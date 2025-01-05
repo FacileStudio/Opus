@@ -10,7 +10,7 @@ import {
 
 export const AuthContext = createContext<{
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: (user: User) => void;
 }>({
   user: null,
   setUser: () => {},
@@ -25,7 +25,7 @@ function AuthProvider({ children }: PropsWithChildren) {
     createdAt: Date;
   } | null>(null);
 
-  const { data, isFetching } = useGetMe(user?.id);
+  const { data, isFetching } = useGetMe();
 
   useEffect(() => {
     if (data) {

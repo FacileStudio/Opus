@@ -1,11 +1,9 @@
 import me from "@/fetchers/user/me";
 import { useQuery } from "@tanstack/react-query";
 
-function useGetMe(userId: string | undefined) {
-  console.log({ userId });
-
+function useGetMe() {
   return useQuery({
-    queryKey: ["me", userId],
+    queryKey: ["me"],
     queryFn: () => me(),
     retry: 0,
   });
