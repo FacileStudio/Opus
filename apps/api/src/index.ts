@@ -9,9 +9,7 @@ const app = new Elysia()
   .guard({
     async beforeHandle({ set, cookie: { session } }) {
       if (!session?.value) {
-        set.status = "Unauthorized";
-
-        return set.status;
+        return { user: null, session: null };
       }
 
       const { user, session: validatedSession } = await validateSessionToken(
@@ -19,9 +17,7 @@ const app = new Elysia()
       );
 
       if (!user || !validatedSession) {
-        set.status = "Unauthorized";
-
-        return set.status;
+        return { user: null, session: null };
       }
     },
   })

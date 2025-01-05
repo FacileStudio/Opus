@@ -1,12 +1,16 @@
 import { Sidebar } from "@/components/common/sidebar";
+import { redirect } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexRouteComponent,
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData({
-      queryKey: ["me"],
-    }),
+  async beforeLoad({ context: { user } }) {
+    if (!user) {
+      throw redirect({
+        to: "/auth/sign-in",
+      });
+    }
+  },
 });
 
 function DashboardIndexRouteComponent() {

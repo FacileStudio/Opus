@@ -15,6 +15,7 @@ import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { type ZodType, z } from "zod";
+import useAuth from "../providers/auth-provider/hooks/use-auth";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export type SignInFormValues = {
@@ -30,6 +31,7 @@ const signInSchema: ZodType<SignInFormValues> = z.object({
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { history } = useRouter();
+  const { setUser } = useAuth();
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -43,7 +45,8 @@ export function SignInForm() {
   });
 
   const onSubmit = async () => {
-    await mutateAsync();
+    const { data: user } = await mutateAsync();
+    setUser(user);
     history.push("/dashboard");
   };
 

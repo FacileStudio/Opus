@@ -25,7 +25,7 @@ function AuthProvider({ children }: PropsWithChildren) {
     createdAt: Date;
   } | null>(null);
 
-  const { data, isLoading } = useGetMe();
+  const { data, isFetching } = useGetMe(user?.id);
 
   useEffect(() => {
     if (data) {
@@ -33,7 +33,7 @@ function AuthProvider({ children }: PropsWithChildren) {
     }
   }, [data]);
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <div className="flex w-full items-center justify-center h-screen flex-col md:flex-row bg-zinc-50 dark:bg-zinc-950">
         <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg shadow-sm animate-spin">
