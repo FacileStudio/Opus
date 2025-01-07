@@ -1,5 +1,4 @@
 import { createId } from "@paralleldrive/cuid2";
-import type { InferSelectModel } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const userTable = sqliteTable("user", {

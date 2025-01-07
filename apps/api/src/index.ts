@@ -9,7 +9,7 @@ const app = new Elysia()
   .use(cors())
   .use(user)
   .guard({
-    async beforeHandle({ set, store, cookie: { session } }) {
+    async beforeHandle({ store, cookie: { session } }) {
       if (!session?.value) {
         return { user: null };
       }

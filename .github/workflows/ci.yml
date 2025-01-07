@@ -34,5 +34,5 @@ jobs:
       - name: Lint project with Biome
         run: pnpm run format-and-lint
       
-      # - name: Build project
-        # run: pnpm run build TODO: Fix build on pipeline
+      - name: Build project
+        run: pnpm run build
