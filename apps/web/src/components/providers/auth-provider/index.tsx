@@ -1,5 +1,5 @@
 import useGetMe from "@/hooks/queries/use-get-me";
-import type { LoggedInUser, User } from "@/types/user";
+import type { LoggedInUser } from "@/types/user";
 import { LayoutGrid } from "lucide-react";
 import {
   type Dispatch,
