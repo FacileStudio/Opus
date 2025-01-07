@@ -38,4 +38,4 @@ jobs:
         run: pnpm dlx turbo check-types
       
       - name: Build project
-        run: pnpm dlx turbo build
+        run: pnpm dlx turbo build --filter=web
