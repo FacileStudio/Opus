@@ -44,13 +44,13 @@ importers:
     dependencies:
       '@elysiajs/cors':
         specifier: ^1.2.0
-        version: 1.2.0(elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3))
+        version: 1.2.0(elysia@1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3))
       '@elysiajs/jwt':
         specifier: ^1.2.0
-        version: 1.2.0(elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3))
+        version: 1.2.0(elysia@1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3))
       '@elysiajs/websocket':
         specifier: ^0.2.8
-        version: 0.2.8(elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3))
+        version: 0.2.8(elysia@1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3))
       '@kaneo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -77,7 +77,7 @@ importers:
         version: 0.2.1(@sinclair/typebox@0.34.13)(drizzle-orm@0.38.3(@types/react@18.3.18)(better-sqlite3@11.7.0)(bun-types@1.1.42)(react@18.3.1))
       elysia:
         specifier: latest
-        version: 1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3)
+        version: 1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3)
     devDependencies:
       bun-types:
         specifier: latest
@@ -1787,6 +1787,18 @@ packages:
   electron-to-chromium@1.5.76:
     resolution: {integrity: sha512-CjVQyG7n7Sr+eBXE86HIulnL5N8xZY1sgmOPGuq/F0Rr0FJq63lg0kEtOIDfZBk44FnDLf6FUJ+dsJcuiUDdDQ==}
 
+  elysia@1.2.10:
+    resolution: {integrity: sha512-QcNl2FjhHFRpKaqy1NoMpyCjJ7OcKBnHwLUkqGu09QwIV84PFb82ILvYJG4GS1RbGv76OA50luaqBLrM3SLZ2w==}
+    peerDependencies:
+      '@sinclair/typebox': '>= 0.34.0'
+      openapi-types: '>= 12.0.0'
+      typescript: '>= 5.0.0'
+    peerDependenciesMeta:
+      openapi-types:
+        optional: true
+      typescript:
+        optional: true
+
   elysia@1.2.9:
     resolution: {integrity: sha512-UqN0j3K5hVnTbrqy6wsyqw4/F5ZdWlBJGPP1ax3JbcwEkKiWLA7HCPDaD+Tahq+h7kgUNKDT6WuIPAoN3rdXBg==}
     peerDependencies:
@@ -2958,22 +2970,22 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
 
-  '@elysiajs/cors@1.2.0(elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3))':
+  '@elysiajs/cors@1.2.0(elysia@1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3))':
     dependencies:
-      elysia: 1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3)
+      elysia: 1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3)
 
   '@elysiajs/eden@1.2.0(elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3))':
     dependencies:
       elysia: 1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3)
 
-  '@elysiajs/jwt@1.2.0(elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3))':
+  '@elysiajs/jwt@1.2.0(elysia@1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3))':
     dependencies:
-      elysia: 1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3)
+      elysia: 1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3)
       jose: 4.15.9
 
-  '@elysiajs/websocket@0.2.8(elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3))':
+  '@elysiajs/websocket@0.2.8(elysia@1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3))':
     dependencies:
-      elysia: 1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3)
+      elysia: 1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3)
       nanoid: 4.0.2
       raikiri: 0.0.0-beta.8
 
@@ -3896,6 +3908,14 @@ snapshots:
   eastasianwidth@0.2.0: {}
 
   electron-to-chromium@1.5.76: {}
+
+  elysia@1.2.10(@sinclair/typebox@0.34.13)(typescript@5.6.3):
+    dependencies:
+      '@sinclair/typebox': 0.34.13
+      cookie: 1.0.2
+      memoirist: 0.2.0
+    optionalDependencies:
+      typescript: 5.6.3
 
   elysia@1.2.9(@sinclair/typebox@0.34.13)(typescript@5.6.3):
     dependencies:

@@ -6,6 +6,10 @@ const workspaces = [
     id: "1",
     name: "Personal Workspace",
   },
+  {
+    id: "2",
+    name: "Uni Workspace",
+  },
 ];
 
 function Workspaces() {

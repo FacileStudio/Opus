@@ -1,39 +1,45 @@
 import useGetMe from "@/hooks/queries/use-get-me";
-import type { User } from "@/types/user";
+import type { LoggedInUser, User } from "@/types/user";
 import { LayoutGrid } from "lucide-react";
 import {
+  type Dispatch,
   type PropsWithChildren,
+  type SetStateAction,
   createContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
 export const AuthContext = createContext<{
-  user: User | null;
-  setUser: (user: User) => void;
+  user: LoggedInUser | null | undefined;
+  setUser: Dispatch<SetStateAction<LoggedInUser | null | undefined>>;
 }>({
-  user: null,
-  setUser: () => {},
+  user: undefined,
+  setUser: () => undefined,
 });
 
 function AuthProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<{
-    name: string;
-    id: string;
-    password: string;
-    email: string;
-    createdAt: Date;
-  } | null>(null);
-
+  const [user, setUser] = useState<LoggedInUser | undefined | null>(undefined);
   const { data, isFetching } = useGetMe();
 
   useEffect(() => {
-    if (data) {
-      setUser(data.data);
+    if (data?.data?.user === null) {
+      setUser(null);
+    } else if (data?.data?.user) {
+      setUser({ ...data?.data?.user });
     }
   }, [data]);
 
-  if (isFetching) {
+  const memoizedValues = useMemo(
+    () => ({
+      user,
+      setUser,
+    }),
+    [user],
+  );
+
+  if (isFetching || user === undefined) {
     return (
       <div className="flex w-full items-center justify-center h-screen flex-col md:flex-row bg-zinc-50 dark:bg-zinc-950">
         <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg shadow-sm animate-spin">
@@ -44,12 +50,7 @@ function AuthProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-      }}
-    >
+    <AuthContext.Provider value={memoizedValues}>
       {children}
     </AuthContext.Provider>
   );

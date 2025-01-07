@@ -2,14 +2,16 @@ import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import user from "./user";
 import { validateSessionToken } from "./user/controllers/validate-session-token";
+import workspace from "./workspace";
 
 const app = new Elysia()
+  .state("userId", "")
   .use(cors())
   .use(user)
   .guard({
-    async beforeHandle({ set, cookie: { session } }) {
+    async beforeHandle({ set, store, cookie: { session } }) {
       if (!session?.value) {
-        return { user: null, session: null };
+        return { user: null };
       }
 
       const { user, session: validatedSession } = await validateSessionToken(
@@ -17,15 +19,22 @@ const app = new Elysia()
       );
 
       if (!user || !validatedSession) {
-        return { user: null, session: null };
+        return { user: null };
       }
+
+      store.userId = user.id;
     },
   })
   .get("/me", async ({ cookie: { session } }) => {
     const { user } = await validateSessionToken(session.value ?? "");
 
-    return user;
+    if (user === null) {
+      return { user: null };
+    }
+
+    return { user };
   })
+  .use(workspace)
   .onError(({ code, error }) => {
     switch (code) {
       case "VALIDATION":

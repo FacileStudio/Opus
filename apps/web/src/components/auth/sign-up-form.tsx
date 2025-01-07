@@ -51,7 +51,10 @@ export function SignUpForm() {
   const onSubmit = async () => {
     const { data: user } = await mutateAsync();
     setUser(user);
-    history.push("/dashboard");
+
+    setTimeout(() => {
+      history.push("/dashboard");
+    }, 500);
   };
 
   return (
