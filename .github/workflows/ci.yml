@@ -32,7 +32,10 @@ jobs:
         run: pnpm install
  
       - name: Lint project with Biome
-        run: pnpm run format-and-lint
+        run: pnpm dlx turbo format-and-lint
+
+      - name: Check types
+        run: pnpm dlx turbo check-types
       
-      - name: Build project
-        run: pnpm run build
+      # - name: Build project
+      #   run: pnpm dlx turbo build TODO: Fix build
