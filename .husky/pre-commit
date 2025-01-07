@@ -1,1 +1,2 @@
-pnpm format-and-lint
+pnpm dlx turbo format-and-lint
+pnpm dlx turbo check-types
