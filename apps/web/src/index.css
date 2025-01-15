@@ -49,6 +49,18 @@
 	}
 }
 
+@layer base {
+	body {
+		@apply text-zinc-900
+	}
+	
+	.dark {
+		body {
+			@apply text-zinc-300
+		}
+	}
+}
+
 /* Custom scrollbar styles */
 @layer utilities {
 	.scrollbar-thin {

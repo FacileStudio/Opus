@@ -7,7 +7,13 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["**/tsconfig*.json", "routeTree.gen.ts", "dist", "cache"]
+		"ignore": [
+			"**/tsconfig*.json",
+			"routeTree.gen.ts",
+			"dist",
+			"cache",
+			"*.css"
+		]
 	},
 	"formatter": {
 		"enabled": true,

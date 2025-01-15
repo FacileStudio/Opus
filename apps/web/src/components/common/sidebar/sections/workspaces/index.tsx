@@ -1,22 +1,18 @@
+import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspace";
 import AddWorkspace from "./add-workspace";
 import WorkspaceItemButton from "./workspace-item-button";
 
-const workspaces = [
-  {
-    id: "1",
-    name: "Personal Workspace",
-  },
-  {
-    id: "2",
-    name: "Uni Workspace",
-  },
-];
+const selectedWorkspace = {
+  id: "1",
+};
 
 function Workspaces() {
-  const selectedWorkspace = {
-    id: "1",
-    name: "Personal Workspace",
-  };
+  const { data } = useGetWorkspaces();
+  const workspaces = data?.data;
+
+  if (!workspaces || !workspaces?.length) {
+    return <div>You don't have any workspaces</div>;
+  }
 
   return (
     <div>

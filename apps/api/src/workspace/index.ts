@@ -1,43 +1,69 @@
-import { eq, or } from "drizzle-orm";
-import Elysia from "elysia";
-import db from "../database";
-import { workspaceTable, workspaceUserTable } from "../database/schema";
+import Elysia, { t } from "elysia";
 import createWorkspace from "./controllers/create-workspace";
-import { createWorkspaceSchema } from "./db/queries";
+import deleteWorkspace from "./controllers/delete-workspace";
+import getWorkspace from "./controllers/get-workspace";
+import getWorkspaces from "./controllers/get-workspaces";
+import updateWorkspace from "./controllers/update-workspace";
+import { updateWorkspaceSchema } from "./db/queries";
 
 const workspace = new Elysia({ prefix: "/workspace" })
   .state("userId", "")
   .post(
-    "/",
-    async ({ body }) => {
-      const createdWorkspace = await createWorkspace(body);
+    "/create",
+    async ({ body, store }) => {
+      const userId = store.userId;
+
+      const createdWorkspace = await createWorkspace({
+        ...body,
+        ownerId: userId,
+      });
 
       return createdWorkspace;
     },
     {
-      body: createWorkspaceSchema,
+      body: t.Object({
+        name: t.String(),
+      }),
     },
   )
-  .get("/workspaces", async ({ store }) => {
+  .get("/list", async ({ store }) => {
     const userId = store.userId;
 
-    const workspaces = await db
-      .select()
-      .from(workspaceTable)
-      .leftJoin(
-        workspaceUserTable,
-        eq(workspaceTable.id, workspaceUserTable.workspaceId),
-      )
-      .where(
-        or(
-          eq(workspaceTable.ownerId, userId),
-          eq(workspaceUserTable.userId, userId),
-        ),
-      );
+    const workspaces = await getWorkspaces({ userId });
 
     return workspaces;
   })
-  .put("/:id", () => {})
-  .delete("/:id", () => {});
+  .get("/:id", async ({ store, params }) => {
+    const userId = store.userId;
+    const workspaceId = params.id;
+
+    const workspace = await getWorkspace({ userId, workspaceId });
+
+    return workspace;
+  })
+  .put(
+    "/:id",
+    async ({ store, params, body }) => {
+      const userId = store.userId;
+      const workspaceId = params.id;
+
+      const updatedWorkspace = await updateWorkspace({
+        userId,
+        workspaceId,
+        body,
+      });
+
+      return updatedWorkspace;
+    },
+    { body: updateWorkspaceSchema },
+  )
+  .delete("/:id", async ({ store, params }) => {
+    const userId = store.userId;
+    const workspaceId = params.id;
+
+    const deletedWorkspace = await deleteWorkspace({ userId, workspaceId });
+
+    return deletedWorkspace;
+  });
 
 export default workspace;
