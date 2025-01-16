@@ -33,7 +33,7 @@
 		"@kaneo/libs": "workspace:*",
 		"@types/node": "^22.10.7",
 		"@types/react": "^19.0.7",
-		"@types/react-dom": "^18.3.5",
+		"@types/react-dom": "^19.0.3",
 		"@vitejs/plugin-react-swc": "^3.5.0",
 		"autoprefixer": "^10.4.20",
 		"globals": "^15.14.0",
