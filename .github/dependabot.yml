@@ -4,13 +4,13 @@ updates:
     directory: "/apps/api"
     schedule:
       interval: "daily"
-      
-  - package-ecosystem: "npm"
-      directory: "/apps/web"
-      schedule:
-        interval: "daily"
 
   - package-ecosystem: "npm"
-        directory: "/packages/libs"
-        schedule:
-          interval: "daily"
+    directory: "/apps/web"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/libs"
+    schedule:
+      interval: "daily"
