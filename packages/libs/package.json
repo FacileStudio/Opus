@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@types/bun": "^1.1.16",
 		"@types/react": "^18.0.17",
-		"@types/react-dom": "^18.0.6",
+		"@types/react-dom": "^19.0.3",
 		"@kaneo/api": "workspace:*",
 		"elysia": "^1.2.10",
 		"react": "^18.2.0",
