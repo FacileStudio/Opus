@@ -11,7 +11,7 @@
 		"@elysiajs/eden": "^1.2.0"
 	},
 	"devDependencies": {
-		"@types/bun": "^1.1.14",
+		"@types/bun": "^1.1.16",
 		"@types/react": "^18.0.17",
 		"@types/react-dom": "^18.0.6",
 		"@kaneo/api": "workspace:*",
