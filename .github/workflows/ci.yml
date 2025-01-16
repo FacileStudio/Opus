@@ -37,5 +37,5 @@ jobs:
       - name: Check types
         run: pnpm dlx turbo check-types
       
-      - # name: Build project
+      # - name: Build project
         # run: pnpm dlx turbo build --filter=@kaneo/web
