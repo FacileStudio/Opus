@@ -1,3 +1,9 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Folder } from "lucide-react";
 
 type WorkspaceItemButtonProps = {
@@ -26,15 +32,30 @@ function WorkspaceItemButton({
   onSelectWorkspace,
 }: WorkspaceItemButtonProps) {
   return (
-    <button
-      type="button"
-      key={workspace.id}
-      onClick={() => onSelectWorkspace(workspace.id)}
-      className={`w-full text-left px-3 py-2 rounded-lg flex items-center transition-colors ${buttonStyles[String(isSelected)]}`}
-    >
-      <Folder className={`w-4 h-4 mr-2 ${iconStyles[String(isSelected)]}`} />
-      {workspace.name}
-    </button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            key={workspace.id}
+            onClick={() => onSelectWorkspace(workspace.id)}
+            className={`w-full text-left px-3 py-2 rounded-lg flex items-center transition-colors ${
+              buttonStyles[String(isSelected)]
+            }`}
+          >
+            <Folder
+              className={`w-4 h-4 mr-2 flex-shrink-0 ${
+                iconStyles[String(isSelected)]
+              }`}
+            />
+            <span className="truncate">{workspace.name}</span>
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{workspace.name}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
