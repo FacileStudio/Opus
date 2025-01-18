@@ -1,23 +1,30 @@
+import useGetProject from "@/hooks/queries/project/use-get-project";
 import { cn } from "@/lib/utils";
 import useProjectStore from "@/store/project";
 import { Layout } from "lucide-react";
+import { useEffect } from "react";
 
 type ProjectItemProps = {
-  project: {
-    projectId: string;
-    projectName: string;
-  };
+  workspaceId: string;
+  projectId: string;
 };
 
-function ProjectItem({ project }: ProjectItemProps) {
+function ProjectItem({ workspaceId, projectId }: ProjectItemProps) {
+  const { data } = useGetProject({ workspaceId, id: projectId });
   const { project: selectedProject, setProject } = useProjectStore();
-  const isSelected = project?.projectId === selectedProject?.projectId;
+
+  const isSelected = selectedProject?.id === projectId;
+
+  useEffect(() => {
+    if (data && isSelected) {
+      setProject(data);
+    }
+  }, [data, setProject, isSelected]);
 
   return (
     <button
       type="button"
-      key={project.projectId}
-      onClick={() => setProject(project)}
+      onClick={() => setProject(data)}
       className={cn(
         "w-full text-left px-2 py-1.5 rounded-md flex items-center text-sm transition-all group",
         isSelected
@@ -41,7 +48,7 @@ function ProjectItem({ project }: ProjectItemProps) {
             : "text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-300",
         )}
       >
-        {project.projectName}
+        {data?.name}
       </span>
     </button>
   );

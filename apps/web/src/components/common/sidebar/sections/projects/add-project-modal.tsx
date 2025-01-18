@@ -28,7 +28,7 @@ function AddProjectModal({ open, onClose }: AddProjectModalProps) {
     if (!name.trim()) return;
 
     await mutateAsync();
-    await queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+    await queryClient.invalidateQueries({ queryKey: ["projects"] });
 
     setName("");
     onClose();

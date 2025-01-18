@@ -20,7 +20,7 @@ function WorkspaceMenu({ id }: WorkspaceMenuProps) {
   async function handleDeleteWorkspace() {
     await deleteWorkspace();
     queryClient.invalidateQueries({
-      queryKey: ["workspaces"],
+      queryKey: ["workspaces", "projects"],
     });
   }
 

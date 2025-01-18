@@ -1,15 +1,13 @@
 import { cn } from "@/lib/utils";
-import type { Project } from "@/types/project";
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
-import ProjectItem from "../../projects/project-item";
+import Projects from "../../projects";
 import WorkspaceMenu from "./workspace-menu";
 
 type WorkspaceItemProps = {
   workspace: {
     id: string;
     name: string;
-    projects: Project[];
   };
   isExpanded: boolean;
   onExpandWorkspace: (id: string) => void;
@@ -70,13 +68,7 @@ function WorkspaceItem({
 
         <WorkspaceMenu id={workspace?.id} />
       </div>
-      {isExpanded && workspace.projects.length > 0 && (
-        <div className="ml-8 space-y-0.5 mt-1">
-          {workspace.projects.map((project) => (
-            <ProjectItem key={project.projectId} project={project} />
-          ))}
-        </div>
-      )}
+      {isExpanded && <Projects workspaceId={workspace?.id} />}
     </Fragment>
   );
 }

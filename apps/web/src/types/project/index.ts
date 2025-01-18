@@ -1,4 +1,6 @@
 export type Project = {
-  projectId: string;
-  projectName: string;
+  id: string;
+  name: string;
+  description: string | null;
+  workspaceId: string;
 };

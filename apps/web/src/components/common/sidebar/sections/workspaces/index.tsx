@@ -77,16 +77,17 @@ function Workspaces() {
         Workspaces
       </h2>
       <div className="space-y-1">
-        {workspaces.map((workspace) => (
-          <div key={workspace.id} className="space-y-1">
-            <WorkspaceItem
-              workspace={workspace}
-              isExpanded={expandedWorkspaces.includes(workspace.id)}
-              onSelectWorkspace={handleSelectWorkspace}
-              onExpandWorkspace={handleExpandWorkspace}
-            />
-          </div>
-        ))}
+        {workspaces.length > 0 &&
+          workspaces.map((workspace) => (
+            <div key={workspace.id} className="space-y-1">
+              <WorkspaceItem
+                workspace={workspace}
+                isExpanded={expandedWorkspaces.includes(workspace.id)}
+                onSelectWorkspace={handleSelectWorkspace}
+                onExpandWorkspace={handleExpandWorkspace}
+              />
+            </div>
+          ))}
         <AddWorkspace />
       </div>
     </div>

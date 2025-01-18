@@ -5,7 +5,6 @@ import {
   workspaceTable,
   workspaceUserTable,
 } from "../../database/schema";
-import groupWorkspacesWithProjects from "../utils/group-workspaces-with-project";
 
 async function getWorkspaces({ userId }: { userId: string }) {
   const workspacesWithProjects = await db
@@ -29,7 +28,7 @@ async function getWorkspaces({ userId }: { userId: string }) {
       ),
     );
 
-  return groupWorkspacesWithProjects(workspacesWithProjects);
+  return workspacesWithProjects;
 }
 
 export default getWorkspaces;

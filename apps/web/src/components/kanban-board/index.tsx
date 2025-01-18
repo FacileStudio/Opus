@@ -1,4 +1,5 @@
 import generateProject from "@/lib/workspace/generate-project";
+import useProjectStore from "@/store/project";
 import {
   DndContext,
   type DragEndEvent,
@@ -19,6 +20,7 @@ function KanbanBoard() {
       tasksPerColumn: 4,
     }),
   );
+  const { project: selectedProject } = useProjectStore();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -124,7 +126,7 @@ function KanbanBoard() {
         <header className="mb-6 space-y-6 flex-shrink-0 px-4 md:px-0">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-              {project.name}
+              {selectedProject?.name}
             </h1>
           </div>
         </header>
