@@ -9,4 +9,4 @@ An open source project management platform focused on simplicity and efficiency.
 
 ## Intro 
 
-<img src="./assets/marketing.png">
+<img src="./assets/cover.png">
