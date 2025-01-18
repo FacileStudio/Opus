@@ -7,6 +7,4 @@
 
 An open source project management platform focused on simplicity and efficiency. Self-host it, customize it, make it yours.
 
-## Intro 
-
 <img src="./assets/cover-image.png">
