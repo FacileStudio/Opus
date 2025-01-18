@@ -2,11 +2,11 @@ import type { Workspace } from "@/types/workspace";
 import { create } from "zustand";
 
 const useWorkspaceStore = create<{
-  workspace: Workspace | null;
-  setWorkspace: (updatedWorkspace: Workspace) => void;
+  workspace: Workspace | undefined;
+  setWorkspace: (updatedWorkspace: Workspace | undefined) => void;
 }>((set) => ({
-  workspace: null,
-  setWorkspace: (updatedWorkspace: Workspace) =>
+  workspace: undefined,
+  setWorkspace: (updatedWorkspace) =>
     set(() => ({ workspace: updatedWorkspace })),
 }));
 

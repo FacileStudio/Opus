@@ -2,7 +2,9 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import useDeleteWorkspace from "@/hooks/mutations/workspace/use-delete-workspace";
 import { cn } from "@/lib/utils";
-import queryClient from "@/query-client";
+import useProjectStore from "@/store/project";
+import useWorkspaceStore from "@/store/workspace";
+import { useQueryClient } from "@tanstack/react-query";
 import { MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import AddProjectModal from "../../projects/add-project-modal";
@@ -13,14 +15,19 @@ type WorkspaceMenuProps = {
 
 function WorkspaceMenu({ id }: WorkspaceMenuProps) {
   const [isCreateProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+  const { setWorkspace } = useWorkspaceStore();
+  const { setProject } = useProjectStore();
+  const queryClient = useQueryClient();
   const { mutateAsync: deleteWorkspace } = useDeleteWorkspace({
     id,
   });
 
   async function handleDeleteWorkspace() {
     await deleteWorkspace();
-    queryClient.invalidateQueries({
-      queryKey: ["workspaces", "projects"],
+    setWorkspace(undefined);
+    setProject(undefined);
+    queryClient.removeQueries({
+      queryKey: ["workspaces"],
     });
   }
 
