@@ -1,16 +1,24 @@
 import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspace";
+import useWorkspaceStore from "@/store/workspace";
+import { useEffect } from "react";
 import AddWorkspace from "./add-workspace";
 import WorkspaceItemButton from "./workspace-item-button";
-
-const selectedWorkspace = {
-  id: "1",
-};
 
 function Workspaces() {
   const { data } = useGetWorkspaces();
   const workspaces = data?.data;
+  const { workspace: selectedWorkspace, setWorkspace } = useWorkspaceStore(
+    (state) => state,
+  );
+
+  useEffect(() => {
+    if (data?.data) {
+      setWorkspace(data?.data[0]);
+    }
+  }, [data?.data, setWorkspace]);
 
   if (!workspaces || !workspaces?.length) {
+    // TODO: Add better empty screen
     return <div>You don't have any workspaces</div>;
   }
 
@@ -24,11 +32,10 @@ function Workspaces() {
           <WorkspaceItemButton
             key={workspace.id}
             workspace={workspace}
-            onSelectWorkspace={() => console.log("Selected")}
-            isSelected={workspace.id === selectedWorkspace.id}
+            onSelectWorkspace={() => setWorkspace(workspace)}
+            isSelected={workspace.id === selectedWorkspace?.id}
           />
         ))}
-
         <AddWorkspace />
       </div>
     </div>

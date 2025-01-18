@@ -6,6 +6,8 @@ function useGetMe() {
     queryKey: ["me"],
     queryFn: () => me(),
     retry: 0,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }
 

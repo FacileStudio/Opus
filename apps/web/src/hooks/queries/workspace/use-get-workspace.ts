@@ -5,6 +5,8 @@ function useGetWorkspaces() {
   return useQuery({
     queryFn: () => getWorkspaces(),
     queryKey: ["workspaces"],
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 }
 
