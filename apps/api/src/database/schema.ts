@@ -65,7 +65,7 @@ export const workspaceUserTable = sqliteTable("workspace_member", {
     .notNull(),
 });
 
-export const boardTable = sqliteTable("board", {
+export const projectTable = sqliteTable("project", {
   id: text("id")
     .$defaultFn(() => createId())
     .primaryKey(),
@@ -86,9 +86,9 @@ export const taskTable = sqliteTable("task", {
   id: text("id")
     .$defaultFn(() => createId())
     .primaryKey(),
-  boardId: text("board_id")
+  projectId: text("project_id")
     .notNull()
-    .references(() => boardTable.id, {
+    .references(() => projectTable.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),

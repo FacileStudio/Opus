@@ -1,8 +1,10 @@
 import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspace";
 import useWorkspaceStore from "@/store/workspace";
-import { useEffect } from "react";
-import AddWorkspace from "./add-workspace";
-import WorkspaceItemButton from "./workspace-item-button";
+import { FilePlus } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import AddWorkspace from "./components/add-workspace";
+import WorkspaceItem from "./components/workspace-item";
 
 function Workspaces() {
   const { data } = useGetWorkspaces();
@@ -11,15 +13,62 @@ function Workspaces() {
     (state) => state,
   );
 
+  const [expandedWorkspaces, setExpandedWorkspaces] = useState<string[]>([
+    selectedWorkspace?.id || "",
+  ]);
+
+  const handleExpandWorkspace = (workspaceId: string) => {
+    setExpandedWorkspaces((prev) =>
+      prev.includes(workspaceId)
+        ? prev.filter((id) => id !== workspaceId)
+        : [...prev, workspaceId],
+    );
+  };
+
+  const handleSelectWorkspace = (
+    event:
+      | React.MouseEvent<HTMLDivElement>
+      | React.KeyboardEvent<HTMLDivElement>,
+    workspaceId: string,
+  ) => {
+    event.stopPropagation();
+
+    const newWorkspace = workspaces?.find(
+      (workspace) => workspace.id === workspaceId,
+    );
+
+    if (!newWorkspace) return;
+
+    setWorkspace(newWorkspace);
+
+    if (!expandedWorkspaces.includes(workspaceId)) {
+      setExpandedWorkspaces((prev) => [...prev, workspaceId]);
+    }
+  };
+
   useEffect(() => {
     if (data?.data) {
       setWorkspace(data?.data[0]);
     }
   }, [data?.data, setWorkspace]);
 
-  if (!workspaces || !workspaces?.length) {
-    // TODO: Add better empty screen
-    return <div>You don't have any workspaces</div>;
+  if (!workspaces || !workspaces.length) {
+    return (
+      <>
+        <div className="flex items-center justify-center px-3 pt-8 text-center">
+          <div className="text-sm text-zinc-500 dark:text-zinc-400">
+            <FilePlus className="mx-auto mb-5 text-zinc-400 dark:text-zinc-500 w-8 h-8" />
+            <p className="text-base text-zinc-700 dark:text-zinc-200 font-medium">
+              No workspaces yet
+            </p>
+            <p className="text-sm text-zinc-400 dark:text-zinc-500 mt-2">
+              Create a workspace to organize your projects.
+            </p>
+          </div>
+        </div>
+        <AddWorkspace />
+      </>
+    );
   }
 
   return (
@@ -29,12 +78,14 @@ function Workspaces() {
       </h2>
       <div className="space-y-1">
         {workspaces.map((workspace) => (
-          <WorkspaceItemButton
-            key={workspace.id}
-            workspace={workspace}
-            onSelectWorkspace={() => setWorkspace(workspace)}
-            isSelected={workspace.id === selectedWorkspace?.id}
-          />
+          <div key={workspace.id} className="space-y-1">
+            <WorkspaceItem
+              workspace={workspace}
+              isExpanded={expandedWorkspaces.includes(workspace.id)}
+              onSelectWorkspace={handleSelectWorkspace}
+              onExpandWorkspace={handleExpandWorkspace}
+            />
+          </div>
         ))}
         <AddWorkspace />
       </div>

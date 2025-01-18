@@ -5,64 +5,8 @@
 		{
 			"idx": 0,
 			"version": "6",
-			"when": 1735769491908,
-			"tag": "0000_shocking_screwball",
-			"breakpoints": true
-		},
-		{
-			"idx": 1,
-			"version": "6",
-			"when": 1735996197501,
-			"tag": "0001_melted_whizzer",
-			"breakpoints": true
-		},
-		{
-			"idx": 2,
-			"version": "6",
-			"when": 1736029469835,
-			"tag": "0002_flowery_secret_warriors",
-			"breakpoints": true
-		},
-		{
-			"idx": 3,
-			"version": "6",
-			"when": 1736113794356,
-			"tag": "0003_mature_madripoor",
-			"breakpoints": true
-		},
-		{
-			"idx": 4,
-			"version": "6",
-			"when": 1736113876330,
-			"tag": "0004_quiet_vector",
-			"breakpoints": true
-		},
-		{
-			"idx": 5,
-			"version": "6",
-			"when": 1736113898977,
-			"tag": "0005_lyrical_marvex",
-			"breakpoints": true
-		},
-		{
-			"idx": 6,
-			"version": "6",
-			"when": 1736113955000,
-			"tag": "0006_windy_sabra",
-			"breakpoints": true
-		},
-		{
-			"idx": 7,
-			"version": "6",
-			"when": 1736114033188,
-			"tag": "0007_reflective_microchip",
-			"breakpoints": true
-		},
-		{
-			"idx": 8,
-			"version": "6",
-			"when": 1736114982878,
-			"tag": "0008_black_electro",
+			"when": 1737212391097,
+			"tag": "0000_abandoned_power_man",
 			"breakpoints": true
 		}
 	]

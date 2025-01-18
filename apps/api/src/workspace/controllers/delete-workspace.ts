@@ -8,7 +8,7 @@ async function deleteWorkspace({
   userId,
   workspaceId,
 }: DeleteWorkspacePayload) {
-  const workspace = await db
+  const [existingWorkspace] = await db
     .select({
       id: workspaceTable.id,
       ownerId: workspaceTable.ownerId,
@@ -22,13 +22,13 @@ async function deleteWorkspace({
     )
     .limit(1);
 
-  const isWorkspaceExisting = Boolean(workspace.at(0));
+  const isWorkspaceExisting = Boolean(existingWorkspace);
 
   if (!isWorkspaceExisting) {
     throw new Error("Workspace not found or access denied");
   }
 
-  const deletedWorkspace = await db
+  const [deletedWorkspace] = await db
     .delete(workspaceTable)
     .where(eq(workspaceTable.id, workspaceId))
     .returning({
@@ -38,7 +38,7 @@ async function deleteWorkspace({
       createdAt: workspaceTable.createdAt,
     });
 
-  return deletedWorkspace.at(0);
+  return deletedWorkspace;
 }
 
 export default deleteWorkspace;

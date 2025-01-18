@@ -1,4 +1,4 @@
-import { and, eq, or } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import db from "../../database";
 import { workspaceTable } from "../../database/schema";
 import type { UpdateWorkspacePayload } from "../db/queries";
@@ -8,7 +8,7 @@ async function updateWorkspace({
   workspaceId,
   body,
 }: { userId: string; workspaceId: string; body: UpdateWorkspacePayload }) {
-  const workspace = await db
+  const [existingWorkspace] = await db
     .select({
       id: workspaceTable.id,
       ownerId: workspaceTable.ownerId,
@@ -22,7 +22,7 @@ async function updateWorkspace({
     )
     .limit(1);
 
-  const isWorkspaceExisting = Boolean(workspace.at(0));
+  const isWorkspaceExisting = Boolean(existingWorkspace);
 
   if (!isWorkspaceExisting) {
     throw new Error("TODO");

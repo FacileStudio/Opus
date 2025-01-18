@@ -2,12 +2,11 @@ import { and, eq, or } from "drizzle-orm";
 import db from "../../database";
 import { workspaceTable, workspaceUserTable } from "../../database/schema";
 
-// TODO: Unify this type
 async function getWorkspace({
   userId,
   workspaceId,
 }: { userId: string; workspaceId: string }) {
-  const workspace = await db
+  const [existingWorkspace] = await db
     .select({
       id: workspaceTable.id,
       name: workspaceTable.name,
@@ -30,7 +29,7 @@ async function getWorkspace({
     )
     .limit(1);
 
-  return workspace.at(0);
+  return existingWorkspace;
 }
 
 export default getWorkspace;

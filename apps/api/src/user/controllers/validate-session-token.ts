@@ -9,17 +9,17 @@ export async function validateSessionToken(
   token: string,
 ): Promise<SessionValidationResult> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const result = await db
+  const sessions = await db
     .select({ user: userTable, session: sessionTable })
     .from(sessionTable)
     .innerJoin(userTable, eq(sessionTable.userId, userTable.id))
     .where(eq(sessionTable.id, sessionId));
 
-  if (result.length < 1) {
+  if (sessions.length < 1) {
     return { session: null, user: null };
   }
 
-  const { user, session } = result[0];
+  const { user, session } = sessions[0];
 
   const isSessionExpired = Date.now() >= session.expiresAt.getTime();
 

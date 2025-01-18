@@ -16,5 +16,6 @@ export const deleteWorkspaceSchema = t.Object({
   workspaceId: t.String(),
 });
 
+export type CreateWorkspacePayload = Static<typeof createWorkspaceSchema>;
 export type UpdateWorkspacePayload = Static<typeof updateWorkspaceSchema>;
 export type DeleteWorkspacePayload = Static<typeof deleteWorkspaceSchema>;
