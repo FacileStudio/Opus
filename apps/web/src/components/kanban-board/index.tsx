@@ -8,11 +8,12 @@ import {
   type UniqueIdentifier,
   closestCorners,
 } from "@dnd-kit/core";
-import { useState } from "react";
-import Column from "./column";
+import { useEffect, useState } from "react";
+import Board from "./board";
 import TaskCard from "./task-card";
 
 function KanbanBoard() {
+  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [project, setProject] = useState(
     generateProject({
       projectId: "sample-1",
@@ -22,6 +23,22 @@ function KanbanBoard() {
   );
   const { project: selectedProject } = useProjectStore();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+
+  useEffect(() => {
+    if (selectedProject) {
+      // TODO: Clean this up by creating a hook for websockets and using Zustand for projects
+      const freshWebsocket = new WebSocket(
+        `http://localhost:1337/task/${selectedProject?.id}`,
+      );
+      setWebSocket(freshWebsocket);
+
+      freshWebsocket.onmessage = (event) => {
+        console.log("OPENED!", event.data);
+
+        setProject(JSON.parse(event.data));
+      };
+    }
+  }, [selectedProject?.id]);
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id);
@@ -82,6 +99,13 @@ function KanbanBoard() {
       } else {
         const updatedTask = { ...task, status: destinationColumn.id };
 
+        webSocket?.send(
+          JSON.stringify({
+            type: "UPDATE_TASK",
+            ...updatedTask,
+          }),
+        );
+
         if (overId === destinationColumn.id) {
           updatedColumns[destinationColumnIndex] = {
             ...destinationColumn,
@@ -122,24 +146,7 @@ function KanbanBoard() {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="h-full flex flex-col">
-        <header className="mb-6 space-y-6 flex-shrink-0 px-4 md:px-0">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-              {selectedProject?.name}
-            </h1>
-          </div>
-        </header>
-
-        <div className="flex-1 relative min-h-0">
-          <div className="flex gap-6 overflow-x-auto pb-6 px-4 md:px-6 h-full snap-x snap-mandatory scrollbar-thin scrollbar-track-zinc-100 scrollbar-thumb-zinc-300 dark:scrollbar-track-zinc-900 dark:scrollbar-thumb-zinc-700">
-            {project.columns.map((column) => (
-              <Column key={column.id} column={column} />
-            ))}
-          </div>
-        </div>
-      </div>
-
+      <Board project={project} selectedProject={selectedProject} />
       <DragOverlay>
         {activeTask ? (
           <div className="transform rotate-3">
