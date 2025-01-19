@@ -1,6 +1,7 @@
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import project from "./project";
+import task from "./task";
 import user from "./user";
 import { validateSessionToken } from "./user/controllers/validate-session-token";
 import workspace from "./workspace";
@@ -37,6 +38,7 @@ const app = new Elysia()
   })
   .use(workspace)
   .use(project)
+  .use(task)
   .onError(({ code, error }) => {
     switch (code) {
       case "VALIDATION":
