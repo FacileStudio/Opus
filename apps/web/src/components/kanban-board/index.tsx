@@ -123,7 +123,7 @@ function KanbanBoard() {
       onDragEnd={handleDragEnd}
     >
       <div className="h-full flex flex-col">
-        <header className="mb-6 space-y-6 flex-shrink-0 px-4 md:px-0">
+        <header className="mb-6 space-y-6 shrink-0 px-4 md:px-0">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
               {selectedProject?.name}

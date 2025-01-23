@@ -53,7 +53,7 @@ function WorkspaceMenu({ id }: WorkspaceMenuProps) {
           >
             <DropdownMenu.Item
               className={cn(
-                "flex items-center px-2 py-1.5 mx-1 text-sm rounded-md cursor-pointer outline-none",
+                "flex items-center px-2 py-1.5 mx-1 text-sm rounded-md cursor-pointer outline-hidden",
                 "text-zinc-600 dark:text-zinc-300",
                 "hover:bg-zinc-100 dark:hover:bg-zinc-700",
                 "focus:bg-zinc-100 dark:focus:bg-zinc-700",
@@ -68,7 +68,7 @@ function WorkspaceMenu({ id }: WorkspaceMenuProps) {
 
             <DropdownMenu.Item
               className={cn(
-                "flex items-center px-2 py-1.5 mx-1 text-sm rounded-md cursor-pointer outline-none",
+                "flex items-center px-2 py-1.5 mx-1 text-sm rounded-md cursor-pointer outline-hidden",
                 "text-zinc-600 dark:text-zinc-300",
                 "hover:bg-zinc-100 dark:hover:bg-zinc-700",
                 "focus:bg-zinc-100 dark:focus:bg-zinc-700",
@@ -81,7 +81,7 @@ function WorkspaceMenu({ id }: WorkspaceMenuProps) {
 
             <DropdownMenu.Item
               className={cn(
-                "flex items-center px-2 py-1.5 mx-1 text-sm rounded-md cursor-pointer outline-none",
+                "flex items-center px-2 py-1.5 mx-1 text-sm rounded-md cursor-pointer outline-hidden",
                 "text-red-600 dark:text-red-400",
                 "hover:bg-red-50 dark:hover:bg-red-500/10",
                 "focus:bg-red-50 dark:focus:bg-red-500/10",
