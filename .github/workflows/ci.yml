@@ -6,7 +6,6 @@ on:
 
 jobs:
   quality:
-    if: ${{ !github.event.pull_request.draft || github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
