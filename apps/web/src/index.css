@@ -1,6 +1,83 @@
+@import 'tailwindcss';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+/* Custom scrollbar styles */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+}
+@utility scrollbar-thumb-zinc-700 {
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(63 63 70);
+    border-radius: 9999px;
+  }
+}
+@utility scrollbar-track-zinc-900 {
+  &::-webkit-scrollbar-track {
+    background-color: rgb(24 24 27);
+  }
+}
 
 @layer base {
 	:root {
@@ -58,26 +135,5 @@
 		body {
 			@apply text-zinc-300
 		}
-	}
-}
-
-/* Custom scrollbar styles */
-@layer utilities {
-	.scrollbar-thin {
-		scrollbar-width: thin;
-	}
-
-	.scrollbar-thumb-zinc-700::-webkit-scrollbar-thumb {
-		background-color: rgb(63 63 70);
-		border-radius: 9999px;
-	}
-
-	.scrollbar-track-zinc-900::-webkit-scrollbar-track {
-		background-color: rgb(24 24 27);
-	}
-
-	.scrollbar-thin::-webkit-scrollbar {
-		width: 6px;
-		height: 6px;
 	}
 }

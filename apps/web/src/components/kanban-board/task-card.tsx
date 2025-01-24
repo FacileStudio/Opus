@@ -38,7 +38,7 @@ function TaskCard({ task }: TaskCardProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white dark:bg-zinc-800/50 backdrop-blur-sm rounded-lg border border-zinc-200 dark:border-zinc-700/50 p-3 cursor-move hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-sm"
+      className="bg-white dark:bg-zinc-800/50 backdrop-blur-xs rounded-lg border border-zinc-200 dark:border-zinc-700/50 p-3 cursor-move hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-xs"
     >
       <h3 className="font-medium text-zinc-900 dark:text-zinc-100 mb-1">
         {task.title}
