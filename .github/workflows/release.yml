@@ -3,7 +3,7 @@ name: Docker Build, Changelog, and Release
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-push-docker:
