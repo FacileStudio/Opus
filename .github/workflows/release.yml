@@ -22,14 +22,23 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push Docker image
+      - name: Build and push web Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./apps/web
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/your-repo-name:latest
-            ghcr.io/${{ github.repository_owner }}/your-repo-name:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/web:latest
+            ghcr.io/${{ github.repository_owner }}/web:${{ github.sha }}
+
+      - name: Build and push api Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./apps/api
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/api:latest
+            ghcr.io/${{ github.repository_owner }}/api:${{ github.sha }}
 
   generate-changelog:
     runs-on: ubuntu-latest
