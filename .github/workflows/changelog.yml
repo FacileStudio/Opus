@@ -1,4 +1,4 @@
-name: Generate Changelog
+name: Generate Changelog and Create Patch Version
 on:
   push:
     branches:
@@ -22,3 +22,5 @@ jobs:
           output-file: CHANGELOG.md
           git-push: true
           create-release: true
+          release-count: 1
+          release-type: patch
