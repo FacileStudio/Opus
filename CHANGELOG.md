@@ -1,3 +1,9 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.1.1](https://github.com/kaneo-app/app/compare/v0.1.0...v0.1.1) (2025-01-25)
+
 # 0.1.0 (2025-01-25)
 
 
@@ -40,6 +46,3 @@
 * **create-turbo:** apply official-starter transform ([6fcda66](https://github.com/kaneo-app/app/commit/6fcda66be3d9e10f32705cd0a59d62eae0e8ef27))
 * **create-turbo:** apply package-manager transform ([2aaf064](https://github.com/kaneo-app/app/commit/2aaf064f095549ad6600e89954aba9fc2c8385d9))
 * **create-turbo:** create basic ([3b8654f](https://github.com/kaneo-app/app/commit/3b8654f88adfe575bdd6190af85ce8daeea7f810))
-
-
-
