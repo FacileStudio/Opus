@@ -1,4 +1,3 @@
-import type { Static } from "elysia";
 import db from "../../database";
 import { workspaceTable } from "../../database/schema";
 import type { CreateWorkspacePayload } from "../db/queries";

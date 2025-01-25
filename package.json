@@ -5,8 +5,6 @@
 	"scripts": {
 		"build": "turbo build",
 		"dev": "turbo dev",
-		"format-and-lint": "biome check .",
-		"format-and-lint:fix": "biome check . --write",
 		"prepare": "husky"
 	},
 	"devDependencies": {
@@ -14,15 +12,16 @@
 		"@commitlint/cli": "^19.6.1",
 		"@commitlint/config-conventional": "^19.6.0",
 		"husky": "^9.1.7",
-		"turbo": "^2.3.3",
+		"turbo": "^2.3.4",
 		"typescript": "5.5.4"
 	},
 	"engines": {
 		"node": ">=18"
 	},
-	"packageManager": "pnpm@7.5.1",
-	"workspaces": ["apps/*", "packages/*"],
-	"dependencies": {
-		"@tanstack/react-router": "^1.94.1"
-	}
+	"packageManager": "bun@1.1.42",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"version": "0.1.1"
 }
