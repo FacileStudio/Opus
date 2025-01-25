@@ -1,5 +1,4 @@
 import { and, eq } from "drizzle-orm";
-import workspace from "..";
 import db from "../../database";
 import { workspaceTable } from "../../database/schema";
 import type { DeleteWorkspacePayload } from "../db/queries";
