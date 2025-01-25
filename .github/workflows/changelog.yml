@@ -21,3 +21,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           output-file: CHANGELOG.md
           git-push: true
+          create-release: true
