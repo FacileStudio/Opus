@@ -41,6 +41,11 @@ jobs:
           skip-git-pull: true
           output-file: false
           create-summary: true
+          skip-on-empty: false
+
+      - name: Debug Changelog Output
+        run: |
+          echo "Changelog Output: ${{ steps.changelog.outputs.clean_changelog }}"
 
       - name: Create Changelog PR
         if: steps.changelog.outputs.skipped == 'false'
