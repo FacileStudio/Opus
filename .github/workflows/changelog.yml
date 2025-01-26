@@ -22,16 +22,27 @@ jobs:
       version: ${{ steps.changelog.outputs.version }}
 
     env:
-      PR_BRANCH: release-ci-${{ github.sha }}
+      PR_BRANCH: release-ci-${{ github.run_id }}
 
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Debug PR_BRANCH
+        run: |
+          echo "PR_BRANCH: ${{ env.PR_BRANCH }}"
+
+      - name: Debug Git History
+        run: |
+          git log --oneline
+
       - name: Create Branch
         run: |
-          git checkout -b ${{ env.PR_BRANCH }}
+          git checkout -b ${{ env.PR_BRANCH }} || git checkout ${{ env.PR_BRANCH }}
 
       - name: Create Changelog
-        uses: TriPSs/conventional-changelog-action@dd734f74fce61a6e02f821ee1b5930bc79a23534
+        uses: TriPSs/conventional-changelog-action@v3  # Use the latest version
         id: changelog
         with:
           github-token: ${{ github.token }}
