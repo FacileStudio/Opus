@@ -25,24 +25,16 @@ jobs:
       PR_BRANCH: release-ci-${{ github.run_id }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Debug PR_BRANCH
-        run: |
-          echo "PR_BRANCH: ${{ env.PR_BRANCH }}"
-
-      - name: Debug Git History
-        run: |
-          git log --oneline
 
       - name: Create Branch
         run: |
           git checkout -b ${{ env.PR_BRANCH }} || git checkout ${{ env.PR_BRANCH }}
 
       - name: Create Changelog
-        uses: TriPSs/conventional-changelog-action@v3  # Use the latest version
+        uses: TriPSs/conventional-changelog-action@v6
         id: changelog
         with:
           github-token: ${{ github.token }}
@@ -52,11 +44,6 @@ jobs:
           skip-git-pull: true
           output-file: false
           create-summary: true
-          skip-on-empty: false
-
-      - name: Debug Changelog Output
-        run: |
-          echo "Changelog Output: ${{ steps.changelog.outputs.clean_changelog }}"
 
       - name: Create Changelog PR
         if: steps.changelog.outputs.skipped == 'false'
@@ -64,3 +51,17 @@ jobs:
             gh pr create --base main --head ${{ env.PR_BRANCH }} --title 'chore(release): ${{ steps.changelog.outputs.tag }} [skip-ci]' --body "${{ steps.changelog.outputs.clean_changelog }}"
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Approve Changelog PR
+        if: steps.changelog.outputs.skipped == 'false'
+        run: |
+          gh pr review --approve ${{ env.PR_BRANCH }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ANDREJ }}
+
+      - name: Merge Changelog PR
+        if: steps.changelog.outputs.skipped == 'false'
+        run: |
+          gh pr merge --squash --auto --delete-branch ${{ env.PR_BRANCH }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ANDREJ }}
