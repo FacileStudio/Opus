@@ -1,36 +1,65 @@
-name: Generate Changelog and Create Patch Version
 on:
   push:
     branches:
       - main
+  pull_request:
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
 
 jobs:
-  generate-changelog:
+  changelog:
+    name: Changelog
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write
+
+    outputs:
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      tag: ${{ steps.changelog.outputs.tag }}
+      clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      version: ${{ steps.changelog.outputs.version }}
+
+    env:
+      PR_BRANCH: release-ci-${{ github.sha }}
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install standard-version
-        run: npm install -g standard-version
-
-      - name: Configure Git
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - name: Create Branch
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git checkout -b ${{ env.PR_BRANCH }}
 
-      - name: Bump version and generate changelog (patch)
-        run: npx standard-version --release-as patch
+      - name: Create Changelog
+        uses: TriPSs/conventional-changelog-action@dd734f74fce61a6e02f821ee1b5930bc79a23534
+        id: changelog
+        with:
+          github-token: ${{ github.token }}
+          git-user-name: "github-actions[bot]"
+          git-user-email: "github-actions[bot]@users.noreply.github.com"
+          git-branch: ${{ env.PR_BRANCH }}
+          skip-git-pull: true
+          output-file: false
+          version-file: .github/package.yaml
+          create-summary: true
 
-      - name: Push changes
+      - name: Create Changelog PR
+        if: steps.changelog.outputs.skipped == 'false'
         run: |
-          git push --follow-tags origin main
+          gh pr create --base main --head ${{ env.PR_BRANCH }} --title 'chore(release): ${{ steps.changelog.outputs.tag }} [skip-ci]' --body '${{ steps.changelog.outputs.clean_changelog }}'
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Approve Changelog PR
+        if: steps.changelog.outputs.skipped == 'false'
+        run: |
+          gh pr review --approve ${{ env.PR_BRANCH }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ANDREJ }}
+
+      - name: Merge Changelog PR
+        if: steps.changelog.outputs.skipped == 'false'
+        run: |
+          gh pr merge --squash --auto --delete-branch ${{ env.PR_BRANCH }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ANDREJ }}
