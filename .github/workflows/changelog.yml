@@ -44,7 +44,7 @@ jobs:
           git-user-email: "github-actions[bot]@users.noreply.github.com"
           git-branch: ${{ env.PR_BRANCH }}
           skip-git-pull: true
-          output-file: false
+          output-file: CHANGELOG.md
           create-summary: true
 
       - name: Create Changelog PR
