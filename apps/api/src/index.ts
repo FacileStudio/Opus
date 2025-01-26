@@ -6,6 +6,7 @@ import task from "./task";
 import user from "./user";
 import { validateSessionToken } from "./user/controllers/validate-session-token";
 import workspace from "./workspace";
+import workspaceUser from "./workspace-user";
 
 const app = new Elysia()
   .state("userId", "")
@@ -41,6 +42,7 @@ const app = new Elysia()
   .use(workspace)
   .use(project)
   .use(task)
+  .use(workspaceUser)
   .onError(({ code, error }) => {
     switch (code) {
       case "VALIDATION":

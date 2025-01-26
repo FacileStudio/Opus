@@ -19,7 +19,7 @@ async function updateProject({
   const isProjectExisting = Boolean(existingProject);
 
   if (!isProjectExisting) {
-    throw new Error("TODO");
+    throw new Error("Project doesn't exist");
   }
 
   const [updatedWorkspace] = await db

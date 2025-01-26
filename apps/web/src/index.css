@@ -58,29 +58,9 @@
   }
 }
 
-/* Custom scrollbar styles */
-@utility scrollbar-thin {
-  scrollbar-width: thin;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-}
-@utility scrollbar-thumb-zinc-700 {
-  &::-webkit-scrollbar-thumb {
-    background-color: rgb(63 63 70);
-    border-radius: 9999px;
-  }
-}
-@utility scrollbar-track-zinc-900 {
-  &::-webkit-scrollbar-track {
-    background-color: rgb(24 24 27);
-  }
-}
-
 @layer base {
 	:root {
+		color-scheme: light;
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
 		--card: 0 0% 100%;
@@ -104,6 +84,7 @@
 	}
 
 	.dark {
+		color-scheme: dark;
 		--background: 240 10% 3.9%;
 		--foreground: 0 0% 98%;
 		--card: 240 10% 3.9%;
@@ -123,6 +104,28 @@
 		--border: 240 3.7% 15.9%;
 		--input: 240 3.7% 15.9%;
 		--ring: 240 4.9% 83.9%;
+	}
+
+	* {
+		scrollbar-width: thin;
+	}
+
+	*::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+
+	*::-webkit-scrollbar-thumb {
+		background-color: theme('colors.zinc.300');
+		border-radius: 9999px;
+	}
+
+	.dark *::-webkit-scrollbar-thumb {
+		background-color: theme('colors.zinc.700');
+	}
+
+	*::-webkit-scrollbar-track {
+		background-color: transparent;
 	}
 }
 

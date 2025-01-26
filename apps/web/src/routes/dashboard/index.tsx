@@ -18,7 +18,7 @@ function DashboardIndexRouteComponent() {
   return (
     <>
       <Sidebar />
-      <main className="flex-1 overflow-hidden p-6">
+      <main className="flex-1 overflow-hidden p-6 scroll-smooth">
         <KanbanBoard />
       </main>
     </>

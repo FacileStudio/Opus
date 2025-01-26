@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 function useGetProjects({ workspaceId }: { workspaceId: string }) {
   return useQuery({
     queryFn: () => getProjects({ workspaceId }),
-    queryKey: ["projects"],
+    queryKey: ["projects", workspaceId],
   });
 }
 

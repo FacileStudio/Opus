@@ -26,7 +26,7 @@ async function updateTask({
   const isTaskExisting = Boolean(existingTask);
 
   if (!isTaskExisting) {
-    throw new Error("TODO");
+    throw new Error("Task doesn't exist");
   }
 
   const [updatedWorkspace] = await db

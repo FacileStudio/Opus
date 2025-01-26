@@ -1,73 +1,86 @@
 import Elysia, { t } from "elysia";
-import { taskTable } from "../database/schema";
 
-import { eq } from "drizzle-orm";
-import db from "../database";
+import createTask from "./controllers/create-task";
 import getTasks from "./controllers/get-tasks";
+import updateTaskStatus from "./controllers/update-task-status";
 
 const connections = new Map();
 
-const task = new Elysia({ prefix: "/task" }).ws("/:projectId", {
-  async open(ws) {
-    const projectId = ws.data.params.projectId;
+const task = new Elysia({ prefix: "/task" })
+  .post(
+    "/create",
+    async ({ body }) => {
+      const createdTask = await createTask(body);
 
-    // TODO: Improve this
-    if (projectId === "undefined") {
-      return null;
-    }
-
-    if (!connections.has(projectId)) {
-      connections.set(projectId, new Set());
-    }
-
-    connections.get(projectId).add(ws);
-
-    const boardState = await getTasks(projectId);
-    ws.send(JSON.stringify(boardState));
-  },
-  async message(
-    ws,
-    message: {
-      type: string;
-      id: string;
-      status: string;
+      return createdTask;
     },
-  ) {
-    const projectId = ws.data.params.projectId;
+    {
+      body: t.Object({
+        projectId: t.String(),
+        assigneeId: t.String(),
+        title: t.String(),
+        status: t.String(),
+        dueDate: t.Date(),
+        description: t.String(),
+        priority: t.String(),
+      }),
+    },
+  )
+  .ws("/ws/:projectId", {
+    async open(ws) {
+      const projectId = ws.data.params.projectId;
 
-    const data = message;
+      if (!connections.has(projectId)) {
+        connections.set(projectId, new Set());
+      }
 
-    if (data.type === "UPDATE_TASK") {
-      // TODO: Make this part of updateTask
-      await db
-        .update(taskTable)
-        .set({ status: data.status })
-        .where(eq(taskTable.id, data.id));
+      connections.get(projectId).add(ws);
 
-      const clients = connections.get(projectId);
       const boardState = await getTasks(projectId);
+      ws.send(boardState);
+    },
+    async message(
+      ws,
+      message: {
+        type: string;
+        id: string;
+        status: string;
+      },
+    ) {
+      const projectId = ws.data.params.projectId;
 
-      if (clients) {
-        for (const client of clients) {
-          client.send(JSON.stringify(boardState));
+      const { type, id, status } = message;
+
+      if (type === "UPDATE_TASK") {
+        await updateTaskStatus({
+          id,
+          status,
+        });
+
+        const clients = connections.get(projectId);
+        const boardState = await getTasks(projectId);
+
+        if (clients) {
+          for (const client of clients) {
+            client.send(boardState);
+          }
         }
       }
-    }
-  },
-  close(ws) {
-    const projectId = ws.data.params.projectId;
+    },
+    close(ws) {
+      const projectId = ws.data.params.projectId;
 
-    const clients = connections.get(projectId);
-    if (clients) {
-      clients.delete(ws);
+      const clients = connections.get(projectId);
+      if (clients) {
+        clients.delete(ws);
 
-      if (clients.size === 0) {
-        connections.delete(projectId);
+        if (clients.size === 0) {
+          connections.delete(projectId);
+        }
       }
-    }
 
-    console.log(`Client disconnected from project ${projectId}`);
-  },
-});
+      console.log(`Client disconnected from project ${projectId}`);
+    },
+  });
 
 export default task;

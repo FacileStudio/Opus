@@ -1,13 +1,13 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import useDeleteWorkspace from "@/hooks/mutations/workspace/use-delete-workspace";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import useProjectStore from "@/store/project";
 import useWorkspaceStore from "@/store/workspace";
 import { useQueryClient } from "@tanstack/react-query";
 import { MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import AddProjectModal from "../../projects/add-project-modal";
+import CreateProjectModal from "../../projects/create-project-modal";
 
 type WorkspaceMenuProps = {
   id: string;
@@ -94,7 +94,7 @@ function WorkspaceMenu({ id }: WorkspaceMenuProps) {
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
-      <AddProjectModal
+      <CreateProjectModal
         open={isCreateProjectModalOpen}
         onClose={() => setCreateProjectModalOpen(false)}
       />

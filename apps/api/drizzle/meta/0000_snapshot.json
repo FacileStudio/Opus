@@ -1,7 +1,7 @@
 {
 	"version": "6",
 	"dialect": "sqlite",
-	"id": "c0af92e1-37ce-46b9-bd70-337eb6049763",
+	"id": "0bc2ad49-3384-4972-89cf-56af7f84a77f",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"tables": {
 		"project": {
@@ -41,7 +41,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-18T14:59:51.091Z\"'"
+					"default": "'\"2025-01-25T23:50:45.754Z\"'"
 				}
 			},
 			"indexes": {},
@@ -147,6 +147,14 @@
 					"autoincrement": false,
 					"default": "'to-do'"
 				},
+				"priority": {
+					"name": "priority",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false,
+					"default": "'low'"
+				},
 				"due_date": {
 					"name": "due_date",
 					"type": "integer",
@@ -160,7 +168,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-18T14:59:51.091Z\"'"
+					"default": "'\"2025-01-25T23:50:45.754Z\"'"
 				}
 			},
 			"indexes": {},
@@ -225,7 +233,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-18T14:59:51.090Z\"'"
+					"default": "'\"2025-01-25T23:50:45.753Z\"'"
 				}
 			},
 			"indexes": {
@@ -277,7 +285,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-18T14:59:51.091Z\"'"
+					"default": "'\"2025-01-25T23:50:45.754Z\"'"
 				}
 			},
 			"indexes": {},
@@ -333,7 +341,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-18T14:59:51.091Z\"'"
+					"default": "'\"2025-01-25T23:50:45.754Z\"'"
 				}
 			},
 			"indexes": {},
