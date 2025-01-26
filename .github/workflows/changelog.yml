@@ -70,6 +70,7 @@ jobs:
 
   release:
     name: Release
+    needs: changelog
     if: github.event_name != 'pull_request' && needs.changelog.outputs.skipped == 'false'
     runs-on: ubuntu-24.04
 
