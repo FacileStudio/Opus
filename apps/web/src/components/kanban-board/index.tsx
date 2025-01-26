@@ -8,7 +8,6 @@ import {
   type UniqueIdentifier,
   closestCorners,
 } from "@dnd-kit/core";
-import { useSearch } from "@tanstack/react-router";
 import { produce } from "immer";
 import { useState } from "react";
 import { BoardEmptyState } from "../common/sidebar/sections/projects/empty-project-state";
