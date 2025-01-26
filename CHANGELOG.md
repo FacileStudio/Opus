@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/kaneo-app/app/compare/v0.1.2...v0.1.3) (2025-01-26)
+
+
+### Features
+
+* :sparkles: finishing socket communication for tasks ([dcb8475](https://github.com/kaneo-app/app/commit/dcb84754b3bb970415bb7e16200224bef5271823))
+* :sparkles: initial commit for projects ([200d9a6](https://github.com/kaneo-app/app/commit/200d9a6df400bab61bbc63f2a28dc3807da77606))
+
 ### [0.1.2](https://github.com/kaneo-app/app/compare/v0.1.1...v0.1.2) (2025-01-25)
 
 ### [0.1.1](https://github.com/kaneo-app/app/compare/v0.1.0...v0.1.1) (2025-01-25)
