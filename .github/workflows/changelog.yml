@@ -42,6 +42,7 @@ jobs:
           output-file: false
           create-summary: true
           skip-on-empty: false
+          include-all: true
 
       - name: Debug Changelog Output
         run: |
