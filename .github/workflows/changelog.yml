@@ -1,3 +1,5 @@
+name: Changelog
+
 on:
   push:
     branches:
@@ -29,17 +31,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install jq
+      - name: Debug PR_BRANCH
         run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
+          echo "PR_BRANCH: ${{ env.PR_BRANCH }}"
+
+      - name: Debug Git History
+        run: |
+          git log --oneline
 
       - name: Create Branch
         run: |
           git checkout -b ${{ env.PR_BRANCH }} || git checkout ${{ env.PR_BRANCH }}
 
       - name: Create Changelog
-        uses: TriPSs/conventional-changelog-action@v3
+        uses: TriPSs/conventional-changelog-action@v4
         id: changelog
         with:
           github-token: ${{ github.token }}
@@ -51,11 +56,15 @@ jobs:
           create-summary: true
           skip-on-empty: false
 
+      - name: Debug Changelog Output
+        run: |
+          echo "Changelog Output: ${{ steps.changelog.outputs.clean_changelog }}"
+
       - name: Create Changelog PR
         if: steps.changelog.outputs.skipped == 'false'
         run: |
-          body=$(echo '${{ steps.changelog.outputs.clean_changelog }}' | jq -Rs .)
-          gh pr create --base main --head ${{ env.PR_BRANCH }} --title 'chore(release): ${{ steps.changelog.outputs.tag }} [skip-ci]' --body "$body"
+          echo '${{ steps.changelog.outputs.clean_changelog }}' > changelog_body.txt
+          gh pr create --base main --head ${{ env.PR_BRANCH }} --title 'chore(release): ${{ steps.changelog.outputs.tag }} [skip-ci]' --body-file changelog_body.txt
         env:
           GH_TOKEN: ${{ github.token }}
 
