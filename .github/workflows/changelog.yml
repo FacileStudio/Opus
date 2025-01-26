@@ -62,8 +62,8 @@ jobs:
       - name: Create Changelog PR
         if: steps.changelog.outputs.skipped == 'false'
         run: |
-          gh pr create --base main --head ${{ env.PR_BRANCH }} --title 'chore(release): ${{ steps.changelog.outputs.tag }} [skip-ci]' --body '${{ steps.changelog.outputs.clean_changelog }}'
-        env:
+          body=$(echo '${{ steps.changelog.outputs.clean_changelog }}' | sed "s/'/'\\\\''/g")
+            gh pr create --base main --head ${{ env.PR_BRANCH }} --title 'chore(release): ${{ steps.changelog.outputs.tag }} [skip-ci]' --body "$body"        env:
           GH_TOKEN: ${{ github.token }}
 
       - name: Approve Changelog PR
