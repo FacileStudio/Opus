@@ -47,10 +47,10 @@ function Workspaces() {
   };
 
   useEffect(() => {
-    if (data?.data) {
+    if (data?.data && !selectedWorkspace) {
       setWorkspace(data?.data[0]);
     }
-  }, [data?.data, setWorkspace]);
+  }, [data?.data, setWorkspace, selectedWorkspace]);
 
   if (!workspaces || !workspaces.length) {
     return (

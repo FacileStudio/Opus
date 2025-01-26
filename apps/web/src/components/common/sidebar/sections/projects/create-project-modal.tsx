@@ -7,12 +7,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useState } from "react";
 
-type AddProjectModalProps = {
+type CreateProjectModalProps = {
   open: boolean;
   onClose: () => void;
 };
 
-function AddProjectModal({ open, onClose }: AddProjectModalProps) {
+function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const queryClient = useQueryClient();
@@ -108,4 +108,4 @@ function AddProjectModal({ open, onClose }: AddProjectModalProps) {
   );
 }
 
-export default AddProjectModal;
+export default CreateProjectModal;

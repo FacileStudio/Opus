@@ -1,4 +1,4 @@
-import type { Column } from "@/types/workspace";
+import type { Column } from "@/types/project";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,

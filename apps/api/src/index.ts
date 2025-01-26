@@ -1,3 +1,4 @@
+import { logger } from "@bogeychan/elysia-logger";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import project from "./project";
@@ -5,10 +6,12 @@ import task from "./task";
 import user from "./user";
 import { validateSessionToken } from "./user/controllers/validate-session-token";
 import workspace from "./workspace";
+import workspaceUser from "./workspace-user";
 
 const app = new Elysia()
   .state("userId", "")
   .use(cors())
+  .use(logger())
   .use(user)
   .guard({
     async beforeHandle({ store, cookie: { session } }) {
@@ -39,6 +42,7 @@ const app = new Elysia()
   .use(workspace)
   .use(project)
   .use(task)
+  .use(workspaceUser)
   .onError(({ code, error }) => {
     switch (code) {
       case "VALIDATION":

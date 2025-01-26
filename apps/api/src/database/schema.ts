@@ -101,6 +101,7 @@ export const taskTable = sqliteTable("task", {
   title: text("title").notNull(),
   description: text("description"),
   status: text("status").notNull().default("to-do"),
+  priority: text("priority").default("low"),
   dueDate: integer("due_date", { mode: "timestamp" }),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(new Date())

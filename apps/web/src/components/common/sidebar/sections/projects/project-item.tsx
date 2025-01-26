@@ -1,5 +1,5 @@
 import useGetProject from "@/hooks/queries/project/use-get-project";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import useProjectStore from "@/store/project";
 import { Layout } from "lucide-react";
 import { useEffect } from "react";
@@ -21,10 +21,16 @@ function ProjectItem({ workspaceId, projectId }: ProjectItemProps) {
     }
   }, [data, setProject, isSelected]);
 
+  const handleSelectProject = () => {
+    if (!isSelected) {
+      setProject(data);
+    }
+  };
+
   return (
     <button
       type="button"
-      onClick={() => setProject(data)}
+      onClick={handleSelectProject}
       className={cn(
         "w-full text-left px-2 py-1.5 rounded-md flex items-center text-sm transition-all group",
         isSelected

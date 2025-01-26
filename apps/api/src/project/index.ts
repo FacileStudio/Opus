@@ -28,7 +28,7 @@ const project = new Elysia({ prefix: "/project" })
     return projects;
   })
   .get("/:id", async ({ params: { id }, query: { workspaceId } }) => {
-    if (!workspaceId) throw new Error("TODO");
+    if (!workspaceId) throw new Error("Workspace ID is required");
 
     const project = await getProject({ id, workspaceId });
 
@@ -51,7 +51,7 @@ const project = new Elysia({ prefix: "/project" })
     },
   )
   .delete("/:id", async ({ params: { id }, query: { workspaceId } }) => {
-    if (!workspaceId) throw new Error("TODO");
+    if (!workspaceId) throw new Error("Workspace ID is required");
 
     const deletedProject = await deleteProject({ id, workspaceId });
 

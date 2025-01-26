@@ -17,7 +17,7 @@ async function deleteProject({
   const isProjectExisting = Boolean(existingProject);
 
   if (!isProjectExisting) {
-    throw new Error("TODO");
+    throw new Error("Project doesn't exist");
   }
 
   const [deletedProject] = await db

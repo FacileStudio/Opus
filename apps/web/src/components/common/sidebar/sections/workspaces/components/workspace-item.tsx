@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 import Projects from "../../projects";

@@ -3,7 +3,7 @@ CREATE TABLE `project` (
 	`workspace_id` text NOT NULL,
 	`name` text NOT NULL,
 	`description` text,
-	`created_at` integer DEFAULT '"2025-01-18T14:59:51.091Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2025-01-25T23:50:45.754Z"' NOT NULL,
 	FOREIGN KEY (`workspace_id`) REFERENCES `workspace`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -21,8 +21,9 @@ CREATE TABLE `task` (
 	`title` text NOT NULL,
 	`description` text,
 	`status` text DEFAULT 'to-do' NOT NULL,
+	`priority` text DEFAULT 'low',
 	`due_date` integer,
-	`created_at` integer DEFAULT '"2025-01-18T14:59:51.091Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2025-01-25T23:50:45.754Z"' NOT NULL,
 	FOREIGN KEY (`project_id`) REFERENCES `project`(`id`) ON UPDATE cascade ON DELETE cascade,
 	FOREIGN KEY (`assignee_id`) REFERENCES `user`(`id`) ON UPDATE cascade ON DELETE cascade
 );
@@ -32,7 +33,7 @@ CREATE TABLE `user` (
 	`name` text NOT NULL,
 	`password` text NOT NULL,
 	`email` text NOT NULL,
-	`created_at` integer DEFAULT '"2025-01-18T14:59:51.090Z"' NOT NULL
+	`created_at` integer DEFAULT '"2025-01-25T23:50:45.753Z"' NOT NULL
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint
@@ -41,7 +42,7 @@ CREATE TABLE `workspace` (
 	`name` text NOT NULL,
 	`description` text,
 	`owner_id` text NOT NULL,
-	`created_at` integer DEFAULT '"2025-01-18T14:59:51.091Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2025-01-25T23:50:45.754Z"' NOT NULL,
 	FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -50,7 +51,7 @@ CREATE TABLE `workspace_member` (
 	`workspace_id` text NOT NULL,
 	`user_id` text NOT NULL,
 	`role` text,
-	`joined_at` integer DEFAULT '"2025-01-18T14:59:51.091Z"' NOT NULL,
+	`joined_at` integer DEFAULT '"2025-01-25T23:50:45.754Z"' NOT NULL,
 	FOREIGN KEY (`workspace_id`) REFERENCES `workspace`(`id`) ON UPDATE cascade ON DELETE cascade,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE cascade ON DELETE cascade
 );

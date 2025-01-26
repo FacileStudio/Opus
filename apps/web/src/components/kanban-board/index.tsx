@@ -1,4 +1,4 @@
-import generateProject from "@/lib/workspace/generate-project";
+import useBoardWebsocket from "@/hooks/use-board-websocket";
 import useProjectStore from "@/store/project";
 import {
   DndContext,
@@ -8,107 +8,70 @@ import {
   type UniqueIdentifier,
   closestCorners,
 } from "@dnd-kit/core";
+import { useSearch } from "@tanstack/react-router";
+import { produce } from "immer";
 import { useState } from "react";
+import { BoardEmptyState } from "../common/sidebar/sections/projects/empty-project-state";
 import Column from "./column";
 import TaskCard from "./task-card";
 
 function KanbanBoard() {
-  const [project, setProject] = useState(
-    generateProject({
-      projectId: "sample-1",
-      workspaceId: "workspace-1",
-      tasksPerColumn: 4,
-    }),
-  );
-  const { project: selectedProject } = useProjectStore();
+  const { project, setProject } = useProjectStore();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const { ws } = useBoardWebsocket();
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id);
   };
 
-  // TODO: Simplify this function
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
-    if (!over) return;
+    if (!over || !project?.columns) return;
 
     const activeId = active.id.toString();
     const overId = over.id.toString();
 
-    const sourceColumn = project.columns.find((col) =>
-      col.tasks.some((task) => task.id === activeId),
-    );
-
-    const destinationColumn = project.columns.find((col) => {
-      if (col.id === overId) return true;
-      return col.tasks.some((task) => task.id === overId);
-    });
-
-    if (!sourceColumn || !destinationColumn) return;
-
-    setProject((currentProject) => {
-      const updatedColumns = [...currentProject.columns];
-
-      const sourceColumnIndex = updatedColumns.findIndex(
-        (col) => col.id === sourceColumn.id,
+    const updatedProject = produce(project, (draft) => {
+      const sourceColumn = draft?.columns?.find((col) =>
+        col.tasks.some((task) => task.id === activeId),
       );
-      const destinationColumnIndex = updatedColumns.findIndex(
-        (col) => col.id === destinationColumn.id,
+      const destinationColumn = draft?.columns?.find(
+        (col) =>
+          col.id === overId || col.tasks.some((task) => task.id === overId),
       );
+
+      if (!sourceColumn || !destinationColumn) return;
 
       const sourceTaskIndex = sourceColumn.tasks.findIndex(
         (task) => task.id === activeId,
       );
       const task = sourceColumn.tasks[sourceTaskIndex];
 
-      updatedColumns[sourceColumnIndex] = {
-        ...sourceColumn,
-        tasks: sourceColumn.tasks.filter((t) => t.id !== activeId),
-      };
+      sourceColumn.tasks = sourceColumn.tasks.filter((t) => t.id !== activeId);
 
       if (sourceColumn.id === destinationColumn.id) {
         const destinationIndex = destinationColumn.tasks.findIndex(
-          (task) => task.id === overId,
+          (t) => t.id === overId,
         );
-        const newTasks = [...destinationColumn.tasks];
-        newTasks.splice(sourceTaskIndex, 1);
-        newTasks.splice(destinationIndex, 0, task);
-
-        updatedColumns[destinationColumnIndex] = {
-          ...destinationColumn,
-          tasks: newTasks,
-        };
+        destinationColumn.tasks.splice(destinationIndex, 0, task);
       } else {
         const updatedTask = { ...task, status: destinationColumn.id };
+        ws?.send(JSON.stringify({ type: "UPDATE_TASK", ...updatedTask }));
 
-        if (overId === destinationColumn.id) {
-          updatedColumns[destinationColumnIndex] = {
-            ...destinationColumn,
-            tasks: [...destinationColumn.tasks, updatedTask],
-          };
-        } else {
-          const destinationIndex = destinationColumn.tasks.findIndex(
-            (task) => task.id === overId,
-          );
-          const newTasks = [...destinationColumn.tasks];
-          newTasks.splice(destinationIndex, 0, updatedTask);
+        const destinationIndex =
+          overId === destinationColumn.id
+            ? destinationColumn.tasks.length
+            : destinationColumn.tasks.findIndex((t) => t.id === overId);
 
-          updatedColumns[destinationColumnIndex] = {
-            ...destinationColumn,
-            tasks: newTasks,
-          };
-        }
+        destinationColumn.tasks.splice(destinationIndex, 0, updatedTask);
       }
-
-      return {
-        ...currentProject,
-        columns: updatedColumns,
-      };
     });
 
+    setProject(updatedProject);
     setActiveId(null);
   };
+
+  if (!project || !project?.columns) return <BoardEmptyState />;
 
   const activeTask = activeId
     ? project.columns
@@ -126,20 +89,19 @@ function KanbanBoard() {
         <header className="mb-6 space-y-6 shrink-0 px-4 md:px-0">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-              {selectedProject?.name}
+              {project?.name}
             </h1>
           </div>
         </header>
 
         <div className="flex-1 relative min-h-0">
-          <div className="flex gap-6 overflow-x-auto pb-6 px-4 md:px-6 h-full snap-x snap-mandatory scrollbar-thin scrollbar-track-zinc-100 scrollbar-thumb-zinc-300 dark:scrollbar-track-zinc-900 dark:scrollbar-thumb-zinc-700">
-            {project.columns.map((column) => (
+          <div className="flex gap-6 overflow-x-auto pb-4 px-4 md:px-6 h-full snap-x snap-mandatory">
+            {project?.columns.map((column) => (
               <Column key={column.id} column={column} />
             ))}
           </div>
         </div>
       </div>
-
       <DragOverlay>
         {activeTask ? (
           <div className="transform rotate-3">

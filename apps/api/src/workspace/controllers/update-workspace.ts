@@ -25,7 +25,7 @@ async function updateWorkspace({
   const isWorkspaceExisting = Boolean(existingWorkspace);
 
   if (!isWorkspaceExisting) {
-    throw new Error("TODO");
+    throw new Error("Workspace doesn't exist");
   }
 
   const updatedWorkspace = await db

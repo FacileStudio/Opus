@@ -5,6 +5,6 @@ export default defineConfig({
   schema: "./src/database/schema.ts",
   dialect: "sqlite",
   dbCredentials: {
-    url: "file:local.db",
+    url: "file:kaneo.db",
   },
 }) satisfies Config;
