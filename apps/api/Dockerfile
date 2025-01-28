@@ -30,4 +30,6 @@ ENV NODE_ENV=production
 
 WORKDIR /app/apps/api
 
+EXPOSE 1337
+
 CMD ["bun", "run", "src/index.ts"]
