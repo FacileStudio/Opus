@@ -17,6 +17,9 @@ services:
 
   backend:
     image: ghcr.io/kaneo-app/api:latest
+    deploy:
+      mode: replicated
+      replicas: 3
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`demo-api.kaneo.app`)"
@@ -31,6 +34,9 @@ services:
     image: ghcr.io/kaneo-app/web:latest
     environment:
       KANEO_API_URL: "change_me"
+    deploy:
+      mode: replicated
+      replicas: 3
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`demo.kaneo.app`)"
