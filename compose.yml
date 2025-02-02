@@ -36,11 +36,13 @@ services:
     networks:
       - traefik-net
     restart: unless-stopped
+    volumes:
+      - .:/app
 
   frontend:
     image: ghcr.io/kaneo-app/web:latest
     environment:
-      KANEO_API_URL: "change_me"
+      KANEO_API_URL: "https://demo.kaneo.app"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`demo.kaneo.app`)"
