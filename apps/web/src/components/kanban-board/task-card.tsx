@@ -44,7 +44,7 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <div className="flex items-center gap-2 mb-2">
         <div className="flex-1">
-          <h3 className="font-medium text-zinc-900 dark:text-zinc-100 truncate">
+          <h3 className="font-medium text-zinc-900 dark:text-zinc-100 max-w-65 truncate">
             {task.title}
           </h3>
         </div>
