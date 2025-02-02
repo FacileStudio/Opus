@@ -5,6 +5,15 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if (window.location.hostname === 'demo.kaneo.app') {
+      const script = document.createElement('script');
+      script.defer = true;
+      script.setAttribute('data-domain', 'demo.kaneo.app');
+      script.src = 'https://plausible.kaneo.app/js/script.js';
+      document.head.appendChild(script);
+    }
+  </script>
   <title>Kaneo</title>
 </head>
 

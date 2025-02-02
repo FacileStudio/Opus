@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:lts-slim AS base
+FROM --platform=$BUILDPLATFORM node:22-slim AS base
 WORKDIR /app
 
 COPY package.json .

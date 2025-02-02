@@ -1,20 +1,49 @@
-version: '3.8'
-
 services:
-  api:
-    image: ghcr.io/kaneo-app/api:latest
-    environment:
-      - JWT_ACCESS=jwt_secret_goes_here
-    ports:
-      - "1337:1337"
-    volumes:
-      - .:/app
-    restart: unless-stopped
-
-  web:
-    image: ghcr.io/kaneo-app/web:latest
+  traefik:
+    image: "traefik:v3.3"
+    container_name: "traefik"
+    command:
+      - "--providers.docker=true"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
     ports:
       - "80:80"
-    depends_on:
-      - api
+      - "443:443"
+
+    networks:
+      - traefik-net
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  backend:
+    image: ghcr.io/kaneo-app/api:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`demo-api.kaneo.app`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+    environment:
+      JWT_ACCESS: "change_me"
+    networks:
+      - traefik-net
     restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    container_name: "kaneo-web"
+    environment:
+      KANEO_API_URL: "change_me"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`demo.kaneo.app`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - traefik-net
+
+networks:
+  traefik-net:
+    driver: bridge
