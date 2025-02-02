@@ -29,7 +29,6 @@ services:
 
   frontend:
     image: ghcr.io/kaneo-app/web:latest
-    container_name: "kaneo-web"
     environment:
       KANEO_API_URL: "change_me"
     labels:
