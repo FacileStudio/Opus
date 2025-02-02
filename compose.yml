@@ -28,9 +28,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
+    image: ghcr.io/kaneo-app/web:latest
     container_name: "kaneo-web"
     environment:
       KANEO_API_URL: "change_me"

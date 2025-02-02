@@ -3,6 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { format } from "date-fns";
 import { Calendar, Flag, UserIcon } from "lucide-react";
+import type { CSSProperties } from "react";
 
 interface TaskCardProps {
   task: Task;
@@ -18,10 +19,11 @@ function TaskCard({ task }: TaskCardProps) {
     isDragging,
   } = useSortable({ id: task.id });
 
-  const style = {
+  const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    touchAction: "none",
   };
 
   const priorityColors = {
