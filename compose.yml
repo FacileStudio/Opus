@@ -31,6 +31,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`demo-api.kaneo.app`)"
       - "traefik.http.routers.backend.entrypoints=web"
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       JWT_ACCESS: "change_me"
     networks:
@@ -47,6 +48,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`demo.kaneo.app`)"
       - "traefik.http.routers.frontend.entrypoints=web"
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - backend
     restart: unless-stopped
