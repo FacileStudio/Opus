@@ -43,22 +43,12 @@ function TaskCard({ task }: TaskCardProps) {
       className="group bg-white dark:bg-zinc-800/50 backdrop-blur-sm rounded-lg border border-zinc-200 dark:border-zinc-700/50 p-3 cursor-move hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-sm"
     >
       <div className="flex items-center gap-2 mb-2">
-        <div className="flex-1">
-          <h3 className="font-medium text-zinc-900 dark:text-zinc-100 max-w-65 truncate">
-            {task.title}
-          </h3>
-        </div>
-        <div className="flex-shrink-0">
-          <span
-            className={`text-xs px-2 py-1 rounded-full ${priorityColors[task.priority as keyof typeof priorityColors]}`}
-          >
-            <Flag className="w-3 h-3 inline-block mr-1" />
-            {task.priority}
-          </span>
-        </div>
+        <h3 className="font-medium text-zinc-900 dark:text-zinc-100 max-w-4/5 truncate">
+          {task.title}
+        </h3>
       </div>
 
-      <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2">
+      <p className="text-sm text-zinc-600 dark:text-zinc-400 truncate mb-3 line-clamp-2">
         {task.description}
       </p>
 
@@ -92,6 +82,15 @@ function TaskCard({ task }: TaskCardProps) {
             </span>
           </div>
         )}
+
+        <div className="flex-shrink-0">
+          <span
+            className={`text-xs px-2 py-1 rounded-full ${priorityColors[task.priority as keyof typeof priorityColors]}`}
+          >
+            <Flag className="w-3 h-3 inline-block mr-1" />
+            {task.priority}
+          </span>
+        </div>
       </div>
     </div>
   );
