@@ -2,6 +2,8 @@ import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import { cn } from "@/lib/cn";
 import useProjectStore from "@/store/project";
 import { useUserPreferencesStore } from "@/store/user-preferences";
+import type { Project } from "@/types/project";
+import { useNavigate } from "@tanstack/react-router";
 import { Layout, Plus } from "lucide-react";
 import { useState } from "react";
 import CreateProjectModal from "./create-project-modal";
@@ -11,10 +13,24 @@ type ProjectsProps = {
 };
 
 function Projects({ workspaceId }: ProjectsProps) {
-  const { project: selectedProject, setProject } = useProjectStore();
+  const { project: currentProject, setProject } = useProjectStore();
   const { data: projects } = useGetProjects({ workspaceId });
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const { isSidebarOpened } = useUserPreferencesStore();
+  const navigate = useNavigate();
+
+  const handleSelectProject = (selectedProject: Project) => {
+    if (currentProject?.id === selectedProject.id) return;
+
+    setProject(selectedProject);
+    navigate({
+      to: "/dashboard/workspace/$workspaceId/project/$projectId",
+      params: {
+        workspaceId,
+        projectId: selectedProject.id,
+      },
+    });
+  };
 
   return (
     <div>
@@ -50,12 +66,12 @@ function Projects({ workspaceId }: ProjectsProps) {
             <button
               type="button"
               key={project.id}
-              onClick={() => setProject(project)}
+              onClick={() => handleSelectProject(project)}
               className={cn(
                 "w-full px-4 py-2 rounded-md flex items-center  text-sm transition-all group",
                 !isSidebarOpened && "px-3",
                 !isSidebarOpened && "justify-center px-2",
-                selectedProject?.id === project.id
+                currentProject?.id === project.id
                   ? "bg-indigo-51 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
                   : "text-zinc-601 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
               )}

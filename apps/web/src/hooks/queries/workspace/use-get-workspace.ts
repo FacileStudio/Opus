@@ -1,13 +1,12 @@
-import getWorkspaces from "@/fetchers/workspace/get-workspaces";
+import getWorkspace from "@/fetchers/workspace/get-workspace";
 import { useQuery } from "@tanstack/react-query";
 
-function useGetWorkspaces() {
+function useGetWorkspace({ workspaceId }: { workspaceId: string }) {
   return useQuery({
-    queryFn: () => getWorkspaces(),
-    queryKey: ["workspaces"],
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    queryKey: [`workspace-${workspaceId}`],
+    enabled: !!workspaceId,
+    queryFn: () => getWorkspace({ workspaceId }),
   });
 }
 
-export default useGetWorkspaces;
+export default useGetWorkspace;

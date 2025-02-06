@@ -1,9 +1,8 @@
 import { Sidebar } from "@/components/common/sidebar";
-import KanbanBoard from "@/components/kanban-board";
-import { redirect } from "@tanstack/react-router";
+import { Outlet, redirect } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/dashboard/")({
+export const Route = createFileRoute("/dashboard")({
   component: DashboardIndexRouteComponent,
   async beforeLoad({ context: { user } }) {
     if (user === null) {
@@ -19,7 +18,7 @@ function DashboardIndexRouteComponent() {
     <>
       <Sidebar />
       <main className="flex-1 overflow-hidden p-6 scroll-smooth">
-        <KanbanBoard />
+        <Outlet />
       </main>
     </>
   );

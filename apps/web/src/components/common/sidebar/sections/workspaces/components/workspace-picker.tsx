@@ -1,10 +1,11 @@
-import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspace";
+import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspaces";
 import { cn } from "@/lib/cn";
 import useProjectStore from "@/store/project";
 import { useUserPreferencesStore } from "@/store/user-preferences";
 import useWorkspaceStore from "@/store/workspace";
 import type { Workspace } from "@/types/workspace";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useNavigate } from "@tanstack/react-router";
 import { ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
 import { CreateWorkspaceModal } from "./create-workspace-modal";
@@ -15,10 +16,17 @@ function WorkspacePicker() {
   const [isCreateWorkspaceOpen, setIsCreateWorkspaceOpen] = useState(false);
   const { data: workspaces } = useGetWorkspaces();
   const { isSidebarOpened } = useUserPreferencesStore();
+  const navigate = useNavigate();
 
   const handleSelectWorkspace = (selectedWorkspace: Workspace) => {
     setProject(undefined);
     setWorkspace(selectedWorkspace);
+    navigate({
+      to: "/dashboard/workspace/$workspaceId",
+      params: {
+        workspaceId: selectedWorkspace?.id,
+      },
+    });
   };
 
   return (

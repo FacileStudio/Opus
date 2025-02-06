@@ -11,22 +11,24 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as DashboardImport } from './routes/dashboard'
 import { Route as IndexImport } from './routes/index'
-import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthSignInImport } from './routes/auth/sign-in'
+import { Route as DashboardWorkspaceWorkspaceIdImport } from './routes/dashboard/workspace/$workspaceId'
+import { Route as DashboardWorkspaceWorkspaceIdProjectProjectIdImport } from './routes/dashboard/workspace/$workspaceId/project/$projectId'
 
 // Create/Update Routes
+
+const DashboardRoute = DashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardIndexRoute = DashboardIndexImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -42,6 +44,20 @@ const AuthSignInRoute = AuthSignInImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const DashboardWorkspaceWorkspaceIdRoute =
+  DashboardWorkspaceWorkspaceIdImport.update({
+    id: '/workspace/$workspaceId',
+    path: '/workspace/$workspaceId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+
+const DashboardWorkspaceWorkspaceIdProjectProjectIdRoute =
+  DashboardWorkspaceWorkspaceIdProjectProjectIdImport.update({
+    id: '/project/$projectId',
+    path: '/project/$projectId',
+    getParentRoute: () => DashboardWorkspaceWorkspaceIdRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -51,6 +67,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
     '/auth/sign-in': {
@@ -67,61 +90,121 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignUpImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardIndexImport
-      parentRoute: typeof rootRoute
+    '/dashboard/workspace/$workspaceId': {
+      id: '/dashboard/workspace/$workspaceId'
+      path: '/workspace/$workspaceId'
+      fullPath: '/dashboard/workspace/$workspaceId'
+      preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdImport
+      parentRoute: typeof DashboardImport
+    }
+    '/dashboard/workspace/$workspaceId/project/$projectId': {
+      id: '/dashboard/workspace/$workspaceId/project/$projectId'
+      path: '/project/$projectId'
+      fullPath: '/dashboard/workspace/$workspaceId/project/$projectId'
+      preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdProjectProjectIdImport
+      parentRoute: typeof DashboardWorkspaceWorkspaceIdImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface DashboardWorkspaceWorkspaceIdRouteChildren {
+  DashboardWorkspaceWorkspaceIdProjectProjectIdRoute: typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
+}
+
+const DashboardWorkspaceWorkspaceIdRouteChildren: DashboardWorkspaceWorkspaceIdRouteChildren =
+  {
+    DashboardWorkspaceWorkspaceIdProjectProjectIdRoute:
+      DashboardWorkspaceWorkspaceIdProjectProjectIdRoute,
+  }
+
+const DashboardWorkspaceWorkspaceIdRouteWithChildren =
+  DashboardWorkspaceWorkspaceIdRoute._addFileChildren(
+    DashboardWorkspaceWorkspaceIdRouteChildren,
+  )
+
+interface DashboardRouteChildren {
+  DashboardWorkspaceWorkspaceIdRoute: typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardWorkspaceWorkspaceIdRoute:
+    DashboardWorkspaceWorkspaceIdRouteWithChildren,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
-  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
+  '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
-  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
+  '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
-  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
+  '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/sign-in' | '/auth/sign-up' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/dashboard/workspace/$workspaceId'
+    | '/dashboard/workspace/$workspaceId/project/$projectId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/sign-in' | '/auth/sign-up' | '/dashboard'
-  id: '__root__' | '/' | '/auth/sign-in' | '/auth/sign-up' | '/dashboard/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/dashboard/workspace/$workspaceId'
+    | '/dashboard/workspace/$workspaceId/project/$projectId'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/dashboard/workspace/$workspaceId'
+    | '/dashboard/workspace/$workspaceId/project/$projectId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   AuthSignInRoute: typeof AuthSignInRoute
   AuthSignUpRoute: typeof AuthSignUpRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   AuthSignInRoute: AuthSignInRoute,
   AuthSignUpRoute: AuthSignUpRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -135,13 +218,19 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/dashboard",
         "/auth/sign-in",
-        "/auth/sign-up",
-        "/dashboard/"
+        "/auth/sign-up"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/dashboard": {
+      "filePath": "dashboard.tsx",
+      "children": [
+        "/dashboard/workspace/$workspaceId"
+      ]
     },
     "/auth/sign-in": {
       "filePath": "auth/sign-in.tsx"
@@ -149,8 +238,16 @@ export const routeTree = rootRoute
     "/auth/sign-up": {
       "filePath": "auth/sign-up.tsx"
     },
-    "/dashboard/": {
-      "filePath": "dashboard/index.tsx"
+    "/dashboard/workspace/$workspaceId": {
+      "filePath": "dashboard/workspace/$workspaceId.tsx",
+      "parent": "/dashboard",
+      "children": [
+        "/dashboard/workspace/$workspaceId/project/$projectId"
+      ]
+    },
+    "/dashboard/workspace/$workspaceId/project/$projectId": {
+      "filePath": "dashboard/workspace/$workspaceId/project/$projectId.tsx",
+      "parent": "/dashboard/workspace/$workspaceId"
     }
   }
 }
