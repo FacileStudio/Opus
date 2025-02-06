@@ -10,7 +10,6 @@ import {
 } from "@dnd-kit/core";
 import { produce } from "immer";
 import { useState } from "react";
-import { BoardEmptyState } from "../common/sidebar/sections/projects/empty-project-state";
 import Column from "./column";
 import TaskCard from "./task-card";
 
@@ -70,7 +69,7 @@ function KanbanBoard() {
     setActiveId(null);
   };
 
-  if (!project || !project?.columns) return <BoardEmptyState />;
+  if (!project || !project?.columns) return <>TODO: Empty state.</>;
 
   const activeTask = activeId
     ? project.columns

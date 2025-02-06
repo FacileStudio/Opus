@@ -1,15 +1,18 @@
 import useAuth from "@/components/providers/auth-provider/hooks/use-auth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/cn";
+import { useUserPreferencesStore } from "@/store/user-preferences";
 
 function UserInfo() {
   const { user } = useAuth();
+  const { isSidebarOpened } = useUserPreferencesStore();
 
   return (
     <div className="flex items-center gap-3 mb-3">
       <Avatar className="text-zinc-900 dark:text-zinc-100">
         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
       </Avatar>
-      <div className="flex-1 min-w-0">
+      <div className={cn("flex-1 min-w-0", !isSidebarOpened && "hidden")}>
         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
           {user?.name}
         </p>
