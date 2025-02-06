@@ -1,4 +1,3 @@
-import { useUserPreferencesStore } from "@/store/user-preferences";
 import useWorkspaceStore from "@/store/workspace";
 import Projects from "../projects";
 import WorkspacePicker from "./components/workspace-picker";
