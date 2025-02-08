@@ -11,6 +11,7 @@ async function getProject({
     .select({
       id: projectTable.id,
       name: projectTable.name,
+      slug: projectTable.slug,
       description: projectTable.description,
       workspaceId: projectTable.workspaceId,
       workspace: workspaceTable,
