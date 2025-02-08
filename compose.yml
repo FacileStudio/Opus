@@ -9,33 +9,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  traefik:
-    image: "traefik:v3.3"
-    container_name: "traefik"
-    command:
-      - "--providers.docker=true"
-      - "--entryPoints.web.address=:80"
-      - "--entryPoints.websecure.address=:443"
-    ports:
-      - "80:80"
-      - "443:443"
-
-    networks:
-      - traefik-net
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
   backend:
     image: ghcr.io/kaneo-app/api:latest
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`demo-api.kaneo.app`)"
-      - "traefik.http.routers.backend.entrypoints=web"
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
       JWT_ACCESS: "change_me"
-    networks:
-      - traefik-net
+    ports:
+      - 1337:1337
     restart: unless-stopped
     volumes:
       - .:/app
@@ -44,17 +25,10 @@ services:
     image: ghcr.io/kaneo-app/web:latest
     environment:
       KANEO_API_URL: "https://demo-api.kaneo.app"
+    ports:
+      - 80:80
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`demo.kaneo.app`)"
-      - "traefik.http.routers.frontend.entrypoints=web"
       - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - backend
     restart: unless-stopped
-    networks:
-      - traefik-net
-
-networks:
-  traefik-net:
-    driver: bridge
