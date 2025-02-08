@@ -2,15 +2,15 @@ import { api } from "@kaneo/libs";
 
 async function createProject({
   name,
-  description,
+  slug,
   workspaceId,
   icon,
-}: { name: string; description: string; workspaceId: string; icon: string }) {
+}: { name: string; slug: string; workspaceId: string; icon: string }) {
   const response = await api.project.create.post({
     name,
-    description,
     workspaceId,
     icon,
+    slug,
   });
 
   if (response.error) {

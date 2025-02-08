@@ -8,6 +8,7 @@ type CreateTaskInput = {
   projectId: string;
   status: string;
   dueDate: Date;
+  number?: number;
   priority: "low" | "medium" | "high" | "urgent";
 };
 

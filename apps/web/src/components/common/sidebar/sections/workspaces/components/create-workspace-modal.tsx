@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import useCreateWorkspace from "@/hooks/queries/workspace/use-create-workspace";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useState } from "react";
 
@@ -17,17 +18,24 @@ export function CreateWorkspaceModal({
 }: CreateWorkspaceModalProps) {
   const [name, setName] = useState("");
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { mutateAsync } = useCreateWorkspace({ name });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    await mutateAsync();
+    const createdWorkspace = await mutateAsync();
     await queryClient.invalidateQueries({ queryKey: ["workspaces"] });
 
     setName("");
     onClose();
+    navigate({
+      to: "/dashboard/workspace/$workspaceId",
+      params: {
+        workspaceId: createdWorkspace.id,
+      },
+    });
   };
 
   return (

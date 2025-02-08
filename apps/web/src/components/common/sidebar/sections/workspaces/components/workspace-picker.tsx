@@ -72,7 +72,9 @@ function WorkspacePicker() {
                   {workspace.name}
                 </DropdownMenu.Item>
               ))}
-            <DropdownMenu.Separator className="h-px bg-zinc-200 dark:bg-zinc-700 my-1" />
+            {workspaces && workspaces.length > 0 && (
+              <DropdownMenu.Separator className="h-px bg-zinc-200 dark:bg-zinc-700 my-1" />
+            )}
             <DropdownMenu.Item
               className="flex items-center px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer outline-none"
               onClick={() => setIsCreateWorkspaceOpen(true)}

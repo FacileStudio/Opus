@@ -7,7 +7,7 @@ const createWorkspace = async ({ name }: { name: string }) => {
     throw new Error(response.error.value.message);
   }
 
-  return response;
+  return response.data;
 };
 
 export default createWorkspace;

@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const userTable = sqliteTable("user", {
   id: text("id")
@@ -75,6 +75,7 @@ export const projectTable = sqliteTable("project", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
+  slug: text("slug").notNull(),
   icon: text("icon").default("Layout"),
   name: text("name").notNull(),
   description: text("description"),
@@ -93,6 +94,7 @@ export const taskTable = sqliteTable("task", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
+  number: int().default(1),
   assigneeId: text("assignee_id")
     .notNull()
     .references(() => userTable.id, {

@@ -15,9 +15,10 @@ import useWorkspaceStore from "@/store/workspace";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Dialog from "@radix-ui/react-dialog";
 import { produce } from "immer";
-import { X } from "lucide-react";
+import { Flag, UserIcon, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Select } from "../ui/select";
 
 interface CreateTaskModalProps {
   open: boolean;
@@ -152,21 +153,23 @@ export function CreateTaskModal({
                           Asignees
                         </FormLabel>
                         <FormControl>
-                          <select
+                          <Select
                             {...field}
-                            className="w-full rounded-md border border-zinc-200 dark:border-zinc-700/50 bg-white dark:bg-zinc-800/50 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-                          >
-                            {users &&
-                              users.length > 0 &&
-                              users?.map((user) => (
-                                <option
-                                  key={user?.userId}
-                                  value={user?.userId ?? ""}
-                                >
-                                  {user.userName}
-                                </option>
-                              ))}
-                          </select>
+                            options={[
+                              {
+                                value: "",
+                                label: "Unassigned",
+                                icon: (
+                                  <UserIcon className="w-4 h-4 text-zinc-400" />
+                                ),
+                              },
+                              ...(users ?? []).map((user) => ({
+                                value: user.userId ?? "",
+                                label: user.userName ?? "",
+                              })),
+                            ]}
+                            placeholder="Select assignee"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -182,15 +185,38 @@ export function CreateTaskModal({
                           Priority
                         </FormLabel>
                         <FormControl>
-                          <select
+                          <Select
                             {...field}
-                            className="w-full rounded-md border border-zinc-200 dark:border-zinc-700/50 bg-white dark:bg-zinc-800/50 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-                          >
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                            <option value="urgent">Urgent</option>
-                          </select>
+                            options={[
+                              {
+                                value: "low",
+                                label: "Low",
+                                icon: (
+                                  <Flag className="w-4 h-4 text-blue-500" />
+                                ),
+                              },
+                              {
+                                value: "medium",
+                                label: "Medium",
+                                icon: (
+                                  <Flag className="w-4 h-4 text-yellow-500" />
+                                ),
+                              },
+                              {
+                                value: "high",
+                                label: "High",
+                                icon: (
+                                  <Flag className="w-4 h-4 text-orange-500" />
+                                ),
+                              },
+                              {
+                                value: "urgent",
+                                label: "Urgent",
+                                icon: <Flag className="w-4 h-4 text-red-500" />,
+                              },
+                            ]}
+                            placeholder="Select priority"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

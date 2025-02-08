@@ -1,6 +1,15 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import db from "../../database";
 import { taskTable, userTable } from "../../database/schema";
+
+async function getNextTaskNumber(projectId: string) {
+  const [task] = await db
+    .select({ count: count() })
+    .from(taskTable)
+    .where(eq(taskTable.projectId, projectId));
+
+  return task.count;
+}
 
 async function createTask(body: {
   projectId: string;
@@ -20,7 +29,15 @@ async function createTask(body: {
     throw new Error("Assignee not found");
   }
 
-  const [createdTask] = await db.insert(taskTable).values(body).returning();
+  const nextTaskNumber = await getNextTaskNumber(body.projectId);
+
+  const [createdTask] = await db
+    .insert(taskTable)
+    .values({
+      ...body,
+      number: nextTaskNumber + 1,
+    })
+    .returning();
 
   return {
     ...createdTask,

@@ -1,7 +1,7 @@
 {
 	"version": "6",
 	"dialect": "sqlite",
-	"id": "29ea78f9-027a-4b6c-b0bc-0746a33ff8f1",
+	"id": "6a9833af-80f3-46e9-a34a-f0cad5ddd6f1",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"tables": {
 		"project": {
@@ -16,6 +16,13 @@
 				},
 				"workspace_id": {
 					"name": "workspace_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"slug": {
+					"name": "slug",
 					"type": "text",
 					"primaryKey": false,
 					"notNull": true,
@@ -49,7 +56,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T16:18:40.042Z\"'"
+					"default": "'\"2025-02-08T22:05:26.528Z\"'"
 				}
 			},
 			"indexes": {},
@@ -126,6 +133,14 @@
 					"notNull": true,
 					"autoincrement": false
 				},
+				"number": {
+					"name": "number",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false,
+					"default": 1
+				},
 				"assignee_id": {
 					"name": "assignee_id",
 					"type": "text",
@@ -176,7 +191,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T16:18:40.042Z\"'"
+					"default": "'\"2025-02-08T22:05:26.528Z\"'"
 				}
 			},
 			"indexes": {},
@@ -241,7 +256,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T16:18:40.041Z\"'"
+					"default": "'\"2025-02-08T22:05:26.528Z\"'"
 				}
 			},
 			"indexes": {
@@ -293,7 +308,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T16:18:40.041Z\"'"
+					"default": "'\"2025-02-08T22:05:26.528Z\"'"
 				}
 			},
 			"indexes": {},
@@ -349,7 +364,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T16:18:40.042Z\"'"
+					"default": "'\"2025-02-08T22:05:26.528Z\"'"
 				}
 			},
 			"indexes": {},

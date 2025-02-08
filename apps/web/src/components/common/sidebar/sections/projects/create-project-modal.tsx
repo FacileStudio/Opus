@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import icons from "@/constants/project-icons";
 import useCreateProject from "@/hooks/mutations/project/use-create-project";
 import { cn } from "@/lib/cn";
+import generateProjectSlug from "@/lib/generate-project-id";
 import useWorkspaceStore from "@/store/workspace";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
@@ -16,13 +17,13 @@ type CreateProjectModalProps = {
 
 function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [slug, setSlug] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("Layout");
   const queryClient = useQueryClient();
   const { workspace } = useWorkspaceStore();
   const { mutateAsync } = useCreateProject({
     name,
-    description,
+    slug,
     workspaceId: workspace?.id ?? "",
     icon: selectedIcon,
   });
@@ -36,9 +37,15 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
     await queryClient.invalidateQueries({ queryKey: ["projects"] });
 
     setName("");
-    setDescription("");
+    setSlug("");
     setSelectedIcon("Layout");
     onClose();
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value;
+    setName(newName);
+    setSlug(generateProjectSlug(newName));
   };
 
   return (
@@ -67,7 +74,7 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
                 </label>
                 <Input
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={handleNameChange}
                   placeholder="Designers"
                   className="bg-white dark:bg-zinc-800/50"
                   required
@@ -76,24 +83,39 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
 
               <div className="mb-4">
                 <label
-                  htmlFor="projectDescription"
-                  aria-label="Project description"
+                  htmlFor="slug"
                   className="block text-sm font-medium text-zinc-900 dark:text-zinc-300 mb-1"
                 >
-                  Project Description
+                  Project Slug
                 </label>
-                <Input
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="The design project!"
-                  className="bg-white dark:bg-zinc-800/50"
-                  required
-                />
+                <div className="flex gap-3">
+                  <Input
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value.toUpperCase())}
+                    placeholder="ABC"
+                    className="bg-white dark:bg-zinc-800/50 uppercase"
+                    maxLength={5}
+                    pattern="[A-Z0-9]+"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => setSlug(generateProjectSlug(name))}
+                    className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+                  >
+                    Generate
+                  </Button>
+                </div>
+                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                  This key will be used for ticket IDs (e.g., ABC-123)
+                </p>
               </div>
 
               <div>
-                {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO: Fix me */}
-                <label className="block text-sm font-medium text-zinc-900 dark:text-zinc-300 mb-3">
+                <label
+                  htmlFor="icon"
+                  className="block text-sm font-medium text-zinc-900 dark:text-zinc-300 mb-3"
+                >
                   Project Icon
                 </label>
                 <div className="relative">

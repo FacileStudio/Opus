@@ -22,6 +22,7 @@ async function getTasks(projectId: string) {
     .select({
       id: taskTable.id,
       title: taskTable.title,
+      number: taskTable.number,
       description: taskTable.description,
       status: taskTable.status,
       priority: taskTable.priority,
@@ -48,6 +49,7 @@ async function getTasks(projectId: string) {
   return {
     id: project.id,
     name: project.name,
+    slug: project.slug,
     workspaceId: project.workspaceId,
     columns,
   };

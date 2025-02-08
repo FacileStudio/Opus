@@ -14,11 +14,11 @@ function getWorkspaceUsers({ workspaceId }: { workspaceId: string }) {
     })
     .from(workspaceTable)
     .where(eq(workspaceTable.id, workspaceId))
-    .leftJoin(
+    .innerJoin(
       workspaceUserTable,
       eq(workspaceTable.id, workspaceUserTable.workspaceId),
     )
-    .leftJoin(userTable, eq(workspaceUserTable.userId, userTable.id))
+    .innerJoin(userTable, eq(workspaceUserTable.userId, userTable.id))
     .unionAll(
       db
         .select({
@@ -26,7 +26,7 @@ function getWorkspaceUsers({ workspaceId }: { workspaceId: string }) {
           userName: userTable.name,
         })
         .from(workspaceTable)
-        .leftJoin(userTable, eq(workspaceTable.ownerId, userTable.id))
+        .innerJoin(userTable, eq(workspaceTable.ownerId, userTable.id))
         .where(eq(workspaceTable.id, workspaceId)),
     );
 }

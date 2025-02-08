@@ -3,12 +3,12 @@ import { useMutation } from "@tanstack/react-query";
 
 function useCreateProject({
   name,
-  description,
+  slug,
   workspaceId,
   icon,
-}: { name: string; description: string; workspaceId: string; icon: string }) {
+}: { name: string; slug: string; workspaceId: string; icon: string }) {
   return useMutation({
-    mutationFn: () => createProject({ name, description, workspaceId, icon }),
+    mutationFn: () => createProject({ name, slug, workspaceId, icon }),
   });
 }
 
