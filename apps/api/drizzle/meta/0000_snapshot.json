@@ -1,7 +1,7 @@
 {
 	"version": "6",
 	"dialect": "sqlite",
-	"id": "0bc2ad49-3384-4972-89cf-56af7f84a77f",
+	"id": "29ea78f9-027a-4b6c-b0bc-0746a33ff8f1",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"tables": {
 		"project": {
@@ -20,6 +20,14 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false
+				},
+				"icon": {
+					"name": "icon",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false,
+					"default": "'Layout'"
 				},
 				"name": {
 					"name": "name",
@@ -41,7 +49,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-25T23:50:45.754Z\"'"
+					"default": "'\"2025-02-08T16:18:40.042Z\"'"
 				}
 			},
 			"indexes": {},
@@ -168,7 +176,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-25T23:50:45.754Z\"'"
+					"default": "'\"2025-02-08T16:18:40.042Z\"'"
 				}
 			},
 			"indexes": {},
@@ -233,7 +241,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-25T23:50:45.753Z\"'"
+					"default": "'\"2025-02-08T16:18:40.041Z\"'"
 				}
 			},
 			"indexes": {
@@ -285,7 +293,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-25T23:50:45.754Z\"'"
+					"default": "'\"2025-02-08T16:18:40.041Z\"'"
 				}
 			},
 			"indexes": {},
@@ -341,7 +349,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-01-25T23:50:45.754Z\"'"
+					"default": "'\"2025-02-08T16:18:40.042Z\"'"
 				}
 			},
 			"indexes": {},

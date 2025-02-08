@@ -5,9 +5,10 @@ function useCreateProject({
   name,
   description,
   workspaceId,
-}: { name: string; description: string; workspaceId: string }) {
+  icon,
+}: { name: string; description: string; workspaceId: string; icon: string }) {
   return useMutation({
-    mutationFn: () => createProject({ name, description, workspaceId }),
+    mutationFn: () => createProject({ name, description, workspaceId, icon }),
   });
 }
 

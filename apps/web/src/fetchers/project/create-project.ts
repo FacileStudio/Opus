@@ -4,11 +4,13 @@ async function createProject({
   name,
   description,
   workspaceId,
-}: { name: string; description: string; workspaceId: string }) {
+  icon,
+}: { name: string; description: string; workspaceId: string; icon: string }) {
   const response = await api.project.create.post({
     name,
     description,
     workspaceId,
+    icon,
   });
 
   if (response.error) {

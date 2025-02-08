@@ -4,8 +4,8 @@ import useProjectStore from "@/store/project";
 import { useUserPreferencesStore } from "@/store/user-preferences";
 import type { Project } from "@/types/project";
 import { useNavigate } from "@tanstack/react-router";
-import { Layout, Plus } from "lucide-react";
-import { useState } from "react";
+import { Layout, Plus, icons } from "lucide-react";
+import { createElement, useState } from "react";
 import CreateProjectModal from "./create-project-modal";
 
 type ProjectsProps = {
@@ -76,12 +76,15 @@ function Projects({ workspaceId }: ProjectsProps) {
                   : "text-zinc-601 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
               )}
             >
-              <Layout
-                className={cn(
-                  "shrink-0",
-                  !isSidebarOpened ? "w-6 h-6" : "w-4 h-4 mr-2",
-                )}
-              />
+              {createElement(
+                icons[project.icon as keyof typeof icons] || Layout,
+                {
+                  className: cn(
+                    "shrink-0",
+                    !isSidebarOpened ? "w-6 h-6" : "w-4 h-4 mr-2",
+                  ),
+                },
+              )}
               {isSidebarOpened && project.name}
             </button>
           ))}

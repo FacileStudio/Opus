@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import icons from "@/constants/project-icons";
 import useCreateProject from "@/hooks/mutations/project/use-create-project";
+import { cn } from "@/lib/cn";
 import useWorkspaceStore from "@/store/workspace";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,13 +17,16 @@ type CreateProjectModalProps = {
 function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedIcon, setSelectedIcon] = useState("Layout");
   const queryClient = useQueryClient();
   const { workspace } = useWorkspaceStore();
   const { mutateAsync } = useCreateProject({
     name,
     description,
     workspaceId: workspace?.id ?? "",
+    icon: selectedIcon,
   });
+  const IconComponent = icons[selectedIcon as keyof typeof icons];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +36,8 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
     await queryClient.invalidateQueries({ queryKey: ["projects"] });
 
     setName("");
+    setDescription("");
+    setSelectedIcon("Layout");
     onClose();
   };
 
@@ -82,6 +89,40 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
                   className="bg-white dark:bg-zinc-800/50"
                   required
                 />
+              </div>
+
+              <div>
+                {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO: Fix me */}
+                <label className="block text-sm font-medium text-zinc-900 dark:text-zinc-300 mb-3">
+                  Project Icon
+                </label>
+                <div className="relative">
+                  <div className="grid grid-cols-8 gap-2 max-h-[240px] overflow-y-auto p-2 rounded-lg border border-zinc-200 dark:border-zinc-700/50">
+                    {Object.entries(icons).map(([name, Icon]) => (
+                      <button
+                        key={name}
+                        type="button"
+                        onClick={() => setSelectedIcon(name)}
+                        className={cn(
+                          "p-2 rounded-lg transition-colors flex items-center justify-center group",
+                          selectedIcon === name
+                            ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
+                            : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
+                        )}
+                        title={name}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </button>
+                    ))}
+                  </div>
+                  <div className="absolute left-0 right-0 bottom-0 h-8 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none" />
+                </div>
+                <div className="flex items-center gap-2 mt-2 px-2">
+                  <IconComponent className="w-4 h-4 text-zinc-400" />
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                    {selectedIcon}
+                  </span>
+                </div>
               </div>
 
               <div className="flex justify-end gap-2">

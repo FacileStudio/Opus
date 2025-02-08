@@ -19,6 +19,7 @@ const project = new Elysia({ prefix: "/project" })
         name: t.String(),
         workspaceId: t.String(),
         description: t.String(),
+        icon: t.String(),
       }),
     },
   )

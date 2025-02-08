@@ -75,6 +75,7 @@ export const projectTable = sqliteTable("project", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
+  icon: text("icon").default("Layout"),
   name: text("name").notNull(),
   description: text("description"),
   createdAt: integer("created_at", { mode: "timestamp" })

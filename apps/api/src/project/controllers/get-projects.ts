@@ -13,6 +13,7 @@ async function getProjects({
       description: projectTable.description,
       workspaceId: projectTable.workspaceId,
       createdAt: projectTable.createdAt,
+      icon: projectTable.icon,
       workspace: {
         id: workspaceTable.id,
         name: workspaceTable.name,
