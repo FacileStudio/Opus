@@ -13,7 +13,7 @@ async function getNextTaskNumber(projectId: string) {
 
 async function createTask(body: {
   projectId: string;
-  assigneeId: string;
+  userEmail: string;
   title: string;
   status: string;
   dueDate: Date | null;
@@ -23,7 +23,7 @@ async function createTask(body: {
   const [assignee] = await db
     .select({ name: userTable.name })
     .from(userTable)
-    .where(eq(userTable.id, body.assigneeId));
+    .where(eq(userTable.email, body.userEmail));
 
   if (!assignee) {
     throw new Error("Assignee not found");

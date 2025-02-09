@@ -9,8 +9,9 @@ import {
 function getWorkspaceUsers({ workspaceId }: { workspaceId: string }) {
   return db
     .select({
-      userId: userTable.id,
+      userEmail: userTable.email,
       userName: userTable.name,
+      joinedAt: userTable.createdAt,
     })
     .from(workspaceTable)
     .where(eq(workspaceTable.id, workspaceId))
@@ -18,15 +19,16 @@ function getWorkspaceUsers({ workspaceId }: { workspaceId: string }) {
       workspaceUserTable,
       eq(workspaceTable.id, workspaceUserTable.workspaceId),
     )
-    .innerJoin(userTable, eq(workspaceUserTable.userId, userTable.id))
+    .innerJoin(userTable, eq(workspaceUserTable.userEmail, userTable.email))
     .unionAll(
       db
         .select({
-          userId: userTable.id,
+          userEmail: userTable.email,
           userName: userTable.name,
+          joinedAt: userTable.createdAt,
         })
         .from(workspaceTable)
-        .innerJoin(userTable, eq(workspaceTable.ownerId, userTable.id))
+        .innerJoin(userTable, eq(workspaceTable.ownerEmail, userTable.email))
         .where(eq(workspaceTable.id, workspaceId)),
     );
 }

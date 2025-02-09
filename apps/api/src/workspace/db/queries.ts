@@ -12,7 +12,7 @@ export const updateWorkspaceSchema = t.Object({
 });
 
 export const deleteWorkspaceSchema = t.Object({
-  userId: t.String(),
+  userEmail: t.String(),
   workspaceId: t.String(),
 });
 

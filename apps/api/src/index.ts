@@ -9,7 +9,7 @@ import workspace from "./workspace";
 import workspaceUser from "./workspace-user";
 
 const app = new Elysia()
-  .state("userId", "")
+  .state("userEmail", "")
   .use(cors())
   .use(logger())
   .use(user)
@@ -27,7 +27,7 @@ const app = new Elysia()
         return { user: null };
       }
 
-      store.userId = user.id;
+      store.userEmail = user.email;
     },
   })
   .get("/me", async ({ cookie: { session } }) => {

@@ -17,7 +17,7 @@ const task = new Elysia({ prefix: "/task" })
     {
       body: t.Object({
         projectId: t.String(),
-        assigneeId: t.String(),
+        userEmail: t.String(),
         title: t.String(),
         status: t.String(),
         dueDate: t.Date(),

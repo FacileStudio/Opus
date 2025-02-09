@@ -4,20 +4,20 @@ import { workspaceTable } from "../../database/schema";
 import type { UpdateWorkspacePayload } from "../db/queries";
 
 async function updateWorkspace({
-  userId,
+  userEmail,
   workspaceId,
   body,
-}: { userId: string; workspaceId: string; body: UpdateWorkspacePayload }) {
+}: { userEmail: string; workspaceId: string; body: UpdateWorkspacePayload }) {
   const [existingWorkspace] = await db
     .select({
       id: workspaceTable.id,
-      ownerId: workspaceTable.ownerId,
+      ownerEmail: workspaceTable.ownerEmail,
     })
     .from(workspaceTable)
     .where(
       and(
         eq(workspaceTable.id, workspaceId),
-        eq(workspaceTable.ownerId, userId),
+        eq(workspaceTable.ownerEmail, userEmail),
       ),
     )
     .limit(1);
@@ -37,7 +37,7 @@ async function updateWorkspace({
     .returning({
       id: workspaceTable.id,
       name: workspaceTable.name,
-      ownerId: workspaceTable.ownerId,
+      ownerEmail: workspaceTable.ownerEmail,
       createdAt: workspaceTable.createdAt,
     });
 

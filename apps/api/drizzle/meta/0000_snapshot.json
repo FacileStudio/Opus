@@ -1,7 +1,7 @@
 {
 	"version": "6",
 	"dialect": "sqlite",
-	"id": "6a9833af-80f3-46e9-a34a-f0cad5ddd6f1",
+	"id": "49787b32-4e2b-4274-a0e2-d2784a178329",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"tables": {
 		"project": {
@@ -56,7 +56,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T22:05:26.528Z\"'"
+					"default": "'\"2025-02-09T21:03:20.815Z\"'"
 				}
 			},
 			"indexes": {},
@@ -141,8 +141,8 @@
 					"autoincrement": false,
 					"default": 1
 				},
-				"assignee_id": {
-					"name": "assignee_id",
+				"assignee_email": {
+					"name": "assignee_email",
 					"type": "text",
 					"primaryKey": false,
 					"notNull": true,
@@ -191,7 +191,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T22:05:26.528Z\"'"
+					"default": "'\"2025-02-09T21:03:20.815Z\"'"
 				}
 			},
 			"indexes": {},
@@ -205,12 +205,12 @@
 					"onDelete": "cascade",
 					"onUpdate": "cascade"
 				},
-				"task_assignee_id_user_id_fk": {
-					"name": "task_assignee_id_user_id_fk",
+				"task_assignee_email_user_email_fk": {
+					"name": "task_assignee_email_user_email_fk",
 					"tableFrom": "task",
 					"tableTo": "user",
-					"columnsFrom": ["assignee_id"],
-					"columnsTo": ["id"],
+					"columnsFrom": ["assignee_email"],
+					"columnsTo": ["email"],
 					"onDelete": "cascade",
 					"onUpdate": "cascade"
 				}
@@ -256,7 +256,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T22:05:26.528Z\"'"
+					"default": "'\"2025-02-09T21:03:20.814Z\"'"
 				}
 			},
 			"indexes": {
@@ -295,8 +295,8 @@
 					"notNull": false,
 					"autoincrement": false
 				},
-				"owner_id": {
-					"name": "owner_id",
+				"owner_email": {
+					"name": "owner_email",
 					"type": "text",
 					"primaryKey": false,
 					"notNull": true,
@@ -308,17 +308,17 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T22:05:26.528Z\"'"
+					"default": "'\"2025-02-09T21:03:20.815Z\"'"
 				}
 			},
 			"indexes": {},
 			"foreignKeys": {
-				"workspace_owner_id_user_id_fk": {
-					"name": "workspace_owner_id_user_id_fk",
+				"workspace_owner_email_user_email_fk": {
+					"name": "workspace_owner_email_user_email_fk",
 					"tableFrom": "workspace",
 					"tableTo": "user",
-					"columnsFrom": ["owner_id"],
-					"columnsTo": ["id"],
+					"columnsFrom": ["owner_email"],
+					"columnsTo": ["email"],
 					"onDelete": "cascade",
 					"onUpdate": "cascade"
 				}
@@ -344,8 +344,8 @@
 					"notNull": true,
 					"autoincrement": false
 				},
-				"user_id": {
-					"name": "user_id",
+				"user_email": {
+					"name": "user_email",
 					"type": "text",
 					"primaryKey": false,
 					"notNull": true,
@@ -364,7 +364,7 @@
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "'\"2025-02-08T22:05:26.528Z\"'"
+					"default": "'\"2025-02-09T21:03:20.815Z\"'"
 				}
 			},
 			"indexes": {},
@@ -378,12 +378,12 @@
 					"onDelete": "cascade",
 					"onUpdate": "cascade"
 				},
-				"workspace_member_user_id_user_id_fk": {
-					"name": "workspace_member_user_id_user_id_fk",
+				"workspace_member_user_email_user_email_fk": {
+					"name": "workspace_member_user_email_user_email_fk",
 					"tableFrom": "workspace_member",
 					"tableTo": "user",
-					"columnsFrom": ["user_id"],
-					"columnsTo": ["id"],
+					"columnsFrom": ["user_email"],
+					"columnsTo": ["email"],
 					"onDelete": "cascade",
 					"onUpdate": "cascade"
 				}

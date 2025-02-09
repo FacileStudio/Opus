@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 type CreateTaskInput = {
   title: string;
   description: string;
-  assigneeId: string;
+  userEmail: string;
   projectId: string;
   status: string;
   dueDate: Date;
@@ -17,7 +17,7 @@ function useCreateTask() {
     mutationFn: ({
       title,
       description,
-      assigneeId,
+      userEmail,
       projectId,
       status,
       dueDate,
@@ -27,7 +27,7 @@ function useCreateTask() {
         title,
         description,
         projectId,
-        assigneeId,
+        userEmail,
         status,
         dueDate,
         priority,

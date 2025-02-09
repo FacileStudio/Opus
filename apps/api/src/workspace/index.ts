@@ -7,15 +7,15 @@ import updateWorkspace from "./controllers/update-workspace";
 import { updateWorkspaceSchema } from "./db/queries";
 
 const workspace = new Elysia({ prefix: "/workspace" })
-  .state("userId", "")
+  .state("userEmail", "")
   .post(
     "/create",
     async ({ body, store }) => {
-      const userId = store.userId;
+      const userEmail = store.userEmail;
 
       const createdWorkspace = await createWorkspace({
         ...body,
-        ownerId: userId,
+        ownerEmail: userEmail,
       });
 
       return createdWorkspace;
@@ -27,28 +27,28 @@ const workspace = new Elysia({ prefix: "/workspace" })
     },
   )
   .get("/list", async ({ store }) => {
-    const userId = store.userId;
+    const userEmail = store.userEmail;
 
-    const workspaces = await getWorkspaces({ userId });
+    const workspaces = await getWorkspaces({ userEmail });
 
     return workspaces;
   })
   .get("/:id", async ({ store, params }) => {
-    const userId = store.userId;
+    const userEmail = store.userEmail;
     const workspaceId = params.id;
 
-    const workspace = await getWorkspace({ userId, workspaceId });
+    const workspace = await getWorkspace({ userEmail, workspaceId });
 
     return workspace;
   })
   .put(
     "/:id",
     async ({ store, params, body }) => {
-      const userId = store.userId;
+      const userEmail = store.userEmail;
       const workspaceId = params.id;
 
       const updatedWorkspace = await updateWorkspace({
-        userId,
+        userEmail,
         workspaceId,
         body,
       });
@@ -58,10 +58,10 @@ const workspace = new Elysia({ prefix: "/workspace" })
     { body: updateWorkspaceSchema },
   )
   .delete("/:id", async ({ store, params }) => {
-    const userId = store.userId;
+    const userEmail = store.userEmail;
     const workspaceId = params.id;
 
-    const deletedWorkspace = await deleteWorkspace({ userId, workspaceId });
+    const deletedWorkspace = await deleteWorkspace({ userEmail, workspaceId });
 
     return deletedWorkspace;
   });

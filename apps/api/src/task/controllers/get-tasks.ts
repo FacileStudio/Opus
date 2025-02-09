@@ -28,12 +28,12 @@ async function getTasks(projectId: string) {
       priority: taskTable.priority,
       dueDate: taskTable.dueDate,
       createdAt: taskTable.createdAt,
-      assigneeId: taskTable.assigneeId,
+      userEmail: taskTable.userEmail,
       assigneeName: userTable.name,
       assigneeEmail: userTable.email,
     })
     .from(taskTable)
-    .leftJoin(userTable, eq(taskTable.assigneeId, userTable.id))
+    .leftJoin(userTable, eq(taskTable.userEmail, userTable.id))
     .where(eq(taskTable.projectId, projectId));
 
   const columns = DEFAULT_COLUMNS.map((column) => ({

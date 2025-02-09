@@ -19,7 +19,7 @@ export type Task = {
   number: number | null;
   description: string | null;
   projectId: string;
-  assigneeId: string;
+  userEmail: string;
   title: string;
   status: string;
   dueDate: Date | null;

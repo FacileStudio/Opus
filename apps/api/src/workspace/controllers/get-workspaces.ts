@@ -6,12 +6,12 @@ import {
   workspaceUserTable,
 } from "../../database/schema";
 
-async function getWorkspaces({ userId }: { userId: string }) {
+async function getWorkspaces({ userEmail }: { userEmail: string }) {
   const workspaces = await db
     .select({
       id: workspaceTable.id,
       name: workspaceTable.name,
-      ownerId: workspaceTable.ownerId,
+      userEmail: workspaceTable.ownerEmail,
     })
     .from(workspaceTable)
     .leftJoin(
@@ -20,11 +20,11 @@ async function getWorkspaces({ userId }: { userId: string }) {
     )
     .where(
       or(
-        eq(workspaceTable.ownerId, userId),
-        eq(workspaceUserTable.userId, userId),
+        eq(workspaceTable.ownerEmail, userEmail),
+        eq(workspaceUserTable.userEmail, userEmail),
       ),
     )
-    .groupBy(workspaceTable.id, workspaceTable.name, workspaceTable.ownerId);
+    .groupBy(workspaceTable.id, workspaceTable.name, workspaceTable.ownerEmail);
 
   const workspacesWithProjects = await Promise.all(
     workspaces.map(async (workspace) => ({

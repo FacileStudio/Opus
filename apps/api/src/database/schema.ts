@@ -32,9 +32,9 @@ export const workspaceTable = sqliteTable("workspace", {
     .primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
-  ownerId: text("owner_id")
+  ownerEmail: text("owner_email")
     .notNull()
-    .references(() => userTable.id, {
+    .references(() => userTable.email, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
@@ -53,9 +53,9 @@ export const workspaceUserTable = sqliteTable("workspace_member", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  userId: text("user_id")
+  userEmail: text("user_email")
     .notNull()
-    .references(() => userTable.id, {
+    .references(() => userTable.email, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
@@ -95,9 +95,9 @@ export const taskTable = sqliteTable("task", {
       onUpdate: "cascade",
     }),
   number: int().default(1),
-  assigneeId: text("assignee_id")
+  userEmail: text("assignee_email")
     .notNull()
-    .references(() => userTable.id, {
+    .references(() => userTable.email, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),

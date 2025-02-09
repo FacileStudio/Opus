@@ -30,7 +30,7 @@ const taskSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().optional(),
   priority: z.enum(["low", "medium", "high", "urgent"]),
-  assigneeId: z.string(),
+  email: z.string(),
 });
 
 type TaskFormValues = z.infer<typeof taskSchema>;
@@ -52,7 +52,7 @@ export function CreateTaskModal({
       title: "",
       description: "",
       priority: "low",
-      assigneeId: "",
+      email: "",
     },
   });
   const { mutateAsync } = useCreateTask();
@@ -63,23 +63,23 @@ export function CreateTaskModal({
     const newTask = await mutateAsync({
       title: data.title.trim(),
       description: data.description?.trim() || "",
-      assigneeId: data.assigneeId,
+      userEmail: data.email,
       priority: data.priority,
       projectId: project?.id,
       dueDate: new Date(),
       status: status ?? "to-do",
     });
 
-    setProject(
-      produce(project, (draft) => {
-        const targetColumn = draft.columns?.find(
-          (col) => col.id === newTask.status,
-        );
-        if (targetColumn) {
-          targetColumn.tasks.push(newTask);
-        }
-      }),
-    );
+    const updatedProject = produce(project, (draft) => {
+      const targetColumn = draft.columns?.find(
+        (col) => col.id === newTask.status,
+      );
+      if (targetColumn) {
+        targetColumn.tasks.push(newTask);
+      }
+    });
+
+    setProject(updatedProject);
 
     form.reset();
     onClose();
@@ -146,7 +146,7 @@ export function CreateTaskModal({
 
                   <FormField
                     control={form.control}
-                    name="assigneeId"
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="block text-sm font-medium text-zinc-900 dark:text-zinc-300 mb-1">
@@ -164,7 +164,7 @@ export function CreateTaskModal({
                                 ),
                               },
                               ...(users ?? []).map((user) => ({
-                                value: user.userId ?? "",
+                                value: user.userEmail ?? "",
                                 label: user.userName ?? "",
                               })),
                             ]}

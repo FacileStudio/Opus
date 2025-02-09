@@ -16,6 +16,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthSignInImport } from './routes/auth/sign-in'
 import { Route as DashboardWorkspaceWorkspaceIdImport } from './routes/dashboard/workspace/$workspaceId'
+import { Route as DashboardWorkspaceWorkspaceIdTeamImport } from './routes/dashboard/workspace/$workspaceId/team'
 import { Route as DashboardWorkspaceWorkspaceIdProjectProjectIdImport } from './routes/dashboard/workspace/$workspaceId/project/$projectId'
 
 // Create/Update Routes
@@ -49,6 +50,13 @@ const DashboardWorkspaceWorkspaceIdRoute =
     id: '/workspace/$workspaceId',
     path: '/workspace/$workspaceId',
     getParentRoute: () => DashboardRoute,
+  } as any)
+
+const DashboardWorkspaceWorkspaceIdTeamRoute =
+  DashboardWorkspaceWorkspaceIdTeamImport.update({
+    id: '/team',
+    path: '/team',
+    getParentRoute: () => DashboardWorkspaceWorkspaceIdRoute,
   } as any)
 
 const DashboardWorkspaceWorkspaceIdProjectProjectIdRoute =
@@ -97,6 +105,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdImport
       parentRoute: typeof DashboardImport
     }
+    '/dashboard/workspace/$workspaceId/team': {
+      id: '/dashboard/workspace/$workspaceId/team'
+      path: '/team'
+      fullPath: '/dashboard/workspace/$workspaceId/team'
+      preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdTeamImport
+      parentRoute: typeof DashboardWorkspaceWorkspaceIdImport
+    }
     '/dashboard/workspace/$workspaceId/project/$projectId': {
       id: '/dashboard/workspace/$workspaceId/project/$projectId'
       path: '/project/$projectId'
@@ -110,11 +125,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface DashboardWorkspaceWorkspaceIdRouteChildren {
+  DashboardWorkspaceWorkspaceIdTeamRoute: typeof DashboardWorkspaceWorkspaceIdTeamRoute
   DashboardWorkspaceWorkspaceIdProjectProjectIdRoute: typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
 }
 
 const DashboardWorkspaceWorkspaceIdRouteChildren: DashboardWorkspaceWorkspaceIdRouteChildren =
   {
+    DashboardWorkspaceWorkspaceIdTeamRoute:
+      DashboardWorkspaceWorkspaceIdTeamRoute,
     DashboardWorkspaceWorkspaceIdProjectProjectIdRoute:
       DashboardWorkspaceWorkspaceIdProjectProjectIdRoute,
   }
@@ -143,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
+  '/dashboard/workspace/$workspaceId/team': typeof DashboardWorkspaceWorkspaceIdTeamRoute
   '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
 }
 
@@ -152,6 +171,7 @@ export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
+  '/dashboard/workspace/$workspaceId/team': typeof DashboardWorkspaceWorkspaceIdTeamRoute
   '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
 }
 
@@ -162,6 +182,7 @@ export interface FileRoutesById {
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
+  '/dashboard/workspace/$workspaceId/team': typeof DashboardWorkspaceWorkspaceIdTeamRoute
   '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRoute
 }
 
@@ -173,6 +194,7 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/dashboard/workspace/$workspaceId'
+    | '/dashboard/workspace/$workspaceId/team'
     | '/dashboard/workspace/$workspaceId/project/$projectId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -181,6 +203,7 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/dashboard/workspace/$workspaceId'
+    | '/dashboard/workspace/$workspaceId/team'
     | '/dashboard/workspace/$workspaceId/project/$projectId'
   id:
     | '__root__'
@@ -189,6 +212,7 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/dashboard/workspace/$workspaceId'
+    | '/dashboard/workspace/$workspaceId/team'
     | '/dashboard/workspace/$workspaceId/project/$projectId'
   fileRoutesById: FileRoutesById
 }
@@ -242,8 +266,13 @@ export const routeTree = rootRoute
       "filePath": "dashboard/workspace/$workspaceId.tsx",
       "parent": "/dashboard",
       "children": [
+        "/dashboard/workspace/$workspaceId/team",
         "/dashboard/workspace/$workspaceId/project/$projectId"
       ]
+    },
+    "/dashboard/workspace/$workspaceId/team": {
+      "filePath": "dashboard/workspace/$workspaceId/team.tsx",
+      "parent": "/dashboard/workspace/$workspaceId"
     },
     "/dashboard/workspace/$workspaceId/project/$projectId": {
       "filePath": "dashboard/workspace/$workspaceId/project/$projectId.tsx",

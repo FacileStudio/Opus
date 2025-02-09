@@ -4,19 +4,19 @@ import { workspaceTable } from "../../database/schema";
 import type { DeleteWorkspacePayload } from "../db/queries";
 
 async function deleteWorkspace({
-  userId,
+  userEmail,
   workspaceId,
 }: DeleteWorkspacePayload) {
   const [existingWorkspace] = await db
     .select({
       id: workspaceTable.id,
-      ownerId: workspaceTable.ownerId,
+      ownerEmail: workspaceTable.ownerEmail,
     })
     .from(workspaceTable)
     .where(
       and(
         eq(workspaceTable.id, workspaceId),
-        eq(workspaceTable.ownerId, userId),
+        eq(workspaceTable.ownerEmail, userEmail),
       ),
     )
     .limit(1);
@@ -33,7 +33,7 @@ async function deleteWorkspace({
     .returning({
       id: workspaceTable.id,
       name: workspaceTable.name,
-      ownerId: workspaceTable.ownerId,
+      ownerEmail: workspaceTable.ownerEmail,
       createdAt: workspaceTable.createdAt,
     });
 

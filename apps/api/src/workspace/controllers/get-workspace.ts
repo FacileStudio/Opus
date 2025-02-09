@@ -3,14 +3,14 @@ import db from "../../database";
 import { workspaceTable, workspaceUserTable } from "../../database/schema";
 
 async function getWorkspace({
-  userId,
+  userEmail,
   workspaceId,
-}: { userId: string; workspaceId: string }) {
+}: { userEmail: string; workspaceId: string }) {
   const [existingWorkspace] = await db
     .select({
       id: workspaceTable.id,
       name: workspaceTable.name,
-      ownerId: workspaceTable.ownerId,
+      ownerEmail: workspaceTable.ownerEmail,
       createdAt: workspaceTable.createdAt,
     })
     .from(workspaceTable)
@@ -22,8 +22,8 @@ async function getWorkspace({
       and(
         eq(workspaceTable.id, workspaceId),
         or(
-          eq(workspaceTable.ownerId, userId),
-          eq(workspaceUserTable.userId, userId),
+          eq(workspaceTable.ownerEmail, userEmail),
+          eq(workspaceUserTable.userEmail, userEmail),
         ),
       ),
     )
