@@ -11,7 +11,7 @@ async function getWorkspaces({ userEmail }: { userEmail: string }) {
     .select({
       id: workspaceTable.id,
       name: workspaceTable.name,
-      userEmail: workspaceTable.ownerEmail,
+      ownerEmail: workspaceTable.ownerEmail,
     })
     .from(workspaceTable)
     .leftJoin(
