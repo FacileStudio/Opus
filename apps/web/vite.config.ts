@@ -5,10 +5,12 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "./",
+  base: "/",
   plugins: [TanStackRouterVite(), react()],
   server: {
     host: true,
+    hmr: true,
+    port: 5173,
   },
   resolve: {
     alias: {
