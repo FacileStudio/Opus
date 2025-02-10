@@ -1,11 +1,15 @@
 import useAuth from "@/components/providers/auth-provider/hooks/use-auth";
 import useSignOut from "@/hooks/mutations/use-sign-out";
+import useProjectStore from "@/store/project";
+import useWorkspaceStore from "@/store/workspace";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 
 function SignOutButton() {
   const { setUser } = useAuth();
+  const { setProject } = useProjectStore();
+  const { setWorkspace } = useWorkspaceStore();
   const { mutateAsync, isPending } = useSignOut();
   const queryClient = useQueryClient();
   const { history } = useRouter();
@@ -17,6 +21,8 @@ function SignOutButton() {
       type: "all",
     });
     setUser(null);
+    setProject(undefined);
+    setWorkspace(undefined);
     history.push("/auth/sign-in");
   };
 
