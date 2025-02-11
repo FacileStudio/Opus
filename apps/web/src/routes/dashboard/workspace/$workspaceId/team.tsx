@@ -1,23 +1,19 @@
-import InviteTeamMemberModal from "@/components/team/invite-team-member-modal";
-import TeamTable from "@/components/team/team-table";
-import { Button } from "@/components/ui/button";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { cn } from "@/lib/cn";
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  useRouterState,
+} from "@tanstack/react-router";
 import { Shield, UserPlus, Users } from "lucide-react";
-import { useState } from "react";
-
-const menuItems = [
-  { icon: Users, label: "Members", path: "/team" },
-  { icon: UserPlus, label: "Invitations", path: "/team/invitations" },
-  { icon: Shield, label: "Roles", path: "/team/roles" },
-];
 
 export const Route = createFileRoute("/dashboard/workspace/$workspaceId/team")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [isInviteTeamMemberDialogOpened, setIsInviteTeamMemberDialogOpened] =
-    useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { workspaceId } = Route.useParams();
 
   return (
     <div className="flex-1 flex h-screen">
@@ -26,45 +22,53 @@ function RouteComponent() {
           Team
         </h2>
         <nav className="space-y-1">
-          {menuItems.map(({ icon: Icon, label, path }) => (
-            <Link
-              key={path}
-              to={path}
-              className={`flex items-center px-3 py-2 rounded-lg text-sm ${
-                location.pathname === path
-                  ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                  : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-              }`}
-            >
-              <Icon className="w-4 h-4 mr-3" />
-              {label}
-            </Link>
-          ))}
+          <Link
+            className={`flex items-center px-3 py-2 rounded-lg  text-sm ${
+              pathname.includes("/members")
+                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
+                : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            }`}
+            to="/dashboard/workspace/$workspaceId/team/members"
+            params={{
+              workspaceId,
+            }}
+          >
+            <Users className="w-4 h-4 mr-3" />
+            Members
+          </Link>
+
+          <Link
+            className={`flex items-center px-3 py-2 rounded-lg  text-sm ${
+              pathname.includes("/invitations")
+                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
+                : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            }`}
+            to="/dashboard/workspace/$workspaceId/team/invitations"
+            params={{
+              workspaceId,
+            }}
+          >
+            <UserPlus className="w-4 h-4 mr-3" />
+            Invitations
+          </Link>
+
+          <div
+            className={cn(
+              "flex items-center px-3 py-2 rounded-lg text-sm opacity-50 cursor-not-allowed",
+              "text-zinc-400 dark:text-zinc-600",
+            )}
+          >
+            <Shield className="w-4 h-4 mr-3" />
+            <span className="flex items-center gap-2">
+              Roles
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
+                Soon
+              </span>
+            </span>
+          </div>
         </nav>
       </aside>
-      <div className="flex-1 p-6">
-        <div className="w-full">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-              Team Members
-            </h1>
-            <Button
-              onClick={() => setIsInviteTeamMemberDialogOpened(true)}
-              className="bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400"
-            >
-              <UserPlus className="w-4 h-4 mr-2" />
-              Invite Member
-            </Button>
-          </div>
-        </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden">
-          <TeamTable />
-        </div>
-      </div>
-      <InviteTeamMemberModal
-        open={isInviteTeamMemberDialogOpened}
-        onClose={() => setIsInviteTeamMemberDialogOpened(false)}
-      />
+      <Outlet />
     </div>
   );
 }

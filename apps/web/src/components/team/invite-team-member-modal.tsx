@@ -1,8 +1,8 @@
 import useInviteWorkspaceUser from "@/hooks/mutations/workspace-user/use-invite-workspace-user";
-import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspaces";
+import { Route } from "@/routes/dashboard/workspace/$workspaceId/team";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Building2, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Select } from "../ui/select";
 
 type Props = {
   open: boolean;
@@ -24,24 +23,22 @@ type Props = {
 
 const teamMemberSchema = z.object({
   userEmail: z.string().email(),
-  workspaceId: z.string(),
 });
 
 type TeamMemberFormValues = z.infer<typeof teamMemberSchema>;
 
 function InviteTeamMemberModal({ open, onClose }: Props) {
-  const { data: workspaces } = useGetWorkspaces();
   const { mutateAsync } = useInviteWorkspaceUser();
+  const { workspaceId } = Route.useParams();
 
   const form = useForm<TeamMemberFormValues>({
     resolver: zodResolver(teamMemberSchema),
     defaultValues: {
       userEmail: "",
-      workspaceId: "",
     },
   });
 
-  const onSubmit = async ({ userEmail, workspaceId }: TeamMemberFormValues) => {
+  const onSubmit = async ({ userEmail }: TeamMemberFormValues) => {
     await mutateAsync({ userEmail, workspaceId });
 
     form.reset();
@@ -87,38 +84,6 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
                       )}
                     />
                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name="workspaceId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="block text-sm font-medium text-zinc-900 dark:text-zinc-300 mb-1">
-                          Workspace
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            {...field}
-                            options={[
-                              {
-                                value: "",
-                                label: "Select a workspace",
-                                icon: (
-                                  <Building2 className="w-4 h-4 text-zinc-400" />
-                                ),
-                              },
-                              ...(workspaces ?? []).map((workspace) => ({
-                                value: workspace.id,
-                                label: workspace.name,
-                              })),
-                            ]}
-                            placeholder="Select workspace"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </div>
 
                 <div className="flex justify-end gap-2 mt-6">

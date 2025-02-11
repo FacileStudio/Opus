@@ -13,7 +13,8 @@
 			"dist",
 			"cache",
 			"*.css",
-			"package.json"
+			"package.json",
+			".turbo"
 		]
 	},
 	"formatter": {
