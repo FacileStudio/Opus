@@ -45,16 +45,18 @@ const task = new Elysia({ prefix: "/task" })
         type: string;
         id: string;
         status: string;
+        userEmail: string;
       },
     ) {
       const projectId = ws.data.params.projectId;
 
-      const { type, id, status } = message;
+      const { type, id, status, userEmail } = message;
 
       if (type === "UPDATE_TASK") {
         await updateTaskStatus({
           id,
           status,
+          userEmail,
         });
 
         const clients = connections.get(projectId);

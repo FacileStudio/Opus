@@ -2,6 +2,7 @@ import useInviteWorkspaceUser from "@/hooks/mutations/workspace-user/use-invite-
 import { Route } from "@/routes/dashboard/workspace/$workspaceId/team";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Dialog from "@radix-ui/react-dialog";
+import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,6 +30,7 @@ type TeamMemberFormValues = z.infer<typeof teamMemberSchema>;
 
 function InviteTeamMemberModal({ open, onClose }: Props) {
   const { mutateAsync } = useInviteWorkspaceUser();
+  const queryClient = useQueryClient();
   const { workspaceId } = Route.useParams();
 
   const form = useForm<TeamMemberFormValues>({
@@ -40,6 +42,9 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
 
   const onSubmit = async ({ userEmail }: TeamMemberFormValues) => {
     await mutateAsync({ userEmail, workspaceId });
+    await queryClient.refetchQueries({
+      queryKey: ["pending-workspace-users", workspaceId],
+    });
 
     form.reset();
     onClose();

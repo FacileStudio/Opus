@@ -5,10 +5,11 @@ import { taskTable } from "../../database/schema";
 async function updateTaskStatus({
   id,
   status,
-}: { id: string; status: string }) {
+  userEmail,
+}: { id: string; status: string; userEmail: string }) {
   await db
     .update(taskTable)
-    .set({ status: status })
+    .set({ status, userEmail })
     .where(eq(taskTable.id, id));
 }
 

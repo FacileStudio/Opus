@@ -14,7 +14,7 @@ type ProjectsProps = {
 
 function Projects({ workspaceId }: ProjectsProps) {
   const { project: currentProject, setProject } = useProjectStore();
-  const { data: projects } = useGetProjects({ workspaceId });
+  const { data: projects, isLoading } = useGetProjects({ workspaceId });
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const { isSidebarOpened } = useUserPreferencesStore();
   const navigate = useNavigate();
@@ -31,6 +31,22 @@ function Projects({ workspaceId }: ProjectsProps) {
       },
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-1 w-full">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="animate-pulse flex items-center px-4 py-1.5 rounded-md"
+          >
+            <div className="h-4 shrink-0 w-4 bg-zinc-200 dark:bg-zinc-800 rounded mr-2" />
+            <div className="h-4 w-full bg-zinc-200 dark:bg-zinc-800 rounded" />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div>

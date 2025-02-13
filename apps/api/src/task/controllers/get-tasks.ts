@@ -33,7 +33,7 @@ async function getTasks(projectId: string) {
       assigneeEmail: userTable.email,
     })
     .from(taskTable)
-    .leftJoin(userTable, eq(taskTable.userEmail, userTable.id))
+    .leftJoin(userTable, eq(taskTable.userEmail, userTable.email))
     .where(eq(taskTable.projectId, projectId));
 
   const columns = DEFAULT_COLUMNS.map((column) => ({

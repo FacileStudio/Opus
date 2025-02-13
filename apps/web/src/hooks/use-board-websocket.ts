@@ -1,4 +1,5 @@
 import { API_URL } from "@/constants/urls";
+import { Route } from "@/routes/dashboard/workspace/$workspaceId/project/$projectId";
 import useProjectStore from "@/store/project";
 import { useEffect, useRef } from "react";
 
@@ -8,12 +9,13 @@ type WebSocketHook = {
 
 function useBoardWebSocket(): WebSocketHook {
   const wsRef = useRef<WebSocket | null>(null);
-  const { project, setProject } = useProjectStore();
+  const { projectId } = Route.useParams();
+  const { setProject } = useProjectStore();
 
   useEffect(() => {
-    if (!project?.id) return;
+    if (!projectId) return;
 
-    const socket = new WebSocket(`${API_URL}/task/ws/${project.id}`);
+    const socket = new WebSocket(`${API_URL}/task/ws/${projectId}`);
 
     socket.onmessage = (event) => {
       try {
@@ -30,7 +32,7 @@ function useBoardWebSocket(): WebSocketHook {
       socket.close();
       wsRef.current = null;
     };
-  }, [project?.id, setProject]);
+  }, [projectId, setProject]);
 
   return {
     ws: wsRef.current,
