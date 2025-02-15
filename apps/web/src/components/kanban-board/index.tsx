@@ -5,8 +5,13 @@ import {
   type DragEndEvent,
   DragOverlay,
   type DragStartEvent,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
   type UniqueIdentifier,
   closestCorners,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { produce } from "immer";
 import { useState } from "react";
@@ -17,6 +22,11 @@ function KanbanBoard() {
   const { project, setProject } = useProjectStore();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const { ws } = useBoardWebsocket();
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor),
+  );
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id);
@@ -82,6 +92,7 @@ function KanbanBoard() {
       collisionDetection={closestCorners}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      sensors={sensors}
     >
       <div className="h-full flex flex-col">
         <header className="mb-6 space-y-6 shrink-0 px-4 md:px-0">
