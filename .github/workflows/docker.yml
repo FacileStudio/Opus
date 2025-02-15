@@ -11,6 +11,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  TARGET_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
   build-and-push-image:
@@ -56,4 +57,5 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          platforms: ${{ env.TARGET_PLATFORMS }}
           labels: ${{ steps.meta.outputs.labels }}
