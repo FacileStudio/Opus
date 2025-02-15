@@ -19,13 +19,14 @@ COPY packages/typescript-config ./packages/typescript-config
 COPY apps/api ./apps/api
 
 FROM oven/bun:1-alpine AS runtime
-WORKDIR /app
+WORKDIR /app/apps/api
 
-COPY --from=base /app ./
+COPY --from=base /app/apps/api ./
+COPY --from=base /app/node_modules ../node_modules
+COPY --from=base /app/packages ../packages
 
 ENV NODE_ENV=production
-WORKDIR /app/apps/api
 
 EXPOSE 1337
 
-CMD ["bun", "run", "src/index.ts"]
+CMD ["bun", "run", "/app/apps/api/src/index.ts"]
