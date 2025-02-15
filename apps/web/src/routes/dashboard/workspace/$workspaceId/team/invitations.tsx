@@ -41,7 +41,7 @@ function RouteComponent() {
                 key={invitation.id}
                 className="p-4 border-b border-zinc-200 dark:border-zinc-800 last:border-0"
               >
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center gap-3">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 uppercase">
                       {invitation.email[0]}
@@ -63,11 +63,6 @@ function RouteComponent() {
                       )}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400">
-                    Admin
-                  </span>
                 </div>
               </div>
             ))}

@@ -16,7 +16,7 @@ function ManageTeams() {
   const onManageTeams = () => {
     setProject(undefined);
     navigate({
-      to: "/dashboard/workspace/$workspaceId/team",
+      to: "/dashboard/workspace/$workspaceId/team/members",
       params: {
         workspaceId,
       },
