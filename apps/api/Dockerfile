@@ -12,18 +12,19 @@ FROM base AS all-deps
 RUN bun install
 
 FROM base AS prod-deps
-RUN bun install
+RUN bun install --production
 
 FROM all-deps AS build
 ENV NODE_ENV=production
 
-COPY ./apps/api ./apps/api
+COPY packages/typescript-config ./packages/typescript-config
+COPY apps/api ./apps/api
 
 FROM oven/bun:alpine AS runtime
 WORKDIR /app
 
 COPY --from=prod-deps /app/node_modules ./node_modules
-
+COPY --from=build /app/packages ./packages
 COPY --from=build /app/apps/api ./apps/api
 
 ENV NODE_ENV=production
