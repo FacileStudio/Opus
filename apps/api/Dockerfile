@@ -1,6 +1,13 @@
 FROM --platform=$BUILDPLATFORM oven/bun:1 AS base
 WORKDIR /app
 
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package.json .
 COPY bun.lockb .
 COPY apps/api/package.json ./apps/api/package.json
