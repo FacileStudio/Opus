@@ -9,10 +9,10 @@ COPY packages/typescript-config/package.json ./packages/typescript-config/packag
 RUN npm i -g bun
 
 FROM base AS all-deps
-RUN bun install
+RUN bun install --no-frozen-lockfile
 
 FROM base AS prod-deps
-RUN bun install --production
+RUN bun install --no-frozen-lockfile --production
 
 FROM all-deps AS build
 ENV NODE_ENV=production
