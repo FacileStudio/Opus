@@ -23,7 +23,10 @@ WORKDIR /app
 
 COPY --from=base /app ./
 
-RUN mkdir -p /data && chown -R nobody:nobody /data
+# Create data directory and set permissions
+RUN mkdir -p /data && \
+    chown -R nobody:nobody /app /data && \
+    chmod -R 755 /app /data
 
 ENV NODE_ENV=production
 WORKDIR /app/apps/api
