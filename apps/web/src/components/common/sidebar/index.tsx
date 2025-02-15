@@ -17,7 +17,7 @@ export function Sidebar() {
           }
         }}
         className={cn(
-          "fixed inset-0 bg-black/50 z-40 lg:hidden",
+          "fixed inset-0 bg-black/50 z-20 lg:hidden",
           isSidebarOpened ? "opacity-100" : "opacity-0 pointer-events-none",
           "transition-opacity duration-300 ease-in-out",
         )}
@@ -31,7 +31,7 @@ export function Sidebar() {
           "transition-all duration-300 ease-in-out",
           "min-h-screen",
           "fixed lg:relative top-0 left-0",
-          "z-50",
+          "z-20",
           !isSidebarOpened ? "w-16" : "w-64",
         )}
       >

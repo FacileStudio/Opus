@@ -35,7 +35,7 @@ function WorkspacePicker() {
         <DropdownMenu.Trigger asChild>
           <button
             type="button"
-            className="w-full px-3 py-2 text-left rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors group"
+            className="w-full z-30 px-3 py-2 text-left rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors group"
           >
             <div className="flex items-center">
               <div className="flex-1 min-w-0">
@@ -52,7 +52,7 @@ function WorkspacePicker() {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="w-56 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1"
+            className="w-56 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 z-50"
             align="start"
             sideOffset={5}
           >

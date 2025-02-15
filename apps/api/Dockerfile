@@ -21,6 +21,8 @@ COPY apps/api ./apps/api
 FROM oven/bun:1-alpine AS runtime
 WORKDIR /app/apps/api
 
+RUN mkdir -p /app/apps/api/data && chmod 777 /app/apps/api/data
+
 COPY --from=base /app/apps/api ./
 COPY --from=base /app/node_modules ../node_modules
 COPY --from=base /app/packages ../packages
