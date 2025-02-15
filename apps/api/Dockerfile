@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:22-slim AS base
+FROM --platform=$BUILDPLATFORM oven/bun:1 AS base
 WORKDIR /app
 
 COPY package.json .
@@ -6,14 +6,12 @@ COPY bun.lockb .
 COPY apps/api/package.json ./apps/api/package.json
 COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
 
-RUN npm i -g bun
-
 RUN bun install --no-frozen-lockfile
 
 COPY packages/typescript-config ./packages/typescript-config
 COPY apps/api ./apps/api
 
-FROM oven/bun:alpine AS runtime
+FROM oven/bun:1-alpine AS runtime
 WORKDIR /app
 
 COPY --from=base /app ./

@@ -1,11 +1,4 @@
-FROM node:22-alpine AS builder
-
-RUN npm install -g bun
-
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++
+FROM --platform=$BUILDPLATFORM oven/bun:1 AS builder
 
 WORKDIR /app
 
@@ -15,7 +8,7 @@ COPY packages ./packages
 COPY apps/api ./apps/api
 COPY apps/web ./apps/web
 
-RUN bun install
+RUN bun install --no-frozen-lockfile
 
 WORKDIR /app/apps/web
 RUN bun run build
