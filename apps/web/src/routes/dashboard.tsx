@@ -17,7 +17,7 @@ function DashboardIndexRouteComponent() {
   return (
     <>
       <Sidebar />
-      <main className="flex-1 overflow-hidden p-6 scroll-smooth">
+      <main className="flex-1 overflow-hidden scroll-smooth">
         <Outlet />
       </main>
     </>

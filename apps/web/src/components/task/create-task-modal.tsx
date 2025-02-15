@@ -62,8 +62,6 @@ export function CreateTaskModal({
   const onSubmit = async (data: TaskFormValues) => {
     if (!project?.id || !workspace?.id) return;
 
-    console.log(data?.email);
-
     const newTask = await mutateAsync({
       title: data.title.trim(),
       description: data.description?.trim() || "",

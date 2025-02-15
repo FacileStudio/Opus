@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 import useProjectStore from "@/store/project";
 import { useUserPreferencesStore } from "@/store/user-preferences";
 import type { Project } from "@/types/project";
-import { useNavigate } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Layout, Plus, icons } from "lucide-react";
 import { createElement, useState } from "react";
 import CreateProjectModal from "./create-project-modal";
@@ -18,13 +18,18 @@ function Projects({ workspaceId }: ProjectsProps) {
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const { isSidebarOpened } = useUserPreferencesStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSelectProject = (selectedProject: Project) => {
-    if (currentProject?.id === selectedProject.id) return;
+    if (
+      currentProject?.id === selectedProject.id &&
+      location.pathname.includes("/board")
+    )
+      return;
 
     setProject(selectedProject);
     navigate({
-      to: "/dashboard/workspace/$workspaceId/project/$projectId",
+      to: "/dashboard/workspace/$workspaceId/project/$projectId/board",
       params: {
         workspaceId,
         projectId: selectedProject.id,
@@ -87,7 +92,8 @@ function Projects({ workspaceId }: ProjectsProps) {
                 "w-full px-4 py-2 rounded-md flex items-center  text-sm transition-all group",
                 !isSidebarOpened && "px-3",
                 !isSidebarOpened && "justify-center px-2",
-                currentProject?.id === project.id
+                location.pathname.includes("/board") &&
+                  project.id === currentProject?.id
                   ? "bg-indigo-51 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
                   : "text-zinc-601 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
               )}

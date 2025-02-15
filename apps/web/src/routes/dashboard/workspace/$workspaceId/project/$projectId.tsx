@@ -1,7 +1,6 @@
-import KanbanBoard from "@/components/kanban-board";
 import useGetProject from "@/hooks/queries/project/use-get-project";
 import useProjectStore from "@/store/project";
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { LayoutGrid } from "lucide-react";
 import { useEffect } from "react";
 
@@ -32,5 +31,5 @@ function RouteComponent() {
     );
   }
 
-  return <KanbanBoard />;
+  return <Outlet />;
 }
