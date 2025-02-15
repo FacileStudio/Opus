@@ -19,7 +19,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-
     networks:
       - traefik-net
     volumes:
@@ -34,11 +33,11 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
       JWT_ACCESS: "change_me"
+    volumes:
+      - sqlite_data:/app/apps/api/data
     networks:
       - traefik-net
     restart: unless-stopped
-    volumes:
-      - .:/app
 
   frontend:
     image: ghcr.io/kaneo-app/web:latest
@@ -58,3 +57,6 @@ services:
 networks:
   traefik-net:
     driver: bridge
+
+volumes:
+  sqlite_data:
