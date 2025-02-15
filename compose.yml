@@ -31,10 +31,12 @@ services:
       - "traefik.http.routers.backend.rule=Host(`demo-api.kaneo.app`)"
       - "traefik.http.routers.backend.entrypoints=web"
       - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.depends-on=true"
+      - "com.centurylinklabs.watchtower.enable-volume-preservation=true"
     environment:
       JWT_ACCESS: "change_me"
     volumes:
-      - sqlite_data:/app/apps/api/data
+      - sqlite_data:/app/apps/api/data:rw
     networks:
       - traefik-net
     restart: unless-stopped
@@ -60,3 +62,4 @@ networks:
 
 volumes:
   sqlite_data:
+    name: kaneo_sqlite_data
