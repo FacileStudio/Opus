@@ -8,14 +8,7 @@ COPY packages/typescript-config/package.json ./packages/typescript-config/packag
 
 RUN npm i -g bun
 
-FROM base AS all-deps
 RUN bun install --no-frozen-lockfile
-
-FROM base AS prod-deps
-RUN bun install --no-frozen-lockfile --production
-
-FROM all-deps AS build
-ENV NODE_ENV=production
 
 COPY packages/typescript-config ./packages/typescript-config
 COPY apps/api ./apps/api
@@ -23,12 +16,9 @@ COPY apps/api ./apps/api
 FROM oven/bun:alpine AS runtime
 WORKDIR /app
 
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=build /app/packages ./packages
-COPY --from=build /app/apps/api ./apps/api
+COPY --from=base /app ./
 
 ENV NODE_ENV=production
-
 WORKDIR /app/apps/api
 
 EXPOSE 1337
