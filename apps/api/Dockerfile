@@ -18,8 +18,7 @@ WORKDIR /app
 
 COPY --from=base /app ./
 
-RUN mkdir -p /app/apps/api/data && \
-    chown -R nobody:nobody /app/apps/api/data
+RUN mkdir -p /data && chown -R nobody:nobody /data
 
 ENV NODE_ENV=production
 WORKDIR /app/apps/api
