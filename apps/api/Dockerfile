@@ -18,8 +18,13 @@ WORKDIR /app
 
 COPY --from=base /app ./
 
+RUN mkdir -p /app/apps/api/data && \
+    chown -R nobody:nobody /app/apps/api/data
+
 ENV NODE_ENV=production
 WORKDIR /app/apps/api
+
+USER nobody
 
 EXPOSE 1337
 
