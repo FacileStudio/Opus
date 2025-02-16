@@ -63,3 +63,4 @@ networks:
 volumes:
   sqlite_data:
     name: kaneo_sqlite_data
+    external: true
