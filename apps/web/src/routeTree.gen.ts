@@ -13,15 +13,15 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as IndexImport } from './routes/index'
+import { Route as DashboardSettingsImport } from './routes/dashboard/settings'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthSignInImport } from './routes/auth/sign-in'
 import { Route as DashboardWorkspaceWorkspaceIdImport } from './routes/dashboard/workspace/$workspaceId'
+import { Route as DashboardSettingsAppearanceImport } from './routes/dashboard/settings/appearance'
 import { Route as DashboardWorkspaceWorkspaceIdTeamImport } from './routes/dashboard/workspace/$workspaceId/team'
-import { Route as DashboardWorkspaceWorkspaceIdSettingsImport } from './routes/dashboard/workspace/$workspaceId/settings'
 import { Route as DashboardWorkspaceWorkspaceIdTeamRolesImport } from './routes/dashboard/workspace/$workspaceId/team/roles'
 import { Route as DashboardWorkspaceWorkspaceIdTeamMembersImport } from './routes/dashboard/workspace/$workspaceId/team/members'
 import { Route as DashboardWorkspaceWorkspaceIdTeamInvitationsImport } from './routes/dashboard/workspace/$workspaceId/team/invitations'
-import { Route as DashboardWorkspaceWorkspaceIdSettingsAppearanceImport } from './routes/dashboard/workspace/$workspaceId/settings/appearance'
 import { Route as DashboardWorkspaceWorkspaceIdProjectProjectIdImport } from './routes/dashboard/workspace/$workspaceId/project/$projectId'
 import { Route as DashboardWorkspaceWorkspaceIdProjectProjectIdBoardImport } from './routes/dashboard/workspace/$workspaceId/project/$projectId/board'
 import { Route as DashboardWorkspaceWorkspaceIdProjectProjectIdTaskTaskIdImport } from './routes/dashboard/workspace/$workspaceId/project/$projectId/task/$taskId'
@@ -38,6 +38,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardSettingsRoute = DashboardSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
 } as any)
 
 const AuthSignUpRoute = AuthSignUpImport.update({
@@ -59,17 +65,17 @@ const DashboardWorkspaceWorkspaceIdRoute =
     getParentRoute: () => DashboardRoute,
   } as any)
 
+const DashboardSettingsAppearanceRoute =
+  DashboardSettingsAppearanceImport.update({
+    id: '/appearance',
+    path: '/appearance',
+    getParentRoute: () => DashboardSettingsRoute,
+  } as any)
+
 const DashboardWorkspaceWorkspaceIdTeamRoute =
   DashboardWorkspaceWorkspaceIdTeamImport.update({
     id: '/team',
     path: '/team',
-    getParentRoute: () => DashboardWorkspaceWorkspaceIdRoute,
-  } as any)
-
-const DashboardWorkspaceWorkspaceIdSettingsRoute =
-  DashboardWorkspaceWorkspaceIdSettingsImport.update({
-    id: '/settings',
-    path: '/settings',
     getParentRoute: () => DashboardWorkspaceWorkspaceIdRoute,
   } as any)
 
@@ -92,13 +98,6 @@ const DashboardWorkspaceWorkspaceIdTeamInvitationsRoute =
     id: '/invitations',
     path: '/invitations',
     getParentRoute: () => DashboardWorkspaceWorkspaceIdTeamRoute,
-  } as any)
-
-const DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute =
-  DashboardWorkspaceWorkspaceIdSettingsAppearanceImport.update({
-    id: '/appearance',
-    path: '/appearance',
-    getParentRoute: () => DashboardWorkspaceWorkspaceIdSettingsRoute,
   } as any)
 
 const DashboardWorkspaceWorkspaceIdProjectProjectIdRoute =
@@ -154,19 +153,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignUpImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsImport
+      parentRoute: typeof DashboardImport
+    }
+    '/dashboard/settings/appearance': {
+      id: '/dashboard/settings/appearance'
+      path: '/appearance'
+      fullPath: '/dashboard/settings/appearance'
+      preLoaderRoute: typeof DashboardSettingsAppearanceImport
+      parentRoute: typeof DashboardSettingsImport
+    }
     '/dashboard/workspace/$workspaceId': {
       id: '/dashboard/workspace/$workspaceId'
       path: '/workspace/$workspaceId'
       fullPath: '/dashboard/workspace/$workspaceId'
       preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdImport
       parentRoute: typeof DashboardImport
-    }
-    '/dashboard/workspace/$workspaceId/settings': {
-      id: '/dashboard/workspace/$workspaceId/settings'
-      path: '/settings'
-      fullPath: '/dashboard/workspace/$workspaceId/settings'
-      preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdSettingsImport
-      parentRoute: typeof DashboardWorkspaceWorkspaceIdImport
     }
     '/dashboard/workspace/$workspaceId/team': {
       id: '/dashboard/workspace/$workspaceId/team'
@@ -181,13 +187,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/workspace/$workspaceId/project/$projectId'
       preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdProjectProjectIdImport
       parentRoute: typeof DashboardWorkspaceWorkspaceIdImport
-    }
-    '/dashboard/workspace/$workspaceId/settings/appearance': {
-      id: '/dashboard/workspace/$workspaceId/settings/appearance'
-      path: '/appearance'
-      fullPath: '/dashboard/workspace/$workspaceId/settings/appearance'
-      preLoaderRoute: typeof DashboardWorkspaceWorkspaceIdSettingsAppearanceImport
-      parentRoute: typeof DashboardWorkspaceWorkspaceIdSettingsImport
     }
     '/dashboard/workspace/$workspaceId/team/invitations': {
       id: '/dashboard/workspace/$workspaceId/team/invitations'
@@ -229,20 +228,16 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface DashboardWorkspaceWorkspaceIdSettingsRouteChildren {
-  DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute: typeof DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute
+interface DashboardSettingsRouteChildren {
+  DashboardSettingsAppearanceRoute: typeof DashboardSettingsAppearanceRoute
 }
 
-const DashboardWorkspaceWorkspaceIdSettingsRouteChildren: DashboardWorkspaceWorkspaceIdSettingsRouteChildren =
-  {
-    DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute:
-      DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute,
-  }
+const DashboardSettingsRouteChildren: DashboardSettingsRouteChildren = {
+  DashboardSettingsAppearanceRoute: DashboardSettingsAppearanceRoute,
+}
 
-const DashboardWorkspaceWorkspaceIdSettingsRouteWithChildren =
-  DashboardWorkspaceWorkspaceIdSettingsRoute._addFileChildren(
-    DashboardWorkspaceWorkspaceIdSettingsRouteChildren,
-  )
+const DashboardSettingsRouteWithChildren =
+  DashboardSettingsRoute._addFileChildren(DashboardSettingsRouteChildren)
 
 interface DashboardWorkspaceWorkspaceIdTeamRouteChildren {
   DashboardWorkspaceWorkspaceIdTeamInvitationsRoute: typeof DashboardWorkspaceWorkspaceIdTeamInvitationsRoute
@@ -284,15 +279,12 @@ const DashboardWorkspaceWorkspaceIdProjectProjectIdRouteWithChildren =
   )
 
 interface DashboardWorkspaceWorkspaceIdRouteChildren {
-  DashboardWorkspaceWorkspaceIdSettingsRoute: typeof DashboardWorkspaceWorkspaceIdSettingsRouteWithChildren
   DashboardWorkspaceWorkspaceIdTeamRoute: typeof DashboardWorkspaceWorkspaceIdTeamRouteWithChildren
   DashboardWorkspaceWorkspaceIdProjectProjectIdRoute: typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRouteWithChildren
 }
 
 const DashboardWorkspaceWorkspaceIdRouteChildren: DashboardWorkspaceWorkspaceIdRouteChildren =
   {
-    DashboardWorkspaceWorkspaceIdSettingsRoute:
-      DashboardWorkspaceWorkspaceIdSettingsRouteWithChildren,
     DashboardWorkspaceWorkspaceIdTeamRoute:
       DashboardWorkspaceWorkspaceIdTeamRouteWithChildren,
     DashboardWorkspaceWorkspaceIdProjectProjectIdRoute:
@@ -305,10 +297,12 @@ const DashboardWorkspaceWorkspaceIdRouteWithChildren =
   )
 
 interface DashboardRouteChildren {
+  DashboardSettingsRoute: typeof DashboardSettingsRouteWithChildren
   DashboardWorkspaceWorkspaceIdRoute: typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardSettingsRoute: DashboardSettingsRouteWithChildren,
   DashboardWorkspaceWorkspaceIdRoute:
     DashboardWorkspaceWorkspaceIdRouteWithChildren,
 }
@@ -322,11 +316,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
+  '/dashboard/settings/appearance': typeof DashboardSettingsAppearanceRoute
   '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
-  '/dashboard/workspace/$workspaceId/settings': typeof DashboardWorkspaceWorkspaceIdSettingsRouteWithChildren
   '/dashboard/workspace/$workspaceId/team': typeof DashboardWorkspaceWorkspaceIdTeamRouteWithChildren
   '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRouteWithChildren
-  '/dashboard/workspace/$workspaceId/settings/appearance': typeof DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute
   '/dashboard/workspace/$workspaceId/team/invitations': typeof DashboardWorkspaceWorkspaceIdTeamInvitationsRoute
   '/dashboard/workspace/$workspaceId/team/members': typeof DashboardWorkspaceWorkspaceIdTeamMembersRoute
   '/dashboard/workspace/$workspaceId/team/roles': typeof DashboardWorkspaceWorkspaceIdTeamRolesRoute
@@ -339,11 +333,11 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
+  '/dashboard/settings/appearance': typeof DashboardSettingsAppearanceRoute
   '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
-  '/dashboard/workspace/$workspaceId/settings': typeof DashboardWorkspaceWorkspaceIdSettingsRouteWithChildren
   '/dashboard/workspace/$workspaceId/team': typeof DashboardWorkspaceWorkspaceIdTeamRouteWithChildren
   '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRouteWithChildren
-  '/dashboard/workspace/$workspaceId/settings/appearance': typeof DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute
   '/dashboard/workspace/$workspaceId/team/invitations': typeof DashboardWorkspaceWorkspaceIdTeamInvitationsRoute
   '/dashboard/workspace/$workspaceId/team/members': typeof DashboardWorkspaceWorkspaceIdTeamMembersRoute
   '/dashboard/workspace/$workspaceId/team/roles': typeof DashboardWorkspaceWorkspaceIdTeamRolesRoute
@@ -357,11 +351,11 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
+  '/dashboard/settings/appearance': typeof DashboardSettingsAppearanceRoute
   '/dashboard/workspace/$workspaceId': typeof DashboardWorkspaceWorkspaceIdRouteWithChildren
-  '/dashboard/workspace/$workspaceId/settings': typeof DashboardWorkspaceWorkspaceIdSettingsRouteWithChildren
   '/dashboard/workspace/$workspaceId/team': typeof DashboardWorkspaceWorkspaceIdTeamRouteWithChildren
   '/dashboard/workspace/$workspaceId/project/$projectId': typeof DashboardWorkspaceWorkspaceIdProjectProjectIdRouteWithChildren
-  '/dashboard/workspace/$workspaceId/settings/appearance': typeof DashboardWorkspaceWorkspaceIdSettingsAppearanceRoute
   '/dashboard/workspace/$workspaceId/team/invitations': typeof DashboardWorkspaceWorkspaceIdTeamInvitationsRoute
   '/dashboard/workspace/$workspaceId/team/members': typeof DashboardWorkspaceWorkspaceIdTeamMembersRoute
   '/dashboard/workspace/$workspaceId/team/roles': typeof DashboardWorkspaceWorkspaceIdTeamRolesRoute
@@ -376,11 +370,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/settings'
+    | '/dashboard/settings/appearance'
     | '/dashboard/workspace/$workspaceId'
-    | '/dashboard/workspace/$workspaceId/settings'
     | '/dashboard/workspace/$workspaceId/team'
     | '/dashboard/workspace/$workspaceId/project/$projectId'
-    | '/dashboard/workspace/$workspaceId/settings/appearance'
     | '/dashboard/workspace/$workspaceId/team/invitations'
     | '/dashboard/workspace/$workspaceId/team/members'
     | '/dashboard/workspace/$workspaceId/team/roles'
@@ -392,11 +386,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/settings'
+    | '/dashboard/settings/appearance'
     | '/dashboard/workspace/$workspaceId'
-    | '/dashboard/workspace/$workspaceId/settings'
     | '/dashboard/workspace/$workspaceId/team'
     | '/dashboard/workspace/$workspaceId/project/$projectId'
-    | '/dashboard/workspace/$workspaceId/settings/appearance'
     | '/dashboard/workspace/$workspaceId/team/invitations'
     | '/dashboard/workspace/$workspaceId/team/members'
     | '/dashboard/workspace/$workspaceId/team/roles'
@@ -408,11 +402,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/settings'
+    | '/dashboard/settings/appearance'
     | '/dashboard/workspace/$workspaceId'
-    | '/dashboard/workspace/$workspaceId/settings'
     | '/dashboard/workspace/$workspaceId/team'
     | '/dashboard/workspace/$workspaceId/project/$projectId'
-    | '/dashboard/workspace/$workspaceId/settings/appearance'
     | '/dashboard/workspace/$workspaceId/team/invitations'
     | '/dashboard/workspace/$workspaceId/team/members'
     | '/dashboard/workspace/$workspaceId/team/roles'
@@ -457,6 +451,7 @@ export const routeTree = rootRoute
     "/dashboard": {
       "filePath": "dashboard.tsx",
       "children": [
+        "/dashboard/settings",
         "/dashboard/workspace/$workspaceId"
       ]
     },
@@ -466,20 +461,23 @@ export const routeTree = rootRoute
     "/auth/sign-up": {
       "filePath": "auth/sign-up.tsx"
     },
+    "/dashboard/settings": {
+      "filePath": "dashboard/settings.tsx",
+      "parent": "/dashboard",
+      "children": [
+        "/dashboard/settings/appearance"
+      ]
+    },
+    "/dashboard/settings/appearance": {
+      "filePath": "dashboard/settings/appearance.tsx",
+      "parent": "/dashboard/settings"
+    },
     "/dashboard/workspace/$workspaceId": {
       "filePath": "dashboard/workspace/$workspaceId.tsx",
       "parent": "/dashboard",
       "children": [
-        "/dashboard/workspace/$workspaceId/settings",
         "/dashboard/workspace/$workspaceId/team",
         "/dashboard/workspace/$workspaceId/project/$projectId"
-      ]
-    },
-    "/dashboard/workspace/$workspaceId/settings": {
-      "filePath": "dashboard/workspace/$workspaceId/settings.tsx",
-      "parent": "/dashboard/workspace/$workspaceId",
-      "children": [
-        "/dashboard/workspace/$workspaceId/settings/appearance"
       ]
     },
     "/dashboard/workspace/$workspaceId/team": {
@@ -498,10 +496,6 @@ export const routeTree = rootRoute
         "/dashboard/workspace/$workspaceId/project/$projectId/board",
         "/dashboard/workspace/$workspaceId/project/$projectId/task/$taskId"
       ]
-    },
-    "/dashboard/workspace/$workspaceId/settings/appearance": {
-      "filePath": "dashboard/workspace/$workspaceId/settings/appearance.tsx",
-      "parent": "/dashboard/workspace/$workspaceId/settings"
     },
     "/dashboard/workspace/$workspaceId/team/invitations": {
       "filePath": "dashboard/workspace/$workspaceId/team/invitations.tsx",

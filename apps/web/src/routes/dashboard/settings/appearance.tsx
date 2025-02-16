@@ -6,9 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Monitor, Moon, Sun } from "lucide-react";
 
-export const Route = createFileRoute(
-  "/dashboard/workspace/$workspaceId/settings/appearance",
-)({
+export const Route = createFileRoute("/dashboard/settings/appearance")({
   component: AppearanceSettings,
 });
 

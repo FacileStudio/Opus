@@ -10,19 +10,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Palette } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute(
-  "/dashboard/workspace/$workspaceId/settings",
-)({
+export const Route = createFileRoute("/dashboard/settings")({
   component: SettingsLayout,
 });
 
 function SettingsLayout() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { workspaceId } = Route.useParams();
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row h-[calc(100vh-65px)]">
+    <div className="flex-1 flex flex-col md:flex-row h-screen">
       <motion.div
         className="md:hidden border-b border-zinc-200 dark:border-zinc-800 p-4"
         initial={{ opacity: 0, y: -10 }}
@@ -82,8 +79,7 @@ function SettingsLayout() {
                   transition={{ delay: 0.2 }}
                 >
                   <Link
-                    to="/dashboard/workspace/$workspaceId/settings/appearance"
-                    params={{ workspaceId }}
+                    to="/dashboard/settings/appearance"
                     onClick={() => setIsMobileNavOpen(false)}
                     className={cn(
                       "flex items-center px-3 py-2 rounded-lg text-sm transition-colors",
