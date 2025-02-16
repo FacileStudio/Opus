@@ -18,7 +18,6 @@ export function Sidebar() {
         }}
         className={cn(
           "fixed inset-0 bg-black/50 z-30 lg:hidden",
-          "h-[100dvh]",
           isSidebarOpened ? "opacity-100" : "opacity-0 pointer-events-none",
           "transition-opacity duration-300 ease-in-out",
         )}
@@ -28,20 +27,20 @@ export function Sidebar() {
 
       <div
         className={cn(
-          "flex bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 h-screen flex-col",
+          "flex flex-col bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800",
           "transition-all duration-300 ease-in-out",
-          "min-h-screen",
-          "fixed lg:relative top-0 left-0",
+          "fixed lg:relative top-0 left-0 bottom-0",
           "z-30",
-          "h-[100dvh]",
-          "max-h-[100dvh]",
-          "pb-safe",
           !isSidebarOpened ? "w-16" : "w-64",
         )}
       >
         <SidebarHeader />
-        <SidebarContent />
-        <SidebarFooter />
+        <div className="flex-1 overflow-y-auto">
+          <SidebarContent />
+        </div>
+        <div className="relative z-10">
+          <SidebarFooter />
+        </div>
       </div>
     </>
   );

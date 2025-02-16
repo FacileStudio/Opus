@@ -33,7 +33,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="h-full p-6">
+    <div className="h-full pr-6 pt-6 pb-6">
       <KanbanBoard />
     </div>
   );
