@@ -8,7 +8,12 @@ function UserInfo() {
   const { isSidebarOpened } = useUserPreferencesStore();
 
   return (
-    <div className="flex items-center gap-3 mb-3">
+    <div
+      className={cn(
+        "flex items-center justify-center",
+        isSidebarOpened && "gap-3 mb-3",
+      )}
+    >
       <Avatar className="text-zinc-900 dark:text-zinc-100">
         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
       </Avatar>

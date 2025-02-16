@@ -10,7 +10,7 @@ function SidebarFooter() {
     <div
       className={cn(
         "border-t border-zinc-200 dark:border-zinc-800",
-        !isSidebarOpened ? "p-2" : "p-4",
+        !isSidebarOpened ? "p-4" : "p-4",
       )}
     >
       <UserInfo />

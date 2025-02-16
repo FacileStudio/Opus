@@ -33,6 +33,9 @@ export function Sidebar() {
           "min-h-screen",
           "fixed lg:relative top-0 left-0",
           "z-30",
+          "h-[100dvh]",
+          "max-h-[100dvh]",
+          "pb-safe",
           !isSidebarOpened ? "w-16" : "w-64",
         )}
       >
