@@ -17,7 +17,8 @@ export function Sidebar() {
           }
         }}
         className={cn(
-          "fixed inset-0 bg-black/50 z-30 lg:hidden h-screen",
+          "fixed inset-0 bg-black/50 z-30 lg:hidden",
+          "h-[100dvh]",
           isSidebarOpened ? "opacity-100" : "opacity-0 pointer-events-none",
           "transition-opacity duration-300 ease-in-out",
         )}
