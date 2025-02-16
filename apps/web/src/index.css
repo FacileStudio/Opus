@@ -38,6 +38,7 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
 }
 
 /*
@@ -55,6 +56,9 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
+  }
+  button {
+    cursor: pointer;
   }
 }
 
