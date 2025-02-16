@@ -35,6 +35,7 @@ services:
       - "com.centurylinklabs.watchtower.enable-volume-preservation=true"
     environment:
       JWT_ACCESS: "change_me"
+      DB_PATH: "/app/apps/api/data/kaneo.db"
     volumes:
       - sqlite_data:/app/apps/api/data:rw
     networks:
