@@ -2,9 +2,9 @@ import type { SignUpFormValues } from "@/components/auth/sign-up-form";
 import signUp from "@/fetchers/user/sign-up";
 import { useMutation } from "@tanstack/react-query";
 
-function useSignUp({ email, password, name }: SignUpFormValues) {
+function useSignUp() {
   return useMutation({
-    mutationFn: () =>
+    mutationFn: ({ email, password, name }: SignUpFormValues) =>
       signUp({
         email,
         password,

@@ -42,14 +42,14 @@ export function SignUpForm() {
       name: "",
     },
   });
-  const { isError, error, mutateAsync } = useSignUp({
-    email: form.getValues("email"),
-    password: form.getValues("password"),
-    name: form.getValues("name"),
-  });
+  const { isError, error, mutateAsync } = useSignUp();
 
-  const onSubmit = async () => {
-    const { data: user } = await mutateAsync();
+  const onSubmit = async (data: SignUpFormValues) => {
+    const { data: user } = await mutateAsync({
+      email: data.email,
+      name: data.name,
+      password: data.password,
+    });
     setUser(user);
 
     setTimeout(() => {

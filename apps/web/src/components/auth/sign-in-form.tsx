@@ -39,13 +39,13 @@ export function SignInForm() {
       password: "",
     },
   });
-  const { error, isError, mutateAsync, isPending } = useSignIn({
-    email: form.getValues("email"),
-    password: form.getValues("password"),
-  });
+  const { error, isError, mutateAsync, isPending } = useSignIn();
 
-  const onSubmit = async () => {
-    const { data: user } = await mutateAsync();
+  const onSubmit = async (data: SignInFormValues) => {
+    const { data: user } = await mutateAsync({
+      email: data.email,
+      password: data.password,
+    });
     setUser(user);
 
     setTimeout(() => {
