@@ -81,8 +81,7 @@ function Projects({ workspaceId }: ProjectsProps) {
         </button>
       </div>
       <div className="space-y-0.5">
-        {projects &&
-          projects.length > 0 &&
+        {projects && projects.length > 0 ? (
           projects.map((project) => (
             <button
               type="button"
@@ -109,7 +108,28 @@ function Projects({ workspaceId }: ProjectsProps) {
               )}
               {isSidebarOpened && project.name}
             </button>
-          ))}
+          ))
+        ) : isSidebarOpened ? (
+          <div className="px-3 py-4 flex flex-col items-center text-center">
+            <div className="w-12 h-12 mb-3 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center">
+              <Layout className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
+            </div>
+            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              Create your first project
+            </p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+              Start organizing your work with a new project
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsCreateProjectOpen(true)}
+              className="text-xs px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-md transition-colors font-medium inline-flex items-center gap-1.5"
+            >
+              <Plus className="w-3 h-3" />
+              New Project
+            </button>
+          </div>
+        ) : null}
       </div>
       <CreateProjectModal
         open={isCreateProjectOpen}

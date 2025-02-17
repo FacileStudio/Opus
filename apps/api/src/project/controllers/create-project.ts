@@ -2,10 +2,15 @@ import db from "../../database";
 import { projectTable } from "../../database/schema";
 import type { CreateProjectPayload } from "../db/queries";
 
-function createProject(
+async function createProject(
   body: Pick<CreateProjectPayload, "name" | "slug" | "workspaceId" | "icon">,
 ) {
-  return db.insert(projectTable).values(body);
+  const [createdProject] = await db
+    .insert(projectTable)
+    .values(body)
+    .returning();
+
+  return createdProject;
 }
 
 export default createProject;

@@ -7,6 +7,7 @@ import generateProjectSlug from "@/lib/generate-project-id";
 import useWorkspaceStore from "@/store/workspace";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useState } from "react";
 
@@ -28,13 +29,21 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
     icon: selectedIcon,
   });
   const IconComponent = icons[selectedIcon as keyof typeof icons];
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    await mutateAsync();
+    const { data } = await mutateAsync();
     await queryClient.invalidateQueries({ queryKey: ["projects"] });
+    navigate({
+      to: "/dashboard/workspace/$workspaceId/project/$projectId/board",
+      params: {
+        workspaceId: workspace?.id ?? "",
+        projectId: data?.id ?? "",
+      },
+    });
 
     setName("");
     setSlug("");

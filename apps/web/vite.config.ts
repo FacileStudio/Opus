@@ -9,7 +9,9 @@ export default defineConfig({
   plugins: [TanStackRouterVite(), react()],
   server: {
     host: true,
-    hmr: true,
+    hmr: {
+      host: "0.0.0.0",
+    },
     port: 5173,
   },
   resolve: {
