@@ -1,5 +1,5 @@
 import useInviteWorkspaceUser from "@/hooks/mutations/workspace-user/use-invite-workspace-user";
-import { Route } from "@/routes/dashboard/workspace/$workspaceId/team";
+import { Route } from "@/routes/dashboard/teams/$workspaceId/_layout.invitations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";

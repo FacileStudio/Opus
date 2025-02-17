@@ -1,6 +1,8 @@
-import EmptyProjectState from "@/components/project/empty-state";
-import useGetProjects from "@/hooks/queries/project/use-get-projects";
+import SelectProjectState from "@/components/project/select-project-state";
+import EmptyWorkspaceState from "@/components/workspace/empty-state";
 import useGetWorkspace from "@/hooks/queries/workspace/use-get-workspace";
+import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspaces";
+import useProjectStore from "@/store/project";
 import useWorkspaceStore from "@/store/workspace";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { LayoutGrid } from "lucide-react";
@@ -12,9 +14,10 @@ export const Route = createFileRoute("/dashboard/workspace/$workspaceId")({
 
 function RouteComponent() {
   const { workspaceId } = Route.useParams();
-  const { setWorkspace } = useWorkspaceStore();
   const { data, isLoading } = useGetWorkspace({ workspaceId });
-  const { data: projects } = useGetProjects({ workspaceId });
+  const { workspace, setWorkspace } = useWorkspaceStore();
+  const { project } = useProjectStore();
+  const { data: workspaces } = useGetWorkspaces();
 
   useEffect(() => {
     if (data) {
@@ -32,7 +35,13 @@ function RouteComponent() {
     );
   }
 
-  const isProjectsEmpty = projects && projects.length === 0;
+  if (workspaces && workspaces.length === 0) {
+    return <EmptyWorkspaceState />;
+  }
 
-  return <>{isProjectsEmpty ? <EmptyProjectState /> : <Outlet />}</>;
+  if (workspace && !project) {
+    return <SelectProjectState />;
+  }
+
+  return <Outlet />;
 }

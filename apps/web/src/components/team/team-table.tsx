@@ -1,5 +1,5 @@
 import useGetWorkspaceUsers from "@/hooks/queries/workspace-users/use-get-workspace-users";
-import { Route } from "@/routes/dashboard/workspace/$workspaceId";
+import { Route } from "@/routes/dashboard/teams/$workspaceId/_layout.roles";
 import { MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 

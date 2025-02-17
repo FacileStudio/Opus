@@ -11,7 +11,7 @@ import { Shield, UserPlus, Users } from "lucide-react";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/dashboard/workspace/$workspaceId/team")({
+export const Route = createFileRoute("/dashboard/teams/$workspaceId/_layout")({
   component: RouteComponent,
 });
 
@@ -21,7 +21,7 @@ function RouteComponent() {
   const { workspaceId } = Route.useParams();
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row h-[calc(100vh-65px)]">
+    <div className="flex-1 flex flex-col md:flex-row h-screen">
       <motion.div
         className="md:hidden border-b border-zinc-200 dark:border-zinc-800 p-4"
         initial={{ opacity: 0, y: -10 }}
@@ -87,7 +87,7 @@ function RouteComponent() {
                         ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
                         : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800",
                     )}
-                    to="/dashboard/workspace/$workspaceId/team/members"
+                    to="/dashboard/teams/$workspaceId/members"
                     params={{
                       workspaceId,
                     }}
@@ -110,7 +110,7 @@ function RouteComponent() {
                         ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
                         : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800",
                     )}
-                    to="/dashboard/workspace/$workspaceId/team/invitations"
+                    to="/dashboard/teams/$workspaceId/invitations"
                     params={{
                       workspaceId,
                     }}

@@ -1,4 +1,6 @@
+import EmptyProjectState from "@/components/project/empty-state";
 import useGetProject from "@/hooks/queries/project/use-get-project";
+import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import useProjectStore from "@/store/project";
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { AlertCircle, LayoutGrid } from "lucide-react";
@@ -16,6 +18,7 @@ function RouteComponent() {
     id: projectId,
     workspaceId,
   });
+  const { data: projects } = useGetProjects({ workspaceId });
   const { setProject } = useProjectStore();
 
   useEffect(() => {
@@ -56,6 +59,10 @@ function RouteComponent() {
         </Link>
       </div>
     );
+  }
+
+  if (projects && projects.length === 0) {
+    return <EmptyProjectState />;
   }
 
   return <Outlet />;

@@ -1,24 +1,23 @@
 import { cn } from "@/lib/cn";
-import { Route } from "@/routes/dashboard/workspace/$workspaceId";
-import useProjectStore from "@/store/project";
 import { useUserPreferencesStore } from "@/store/user-preferences";
+import useWorkspaceStore from "@/store/workspace";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { Users } from "lucide-react";
 
 function ManageTeams() {
   const { isSidebarOpened } = useUserPreferencesStore();
   const navigate = useNavigate();
-  const { workspaceId } = Route.useParams();
-  const { setProject } = useProjectStore();
+  const { workspace } = useWorkspaceStore();
   const location = useRouterState({ select: (s) => s.location });
-  const isOnTeamsRoute = location.pathname.includes("/team");
+  const isOnTeamsRoute = location.pathname.includes("/teams");
 
   const onManageTeams = () => {
-    setProject(undefined);
+    if (!workspace) return;
+
     navigate({
-      to: "/dashboard/workspace/$workspaceId/team/members",
+      to: "/dashboard/teams/$workspaceId/members",
       params: {
-        workspaceId,
+        workspaceId: workspace.id,
       },
     });
   };

@@ -1,6 +1,6 @@
 import { Sidebar } from "@/components/common/sidebar";
-import EmptyWorkspaceState from "@/components/workspace/empty-state";
-import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspaces";
+import SelectWorkspaceState from "@/components/workspace/select-workspace-state";
+import useWorkspaceStore from "@/store/workspace";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dashboard")({
@@ -15,15 +15,13 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardIndexRouteComponent() {
-  const { data } = useGetWorkspaces();
-
-  const isWorkspacesEmpty = data && data.length === 0;
+  const { workspace } = useWorkspaceStore();
 
   return (
     <>
       <Sidebar />
       <main className="flex-1 overflow-hidden scroll-smooth">
-        {isWorkspacesEmpty ? <EmptyWorkspaceState /> : <Outlet />}
+        {workspace ? <Outlet /> : <SelectWorkspaceState />}
       </main>
     </>
   );
