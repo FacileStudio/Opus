@@ -52,12 +52,12 @@ jobs:
           if [ -n "${{ inputs.version }}" ]; then
             echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
           else
-            NEW_VERSION=$(bun run -e "
-              import semver from 'semver';
-              const current = '${{ steps.current_version.outputs.version }}';
-              const bump = '${{ steps.bump.outputs.bump }}';
-              console.log(semver.inc(current, bump));
-            ")
+            echo 'import semver from "semver";
+            const current = "${{ steps.current_version.outputs.version }}";
+            const bump = "${{ steps.bump.outputs.bump }}";
+            console.log(semver.inc(current, bump));' > version.mjs
+            NEW_VERSION=$(bun version.mjs)
+            rm version.mjs
             echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           fi
 
