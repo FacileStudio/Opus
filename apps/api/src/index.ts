@@ -1,4 +1,3 @@
-import { logger } from "@bogeychan/elysia-logger";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import project from "./project";
@@ -11,7 +10,6 @@ import workspaceUser from "./workspace-user";
 const app = new Elysia()
   .state("userEmail", "")
   .use(cors())
-  .use(logger())
   .use(user)
   .guard({
     async beforeHandle({ store, cookie: { session } }) {
