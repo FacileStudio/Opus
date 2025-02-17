@@ -1,7 +1,7 @@
+import EmptyProjectState from "@/components/project/empty-state";
 import SelectProjectState from "@/components/project/select-project-state";
-import EmptyWorkspaceState from "@/components/workspace/empty-state";
+import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import useGetWorkspace from "@/hooks/queries/workspace/use-get-workspace";
-import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspaces";
 import useProjectStore from "@/store/project";
 import useWorkspaceStore from "@/store/workspace";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
@@ -17,7 +17,7 @@ function RouteComponent() {
   const { data, isLoading } = useGetWorkspace({ workspaceId });
   const { workspace, setWorkspace } = useWorkspaceStore();
   const { project } = useProjectStore();
-  const { data: workspaces } = useGetWorkspaces();
+  const { data: projects } = useGetProjects({ workspaceId });
 
   useEffect(() => {
     if (data) {
@@ -35,8 +35,8 @@ function RouteComponent() {
     );
   }
 
-  if (workspaces && workspaces.length === 0) {
-    return <EmptyWorkspaceState />;
+  if (projects && projects.length === 0) {
+    return <EmptyProjectState />;
   }
 
   if (workspace && !project) {
