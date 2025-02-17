@@ -31,6 +31,7 @@ jobs:
           bun add -g conventional-changelog-cli
           bun add -g conventional-recommended-bump
           bun add -g conventional-changelog-angular
+          bun add -g semver
 
       - name: Get version bump
         id: bump
@@ -48,24 +49,21 @@ jobs:
       - name: Calculate new version
         id: new_version
         run: |
-          CURRENT_VERSION=${{ steps.current_version.outputs.version }}
           if [ -n "${{ inputs.version }}" ]; then
-            NEW_VERSION=${{ inputs.version }}
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
           else
-            BUMP=${{ steps.bump.outputs.bump }}
             NEW_VERSION=$(bun run -e "
-              const semver = require('semver');
-              const current = '$CURRENT_VERSION';
-              const bump = '$BUMP';
+              import semver from 'semver';
+              const current = '${{ steps.current_version.outputs.version }}';
+              const bump = '${{ steps.bump.outputs.bump }}';
               console.log(semver.inc(current, bump));
             ")
+            echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           fi
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Update version in package.json
         run: |
-          NEW_VERSION=${{ steps.new_version.outputs.version }}
-          bun x npm version $NEW_VERSION --no-git-tag-version
+          bun x npm version ${{ steps.new_version.outputs.version }} --no-git-tag-version
 
       - name: Generate changelog
         run: |
