@@ -1,0 +1,97 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (leave empty for automatic versioning)'
+        required: false
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install -g conventional-changelog-cli
+          npm install -g conventional-recommended-bump
+
+      - name: Get version bump
+        id: bump
+        if: ${{ !inputs.version }}
+        run: |
+          BUMP=$(conventional-recommended-bump -p angular)
+          echo "bump=$BUMP" >> $GITHUB_OUTPUT
+          
+      - name: Get current version
+        id: current_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Calculate new version
+        id: new_version
+        run: |
+          CURRENT_VERSION=${{ steps.current_version.outputs.version }}
+          if [ -n "${{ inputs.version }}" ]; then
+            NEW_VERSION=${{ inputs.version }}
+          else
+            BUMP=${{ steps.bump.outputs.bump }}
+            NEW_VERSION=$(node -e "
+              const semver = require('semver');
+              const current = '$CURRENT_VERSION';
+              const bump = '$BUMP';
+              console.log(semver.inc(current, bump));
+            ")
+          fi
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version in package.json
+        run: |
+          NEW_VERSION=${{ steps.new_version.outputs.version }}
+          npm version $NEW_VERSION --no-git-tag-version
+
+      - name: Generate changelog
+        run: |
+          conventional-changelog -p angular -i CHANGELOG.md -s
+
+      - name: Create Release Commit
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add CHANGELOG.md package.json
+          git commit -m "chore(release): v${{ steps.new_version.outputs.version }}"
+          git tag "v${{ steps.new_version.outputs.version }}"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          tags: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.new_version.outputs.version }}
+          name: Release v${{ steps.new_version.outputs.version }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
