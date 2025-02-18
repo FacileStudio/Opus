@@ -28,7 +28,10 @@ function DashboardIndexRouteComponent() {
       <Sidebar />
       <main className="flex-1 overflow-hidden scroll-smooth">
         {hasNoWorkspacesAndNoSelectedWorkspace && <EmptyWorkspaceState />}
-        {workspace ? <Outlet /> : <SelectWorkspaceState />}
+        {!workspace && workspaces && workspaces.length > 0 && (
+          <SelectWorkspaceState />
+        )}
+        <Outlet />
       </main>
     </>
   );

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, LayoutGrid } from "lucide-react";
+import { ArrowLeft, LayoutGrid } from "lucide-react";
 
 function SelectProjectState() {
   return (
@@ -24,7 +24,7 @@ function SelectProjectState() {
               <LayoutGrid className="w-8 h-8 text-indigo-500 dark:text-indigo-400" />
             </motion.div>
             <motion.div
-              className="absolute -right-4 top-1/2 -translate-y-1/2"
+              className="absolute -left-4 top-1/2 -translate-y-1/2"
               animate={{ x: [0, 5, 0] }}
               transition={{
                 duration: 2,
@@ -33,7 +33,7 @@ function SelectProjectState() {
                 delay: 0.5,
               }}
             >
-              <ArrowRight className="w-5 h-5 text-indigo-400 dark:text-indigo-300" />
+              <ArrowLeft className="w-5 h-5 text-indigo-400 dark:text-indigo-300" />
             </motion.div>
           </div>
           <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
