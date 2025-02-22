@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import useGetWorkspace from "@/hooks/queries/workspace/use-get-workspace";
 import { cn } from "@/lib/cn";
+import useWorkspaceStore from "@/store/workspace";
 import {
   Link,
   Outlet,
@@ -7,9 +9,9 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { Shield, UserPlus, Users } from "lucide-react";
+import { Shield, Users } from "lucide-react";
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/dashboard/teams/$workspaceId/_layout")({
   component: RouteComponent,
@@ -19,6 +21,17 @@ function RouteComponent() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { workspaceId } = Route.useParams();
+  const { setWorkspace } = useWorkspaceStore();
+
+  const { data: workspace } = useGetWorkspace({
+    workspaceId,
+  });
+
+  useEffect(() => {
+    if (workspace) {
+      setWorkspace(workspace);
+    }
+  }, [workspace, setWorkspace]);
 
   return (
     <div className="flex-1 flex flex-col md:flex-row h-screen">
@@ -101,29 +114,6 @@ function RouteComponent() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <Link
-                    className={cn(
-                      "flex items-center px-3 py-2 rounded-lg text-sm transition-all duration-200 ease-in-out",
-                      pathname.includes("/invitations")
-                        ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                        : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800",
-                    )}
-                    to="/dashboard/teams/$workspaceId/invitations"
-                    params={{
-                      workspaceId,
-                    }}
-                    onClick={() => setIsMobileNavOpen(false)}
-                  >
-                    <UserPlus className="w-4 h-4 mr-3" />
-                    Invitations
-                  </Link>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
                   <div
@@ -148,12 +138,14 @@ function RouteComponent() {
       </AnimatePresence>
 
       <motion.div
-        className="flex-1 overflow-auto"
+        className="flex-1"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        <Outlet />
+        <div className="h-full overflow-auto">
+          <Outlet />
+        </div>
       </motion.div>
     </div>
   );

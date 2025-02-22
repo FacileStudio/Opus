@@ -1,36 +1,20 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import db from "../../database";
-import {
-  userTable,
-  workspaceTable,
-  workspaceUserTable,
-} from "../../database/schema";
+import { userTable, workspaceUserTable } from "../../database/schema";
 
 function getWorkspaceUsers({ workspaceId }: { workspaceId: string }) {
   return db
     .select({
-      userEmail: userTable.email,
+      userEmail: workspaceUserTable.userEmail,
       userName: userTable.name,
-      joinedAt: userTable.createdAt,
+      joinedAt: workspaceUserTable.joinedAt,
+      status: workspaceUserTable.status,
+      role: workspaceUserTable.role,
     })
-    .from(workspaceTable)
-    .where(eq(workspaceTable.id, workspaceId))
-    .innerJoin(
-      workspaceUserTable,
-      eq(workspaceTable.id, workspaceUserTable.workspaceId),
-    )
-    .innerJoin(userTable, eq(workspaceUserTable.userEmail, userTable.email))
-    .unionAll(
-      db
-        .select({
-          userEmail: userTable.email,
-          userName: userTable.name,
-          joinedAt: userTable.createdAt,
-        })
-        .from(workspaceTable)
-        .innerJoin(userTable, eq(workspaceTable.ownerEmail, userTable.email))
-        .where(eq(workspaceTable.id, workspaceId)),
-    );
+    .from(workspaceUserTable)
+    .leftJoin(userTable, eq(workspaceUserTable.userEmail, userTable.email))
+    .where(eq(workspaceUserTable.workspaceId, workspaceId))
+    .orderBy(asc(workspaceUserTable.status));
 }
 
 export default getWorkspaceUsers;
