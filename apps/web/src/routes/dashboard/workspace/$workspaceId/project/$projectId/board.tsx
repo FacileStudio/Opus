@@ -22,7 +22,7 @@ function RouteComponent() {
   }, [data, setProject]);
 
   return (
-    <div className="h-screen overflow-hidden p-2">
+    <div className="h-full overflow-hidden p-6">
       <KanbanBoard />
     </div>
   );
