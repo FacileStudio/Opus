@@ -1,11 +1,9 @@
-import { AlertTriangle } from "lucide-react";
 import { Button } from "./ui/button";
 
 export function DemoAlert() {
   return (
-    <div className="flex flex-col bg-amber-500/10 border-b border-amber-500/20 px-4 py-3 text-center">
+    <div className="flex sticky top-0 left-0 right-0 flex-col bg-amber-500/10 border-b border-amber-500/20 px-4 py-3 text-center">
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm text-amber-900 dark:text-amber-300">
-        <AlertTriangle className="w-5 h-5 sm:w-4 sm:h-4 mb-1 sm:mb-0" />
         <p className="flex flex-col sm:flex-row items-center gap-2">
           This is a demo environment. All data will be automatically purged
           every 24 hours.

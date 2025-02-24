@@ -28,7 +28,7 @@ function DashboardIndexRouteComponent() {
   return (
     <>
       <Sidebar />
-      <main className="flex-1 overflow-hidden scroll-smooth">
+      <main className="w-full overflow-auto scroll-smooth flex flex-col">
         {isDemoMode && <DemoAlert />}
         {hasNoWorkspacesAndNoSelectedWorkspace && <EmptyWorkspaceState />}
         {!workspace && workspaces && workspaces.length > 0 && (
