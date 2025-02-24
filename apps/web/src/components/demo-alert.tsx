@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 
 export function DemoAlert() {
   return (
-    <div className="flex flex-col h-12 bg-amber-500/10 border-b border-amber-500/20 px-4 py-3 text-center">
+    <div className="flex flex-col bg-amber-500/10 border-b border-amber-500/20 px-4 py-3 text-center">
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm text-amber-900 dark:text-amber-300">
         <AlertTriangle className="w-5 h-5 sm:w-4 sm:h-4 mb-1 sm:mb-0" />
         <p className="flex flex-col sm:flex-row items-center gap-2">
