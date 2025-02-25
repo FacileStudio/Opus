@@ -25,7 +25,8 @@ We are a community-driven project and we expect all contributors to follow our C
 
 ### Requirements
 
-- Bun (package manager)
+- Docker
+- Docker Compose
 - Git
 
 ### Local Development Setup
@@ -45,7 +46,7 @@ bun install
 3. Start the development server:
 
 ```bash
-bun run dev
+docker compose -f compose.local.yml up -d
 ```
 
 This will start the frontend and backend servers on [http://localhost:5173](http://localhost:5173) and [http://localhost:1337](http://localhost:1337) respectively.
@@ -55,14 +56,12 @@ This will start the frontend and backend servers on [http://localhost:5173](http
 ### Finding Issues to Work On
 
 - Check the [issues](https://github.com/kaneo-app/app/issues) page for open issues.
-- Check the [Discord server](https://discord.gg/vTKsVnqY) for help with issues.
+- Check the [Discord server](https://discord.gg/rU4tSyhXXU) for help with issues.
 
 ### Creating Pull Requests
 
 - Create a new branch for your changes.
-- Make your changes and commit them.
-
-mention conventional commits
+- Make your changes and commit them using conventional commits:
 
 ```bash
 git commit -m "feat: add new feature"
@@ -80,23 +79,24 @@ git push origin my-branch
 
 ### Code Style
 
-- Use `bun` as the package manager.
-- Use `typescript` for the code.
-- Use `biome` for the code style.
-- Use `biome` for the code linting.
+- Use `biome` for code style and linting.
+- The project is configured with Biome's recommended rules.
+- Run `bun x biome ci .` before committing to ensure your code follows the style guide.
 
 ### Conventional Commits
 
-- Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for the commit messages.
+- Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages.
+- Common types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 ### Project Structure
 
 - `apps/api/`: The backend API server.
 - `apps/web/`: The frontend web application.
+- `packages/`: Shared packages and configurations.
 
 ## Need Help?
 
-- Check the [Discord server](https://discord.gg/vTKsVnqY) for help.
+- Check the [Discord server](https://discord.gg/rU4tSyhXXU) for help.
 - Open an [issue](https://github.com/kaneo-app/app/issues) if you need help.
 
 Thank you for your contribution to Kaneo! 🎉
