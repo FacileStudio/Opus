@@ -10,7 +10,7 @@
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/kaneo-app/app/ci.yml?branch=main)](https://github.com/kaneo-app/app/actions)
-[![Discord](https://img.shields.io/discord/1326250681530843178?color=7389D8&label=&logo=discord&logoColor=ffffff)](https://discord.gg/vTKsVnqY)
+[![Discord](https://img.shields.io/discord/1326250681530843178?color=7389D8&label=&logo=discord&logoColor=ffffff)](https://discord.gg/rU4tSyhXXU)
 
 </div>
 
@@ -24,7 +24,7 @@
     <span> | </span>
     <a href="https://demo.kaneo.app">Demo</a>
     <span> | </span>
-    <a href="https://discord.gg/vTKsVnqY">Discord</a>
+    <a href="https://discord.gg/rU4tSyhXXU">Discord</a>
   </h3>
 </div>
 
@@ -104,7 +104,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## 💬 Community
 
-- [Discord](https://discord.gg/vTKsVnqY) - Chat with the community
+- [Discord](https://discord.gg/rU4tSyhXXU) - Chat with the community
 - [GitHub Issues](https://github.com/kaneo-app/app/issues) - Report bugs or suggest features
 - [Website](https://kaneo.app) - Official website
 
