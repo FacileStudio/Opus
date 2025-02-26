@@ -26,10 +26,8 @@ export function CreateWorkspaceModal({
     if (!name.trim()) return;
 
     const createdWorkspace = await mutateAsync();
-    await queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+    resetAndCloseModal();
 
-    setName("");
-    onClose();
     navigate({
       to: "/dashboard/workspace/$workspaceId",
       params: {
@@ -38,8 +36,18 @@ export function CreateWorkspaceModal({
     });
   };
 
+  const resetWorkspaceState = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+    setName("");
+  };
+
+  const resetAndCloseModal = () => {
+    resetWorkspaceState();
+    onClose();
+  };
+
   return (
-    <Dialog.Root open={open} onOpenChange={onClose}>
+    <Dialog.Root open={open} onOpenChange={resetAndCloseModal}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40" />
         <Dialog.Content className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
@@ -48,7 +56,10 @@ export function CreateWorkspaceModal({
               <Dialog.Title className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 New Workspace
               </Dialog.Title>
-              <Dialog.Close className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">
+              <Dialog.Close
+                asChild
+                className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              >
                 <X size={20} />
               </Dialog.Close>
             </div>
@@ -68,6 +79,7 @@ export function CreateWorkspaceModal({
                   placeholder="My Workspace"
                   className="bg-white dark:bg-zinc-800/50"
                   required
+                  autoFocus
                 />
               </div>
 

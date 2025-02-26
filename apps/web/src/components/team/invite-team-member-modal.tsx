@@ -46,12 +46,24 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
       queryKey: ["workspace-users", workspaceId],
     });
 
+    resetInviteTeamMember();
+    onClose();
+  };
+
+  const resetInviteTeamMember = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["workspace-users", workspaceId],
+    });
     form.reset();
+  };
+
+  const resetAndCloseModal = () => {
+    resetInviteTeamMember();
     onClose();
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={onClose}>
+    <Dialog.Root open={open} onOpenChange={resetAndCloseModal}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
         <Dialog.Content className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
@@ -60,7 +72,10 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
               <Dialog.Title className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 Invite Team Member
               </Dialog.Title>
-              <Dialog.Close className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">
+              <Dialog.Close
+                asChild
+                className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              >
                 <X size={20} />
               </Dialog.Close>
             </div>
@@ -82,6 +97,7 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
                               {...field}
                               placeholder="colleague@company.com"
                               className="bg-white dark:bg-zinc-800/50"
+                              autoFocus
                             />
                           </FormControl>
                           <FormMessage />

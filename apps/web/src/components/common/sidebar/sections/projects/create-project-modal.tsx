@@ -37,6 +37,7 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
 
     const { data } = await mutateAsync();
     await queryClient.invalidateQueries({ queryKey: ["projects"] });
+
     navigate({
       to: "/dashboard/workspace/$workspaceId/project/$projectId/board",
       params: {
@@ -45,9 +46,7 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
       },
     });
 
-    setName("");
-    setSlug("");
-    setSelectedIcon("Layout");
+    resetState();
     onClose();
   };
 
@@ -57,8 +56,24 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
     setSlug(generateProjectSlug(newName));
   };
 
+  const resetProjectState = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["projects"] });
+    resetState();
+  };
+
+  const resetState = () => {
+    setName("");
+    setSlug("");
+    setSelectedIcon("Layout");
+  };
+
+  const resetAndCloseModal = () => {
+    resetProjectState();
+    onClose();
+  };
+
   return (
-    <Dialog.Root open={open} onOpenChange={onClose}>
+    <Dialog.Root open={open} onOpenChange={resetAndCloseModal}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40" />
         <Dialog.Content className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
@@ -67,7 +82,10 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
               <Dialog.Title className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 New Project
               </Dialog.Title>
-              <Dialog.Close className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">
+              <Dialog.Close
+                asChild
+                className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              >
                 <X size={20} />
               </Dialog.Close>
             </div>
