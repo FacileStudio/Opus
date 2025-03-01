@@ -29,7 +29,10 @@ function TaskTitle({
     await updateTask({
       ...task,
       title: value,
-      assigneeName: task.userEmail || "",
+      userEmail: task.userEmail || "",
+      status: task.status || "",
+      dueDate: task.dueDate || new Date(),
+      priority: task.priority || "",
     });
     setIsSaving(false);
   }, 1000);

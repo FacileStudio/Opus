@@ -32,7 +32,11 @@ function TaskDescription({ setIsSaving }: TaskDescriptionProps) {
     await updateTask({
       ...task,
       description: value,
-      assigneeName: task.userEmail || "",
+      userEmail: task.userEmail || "",
+      title: task.title || "",
+      status: task.status || "",
+      dueDate: task.dueDate || new Date(),
+      priority: task.priority || "",
     });
     setIsSaving(false);
   }, 1000);

@@ -13,7 +13,7 @@ import TaskCalendar from "./task-calendar";
 
 export const taskInfoSchema = z.object({
   status: z.string(),
-  assigneeName: z.string(),
+  userEmail: z.string(),
   priority: z.string(),
   dueDate: z.date(),
 });
@@ -30,7 +30,7 @@ function TaskInfo({
   const form = useForm<z.infer<typeof taskInfoSchema>>({
     values: {
       status: task?.status || "",
-      assigneeName: task?.userEmail || "",
+      userEmail: task?.userEmail || "",
       priority: task?.priority || "",
       dueDate: task?.dueDate || new Date(),
     },
@@ -44,7 +44,10 @@ function TaskInfo({
     setIsSaving(true);
     await updateTask({
       ...task,
-      ...data,
+      userEmail: data.userEmail,
+      status: data.status || "",
+      priority: data.priority || "",
+      dueDate: data.dueDate || new Date(),
     });
     setIsSaving(false);
   };
@@ -56,7 +59,7 @@ function TaskInfo({
   }, [form]);
 
   return (
-    <div className="w-full md:w-80 flex-shrink-0 overflow-y-auto border-b border-zinc-200 dark:border-zinc-800 p-4 gap-4 flex flex-col">
+    <div className="w-full md:w-96 flex-shrink-0 overflow-y-auto border-b border-zinc-200 dark:border-zinc-800 p-4 gap-4 border-l flex flex-col">
       <Form {...form}>
         <FormField
           control={form.control}
@@ -84,7 +87,7 @@ function TaskInfo({
 
         <FormField
           control={form.control}
-          name="assigneeName"
+          name="userEmail"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Assign to</FormLabel>
@@ -93,7 +96,7 @@ function TaskInfo({
                 placeholder="Assign to"
                 onChange={(value) => {
                   field.onChange(value);
-                  handleChange({ ...form.getValues(), assigneeName: value });
+                  handleChange({ ...form.getValues(), userEmail: value });
                 }}
                 options={[
                   {

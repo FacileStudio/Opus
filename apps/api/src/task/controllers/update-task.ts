@@ -6,7 +6,7 @@ async function updateTask(
   taskId: string,
   body: {
     projectId: string;
-    assigneeId: string | null;
+    userEmail: string;
     title: string;
     status: string;
     dueDate: Date | null;
@@ -33,6 +33,7 @@ async function updateTask(
       status: body.status,
       dueDate: new Date(body.dueDate ?? ""),
       priority: body.priority,
+      userEmail: body.userEmail,
     })
     .where(eq(taskTable.id, taskId))
     .returning();

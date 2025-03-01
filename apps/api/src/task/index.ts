@@ -40,23 +40,25 @@ const task = new Elysia({ prefix: "/task" })
       }),
     },
   )
-  .put("/:taskId/update", async ({ params, body }) => {
-    const updatedTask = await updateTask(
-      params.taskId,
-      // TODO: Fix this casting
-      body as {
-        projectId: string;
-        assigneeId: string | null;
-        title: string;
-        status: string;
-        dueDate: Date | null;
-        description: string;
-        priority: string;
-      },
-    );
+  .put(
+    "/:taskId/update",
+    async ({ params, body }) => {
+      const updatedTask = await updateTask(params.taskId, body);
 
-    return updatedTask;
-  })
+      return updatedTask;
+    },
+    {
+      body: t.Object({
+        projectId: t.String(),
+        userEmail: t.String(),
+        title: t.String(),
+        status: t.String(),
+        dueDate: t.Date(),
+        description: t.String(),
+        priority: t.String(),
+      }),
+    },
+  )
   .ws("/ws/:projectId", {
     async open(ws) {
       const projectId = ws.data.params.projectId;
