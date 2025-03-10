@@ -70,6 +70,12 @@ volumes:
 
 4. Create your first project and start managing your tasks!
 
+| Variable | Description | Required | Default |
+| -------- | ----------- | -------- | ------- |
+| `JWT_ACCESS` | The JWT access token for the API | Yes | - |
+| `DB_PATH` | The path to the SQLite database | Yes | `./data/kaneo.db` |
+| `KANEO_API_URL` | The URL of the Kaneo API | Yes | `http://localhost:1337` |
+
 ## 📖 Documentation
 
 For detailed instructions and documentation, visit our [Documentation](https://kaneo.app/quick-start).
