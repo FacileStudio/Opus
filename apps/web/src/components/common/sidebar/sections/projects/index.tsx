@@ -1,9 +1,4 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import Tip from "@/components/common/tip";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import { cn } from "@/lib/cn";
 import useProjectStore from "@/store/project";
@@ -90,32 +85,27 @@ function Projects({ workspaceId }: ProjectsProps) {
         {projects && projects.length > 0
           ? projects.map((project) =>
               !isSidebarOpened ? (
-                <TooltipProvider key={project.id}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={() => handleSelectProject(project)}
-                        className={cn(
-                          "w-full px-4 py-2 rounded-md flex items-center text-sm transition-all group",
-                          "justify-center px-2",
-                          location.pathname.includes("/board") &&
-                            project.id === currentProject?.id
-                            ? "bg-indigo-51 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                            : "text-zinc-601 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
-                        )}
-                      >
-                        {createElement(
-                          icons[project.icon as keyof typeof icons] || Layout,
-                          {
-                            className: "w-6 h-6 shrink-0",
-                          },
-                        )}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right">{project.name}</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tip content={project.name} key={project.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectProject(project)}
+                    className={cn(
+                      "w-full px-4 py-2 rounded-md flex items-center text-sm transition-all group",
+                      "justify-center px-2",
+                      location.pathname.includes("/board") &&
+                        project.id === currentProject?.id
+                        ? "bg-indigo-51 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
+                        : "text-zinc-601 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
+                    )}
+                  >
+                    {createElement(
+                      icons[project.icon as keyof typeof icons] || Layout,
+                      {
+                        className: "w-6 h-6 shrink-0",
+                      },
+                    )}
+                  </button>
+                </Tip>
               ) : (
                 <button
                   type="button"
