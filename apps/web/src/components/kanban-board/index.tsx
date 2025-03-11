@@ -84,22 +84,22 @@ function KanbanBoard() {
 
   if (!project || !project.columns) {
     return (
-      <div className="h-full flex flex-col">
-        <header className="mb-6 space-y-6 shrink-0 px-6">
+      <div className="h-full flex flex-col w-full">
+        <header className="mb-6 mt-6 space-y-6 shrink-0 px-6">
           <div className="flex items-center justify-between">
             <div className="w-48 h-8 bg-zinc-100 dark:bg-zinc-800/50 rounded-md animate-pulse" />
           </div>
         </header>
 
         <div className="flex-1 relative min-h-0">
-          <div className="flex gap-6 overflow-x-auto pb-4 px-4 md:px-6 h-full">
-            {[...Array(3)].map((_, i) => (
+          <div className="flex gap-6 flex-1 overflow-x-auto pb-4 px-4 md:px-6 h-full">
+            {[...Array(4)].map((_, i) => (
               <div
                 key={`kanban-column-skeleton-${
                   // biome-ignore lint/suspicious/noArrayIndexKey: It's a skeleton
                   i
                 }`}
-                className="flex-1 min-w-80 flex flex-col bg-zinc-50 dark:bg-zinc-900 rounded-lg h-full"
+                className="flex-1 w-full min-w-80 flex flex-col bg-zinc-50 dark:bg-zinc-900 rounded-lg h-full"
               >
                 <div className="px-4 py-3 flex items-center justify-between">
                   <div className="w-24 h-5 bg-zinc-100 dark:bg-zinc-800/50 rounded animate-pulse" />
