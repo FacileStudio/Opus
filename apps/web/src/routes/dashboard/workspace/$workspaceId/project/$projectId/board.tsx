@@ -1,5 +1,5 @@
 import KanbanBoard from "@/components/kanban-board";
-import useGetProject from "@/hooks/queries/project/use-get-project";
+import useGetTasks from "@/hooks/queries/task/use-get-tasks";
 import useProjectStore from "@/store/project";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -11,8 +11,8 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const { workspaceId, projectId } = Route.useParams();
-  const { data } = useGetProject({ id: projectId, workspaceId });
+  const { projectId } = Route.useParams();
+  const { data } = useGetTasks(projectId);
   const { setProject } = useProjectStore();
 
   useEffect(() => {

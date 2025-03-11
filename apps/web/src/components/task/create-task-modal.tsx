@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useCreateTask from "@/hooks/mutations/task/use-create-task";
+import useUpdateTask from "@/hooks/mutations/task/use-update-task";
 import useGetWorkspaceUsers from "@/hooks/queries/workspace-users/use-get-workspace-users";
-import useBoardWebSocket from "@/hooks/use-board-websocket";
 import useProjectStore from "@/store/project";
 import useWorkspaceStore from "@/store/workspace";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,10 +43,10 @@ export function CreateTaskModal({
 }: CreateTaskModalProps) {
   const { project, setProject } = useProjectStore();
   const { workspace } = useWorkspaceStore();
+  const { mutate: updateTask } = useUpdateTask();
   const { data: users } = useGetWorkspaceUsers({
     workspaceId: workspace?.id ?? "",
   });
-  const { ws } = useBoardWebSocket();
 
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
@@ -85,7 +85,7 @@ export function CreateTaskModal({
     });
 
     setProject(updatedProject);
-    ws?.send(JSON.stringify({ type: "UPDATE_TASK", ...newTask }));
+    updateTask(newTask);
 
     form.reset();
     onClose();

@@ -96,7 +96,7 @@ function TaskEditPage() {
               </div>
             </div>
           </div>
-          <TaskInfo setIsSaving={setIsSaving} />
+          {task && <TaskInfo task={task} setIsSaving={setIsSaving} />}
         </div>
       </div>
     </motion.div>

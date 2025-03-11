@@ -1,10 +1,9 @@
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Select } from "@/components/ui/select";
 import useUpdateTask from "@/hooks/mutations/task/use-update-task";
-import useGetTask from "@/hooks/queries/task/use-get-task";
 import useGetWorkspaceUsers from "@/hooks/queries/workspace-users/use-get-workspace-users";
-import { Route } from "@/routes/dashboard/workspace/$workspaceId/project/$projectId/task/$taskId";
 import useProjectStore from "@/store/project";
+import type { Task } from "@/types/project";
 import { Flag } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -19,23 +18,25 @@ export const taskInfoSchema = z.object({
 });
 
 function TaskInfo({
+  task,
   setIsSaving,
-}: { setIsSaving: (isSaving: boolean) => void }) {
-  const { taskId, workspaceId } = Route.useParams();
+}: {
+  task: Task;
+  setIsSaving: (isSaving: boolean) => void;
+}) {
   const { project } = useProjectStore();
-  const { data: task } = useGetTask(taskId);
-  const { data: workspaceUsers } = useGetWorkspaceUsers({ workspaceId });
+  const { data: workspaceUsers } = useGetWorkspaceUsers({
+    workspaceId: project?.workspaceId || "",
+  });
   const { mutateAsync: updateTask } = useUpdateTask();
 
   const form = useForm<z.infer<typeof taskInfoSchema>>({
-    values: {
+    defaultValues: {
       status: task?.status || "",
       userEmail: task?.userEmail || "",
       priority: task?.priority || "",
       dueDate: task?.dueDate || new Date(),
     },
-    shouldUnregister: true,
-    mode: "onChange",
   });
 
   const handleChange = async (data: z.infer<typeof taskInfoSchema>) => {
@@ -48,6 +49,7 @@ function TaskInfo({
       status: data.status || "",
       priority: data.priority || "",
       dueDate: data.dueDate || new Date(),
+      projectId: project?.id || "",
     });
     setIsSaving(false);
   };

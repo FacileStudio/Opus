@@ -32,7 +32,6 @@ async function getTasks(projectId: string) {
       assigneeName: userTable.name,
       assigneeEmail: userTable.email,
       projectId: taskTable.projectId,
-      projectSlug: projectTable.slug,
     })
     .from(taskTable)
     .leftJoin(userTable, eq(taskTable.userEmail, userTable.email))
@@ -53,6 +52,7 @@ async function getTasks(projectId: string) {
     id: project.id,
     name: project.name,
     slug: project.slug,
+    description: project.description,
     workspaceId: project.workspaceId,
     columns,
   };

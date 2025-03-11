@@ -3,7 +3,7 @@ import { api } from "@kaneo/libs";
 
 async function updateTask(taskId: string, task: Task) {
   const response = await api.task({ taskId }).update.put({
-    userEmail: task.userEmail,
+    userEmail: task.userEmail || "",
     title: task.title,
     description: task.description || "",
     status: task.status,

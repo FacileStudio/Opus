@@ -49,6 +49,8 @@ function TaskComment() {
     queryClient.invalidateQueries({
       queryKey: ["activities", taskId],
     });
+
+    form.reset();
   }
 
   useEffect(() => {

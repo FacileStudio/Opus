@@ -1,4 +1,4 @@
-import useBoardWebsocket from "@/hooks/use-board-websocket";
+import useUpdateTask from "@/hooks/mutations/task/use-update-task";
 import useProjectStore from "@/store/project";
 import {
   DndContext,
@@ -21,7 +21,7 @@ import TaskCard from "./task-card";
 function KanbanBoard() {
   const { project, setProject } = useProjectStore();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  const { ws } = useBoardWebsocket();
+  const { mutate: updateTask } = useUpdateTask();
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
@@ -65,16 +65,16 @@ function KanbanBoard() {
           destinationIndex += 1;
         }
         destinationColumn.tasks.splice(destinationIndex, 0, task);
+        updateTask(task);
       } else {
         const updatedTask = { ...task, status: destinationColumn.id };
-        ws?.send(JSON.stringify({ type: "UPDATE_TASK", ...updatedTask }));
-
         const destinationIndex =
           overId === destinationColumn.id
             ? destinationColumn.tasks.length
             : destinationColumn.tasks.findIndex((t) => t.id === overId);
 
         destinationColumn.tasks.splice(destinationIndex + 1, 0, updatedTask);
+        updateTask(updatedTask);
       }
     });
 
