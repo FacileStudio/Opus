@@ -13,7 +13,7 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { projectId } = Route.useParams();
   const { data } = useGetTasks(projectId);
-  const { setProject } = useProjectStore();
+  const { project, setProject } = useProjectStore();
 
   useEffect(() => {
     if (data) {
@@ -23,7 +23,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-1">
-      <KanbanBoard />
+      <KanbanBoard project={project} />
     </div>
   );
 }

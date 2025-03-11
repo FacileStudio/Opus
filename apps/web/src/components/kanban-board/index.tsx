@@ -1,5 +1,6 @@
 import useUpdateTask from "@/hooks/mutations/task/use-update-task";
 import useProjectStore from "@/store/project";
+import type { Project } from "@/types/project";
 import {
   DndContext,
   type DragEndEvent,
@@ -18,8 +19,8 @@ import { useState } from "react";
 import Column from "./column";
 import TaskCard from "./task-card";
 
-function KanbanBoard() {
-  const { project, setProject } = useProjectStore();
+function KanbanBoard({ project }: { project: Project | undefined }) {
+  const { setProject } = useProjectStore();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const { mutate: updateTask } = useUpdateTask();
   const sensors = useSensors(
@@ -82,7 +83,7 @@ function KanbanBoard() {
     setActiveId(null);
   };
 
-  if (!project || !project.columns) {
+  if (!project || !project?.columns) {
     return (
       <div className="h-full flex flex-col w-full">
         <header className="mb-6 mt-6 space-y-6 shrink-0 px-6">
