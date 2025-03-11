@@ -37,7 +37,7 @@ function TaskCard({ task }: TaskCardProps) {
     medium:
       "bg-yellow-50 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-500",
     high: "bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-500",
-    urgent: "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-500",
+    critical: "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-500",
   };
 
   function handleTaskCardClick() {
