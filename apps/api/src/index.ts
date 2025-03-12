@@ -51,7 +51,7 @@ const app = new Elysia()
             value: demoSession,
             httpOnly: true,
             path: "/",
-            secure: process.env.NODE_ENV === "production",
+            secure: true,
             sameSite: "lax",
             expires: expiresAt,
           },
