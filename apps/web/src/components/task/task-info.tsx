@@ -144,8 +144,8 @@ function TaskInfo({
                     icon: <Flag className="w-4 h-4 text-red-500" />,
                   },
                   {
-                    value: "critical",
-                    label: "Critical",
+                    value: "urgent",
+                    label: "Urgent",
                     icon: <Flag className="w-4 h-4 text-red-500" />,
                   },
                 ]}
