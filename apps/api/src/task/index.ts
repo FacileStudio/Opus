@@ -21,6 +21,7 @@ const task = new Elysia({ prefix: "/task" })
         dueDate: t.Date(),
         description: t.String(),
         priority: t.String(),
+        position: t.Number(),
       }),
     },
   )
@@ -63,6 +64,7 @@ const task = new Elysia({ prefix: "/task" })
         dueDate: t.Date(),
         description: t.String(),
         priority: t.String(),
+        position: t.Number(),
       }),
     },
   );

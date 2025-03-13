@@ -33,6 +33,7 @@ function TaskTitle({
       status: task.status || "",
       dueDate: task.dueDate || new Date(),
       priority: task.priority || "",
+      position: task.position || 0,
     });
     setIsSaving(false);
   }, 1000);

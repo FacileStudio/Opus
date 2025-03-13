@@ -27,6 +27,7 @@ async function getTasks(projectId: string) {
       status: taskTable.status,
       priority: taskTable.priority,
       dueDate: taskTable.dueDate,
+      position: taskTable.position,
       createdAt: taskTable.createdAt,
       userEmail: taskTable.userEmail,
       assigneeName: userTable.name,
@@ -36,7 +37,8 @@ async function getTasks(projectId: string) {
     .from(taskTable)
     .leftJoin(userTable, eq(taskTable.userEmail, userTable.email))
     .leftJoin(projectTable, eq(taskTable.projectId, projectTable.id))
-    .where(eq(taskTable.projectId, projectId));
+    .where(eq(taskTable.projectId, projectId))
+    .orderBy(taskTable.position);
 
   const columns = DEFAULT_COLUMNS.map((column) => ({
     id: column.id,

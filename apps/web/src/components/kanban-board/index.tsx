@@ -77,7 +77,10 @@ function KanbanBoard({ project }: { project: Project | undefined }) {
           destinationIndex += 1;
         }
         destinationColumn.tasks.splice(destinationIndex, 0, task);
-        updateTask(task);
+
+        destinationColumn.tasks.forEach((t, index) => {
+          updateTask({ ...t, position: index + 1 });
+        });
       } else {
         const updatedTask = { ...task, status: destinationColumn.id };
         const destinationIndex =
@@ -86,7 +89,10 @@ function KanbanBoard({ project }: { project: Project | undefined }) {
             : destinationColumn.tasks.findIndex((t) => t.id === overId);
 
         destinationColumn.tasks.splice(destinationIndex + 1, 0, updatedTask);
-        updateTask(updatedTask);
+
+        destinationColumn.tasks.forEach((t, index) => {
+          updateTask({ ...t, position: index + 1 });
+        });
       }
     });
 

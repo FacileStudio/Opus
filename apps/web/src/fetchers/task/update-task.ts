@@ -10,6 +10,7 @@ async function updateTask(taskId: string, task: Task) {
     projectId: task.projectId,
     priority: task.priority || "",
     dueDate: task.dueDate || new Date(),
+    position: task.position || 0,
   });
 
   if (response.status !== 200) {

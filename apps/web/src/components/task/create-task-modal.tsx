@@ -70,6 +70,7 @@ export function CreateTaskModal({
       projectId: project?.id,
       dueDate: new Date(),
       status: status ?? "to-do",
+      position: 0,
     });
 
     const updatedProject = produce(project, (draft) => {
@@ -80,12 +81,14 @@ export function CreateTaskModal({
         targetColumn.tasks.push({
           ...newTask,
           userEmail: data.email,
+          position: 0,
         });
       }
     });
 
     setProject(updatedProject);
-    updateTask(newTask);
+
+    updateTask({ ...newTask, position: 0 });
 
     form.reset();
     onClose();

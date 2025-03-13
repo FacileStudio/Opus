@@ -25,4 +25,5 @@ export type Task = {
   dueDate: Date | null;
   priority: string | null;
   projectSlug?: string;
+  position: number | null;
 };
