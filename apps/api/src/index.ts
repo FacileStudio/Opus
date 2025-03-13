@@ -38,19 +38,18 @@ const app = new Elysia()
     async beforeHandle({ store, cookie: { session }, set }) {
       if (isDemoMode) {
         if (!session?.value) {
-          return await setDemoUser(set);
+          await setDemoUser(set);
         }
 
         const { user, session: validatedSession } = await validateSessionToken(
-          session.value,
+          session.value ?? "",
         );
 
         if (!user || !validatedSession) {
-          return await setDemoUser(set);
+          await setDemoUser(set);
         }
 
-        store.userEmail = user.email;
-        return { user };
+        store.userEmail = user?.email ?? "";
       }
 
       if (!session?.value) {
