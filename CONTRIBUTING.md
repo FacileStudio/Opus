@@ -34,7 +34,7 @@ We are a community-driven project and we expect all contributors to follow our C
 1. Fork and clone the repository:
 
 ```bash
-git clone https://github.com/kaneo-app/app.git
+git clone https://github.com/usekaneo/kaneo.git
 ```
 
 2. Install the dependencies:
@@ -61,7 +61,7 @@ This will start the frontend and backend servers on [http://localhost:5173](http
 
 ### Finding Issues to Work On
 
-- Check the [issues](https://github.com/kaneo-app/app/issues) page for open issues.
+- Check the [issues](https://github.com/usekaneo/kaneo/issues) page for open issues.
 - Check the [Discord server](https://discord.gg/rU4tSyhXXU) for help with issues.
 
 ### Creating Pull Requests
@@ -103,6 +103,6 @@ git push origin my-branch
 ## Need Help?
 
 - Check the [Discord server](https://discord.gg/rU4tSyhXXU) for help.
-- Open an [issue](https://github.com/kaneo-app/app/issues) if you need help.
+- Open an [issue](https://github.com/usekaneo/kaneo/issues) if you need help.
 
 Thank you for your contribution to Kaneo! 🎉
