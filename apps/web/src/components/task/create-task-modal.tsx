@@ -1,3 +1,4 @@
+import { Editor } from "@/components/common/editor";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -98,7 +99,7 @@ export function CreateTaskModal({
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
-        <Dialog.Content className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
+        <Dialog.Content className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg">
           <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl">
             <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
               <Dialog.Title className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
@@ -141,12 +142,13 @@ export function CreateTaskModal({
                           Description
                         </FormLabel>
                         <FormControl>
-                          <textarea
-                            {...field}
-                            placeholder="Task description"
-                            className="w-full rounded-md border border-zinc-200 dark:border-zinc-700/50 bg-white dark:bg-zinc-800/50 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 dark:placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-                            rows={3}
-                          />
+                          <div className="border border-zinc-200 dark:border-zinc-700/50 rounded-md overflow-hidden">
+                            <Editor
+                              value={field.value || ""}
+                              onChange={(value) => field.onChange(value)}
+                              placeholder="Add a detailed description..."
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
