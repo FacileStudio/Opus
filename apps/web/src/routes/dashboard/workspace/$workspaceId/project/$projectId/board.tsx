@@ -16,7 +16,6 @@ function RouteComponent() {
   const { project, setProject } = useProjectStore();
 
   useEffect(() => {
-    console.log(data);
     if (data) {
       setProject(data);
     }
