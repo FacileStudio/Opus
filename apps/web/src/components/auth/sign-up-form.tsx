@@ -11,12 +11,11 @@ import { Input } from "@/components/ui/input";
 import useSignUp from "@/hooks/mutations/use-sign-up";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "@tanstack/react-router";
-import { AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { type ZodType, z } from "zod";
 import useAuth from "../providers/auth-provider/hooks/use-auth";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export type SignUpFormValues = {
   email: string;
@@ -42,7 +41,7 @@ export function SignUpForm() {
       name: "",
     },
   });
-  const { isError, error, mutateAsync } = useSignUp();
+  const { mutateAsync } = useSignUp();
 
   const onSubmit = async (data: SignUpFormValues) => {
     const { data: user } = await mutateAsync({
@@ -131,14 +130,6 @@ export function SignUpForm() {
             )}
           />
         </div>
-
-        {isError && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
-          </Alert>
-        )}
 
         <Button
           type="submit"

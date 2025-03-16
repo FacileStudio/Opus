@@ -4,7 +4,6 @@ import createSession from "./controllers/create-session";
 import invalidateSession from "./controllers/invalidate-session";
 import signIn from "./controllers/sign-in";
 import signUp from "./controllers/sign-up";
-import { UserErrors } from "./errors";
 import generateSessionToken from "./utils/generate-session-token";
 import isInSecureMode from "./utils/is-in-secure-mode";
 
@@ -47,7 +46,7 @@ const user = new Elysia({ prefix: "/user" })
     async ({ body: { email, password, name }, set, request }) => {
       const user = await signUp(email, password, name);
 
-      if (!user) throw new Error(UserErrors.FailedToCreateAnAccount);
+      if (!user) throw new Error("Failed to create an account");
 
       const token = generateSessionToken();
       const session = await createSession(token, user.id);

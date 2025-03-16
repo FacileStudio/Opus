@@ -7,6 +7,7 @@ import type { Task } from "@/types/project";
 import { Flag } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import TaskCalendar from "./task-calendar";
 
@@ -43,15 +44,23 @@ function TaskInfo({
     if (!task) return;
 
     setIsSaving(true);
-    await updateTask({
-      ...task,
-      userEmail: data.userEmail,
-      status: data.status || "",
-      priority: data.priority || "",
-      dueDate: data.dueDate || new Date(),
-      projectId: project?.id || "",
-    });
-    setIsSaving(false);
+    try {
+      await updateTask({
+        ...task,
+        userEmail: data.userEmail,
+        status: data.status || "",
+        priority: data.priority || "",
+        dueDate: data.dueDate || new Date(),
+        projectId: project?.id || "",
+      });
+      toast.success("Task updated successfully");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update task",
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   useEffect(() => {

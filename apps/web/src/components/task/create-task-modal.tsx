@@ -19,6 +19,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { produce } from "immer";
 import { Flag, UserIcon, X } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Select } from "../ui/select";
 
@@ -63,36 +64,42 @@ export function CreateTaskModal({
   const onSubmit = async (data: TaskFormValues) => {
     if (!project?.id || !workspace?.id) return;
 
-    const newTask = await mutateAsync({
-      title: data.title.trim(),
-      description: data.description?.trim() || "",
-      userEmail: data.email,
-      priority: data.priority,
-      projectId: project?.id,
-      dueDate: new Date(),
-      status: status ?? "to-do",
-      position: 0,
-    });
+    try {
+      const newTask = await mutateAsync({
+        title: data.title.trim(),
+        description: data.description?.trim() || "",
+        userEmail: data.email,
+        priority: data.priority,
+        projectId: project?.id,
+        dueDate: new Date(),
+        status: status ?? "to-do",
+        position: 0,
+      });
 
-    const updatedProject = produce(project, (draft) => {
-      const targetColumn = draft.columns?.find(
-        (col) => col.id === newTask.status,
+      const updatedProject = produce(project, (draft) => {
+        const targetColumn = draft.columns?.find(
+          (col) => col.id === newTask.status,
+        );
+        if (targetColumn) {
+          targetColumn.tasks.push({
+            ...newTask,
+            userEmail: data.email,
+            position: 0,
+          });
+        }
+      });
+
+      setProject(updatedProject);
+      updateTask({ ...newTask, position: 0 });
+      toast.success("Task created successfully");
+
+      form.reset();
+      onClose();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create task",
       );
-      if (targetColumn) {
-        targetColumn.tasks.push({
-          ...newTask,
-          userEmail: data.email,
-          position: 0,
-        });
-      }
-    });
-
-    setProject(updatedProject);
-
-    updateTask({ ...newTask, position: 0 });
-
-    form.reset();
-    onClose();
+    }
   };
 
   return (

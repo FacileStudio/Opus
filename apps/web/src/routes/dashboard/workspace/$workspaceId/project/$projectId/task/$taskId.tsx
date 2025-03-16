@@ -5,7 +5,7 @@ import TaskInfo from "@/components/task/task-info";
 import TaskTitle from "@/components/task/task-title";
 import useGetTask from "@/hooks/queries/task/use-get-task";
 import useProjectStore from "@/store/project";
-import { Link, Navigate, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { LayoutGrid, X } from "lucide-react";
 import { useState } from "react";
@@ -21,18 +21,6 @@ function TaskEditPage() {
   const { data: task, isLoading } = useGetTask(taskId);
   const { project } = useProjectStore();
   const [isSaving, setIsSaving] = useState(false);
-
-  if (!task || !project) {
-    return (
-      <Navigate
-        to="/dashboard/workspace/$workspaceId/project/$projectId/board"
-        params={{
-          workspaceId,
-          projectId,
-        }}
-      />
-    );
-  }
 
   if (isLoading) {
     return (
@@ -64,7 +52,7 @@ function TaskEditPage() {
           </Link>
           <div className="flex-1 min-w-0">
             <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400 mb-0.5">
-              {project?.slug}-{task.number}
+              {project?.slug}-{task?.number}
             </div>
             <TaskTitle setIsSaving={setIsSaving} />
           </div>
