@@ -1,15 +1,36 @@
-import { ArrowDownToLine, X } from "lucide-react";
-import { useEffect } from "react";
+import { Archive, ArrowDownToLine, Menu, Trash2, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  CommandDialog,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { useBulkOperations } from "@/hooks/mutations/task/use-bulk-operations";
+import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
+import { useGetActiveWorkspaceUsers } from "@/hooks/queries/workspace-users/use-get-active-workspace-users";
+import { getColumnIcon } from "@/lib/column";
 import useBulkSelectionStore from "@/store/bulk-selection";
 import { Button } from "../ui/button";
-import BulkActionsMenu from "./bulk-actions-menu";
 
 function BulkToolbar() {
   const { selectedTaskIds, clearSelection, selectAll } =
     useBulkSelectionStore();
-  const { bulkMoveToBacklog } = useBulkOperations();
+  const {
+    bulkMoveToBacklog,
+    bulkDelete,
+    bulkArchive,
+    bulkChangeStatus,
+    bulkAssign,
+  } = useBulkOperations();
+  const { data: workspace } = useActiveWorkspace();
+  const { data: workspaceUsers } = useGetActiveWorkspaceUsers(
+    workspace?.id ?? "",
+  );
+  const [isActionsOpen, setIsActionsOpen] = useState(false);
 
   const selectedCount = selectedTaskIds.size;
 
@@ -31,14 +52,6 @@ function BulkToolbar() {
   }, [selectAll, clearSelection]);
 
   const handleMoveToBacklog = async () => {
-    if (
-      !confirm(
-        `Move ${selectedCount} tasks to backlog? This will change their status to "planned".`,
-      )
-    ) {
-      return;
-    }
-
     try {
       await bulkMoveToBacklog(Array.from(selectedTaskIds));
       toast.success(`${selectedCount} tasks moved to backlog`);
@@ -48,40 +61,152 @@ function BulkToolbar() {
     }
   };
 
+  const handleBulkDelete = async () => {
+    if (
+      !confirm(`Delete ${selectedCount} tasks? This action cannot be undone.`)
+    ) {
+      return;
+    }
+
+    try {
+      await bulkDelete(Array.from(selectedTaskIds));
+      toast.success(`${selectedCount} tasks deleted`);
+      clearSelection();
+      setIsActionsOpen(false);
+    } catch (_error) {
+      toast.error("Failed to delete tasks");
+    }
+  };
+
+  const handleBulkArchive = async () => {
+    try {
+      await bulkArchive(Array.from(selectedTaskIds));
+      toast.success(`${selectedCount} tasks archived`);
+      clearSelection();
+      setIsActionsOpen(false);
+    } catch (_error) {
+      toast.error("Failed to archive tasks");
+    }
+  };
+
+  const handleBulkChangeStatus = async (status: string) => {
+    try {
+      await bulkChangeStatus({ taskIds: Array.from(selectedTaskIds), status });
+      toast.success(`${selectedCount} tasks updated`);
+      clearSelection();
+      setIsActionsOpen(false);
+    } catch (_error) {
+      toast.error("Failed to update tasks");
+    }
+  };
+
+  const handleBulkAssign = async (userId: string) => {
+    try {
+      await bulkAssign({ taskIds: Array.from(selectedTaskIds), userId });
+      toast.success(`${selectedCount} tasks assigned`);
+      clearSelection();
+      setIsActionsOpen(false);
+    } catch (_error) {
+      toast.error("Failed to assign tasks");
+    }
+  };
+
   if (selectedCount === 0) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="bg-background/95 backdrop-blur-sm border border-border rounded-lg shadow-lg p-3 flex items-center gap-3">
-        <span className="text-sm font-medium text-foreground">
-          {selectedCount} selected
-        </span>
-        <hr className="w-px h-6 bg-border" />
+    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+      <div className="bg-background text-foreground rounded-xl shadow-lg px-2 py-2 flex items-center gap-1 border border-border">
+        <div className="flex items-center gap-1.5 px-3">
+          <span className="text-sm font-medium text-foreground">
+            {selectedCount} selected
+          </span>
+        </div>
 
-        <Button onClick={handleMoveToBacklog} size="sm" variant="outline">
-          <ArrowDownToLine className="size-3" />
+        <div className="w-px h-6 bg-border" />
+
+        <Button size="sm" variant="ghost" onClick={handleMoveToBacklog}>
+          <ArrowDownToLine className="size-4" />
           Move to Backlog
         </Button>
 
-        <div className="flex-1 gap-2">
-          <BulkActionsMenu />
+        <div className="w-px h-6 bg-border" />
 
-          <Button
-            variant="ghost"
-            className="ml-2"
-            onClick={clearSelection}
-            size="sm"
-          >
-            <X className="size-3" />
-          </Button>
-        </div>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsActionsOpen(true)}
+        >
+          <Menu className="size-4" />
+          Actions
+        </Button>
+
+        <div className="w-px h-6 bg-border" />
+
+        <Button size="sm" variant="ghost" onClick={clearSelection}>
+          <X className="size-4" />
+        </Button>
       </div>
 
-      {selectedCount === 0 && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 text-xs text-muted-foreground/70 bg-background/90 backdrop-blur-sm border border-border/40 rounded-md px-3 py-2 shadow-md max-w-sm">
-          Hold Cmd/Ctrl + Click to select tasks • Cmd/Ctrl + A to select all
-        </div>
-      )}
+      <CommandDialog
+        title="Bulk Actions"
+        open={isActionsOpen}
+        onOpenChange={setIsActionsOpen}
+      >
+        <CommandInput placeholder="Search actions..." />
+        <CommandList>
+          <CommandGroup heading="Actions">
+            <CommandItem onSelect={handleBulkDelete}>
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete tasks
+            </CommandItem>
+            <CommandItem onSelect={handleBulkArchive}>
+              <Archive className="w-4 h-4 mr-2" />
+              Archive tasks
+            </CommandItem>
+          </CommandGroup>
+
+          <CommandGroup heading="Change Status">
+            <CommandItem onSelect={() => handleBulkChangeStatus("to-do")}>
+              {getColumnIcon("to-do")}
+              To Do
+            </CommandItem>
+            <CommandItem onSelect={() => handleBulkChangeStatus("in-progress")}>
+              {getColumnIcon("in-progress")}
+              In Progress
+            </CommandItem>
+            <CommandItem onSelect={() => handleBulkChangeStatus("in-review")}>
+              {getColumnIcon("in-review")}
+              In Review
+            </CommandItem>
+            <CommandItem onSelect={() => handleBulkChangeStatus("done")}>
+              {getColumnIcon("done")}
+              Done
+            </CommandItem>
+          </CommandGroup>
+
+          <CommandGroup heading="Assign to">
+            {workspaceUsers?.members?.map((member) => (
+              <CommandItem
+                key={member.userId}
+                onSelect={() => handleBulkAssign(member.userId)}
+              >
+                <Avatar className="h-6 w-6">
+                  <AvatarImage
+                    src={member.user?.image ?? ""}
+                    alt={member.user?.name || ""}
+                  />
+                  <AvatarFallback className="text-xs font-medium border border-border/30">
+                    {member.user?.name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm">
+                  {member.user?.name || "Unknown User"}
+                </span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
     </div>
   );
 }
