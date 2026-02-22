@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - coss
     paths:
       - "apps/site/**"
       - "packages/**"
