@@ -37,6 +37,7 @@ import useBulkSelectionStore from "@/store/bulk-selection";
 import useProjectStore from "@/store/project";
 import { useUserPreferencesStore } from "@/store/user-preferences";
 import type Task from "@/types/task";
+import { Button } from "../ui/button";
 import { ContextMenu, ContextMenuTrigger } from "../ui/context-menu";
 import TaskCardContextMenuContent from "./task-card-context-menu/task-card-context-menu-content";
 import TaskCardLabels from "./task-labels";
@@ -399,12 +400,15 @@ function TaskCard({ task }: TaskCardProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose>Cancel</AlertDialogClose>
-            <AlertDialogClose
-              onClick={handleDeleteTask}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Delete Task
+            <AlertDialogClose>
+              <Button variant="outline" size="sm">
+                Cancel
+              </Button>
+            </AlertDialogClose>
+            <AlertDialogClose onClick={handleDeleteTask}>
+              <Button variant="destructive" size="sm">
+                Delete Task
+              </Button>
             </AlertDialogClose>
           </AlertDialogFooter>
         </AlertDialogContent>

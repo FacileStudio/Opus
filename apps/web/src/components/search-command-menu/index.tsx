@@ -180,12 +180,7 @@ function SearchCommandMenu({ open, setOpen }: SearchCommandMenuProps) {
   }, [searchEnabled, searchResults?.results]);
 
   return (
-    <CommandDialog
-      open={open}
-      onOpenChange={setOpen}
-      title="Search"
-      description="Search for tasks, projects, comments, and more"
-    >
+    <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandDialogPopup>
         <Command items={groupedItems}>
           <CommandInput

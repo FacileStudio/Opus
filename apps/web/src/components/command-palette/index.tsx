@@ -241,7 +241,7 @@ function CommandPalette() {
   return (
     <>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandDialogPopup className="max-w-4xl">
+        <CommandDialogPopup>
           <Command items={groupedItems}>
             <CommandInput placeholder="Search for apps and commands..." />
             <CommandPanel>
