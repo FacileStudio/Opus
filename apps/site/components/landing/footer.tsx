@@ -9,19 +9,30 @@ export function Footer() {
             <a href="/" aria-label="Kaneo home" className="inline-flex">
               <Logo />
             </a>
-            <p className="max-w-sm text-balance text-muted-foreground text-sm">All you need. Nothing you don&apos;t.</p>
+            <p className="max-w-sm text-balance text-muted-foreground text-sm">
+              All you need. Nothing you don&apos;t.
+            </p>
           </div>
 
           <div className="col-span-3 grid gap-6 sm:grid-cols-3">
             <div className="space-y-3 text-sm">
               <p className="font-medium">Product</p>
-              <a className="block text-muted-foreground transition-colors hover:text-foreground" href="https://cloud.kaneo.app">
+              <a
+                className="block text-muted-foreground transition-colors hover:text-foreground"
+                href="https://cloud.kaneo.app"
+              >
                 Open Cloud
               </a>
-              <a className="block text-muted-foreground transition-colors hover:text-foreground" href="/docs/core">
+              <a
+                className="block text-muted-foreground transition-colors hover:text-foreground"
+                href="/docs/core"
+              >
                 Getting Started
               </a>
-              <a className="block text-muted-foreground transition-colors hover:text-foreground" href="#features">
+              <a
+                className="block text-muted-foreground transition-colors hover:text-foreground"
+                href="#features"
+              >
                 Features
               </a>
             </div>
@@ -64,7 +75,10 @@ export function Footer() {
               >
                 Discord
               </a>
-              <a className="block text-muted-foreground transition-colors hover:text-foreground" href="/docs">
+              <a
+                className="block text-muted-foreground transition-colors hover:text-foreground"
+                href="/docs"
+              >
                 Documentation
               </a>
             </div>

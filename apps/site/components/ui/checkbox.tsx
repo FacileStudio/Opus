@@ -32,6 +32,7 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
                 width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <title>Indeterminate</title>
                 <path d="M5.252 12h13.496" />
               </svg>
             ) : (
@@ -47,6 +48,7 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
                 width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <title>Check</title>
                 <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
               </svg>
             )}

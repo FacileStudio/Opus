@@ -45,7 +45,11 @@ export function ThemeToggle() {
       size="icon"
       variant="ghost"
     >
-      {mounted && theme === "dark" ? <SunIcon className="size-4" /> : <MoonIcon className="size-4" />}
+      {mounted && theme === "dark" ? (
+        <SunIcon className="size-4" />
+      ) : (
+        <MoonIcon className="size-4" />
+      )}
     </Button>
   );
 }

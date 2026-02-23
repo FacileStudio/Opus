@@ -10,7 +10,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 type LinkItem = {
@@ -36,27 +40,32 @@ const navigationLinks: NavigationLink[] = [
   {
     items: [
       {
-        description: "Understand the product model and day-to-day workflows end to end.",
+        description:
+          "Understand the product model and day-to-day workflows end to end.",
         href: "/docs/core/functional",
         label: "Functional Guides",
       },
       {
-        description: "Set up your workspace structure and initial project configuration.",
+        description:
+          "Set up your workspace structure and initial project configuration.",
         href: "/docs/core/functional/create-workspace-and-project",
         label: "Create Workspace & Project",
       },
       {
-        description: "Run tasks across board and list views with clear ownership and status.",
+        description:
+          "Run tasks across board and list views with clear ownership and status.",
         href: "/docs/core/functional/plan-and-execute-tasks",
         label: "Plan & Execute Tasks",
       },
       {
-        description: "Use backlog planning to organize upcoming work and sequencing.",
+        description:
+          "Use backlog planning to organize upcoming work and sequencing.",
         href: "/docs/core/functional/backlog-planning",
         label: "Backlog Planning",
       },
       {
-        description: "Define and evolve project workflows to match your delivery process.",
+        description:
+          "Define and evolve project workflows to match your delivery process.",
         href: "/docs/core/functional/configure-workflows",
         label: "Configure Workflows",
       },
@@ -101,7 +110,15 @@ export function Navbar() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Popover>
-            <PopoverTrigger render={<Button className="group size-8 md:hidden" size="icon" variant="ghost" />}>
+            <PopoverTrigger
+              render={
+                <Button
+                  className="group size-8 md:hidden"
+                  size="icon"
+                  variant="ghost"
+                />
+              }
+            >
               <svg
                 className="pointer-events-none"
                 fill="none"
@@ -114,6 +131,7 @@ export function Navbar() {
                 width={16}
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <title>Menu</title>
                 <path
                   className="-translate-y-[7px] origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-315"
                   d="M4 12L20 12"
@@ -135,11 +153,16 @@ export function Navbar() {
                     <NavigationMenuItem className="w-full" key={link.label}>
                       {link.submenu ? (
                         <>
-                          <div className="px-2 py-1.5 font-medium text-muted-foreground text-xs">{link.label}</div>
+                          <div className="px-2 py-1.5 font-medium text-muted-foreground text-xs">
+                            {link.label}
+                          </div>
                           <ul>
                             {link.items.map((item) => (
                               <li key={item.label}>
-                                <NavigationMenuLink className="rounded-none py-1.5" href={item.href}>
+                                <NavigationMenuLink
+                                  className="rounded-none py-1.5"
+                                  href={item.href}
+                                >
                                   {item.label}
                                 </NavigationMenuLink>
                               </li>
@@ -147,7 +170,10 @@ export function Navbar() {
                           </ul>
                         </>
                       ) : (
-                        <NavigationMenuLink className="rounded-none py-1.5" href={link.href}>
+                        <NavigationMenuLink
+                          className="rounded-none py-1.5"
+                          href={link.href}
+                        >
                           {link.label}
                         </NavigationMenuLink>
                       )}
@@ -159,10 +185,19 @@ export function Navbar() {
           </Popover>
 
           <div className="flex items-center gap-6">
-            <a className="flex h-8 items-center text-primary hover:text-primary" href="/" aria-label="Kaneo home">
+            <a
+              className="flex h-8 items-center text-primary hover:text-primary"
+              href="/"
+              aria-label="Kaneo home"
+            >
               <Logo />
             </a>
-            <NavigationMenu className="max-md:hidden" viewport={false} delayDuration={0} skipDelayDuration={0}>
+            <NavigationMenu
+              className="max-md:hidden"
+              viewport={false}
+              delayDuration={0}
+              skipDelayDuration={0}
+            >
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link) => (
                   <NavigationMenuItem key={link.label}>
@@ -172,14 +207,28 @@ export function Navbar() {
                           {link.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="data-[motion=from-end]:slide-in-from-right-16! data-[motion=from-start]:slide-in-from-left-16! data-[motion=to-end]:slide-out-to-right-16! data-[motion=to-start]:slide-out-to-left-16! z-50 rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
-                          <ul className={cn(link.type === "description" ? "min-w-64" : "min-w-48")}>
+                          <ul
+                            className={cn(
+                              link.type === "description"
+                                ? "min-w-64"
+                                : "min-w-48",
+                            )}
+                          >
                             {link.items.map((item) => (
                               <li key={item.label}>
-                                <NavigationMenuLink className="rounded-none py-1.5" href={item.href}>
-                                  {link.type === "description" && "description" in item ? (
+                                <NavigationMenuLink
+                                  className="rounded-none py-1.5"
+                                  href={item.href}
+                                >
+                                  {link.type === "description" &&
+                                  "description" in item ? (
                                     <div className="space-y-1">
-                                      <div className="font-medium">{item.label}</div>
-                                      <p className="line-clamp-2 text-muted-foreground text-xs">{item.description}</p>
+                                      <div className="font-medium">
+                                        {item.label}
+                                      </div>
+                                      <p className="line-clamp-2 text-muted-foreground text-xs">
+                                        {item.description}
+                                      </p>
                                     </div>
                                   ) : (
                                     <span>{item.label}</span>
@@ -191,7 +240,10 @@ export function Navbar() {
                         </NavigationMenuContent>
                       </>
                     ) : (
-                      <NavigationMenuLink className="rounded-none py-1.5 font-medium text-muted-foreground hover:text-primary" href={link.href}>
+                      <NavigationMenuLink
+                        className="rounded-none py-1.5 font-medium text-muted-foreground hover:text-primary"
+                        href={link.href}
+                      >
                         {link.label}
                       </NavigationMenuLink>
                     )}

@@ -1,7 +1,7 @@
 "use client";
 
-import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import { ChevronDownIcon } from "lucide-react";
+import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import type * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +16,10 @@ function NavigationMenu({
   return (
     <NavigationMenuPrimitive.Root
       data-slot="navigation-menu"
-      className={cn("relative z-10 flex max-w-max flex-1 items-center justify-center", className)}
+      className={cn(
+        "relative z-10 flex max-w-max flex-1 items-center justify-center",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -32,7 +35,10 @@ function NavigationMenuList({
   return (
     <NavigationMenuPrimitive.List
       data-slot="navigation-menu-list"
-      className={cn("group flex flex-1 list-none items-center justify-center gap-1", className)}
+      className={cn(
+        "group flex flex-1 list-none items-center justify-center gap-1",
+        className,
+      )}
       {...props}
     />
   );
@@ -42,7 +48,13 @@ function NavigationMenuItem({
   className,
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Item>) {
-  return <NavigationMenuPrimitive.Item data-slot="navigation-menu-item" className={cn("relative", className)} {...props} />;
+  return (
+    <NavigationMenuPrimitive.Item
+      data-slot="navigation-menu-item"
+      className={cn("relative", className)}
+      {...props}
+    />
+  );
 }
 
 function NavigationMenuTrigger({

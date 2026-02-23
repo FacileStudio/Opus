@@ -2,8 +2,53 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Kaneo",
-  description: "All you need. Nothing you don't.",
+  metadataBase: new URL("https://kaneo.app"),
+  title: {
+    default: "Kaneo — All you need. Nothing you don't.",
+    template: "%s | Kaneo",
+  },
+  description:
+    "All you need. Nothing you don't. Open source project management that works for you, not against you.",
+  keywords: [
+    "kaneo",
+    "project management",
+    "open source",
+    "kanban",
+    "task management",
+    "self-hosted",
+    "team collaboration",
+  ],
+  applicationName: "Kaneo",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://kaneo.app",
+    siteName: "Kaneo",
+    title: "Kaneo — All you need. Nothing you don't.",
+    description:
+      "Open source project management that works for you, not against you. Self-hosted, simple, and powerful.",
+    images: [
+      {
+        url: "https://assets.kaneo.app/readme.png",
+        width: 1200,
+        height: 630,
+        alt: "Kaneo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kaneo — All you need. Nothing you don't.",
+    description:
+      "Open source project management that works for you, not against you. Self-hosted, simple, and powerful.",
+    images: ["https://assets.kaneo.app/readme.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -18,6 +63,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: This is necessary to apply the user's preferred color scheme before React hydration to prevent a flash of incorrect theme.
           dangerouslySetInnerHTML={{
             __html: `
               (function() {

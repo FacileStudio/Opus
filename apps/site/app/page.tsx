@@ -1,8 +1,8 @@
-import { Navbar } from "@/components/landing/navbar";
 import { Features } from "@/components/landing/features";
 import { Footer } from "@/components/landing/footer";
 import { FounderStatement } from "@/components/landing/founder-statement";
 import { Hero } from "@/components/landing/hero";
+import { Navbar } from "@/components/landing/navbar";
 import { SectionSeparator } from "@/components/landing/section-separator";
 
 export default function HomePage() {
