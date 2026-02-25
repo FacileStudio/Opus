@@ -1,3 +1,17 @@
+# [2.3.0](https://github.com/usekaneo/kaneo/compare/v2.2.1...v2.3.0) (2026-02-25)
+
+
+### Features
+
+* add app preview in landing page ([0ea7d88](https://github.com/usekaneo/kaneo/commit/0ea7d88f6040e280a617f1ac2fde58574918cc3a))
+* improve styles for filters ([615d5dd](https://github.com/usekaneo/kaneo/commit/615d5dd2efda9618766acd267c3684aac727a1ce))
+* **web:** implement board search functionality and integrate with task filters ([aa5d86a](https://github.com/usekaneo/kaneo/commit/aa5d86ac18e007bd3827bdf98791a057cd6450b6))
+* **web:** persist board filters and polish linear-style filter chips ([e3f7f9d](https://github.com/usekaneo/kaneo/commit/e3f7f9df98a7fc0aa11fc93b78fcb38f5d3fbf20))
+* **web:** polish kanban and backlog interactions ([041cd87](https://github.com/usekaneo/kaneo/commit/041cd87eb74bf860e5c0aed2811aafbc845e79b5))
+* **web:** revamp dashboard shell navigation and header controls ([d87a779](https://github.com/usekaneo/kaneo/commit/d87a77946143206d8578d06e2f2dab79c5930790))
+
+
+
 ## [2.2.1](https://github.com/usekaneo/kaneo/compare/v2.2.0...v2.2.1) (2026-02-16)
 
 
