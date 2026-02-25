@@ -31,9 +31,9 @@ export const metadata: Metadata = {
       "Open source project management that works for you, not against you. Self-hosted, simple, and powerful.",
     images: [
       {
-        url: "https://assets.kaneo.app/readme.png",
-        width: 1200,
-        height: 630,
+        url: "/images/hero.png",
+        width: 976,
+        height: 512,
         alt: "Kaneo",
       },
     ],
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "Kaneo — All you need. Nothing you don't.",
     description:
       "Open source project management that works for you, not against you. Self-hosted, simple, and powerful.",
-    images: ["https://assets.kaneo.app/readme.png"],
+    images: ["/images/hero.png"],
   },
   robots: {
     index: true,

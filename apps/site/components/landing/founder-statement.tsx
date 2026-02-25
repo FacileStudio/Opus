@@ -1,7 +1,7 @@
 export function FounderStatement() {
   return (
     <section id="why" className="px-6 py-16 md:py-20">
-      <div className="mx-auto w-full max-w-3xl">
+      <div className="mx-auto w-full max-w-6xl">
         <h2 className="text-3xl font-semibold md:text-4xl">Why Kaneo exists</h2>
         <div className="mt-6 space-y-6 text-lg leading-relaxed text-muted-foreground">
           <p>
