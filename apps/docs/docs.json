@@ -141,11 +141,11 @@
 	},
 	"seo": {
 		"indexing": "all"
-  },
-  "integrations": {
-    "plausible": {
-      "domain": "kaneo.app/docs",
-      "server": "plausible.kaneo.app"
-    }
-  }
+	},
+	"integrations": {
+		"plausible": {
+			"domain": "kaneo.app/docs",
+			"server": "plausible.kaneo.app"
+		}
+	}
 }

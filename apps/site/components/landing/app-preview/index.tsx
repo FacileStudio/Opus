@@ -45,7 +45,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useTaskFilters } from "@/hooks/use-task-filters";
 import { cn } from "@/lib/utils";
-import type Task from "@/types/task";
 import {
   MOCK_PROJECTS,
   MOCK_USERS,
