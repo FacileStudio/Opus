@@ -26,6 +26,10 @@ type IssueClosedPayload = {
 };
 
 export async function handleGiteaIssueClosed(payload: IssueClosedPayload) {
+  if (payload.action !== "closed") {
+    return;
+  }
+
   const { issue, repository } = payload;
 
   const baseUrl = baseUrlFromRepositoryHtmlUrl(repository.html_url);
@@ -59,9 +63,21 @@ export async function handleGiteaIssueClosed(payload: IssueClosedPayload) {
       continue;
     }
 
-    const existingMetadata = externalLink.metadata
-      ? JSON.parse(externalLink.metadata)
-      : {};
+    let existingMetadata: Record<string, unknown> = {};
+    if (externalLink.metadata) {
+      try {
+        existingMetadata = JSON.parse(externalLink.metadata) as Record<
+          string,
+          unknown
+        >;
+      } catch (error) {
+        console.warn("Failed to parse Gitea issue metadata for close sync", {
+          externalLinkId: externalLink.id,
+          metadata: externalLink.metadata,
+          error,
+        });
+      }
+    }
 
     if (existingMetadata.createdFrom === "kaneo") {
       continue;
