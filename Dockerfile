@@ -73,8 +73,8 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/* && \
   groupadd -g 1001 appuser && \
   useradd -u 1001 -g appuser -d /home/appuser -m appuser && \
-  mkdir -p /app /app/apps/api/data /var/cache/nginx /run/nginx /var/log/nginx /usr/share/nginx/html /docker-entrypoint.d && \
-  chown -R appuser:appuser /app /var/cache/nginx /run/nginx /var/log/nginx /usr/share/nginx/html /docker-entrypoint.d && \
+  mkdir -p /app /app/apps/api/data /var/cache/nginx /run/nginx /var/log/nginx /var/lib/nginx/body /var/lib/nginx/proxy /var/lib/nginx/fastcgi /var/lib/nginx/uwsgi /var/lib/nginx/scgi /usr/share/nginx/html /docker-entrypoint.d && \
+  chown -R appuser:appuser /app /var/cache/nginx /run/nginx /var/log/nginx /var/lib/nginx /usr/share/nginx/html /docker-entrypoint.d && \
   touch /run/nginx.pid && \
   chown appuser:appuser /run/nginx.pid && \
   rm -f /etc/nginx/sites-enabled/default && \
