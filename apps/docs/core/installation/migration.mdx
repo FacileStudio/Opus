@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
 
   api:
-    image: ghcr.io/FacileStudio/api:latest
+    image: ghcr.io/facilestudio/api:latest
     ports:
       - "1337:1337"
     env_file:
@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
 
   web:
-    image: ghcr.io/FacileStudio/web:latest
+    image: ghcr.io/facilestudio/web:latest
     ports:
       - "5173:5173"
     env_file:
@@ -75,7 +75,7 @@ services:
       retries: 5
 
   opus:
-    image: ghcr.io/FacileStudio/opus:latest
+    image: ghcr.io/facilestudio/opus:latest
     ports:
       - "5173:5173"
     env_file:
@@ -189,7 +189,7 @@ Chart version 0.3.0 is a breaking change. All `api.*` and `web.*` value keys hav
 ```yaml
 api:
   image:
-    repository: ghcr.io/FacileStudio/api
+    repository: ghcr.io/facilestudio/api
     tag: "2.5.0"
   service:
     type: ClusterIP
@@ -200,7 +200,7 @@ api:
 
 web:
   image:
-    repository: ghcr.io/FacileStudio/web
+    repository: ghcr.io/facilestudio/web
     tag: "2.5.0"
   service:
     type: ClusterIP
@@ -211,7 +211,7 @@ web:
 ```yaml
 opus:
   image:
-    repository: ghcr.io/FacileStudio/opus
+    repository: ghcr.io/facilestudio/opus
     tag: "2.6.0"
   service:
     type: ClusterIP

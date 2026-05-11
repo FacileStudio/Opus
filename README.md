@@ -87,7 +87,7 @@ services:
       retries: 5
 
   opus:
-    image: ghcr.io/FacileStudio/opus:latest
+    image: ghcr.io/facilestudio/opus:latest
     ports:
       - "5173:5173"
     env_file:
@@ -113,7 +113,7 @@ For development, see our [Environment Setup Guide](ENVIRONMENT_SETUP.md) for det
 
 Opus requires several environment variables to be configured. The Docker Compose setup above handles the database automatically, but you'll need to configure environment variables for the API and web services.
 
-For complete configuration instructions, including all required environment variables, database setup for non-Docker deployments, and advanced settings, see the [documentation](https://opus.app/docs/core). Advanced deployments can still use the separate `ghcr.io/FacileStudio/api` and `ghcr.io/FacileStudio/web` images.
+For complete configuration instructions, including all required environment variables, database setup for non-Docker deployments, and advanced settings, see the [documentation](https://opus.app/docs/core). Advanced deployments can still use the separate `ghcr.io/facilestudio/api` and `ghcr.io/facilestudio/web` images.
 
 ## Kubernetes Deployment
 
