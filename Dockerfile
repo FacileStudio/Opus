@@ -5,7 +5,10 @@ COPY package.json pnpm-workspace.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/email/package.json ./packages/email/
 COPY packages/libs/package.json ./packages/libs/
+COPY packages/mcp/package.json ./packages/mcp/
 COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY apps/site/package.json ./apps/site/
 
 RUN bun install
 
@@ -21,10 +24,13 @@ FROM oven/bun:1 AS api-deps
 WORKDIR /app
 
 COPY --from=api-builder /app/package.json /app/pnpm-workspace.yaml ./
-COPY --from=api-builder /app/apps/api/package.json ./apps/api/
 COPY --from=api-builder /app/packages/typescript-config/package.json ./packages/typescript-config/
-COPY --from=api-builder /app/packages/libs/package.json ./packages/libs/
 COPY --from=api-builder /app/packages/email/package.json ./packages/email/
+COPY --from=api-builder /app/packages/libs/package.json ./packages/libs/
+COPY --from=api-builder /app/packages/mcp/package.json ./packages/mcp/
+COPY --from=api-builder /app/apps/api/package.json ./apps/api/
+COPY --from=api-builder /app/apps/web/package.json ./apps/web/
+COPY --from=api-builder /app/apps/site/package.json ./apps/site/
 
 RUN sed -i 's/"prepare": "husky"/"prepare": ""/g' package.json && \
   bun install --production
@@ -37,9 +43,13 @@ FROM oven/bun:1 AS web-builder
 WORKDIR /app
 
 COPY package.json pnpm-workspace.yaml ./
-COPY apps/web/package.json ./apps/web/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
+COPY packages/email/package.json ./packages/email/
 COPY packages/libs/package.json ./packages/libs/
+COPY packages/mcp/package.json ./packages/mcp/
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY apps/site/package.json ./apps/site/
 
 RUN bun install
 
