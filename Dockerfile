@@ -94,9 +94,9 @@ RUN chmod +x /docker-entrypoint.d/env.sh /usr/local/bin/opus-entrypoint.sh
 ENV NODE_ENV=production
 
 USER appuser
-EXPOSE 5173
+EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:5173/api/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:80/api/health || exit 1
 
 CMD ["/usr/local/bin/opus-entrypoint.sh"]
