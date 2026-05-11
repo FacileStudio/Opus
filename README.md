@@ -101,7 +101,7 @@ volumes:
   postgres_data:
 ```
 
-Save this as `compose.yml`, create a `.env` file with `OPUS_CLIENT_URL=http://localhost:5173`, `POSTGRES_PASSWORD=<password>`, and `AUTH_SECRET=<output of openssl rand -hex 32>`, run `docker compose up -d`, and open [http://localhost:5173](http://localhost:5173).
+Save this as `docker-compose.yml`, create a `.env` file with `OPUS_CLIENT_URL=http://localhost:5173`, `POSTGRES_PASSWORD=<password>`, and `AUTH_SECRET=<output of openssl rand -hex 32>`, run `docker compose up -d`, and open [http://localhost:5173](http://localhost:5173).
 
 > **Important:** See our [full documentation](https://opus.app/docs/core) for detailed setup instructions, environment variable configuration, and troubleshooting guides.
 

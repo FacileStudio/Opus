@@ -1,6 +1,6 @@
 ---
 description: Deployment and DevOps guidelines for Docker Compose and Kubernetes
-globs: compose.yml,charts/**/*
+globs: docker-compose.yml,charts/**/*
 alwaysApply: false
 ---
 # Deployment & DevOps Guidelines
@@ -11,7 +11,7 @@ Opus supports multiple deployment methods: Docker Compose for development/testin
 
 ### Configuration
 
-The main Docker Compose configuration is in `compose.yml` at the project root.
+The main Docker Compose configuration is in `docker-compose.yml` at the project root.
 
 ### Service Structure
 
