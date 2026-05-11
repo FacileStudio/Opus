@@ -20,18 +20,18 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
-# Derive KANEO_API_URL from KANEO_CLIENT_URL if not explicitly set
-client_url_trimmed="$(printf '%s' "${KANEO_CLIENT_URL:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+# Derive OPUS_API_URL from OPUS_CLIENT_URL if not explicitly set
+client_url_trimmed="$(printf '%s' "${OPUS_CLIENT_URL:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
 client_url="${client_url_trimmed%/}"
-if [ -z "${KANEO_API_URL:-}" ] && [ -n "$client_url" ]; then
-  export KANEO_API_URL="${client_url}/api"
-  echo "KANEO_API_URL not set — derived from KANEO_CLIENT_URL: $KANEO_API_URL"
+if [ -z "${OPUS_API_URL:-}" ] && [ -n "$client_url" ]; then
+  export OPUS_API_URL="${client_url}/api"
+  echo "OPUS_API_URL not set — derived from OPUS_CLIENT_URL: $OPUS_API_URL"
 fi
 
 # Derive DATABASE_URL from individual postgres vars if not explicitly set
 if [ -z "${DATABASE_URL:-}" ]; then
-  POSTGRES_DB="${POSTGRES_DB:-kaneo}"
-  POSTGRES_USER="${POSTGRES_USER:-kaneo}"
+  POSTGRES_DB="${POSTGRES_DB:-opus}"
+  POSTGRES_USER="${POSTGRES_USER:-opus}"
   if [ -n "${POSTGRES_PASSWORD:-}" ]; then
     encoded_user="$(urlencode "$POSTGRES_USER")"
     encoded_password="$(urlencode "$POSTGRES_PASSWORD")"

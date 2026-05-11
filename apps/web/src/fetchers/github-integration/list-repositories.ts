@@ -1,4 +1,4 @@
-import { client } from "@kaneo/libs";
+import { client } from "@opus/libs";
 import type { InferResponseType } from "hono";
 
 export type ListRepositoriesResponse = InferResponseType<

@@ -1,17 +1,17 @@
 {
-	"name": "@kaneo/mcp",
+	"name": "@opus/mcp",
 	"version": "0.1.5",
-	"description": "Model Context Protocol (stdio) server for Kaneo — tasks, projects, labels, and device authorization",
+	"description": "Model Context Protocol (stdio) server for Opus — tasks, projects, labels, and device authorization",
 	"license": "MIT",
-	"homepage": "https://github.com/usekaneo/kaneo/",
+	"homepage": "https://github.com/FacileStudio/opus/",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/usekaneo/kaneo/",
+		"url": "https://github.com/FacileStudio/opus/",
 		"directory": "packages/mcp"
 	},
 	"type": "module",
 	"bin": {
-		"kaneo-mcp": "dist/index.js"
+		"opus-mcp": "dist/index.js"
 	},
 	"exports": {
 		".": {
@@ -30,7 +30,7 @@
 	"keywords": [
 		"mcp",
 		"model-context-protocol",
-		"kaneo",
+		"opus",
 		"stdio"
 	],
 	"scripts": {
@@ -49,7 +49,7 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"@kaneo/typescript-config": "workspace:*",
+		"@opus/typescript-config": "workspace:*",
 		"@types/node": "^25.3.5",
 		"@types/prompts": "^2.4.9",
 		"tsx": "^4.21.0",

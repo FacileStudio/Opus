@@ -144,7 +144,7 @@ describe("S3 helpers", () => {
 
   it("creates presigned upload URLs without hoisted checksum query params", async () => {
     process.env.S3_ENDPOINT = "https://storage.example.test";
-    process.env.S3_BUCKET = "kaneo";
+    process.env.S3_BUCKET = "opus";
     process.env.S3_ACCESS_KEY_ID = "test-access-key";
     process.env.S3_SECRET_ACCESS_KEY = "test-secret-key";
     process.env.S3_REGION = "us-east-1";

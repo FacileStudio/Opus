@@ -53,7 +53,7 @@ export class AuthService {
   }
 
   private log(msg: string): void {
-    console.error(`[kaneo-mcp] ${msg}`);
+    console.error(`[opus-mcp] ${msg}`);
   }
 
   /**

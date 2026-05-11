@@ -87,14 +87,14 @@ const navigationLinks: NavigationLink[] = [
   },
   {
     items: [
-      { href: "#why", label: "Why Kaneo" },
-      { href: "https://github.com/usekaneo/kaneo", label: "Open Source" },
+      { href: "#why", label: "Why Opus" },
+      { href: "https://github.com/FacileStudio/opus", label: "Open Source" },
       {
-        href: "https://cloud.kaneo.app/public-project/vlu4ak2w8rs9rn1r4lirj2u1",
+        href: "https://cloud.opus.app/public-project/vlu4ak2w8rs9rn1r4lirj2u1",
         label: "Roadmap",
       },
       {
-        href: "https://github.com/usekaneo/kaneo/blob/main/CONTRIBUTING.md",
+        href: "https://github.com/FacileStudio/opus/blob/main/CONTRIBUTING.md",
         label: "Contributing",
       },
     ],
@@ -188,7 +188,7 @@ export function Navbar() {
             <a
               className="flex h-8 items-center text-primary hover:text-primary"
               href="/"
-              aria-label="Kaneo home"
+              aria-label="Opus home"
             >
               <Logo />
             </a>
@@ -270,7 +270,7 @@ export function Navbar() {
             size="sm"
             variant="ghost"
             onClick={() => {
-              window.location.href = "https://cloud.kaneo.app/auth/sign-in";
+              window.location.href = "https://cloud.opus.app/auth/sign-in";
             }}
           >
             Sign In
@@ -279,7 +279,7 @@ export function Navbar() {
             className="text-sm"
             size="sm"
             onClick={() => {
-              window.location.href = "https://cloud.kaneo.app";
+              window.location.href = "https://cloud.opus.app";
             }}
           >
             Get Started

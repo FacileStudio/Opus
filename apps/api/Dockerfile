@@ -30,7 +30,7 @@ RUN pnpm run build
 
 # Fix TypeScript config and build API
 WORKDIR /app/apps/api
-RUN sed -i 's/"extends": "@kaneo\/typescript-config\/base.json"/"extends": "..\/..\/packages\/typescript-config\/base.json"/g' /app/apps/api/tsconfig.json && \
+RUN sed -i 's/"extends": "@opus\/typescript-config\/base.json"/"extends": "..\/..\/packages\/typescript-config\/base.json"/g' /app/apps/api/tsconfig.json && \
   pnpm run build
 
 # Production stage - use specific version tag without SHA256

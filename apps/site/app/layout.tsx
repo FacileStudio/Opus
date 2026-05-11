@@ -10,15 +10,15 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kaneo.app"),
+  metadataBase: new URL("https://opus.app"),
   title: {
-    default: "Kaneo — All you need. Nothing you don't.",
-    template: "%s | Kaneo",
+    default: "Opus — All you need. Nothing you don't.",
+    template: "%s | Opus",
   },
   description:
     "All you need. Nothing you don't. Open source project management that works for you, not against you.",
   keywords: [
-    "kaneo",
+    "opus",
     "project management",
     "open source",
     "kanban",
@@ -26,15 +26,15 @@ export const metadata: Metadata = {
     "self-hosted",
     "team collaboration",
   ],
-  applicationName: "Kaneo",
+  applicationName: "Opus",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
-    url: "https://kaneo.app",
-    siteName: "Kaneo",
-    title: "Kaneo — All you need. Nothing you don't.",
+    url: "https://opus.app",
+    siteName: "Opus",
+    title: "Opus — All you need. Nothing you don't.",
     description:
       "Open source project management that works for you, not against you. Self-hosted, simple, and powerful.",
     images: [
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
         url: "/images/hero.png",
         width: 1200,
         height: 630,
-        alt: "Kaneo",
+        alt: "Opus",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kaneo — All you need. Nothing you don't.",
+    title: "Opus — All you need. Nothing you don't.",
     description:
       "Open source project management that works for you, not against you. Self-hosted, simple, and powerful.",
     images: ["/images/hero.png"],
@@ -63,37 +63,37 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   category: "productivity",
-  creator: "Kaneo",
-  publisher: "Kaneo",
+  creator: "Opus",
+  publisher: "Opus",
 };
 
 const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Kaneo",
-    url: "https://kaneo.app",
-    logo: "https://kaneo.app/logo-512.png",
-    sameAs: ["https://github.com/usekaneo/kaneo"],
+    name: "Opus",
+    url: "https://opus.app",
+    logo: "https://opus.app/logo-512.png",
+    sameAs: ["https://github.com/FacileStudio/opus"],
   },
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Kaneo",
-    url: "https://kaneo.app",
+    name: "Opus",
+    url: "https://opus.app",
     inLanguage: "en",
   },
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Kaneo",
+    name: "Opus",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web, Linux, macOS, Windows",
     description:
       "Open source project management that works for you, not against you. Self-hosted, simple, and powerful.",
-    url: "https://kaneo.app",
-    image: "https://kaneo.app/images/hero.png",
-    license: "https://github.com/usekaneo/kaneo/blob/main/LICENSE",
+    url: "https://opus.app",
+    image: "https://opus.app/images/hero.png",
+    license: "https://github.com/FacileStudio/opus/blob/main/LICENSE",
   },
 ];
 
@@ -133,8 +133,8 @@ export default function RootLayout({
         />
         <Script
           defer
-          data-domain="kaneo.app"
-          src="https://plausible.kaneo.app/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"
+          data-domain="opus.app"
+          src="https://plausible.opus.app/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"
           strategy="afterInteractive"
         />
         <Script id="plausible-init" strategy="afterInteractive">

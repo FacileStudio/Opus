@@ -1,10 +1,10 @@
-# Kaneo Helm Chart
+# Opus Helm Chart
 
-This Helm chart deploys [Kaneo](https://kaneo.app) - open source project management that works for you, not against you.
+This Helm chart deploys [Opus](https://opus.app) - open source project management that works for you, not against you.
 
 ## Introduction
 
-This chart bootstraps a Kaneo deployment on a Kubernetes cluster using the Helm package manager. It deploys both the API backend and Web frontend components, along with a PostgreSQL database, with optional ingress or Gateway API resources.
+This chart bootstraps a Opus deployment on a Kubernetes cluster using the Helm package manager. It deploys both the API backend and Web frontend components, along with a PostgreSQL database, with optional ingress or Gateway API resources.
 
 ## Prerequisites
 
@@ -20,14 +20,14 @@ Clone the repository and install with Helm:
 
 ```bash
 # Clone the repo
-git clone https://github.com/usekaneo/kaneo.git
-cd kaneo
+git clone https://github.com/FacileStudio/opus.git
+cd opus
 
 # Install with Helm
-helm install kaneo ./charts/kaneo --namespace kaneo --create-namespace
+helm install opus ./charts/opus --namespace opus --create-namespace
 
 # Access locally
-kubectl port-forward svc/kaneo-web 5173:5173 -n kaneo
+kubectl port-forward svc/opus-web 5173:5173 -n opus
 ```
 
 Open [http://localhost:5173](http://localhost:5173) and you're ready to go.
@@ -37,8 +37,8 @@ Open [http://localhost:5173](http://localhost:5173) and you're ready to go.
 For real deployments, you'll want proper ingress:
 
 ```bash
-helm install kaneo ./charts/kaneo \
-  --namespace kaneo \
+helm install opus ./charts/opus \
+  --namespace opus \
   --create-namespace \
   --set ingress.enabled=true \
   --set ingress.className=nginx \
@@ -47,11 +47,11 @@ helm install kaneo ./charts/kaneo \
 
 ### Production Setup with Gateway API
 
-If your cluster already has Gateway API CRDs and a `Gateway` configured, you can expose Kaneo with an `HTTPRoute`:
+If your cluster already has Gateway API CRDs and a `Gateway` configured, you can expose Opus with an `HTTPRoute`:
 
 ```bash
-helm install kaneo ./charts/kaneo \
-  --namespace kaneo \
+helm install opus ./charts/opus \
+  --namespace opus \
   --create-namespace \
   --set gateway.enabled=true \
   --set "gateway.parentRefs[0].name=main-gateway" \
@@ -62,20 +62,20 @@ helm install kaneo ./charts/kaneo \
 
 ## Installing the Chart
 
-To install the chart with the release name `my-kaneo`:
+To install the chart with the release name `my-opus`:
 
 ```bash
-helm install my-kaneo ./charts/kaneo
+helm install my-opus ./charts/opus
 ```
 
-The command deploys Kaneo on the Kubernetes cluster with default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+The command deploys Opus on the Kubernetes cluster with default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `my-kaneo` deployment:
+To uninstall/delete the `my-opus` deployment:
 
 ```bash
-helm uninstall my-kaneo
+helm uninstall my-opus
 ```
 
 ## Parameters
@@ -105,9 +105,9 @@ helm uninstall my-kaneo
 | `postgresql.image.repository`       | PostgreSQL image repository                                                                                        | `postgres`                      |
 | `postgresql.image.tag`              | PostgreSQL image tag                                                                                               | `16-alpine`                     |
 | `postgresql.image.pullPolicy`       | PostgreSQL image pull policy                                                                                      | `IfNotPresent`                  |
-| `postgresql.auth.database`          | PostgreSQL database name                                                                                           | `kaneo`                         |
-| `postgresql.auth.username`          | PostgreSQL username                                                                                                | `kaneo_user`                    |
-| `postgresql.auth.password`          | PostgreSQL password                                                                                                | `kaneo_password`                |
+| `postgresql.auth.database`          | PostgreSQL database name                                                                                           | `opus`                         |
+| `postgresql.auth.username`          | PostgreSQL username                                                                                                | `opus_user`                    |
+| `postgresql.auth.password`          | PostgreSQL password                                                                                                | `opus_password`                |
 | `postgresql.auth.existingSecret`    | Name of existing secret containing PostgreSQL credentials                                                          | `""`                            |
 | `postgresql.persistence.enabled`    | Enable persistence for PostgreSQL data                                                                             | `true`                          |
 | `postgresql.persistence.size`       | PostgreSQL PVC size                                                                                                | `8Gi`                           |
@@ -121,7 +121,7 @@ helm uninstall my-kaneo
 
 | Name                                | Description                                                                                                        | Value                           |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `api.image.repository`              | API image repository                                                                                              | `ghcr.io/usekaneo/api`          |
+| `api.image.repository`              | API image repository                                                                                              | `ghcr.io/FacileStudio/api`          |
 | `api.image.tag`                     | API image tag                                                                                                     | `latest`                        |
 | `api.image.pullPolicy`              | API image pull policy                                                                                             | `IfNotPresent`                  |
 | `api.service.type`                  | API service type                                                                                                  | `ClusterIP`                     |
@@ -137,8 +137,8 @@ helm uninstall my-kaneo
 | `api.env.database.external.enabled` | Use external PostgreSQL database (set postgresql.enabled to false)                                               | `false`                         |
 | `api.env.database.external.host`    | External PostgreSQL host                                                                                          | `""`                            |
 | `api.env.database.external.port`    | External PostgreSQL port                                                                                          | `5432`                          |
-| `api.env.database.external.database` | External PostgreSQL database name                                                                                | `kaneo`                         |
-| `api.env.database.external.username` | External PostgreSQL username                                                                                     | `kaneo_user`                    |
+| `api.env.database.external.database` | External PostgreSQL database name                                                                                | `opus`                         |
+| `api.env.database.external.username` | External PostgreSQL username                                                                                     | `opus_user`                    |
 | `api.env.database.external.password` | External PostgreSQL password                                                                                     | `""`                            |
 | `api.resources`                     | Resource requests and limits for the API container (optional, disabled by default)                                | `{}`                            |
 
@@ -146,7 +146,7 @@ helm uninstall my-kaneo
 
 | Name                                | Description                                                                                                        | Value                           |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `web.image.repository`              | Web image repository                                                                                               | `ghcr.io/usekaneo/web`          |
+| `web.image.repository`              | Web image repository                                                                                               | `ghcr.io/FacileStudio/web`          |
 | `web.image.tag`                     | Web image tag                                                                                                      | `latest`                        |
 | `web.image.pullPolicy`              | Web image pull policy                                                                                              | `IfNotPresent`                  |
 | `web.service.type`                  | Web service type                                                                                                   | `ClusterIP`                     |
@@ -272,7 +272,7 @@ ingress:
           service: api
           port: 1337
   tls:
-    - secretName: kaneo-tls
+    - secretName: opus-tls
       hosts:
         - your-domain.com
 ```
@@ -295,8 +295,8 @@ api:
         enabled: true
         host: "your-postgres-host.com"
         port: 5432
-        database: "kaneo"
-        username: "kaneo_user"
+        database: "opus"
+        username: "opus_user"
         password: "your-db-password"
 ```
 
@@ -306,8 +306,8 @@ For production environments, it's recommended to store sensitive data like the J
 
 ```bash
 # Create a Secret for sensitive data
-kubectl create secret generic kaneo-secrets \
-  --namespace kaneo \
+kubectl create secret generic opus-secrets \
+  --namespace opus \
   --from-literal=jwt-access="your-secure-jwt-secret" \
   --from-literal=postgres-password="your-secure-db-password"
 ```
@@ -318,7 +318,7 @@ Then reference these secrets in your values:
 # values.yaml
 postgresql:
   auth:
-    existingSecret: "kaneo-secrets"
+    existingSecret: "opus-secrets"
     secretKeys:
       userPasswordKey: "postgres-password"
 
@@ -326,7 +326,7 @@ api:
   env:
     existingSecret:
       enabled: true
-      name: "kaneo-secrets"
+      name: "opus-secrets"
       key: "jwt-access"
 ```
 
@@ -335,9 +335,9 @@ api:
 ### PostgreSQL Configuration
 
 The chart deploys PostgreSQL 16 (Alpine) by default with the following configuration:
-- Database name: `kaneo`
-- Username: `kaneo_user`
-- Default password: `kaneo_password` (change this in production!)
+- Database name: `opus`
+- Username: `opus_user`
+- Default password: `opus_password` (change this in production!)
 - Persistent storage: 8Gi (configurable)
 
 ### Backup and Recovery
@@ -346,7 +346,7 @@ For production deployments, consider implementing regular database backups:
 
 ```bash
 # Example backup command
-kubectl exec -it deployment/my-kaneo-postgresql -- pg_dump -U kaneo_user kaneo > kaneo-backup.sql
+kubectl exec -it deployment/my-opus-postgresql -- pg_dump -U opus_user opus > opus-backup.sql
 ```
 
 ### Migration from SQLite
@@ -356,7 +356,7 @@ If you're migrating from a previous SQLite-based installation, you'll need to:
 2. Deploy the new PostgreSQL-based chart
 3. Import your data into PostgreSQL
 
-Contact the Kaneo community on [Discord](https://discord.gg/rU4tSyhXXU) for migration assistance.
+Contact the Opus community on [Discord](https://discord.gg/rU4tSyhXXU) for migration assistance.
 
 ## Architecture
 
@@ -399,7 +399,7 @@ ingress:
           service: api
           port: 1337
   tls:
-    - secretName: kaneo-tls
+    - secretName: opus-tls
       hosts:
         - your-domain.com
 ```
@@ -417,7 +417,7 @@ gateway:
       namespace: gateway-system
       sectionName: https
   hostnames:
-    - kaneo.example.com
+    - opus.example.com
 ```
 
 By default the chart creates two Gateway API rules:

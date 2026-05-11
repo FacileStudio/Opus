@@ -32,7 +32,7 @@ import { useTranslation } from "react-i18next";
 import { bundledLanguages, type Highlighter } from "shiki";
 import { AttachmentCard } from "@/components/task/extensions/attachment-card";
 import { EmbedBlock } from "@/components/task/extensions/embed-block";
-import { KaneoIssueLink } from "@/components/task/extensions/kaneo-issue-link";
+import { OpusIssueLink } from "@/components/task/extensions/opus-issue-link";
 import {
   SHIKI_CODEBLOCK_REFRESH_META,
   ShikiCodeBlock,
@@ -574,7 +574,7 @@ export default function CommentEditor({
           heading: { levels: [1, 2, 3] },
           trailingNode: false,
           codeBlock: {
-            HTMLAttributes: { class: "kaneo-tiptap-codeblock" },
+            HTMLAttributes: { class: "opus-tiptap-codeblock" },
           },
         }),
         Link.configure({
@@ -597,11 +597,11 @@ export default function CommentEditor({
         }),
         EmbedBlock,
         AttachmentCard,
-        KaneoIssueLink,
+        OpusIssueLink,
         TaskList,
         Image.configure({
           HTMLAttributes: {
-            class: "kaneo-editor-image",
+            class: "opus-editor-image",
             loading: "lazy",
           },
         }),
@@ -621,8 +621,8 @@ export default function CommentEditor({
       editorProps: {
         attributes: {
           class: cn(
-            proseClassName || "kaneo-comment-editor-prose",
-            readOnly && "kaneo-comment-editor-prose-readonly",
+            proseClassName || "opus-comment-editor-prose",
+            readOnly && "opus-comment-editor-prose-readonly",
           ),
         },
         handlePaste: (view, event) => {
@@ -665,7 +665,7 @@ export default function CommentEditor({
             event.preventDefault();
             view.dispatch(
               view.state.tr.replaceSelectionWith(
-                view.state.schema.nodes.kaneoIssueLink.create({
+                view.state.schema.nodes.opusIssueLink.create({
                   url,
                   issueKey: issueKey || "",
                   taskId: taskIdFromUrl || "",
@@ -911,7 +911,7 @@ export default function CommentEditor({
     const handleImagePreviewClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (!(target instanceof HTMLImageElement)) return;
-      if (!target.classList.contains("kaneo-editor-image")) return;
+      if (!target.classList.contains("opus-editor-image")) return;
 
       event.preventDefault();
       setPreviewImage({
@@ -1308,9 +1308,9 @@ export default function CommentEditor({
     (event: ReactMouseEvent<HTMLElement>) => {
       if (disabled) return;
       const target = event.target as HTMLElement;
-      if (target.closest(".kaneo-codeblock-language")) return;
+      if (target.closest(".opus-codeblock-language")) return;
       const hovered = target.closest(
-        "pre.kaneo-tiptap-codeblock",
+        "pre.opus-tiptap-codeblock",
       ) as HTMLElement | null;
 
       if (!hovered) {
@@ -1333,7 +1333,7 @@ export default function CommentEditor({
   const handleEditorMouseLeave = useCallback(
     (event: ReactMouseEvent<HTMLElement>) => {
       const relatedTarget = event.relatedTarget as HTMLElement | null;
-      if (relatedTarget?.closest(".kaneo-codeblock-language")) return;
+      if (relatedTarget?.closest(".opus-codeblock-language")) return;
       if (isCodeLanguageMenuOpen) return;
 
       if (codeLanguageHideTimeoutRef.current !== null) {
@@ -1343,7 +1343,7 @@ export default function CommentEditor({
       codeLanguageHideTimeoutRef.current = window.setTimeout(() => {
         codeLanguageHideTimeoutRef.current = null;
         const pickerIsHovered = Boolean(
-          document.querySelector(".kaneo-codeblock-language:hover"),
+          document.querySelector(".opus-codeblock-language:hover"),
         );
         if (pickerIsHovered || isCodeLanguageMenuOpen) return;
 
@@ -1397,9 +1397,9 @@ export default function CommentEditor({
           : t("activity:comment.editor.ariaCommentEditor")
       }
       className={cn(
-        "kaneo-comment-editor-shell",
+        "opus-comment-editor-shell",
         isDragActive && "is-drag-active",
-        readOnly && "kaneo-comment-editor-shell-readonly",
+        readOnly && "opus-comment-editor-shell-readonly",
         className,
       )}
       onDragEnter={handleShellDragEnter}
@@ -1430,7 +1430,7 @@ export default function CommentEditor({
       )}
       {editor && hoveredCodeBlock && !disabled && (
         <div
-          className="kaneo-codeblock-language"
+          className="opus-codeblock-language"
           style={{
             top: hoveredCodeBlock.top,
             left: hoveredCodeBlock.left,
@@ -1439,7 +1439,7 @@ export default function CommentEditor({
         >
           <button
             type="button"
-            className="kaneo-codeblock-language-trigger kaneo-codeblock-copy-trigger"
+            className="opus-codeblock-language-trigger opus-codeblock-copy-trigger"
             aria-label={
               isCodeCopied
                 ? t("activity:comment.editor.ariaCopied")
@@ -1471,7 +1471,7 @@ export default function CommentEditor({
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="kaneo-codeblock-language-trigger"
+                  className="opus-codeblock-language-trigger"
                 >
                   <span className="truncate">{activeCodeLanguageLabel}</span>
                   <ChevronDown className="size-3.5 opacity-70" />
@@ -1505,7 +1505,7 @@ export default function CommentEditor({
       {editor && !readOnly && !disabled && showBubbleMenu && (
         <BubbleMenu
           editor={editor}
-          className="kaneo-comment-editor-bubble"
+          className="opus-comment-editor-bubble"
           shouldShow={({ editor: activeEditor, from, to }) => {
             if (activeEditor.isActive("embedBlock")) return false;
             if (activeEditor.isActive("image")) return false;
@@ -1518,7 +1518,7 @@ export default function CommentEditor({
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-comment-editor-bubble-btn",
+              "opus-comment-editor-bubble-btn",
               editor.isActive("bold") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -1530,7 +1530,7 @@ export default function CommentEditor({
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-comment-editor-bubble-btn",
+              "opus-comment-editor-bubble-btn",
               editor.isActive("italic") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -1542,7 +1542,7 @@ export default function CommentEditor({
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-comment-editor-bubble-btn",
+              "opus-comment-editor-bubble-btn",
               editor.isActive("underline") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1555,7 +1555,7 @@ export default function CommentEditor({
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-comment-editor-bubble-btn",
+              "opus-comment-editor-bubble-btn",
               editor.isActive("bulletList") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1568,7 +1568,7 @@ export default function CommentEditor({
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-comment-editor-bubble-btn",
+              "opus-comment-editor-bubble-btn",
               editor.isActive("taskList") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleTaskList().run()}
@@ -1580,7 +1580,7 @@ export default function CommentEditor({
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-comment-editor-bubble-btn",
+              "opus-comment-editor-bubble-btn",
               editor.isActive("orderedList") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1593,7 +1593,7 @@ export default function CommentEditor({
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-comment-editor-bubble-btn",
+              "opus-comment-editor-bubble-btn",
               editor.isActive("link") && "bg-accent text-accent-foreground",
             )}
             onClick={setLink}
@@ -1604,7 +1604,7 @@ export default function CommentEditor({
             type="button"
             variant="ghost"
             size="xs"
-            className="kaneo-comment-editor-bubble-btn"
+            className="opus-comment-editor-bubble-btn"
             onClick={() => openImagePicker(editor)}
           >
             <Paperclip className="size-3.5" />
@@ -1613,7 +1613,7 @@ export default function CommentEditor({
       )}
       {slashMenu && !readOnly && !disabled && (
         <div
-          className="kaneo-tiptap-slash-menu"
+          className="opus-tiptap-slash-menu"
           style={{
             top: slashMenu.top,
             left: slashMenu.left,
@@ -1624,8 +1624,8 @@ export default function CommentEditor({
             groupedSlashCommands.map((group) => {
               if (!group.items.length) return null;
               return (
-                <div key={group.title} className="kaneo-tiptap-slash-group">
-                  <div className="kaneo-tiptap-slash-group-title">
+                <div key={group.title} className="opus-tiptap-slash-group">
+                  <div className="opus-tiptap-slash-group-title">
                     {group.title}
                   </div>
                   {group.items.map((command) => {
@@ -1637,7 +1637,7 @@ export default function CommentEditor({
                         key={command.id}
                         type="button"
                         className={cn(
-                          "kaneo-tiptap-slash-item",
+                          "opus-tiptap-slash-item",
                           slashMenu.selectedIndex === index && "is-selected",
                         )}
                         onMouseEnter={() =>
@@ -1657,11 +1657,11 @@ export default function CommentEditor({
                           setSlashMenu(null);
                         }}
                       >
-                        <span className="kaneo-tiptap-slash-label">
+                        <span className="opus-tiptap-slash-label">
                           {command.label}
                         </span>
                         {command.shortcut && (
-                          <span className="kaneo-tiptap-slash-shortcut">
+                          <span className="opus-tiptap-slash-shortcut">
                             {command.shortcut}
                           </span>
                         )}
@@ -1672,7 +1672,7 @@ export default function CommentEditor({
               );
             })
           ) : (
-            <div className="kaneo-tiptap-slash-empty">
+            <div className="opus-tiptap-slash-empty">
               {t("activity:comment.editor.noCommands")}
             </div>
           )}
@@ -1680,7 +1680,7 @@ export default function CommentEditor({
       )}
       {editor && embedComposer && (
         <div
-          className="kaneo-embed-composer"
+          className="opus-embed-composer"
           style={{
             top: embedComposer.top,
             left: embedComposer.left,
@@ -1688,23 +1688,23 @@ export default function CommentEditor({
           }}
         >
           {embedComposer.mode === "choice" ? (
-            <div className="kaneo-embed-choice-menu">
+            <div className="opus-embed-choice-menu">
               <button
                 type="button"
-                className="kaneo-embed-choice-item is-primary"
+                className="opus-embed-choice-item is-primary"
                 onMouseDown={(event) => {
                   event.preventDefault();
                   submitEmbedComposer("embed");
                 }}
               >
                 <span>{t("activity:comment.editor.embedVideo")}</span>
-                <span className="kaneo-embed-choice-hint">
+                <span className="opus-embed-choice-hint">
                   {t("activity:comment.editor.hintTab")}
                 </span>
               </button>
               <button
                 type="button"
-                className="kaneo-embed-choice-item"
+                className="opus-embed-choice-item"
                 onMouseDown={(event) => {
                   event.preventDefault();
                   setEmbedComposer(null);
@@ -1712,14 +1712,14 @@ export default function CommentEditor({
                 }}
               >
                 <span>{t("activity:comment.editor.keepAsLink")}</span>
-                <span className="kaneo-embed-choice-hint">
+                <span className="opus-embed-choice-hint">
                   {t("activity:comment.editor.hintEsc")}
                 </span>
               </button>
             </div>
           ) : (
             <form
-              className="kaneo-embed-composer-form"
+              className="opus-embed-composer-form"
               onSubmit={(event) => {
                 event.preventDefault();
                 submitEmbedComposer("embed");
@@ -1737,7 +1737,7 @@ export default function CommentEditor({
                 placeholder={t("activity:comment.editor.pasteUrl")}
                 autoFocus
               />
-              <div className="kaneo-embed-composer-actions">
+              <div className="opus-embed-composer-actions">
                 <Button
                   type="button"
                   size="xs"
@@ -1762,7 +1762,7 @@ export default function CommentEditor({
                 </Button>
               </div>
               {embedComposerError && (
-                <p className="kaneo-embed-composer-error">
+                <p className="opus-embed-composer-error">
                   {t(`activity:comment.editor.${embedComposerError}`)}
                 </p>
               )}
@@ -1772,14 +1772,14 @@ export default function CommentEditor({
       )}
       <EditorContent
         editor={editor}
-        className={cn("kaneo-comment-editor-content", contentClassName)}
+        className={cn("opus-comment-editor-content", contentClassName)}
         onMouseMove={handleEditorMouseMove}
         onMouseLeave={handleEditorMouseLeave}
       />
       {!readOnly && !disabled && showQuickAttachButton && (
         <button
           type="button"
-          className="kaneo-editor-quick-attach"
+          className="opus-editor-quick-attach"
           onMouseDown={(event) => {
             event.preventDefault();
           }}
@@ -1790,7 +1790,7 @@ export default function CommentEditor({
         </button>
       )}
       {isDragActive && (
-        <div className="kaneo-editor-drop-indicator">
+        <div className="opus-editor-drop-indicator">
           <span>{t("activity:comment.editor.dropImageToUpload")}</span>
         </div>
       )}

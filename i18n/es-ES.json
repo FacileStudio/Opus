@@ -1,6 +1,6 @@
 {
 	"common": {
-		"appName": "Kaneo",
+		"appName": "Opus",
 		"actions": {
 			"cancel": "Cancelar",
 			"close": "Cerrar",
@@ -73,7 +73,7 @@
 				"errorToast": "Hubo un error al crear el proyecto"
 			},
 			"createWorkspace": {
-				"breadcrumbKaneo": "KANEO",
+				"breadcrumbOpus": "OPUS",
 				"title": "Crear un nuevo espacio de trabajo",
 				"description": "Crea un nuevo espacio de trabajo eligiendo un nombre.",
 				"namePlaceholder": "Nombre del espacio de trabajo",
@@ -240,7 +240,7 @@
 			"workspaceLabel": "Espacio de trabajo: {{workspaceName}}",
 			"joinWorkspace": "Unirse a {{workspaceName}}",
 			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> te ha invitado a unirse a su espacio de trabajo.",
-			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> te ha invitado a unirse a su espacio de trabajo en Kaneo.",
+			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> te ha invitado a unirse a su espacio de trabajo en Opus.",
 			"signInToAccept": "Inicia sesión para aceptar esta invitación.",
 			"accepting": "Aceptando...",
 			"acceptInvitation": "Aceptar invitación",
@@ -255,7 +255,7 @@
 			}
 		},
 		"onboarding": {
-			"pageTitle": "Bienvenido a Kaneo",
+			"pageTitle": "Bienvenido a Opus",
 			"workspacePageTitle": "Crear espacio de trabajo",
 			"createWorkspaceTitle": "Crear espacio de trabajo",
 			"createWorkspaceSubtitle": "Configura tu espacio de trabajo para empezar a gestionar proyectos",
@@ -322,7 +322,7 @@
 		},
 		"preferencesPage": {
 			"title": "Preferencias",
-			"subtitle": "Personaliza tu experiencia Kaneo.",
+			"subtitle": "Personaliza tu experiencia Opus.",
 			"appearanceTitle": "Apariencia",
 			"appearanceSubtitle": "Ajustes visuales y de diseño.",
 			"theme": "Tema",
@@ -365,7 +365,7 @@
 			"title": "Ajustes de Desarrollador",
 			"subtitle": "Gestiona tus claves de API y recursos de desarrollo.",
 			"apiKeysCardTitle": "Claves de API",
-			"apiKeysCardDescription": "Crea y gestiona las claves de API para acceder a Kaneo.",
+			"apiKeysCardDescription": "Crea y gestiona las claves de API para acceder a Opus.",
 			"createApiKey": "Crear clave de API",
 			"unnamedKey": "Clave sin nombre"
 		},
@@ -404,7 +404,7 @@
 			},
 			"createDialog": {
 				"title": "Crear clave de API",
-				"description": "Create una nueva clave de API para acceder a la API de Kaneo.",
+				"description": "Create una nueva clave de API para acceder a la API de Opus.",
 				"nameLabel": "Nombre",
 				"namePlaceholder": "Mi API Key",
 				"nameDescription": "Un nombre descriptivo para esta clave de API",
@@ -576,7 +576,7 @@
 				"removeError": "Error al eliminar la integración con GitHub",
 				"issuesImported": "Issues importados correctamente",
 				"importError": "Error al importar issues",
-				"commentOnEnabled": "Kaneo añadirá un comentario con un enlace a la tarea en los nuevos issues",
+				"commentOnEnabled": "Opus añadirá un comentario con un enlace a la tarea en los nuevos issues",
 				"commentOnDisabled": "Los comentarios con enlaces a tareas en nuevos issues están desactivados",
 				"settingsUpdateError": "Error al actualizar la integración de GitHub"
 			},
@@ -587,8 +587,8 @@
 			"badgeNotConnected": "No connectado",
 			"repository": "Repositorio",
 			"repositoryHint": "Repositorio de GitHub conectado",
-			"commentTaskLinkTitle": "Comenta Kaneo link en issues nuevos",
-			"commentTaskLinkHint": "Si está activado, Kaneo añade un comentario en cada nuevo issue de GitHub vinculado con la tarea.",
+			"commentTaskLinkTitle": "Comenta Opus link en issues nuevos",
+			"commentTaskLinkHint": "Si está activado, Opus añade un comentario en cada nuevo issue de GitHub vinculado con la tarea.",
 			"appStatusTitle": "Estado de la App de GitHub",
 			"appStatusHint": "Estado de instalación y permisos",
 			"statusProperlyConfigured": "Correctamente configurado",
@@ -706,15 +706,15 @@
 				"removeError": "Error al eliminar la integración con webhook"
 			},
 			"connectionTitle": "Conexión de sálida a un webhook",
-			"connectionHint": "Envía eventos de las tareas a tu propio webhook como JSON. Una cabecera X-Kaneo-Signature se incluye si el secreto está configurado.",
+			"connectionHint": "Envía eventos de las tareas a tu propio webhook como JSON. Una cabecera X-Opus-Signature se incluye si el secreto está configurado.",
 			"connected": "Conectado",
 			"paused": "Pausado",
 			"webhookLabel": "URL del webhook",
-			"webhookPlaceholder": "https://ejemplo.com/webhooks/kaneo",
-			"webhookHint": "Kaneo envía requests POST como JSON para cada evento activo.",
+			"webhookPlaceholder": "https://ejemplo.com/webhooks/opus",
+			"webhookHint": "Opus envía requests POST como JSON para cada evento activo.",
 			"secretLabel": "Secreto para la firma",
 			"secretPlaceholder": "Secreto opcional",
-			"secretHint": "Opcional. Si está configurado, Kaneo envía el cuerpo de la petición y añade la cabecera X-Kaneo-Signature.",
+			"secretHint": "Opcional. Si está configurado, Opus envía el cuerpo de la petición y añade la cabecera X-Opus-Signature.",
 			"secretHintConfigured": "Ya hay un secreto configurado ({{secret}}). Introduce uno nuevo para reemplazarlo.",
 			"eventsTitle": "Notificaciones de eventos",
 			"eventsHint": "Elige qué cambios en el proyecto deben ser notificados a través de webhooks.",

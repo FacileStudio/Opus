@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://kaneo.app/i18n/schema.json",
-	"title": "Kaneo locale schema",
+	"$id": "https://opus.app/i18n/schema.json",
+	"title": "Opus locale schema",
 	"type": "object",
 	"additionalProperties": false,
 	"properties": {
@@ -275,7 +275,7 @@
 							"type": "object",
 							"additionalProperties": false,
 							"properties": {
-								"breadcrumbKaneo": {
+								"breadcrumbOpus": {
 									"type": "string"
 								},
 								"title": {
@@ -301,7 +301,7 @@
 								}
 							},
 							"required": [
-								"breadcrumbKaneo",
+								"breadcrumbOpus",
 								"title",
 								"description",
 								"namePlaceholder",

@@ -15,17 +15,17 @@ export type NotificationEmailProps = {
 
 const messages = {
   en: {
-    preview: "You have a new Kaneo notification",
+    preview: "You have a new Opus notification",
     subtitle: "A notification matched your delivery preferences.",
-    footer: "Kaneo notification",
-    actionLabel: "Open in Kaneo",
+    footer: "Opus notification",
+    actionLabel: "Open in Opus",
   },
   de: {
-    preview: "Du hast eine neue Kaneo-Benachrichtigung",
+    preview: "Du hast eine neue Opus-Benachrichtigung",
     subtitle:
       "Eine Benachrichtigung entspricht deinen Zustellungs-Einstellungen.",
-    footer: "Kaneo-Benachrichtigung",
-    actionLabel: "In Kaneo oeffnen",
+    footer: "Opus-Benachrichtigung",
+    actionLabel: "In Opus oeffnen",
   },
 } as const;
 
@@ -57,7 +57,7 @@ const NotificationEmail = ({
 NotificationEmail.PreviewProps = {
   title: "Task assigned to you",
   message: "You were assigned to Design account notifications.",
-  actionUrl: "https://kaneo.app",
+  actionUrl: "https://opus.app",
 } as NotificationEmailProps;
 
 export default NotificationEmail;
