@@ -1,7 +1,7 @@
 FROM oven/bun:1 AS api-builder
 WORKDIR /app
 
-RUN npm install -g corepack@latest && corepack enable && corepack prepare pnpm@10.32.1 --activate
+RUN bun install -g pnpm@10.32.1
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
@@ -25,7 +25,7 @@ RUN cd apps/api && pnpm run build
 FROM oven/bun:1 AS api-deps
 WORKDIR /app
 
-RUN npm install -g corepack@latest && corepack enable && corepack prepare pnpm@10.32.1 --activate
+RUN bun install -g pnpm@10.32.1
 
 COPY --from=api-builder /app/package.json /app/pnpm-workspace.yaml /app/pnpm-lock.yaml ./
 COPY --from=api-builder /app/packages/typescript-config/package.json ./packages/typescript-config/
@@ -46,7 +46,7 @@ COPY --from=api-builder /app/packages/email ./packages/email
 FROM oven/bun:1 AS web-builder
 WORKDIR /app
 
-RUN npm install -g corepack@latest && corepack enable && corepack prepare pnpm@10.32.1 --activate
+RUN bun install -g pnpm@10.32.1
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
