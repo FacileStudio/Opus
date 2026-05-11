@@ -1,4 +1,4 @@
-import { client } from "@kaneo/libs";
+import { client } from "@opus/libs";
 import type { InferRequestType } from "hono/client";
 
 export type DeleteProjectRequest = InferRequestType<

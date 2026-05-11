@@ -1,10 +1,10 @@
-# Kaneo Mintlify Docs
+# Opus Mintlify Docs
 
-This directory contains Kaneo documentation powered by Mintlify.
+This directory contains Opus documentation powered by Mintlify.
 
 ## Monorepo setup
 
-- Repository: `kaneo`
+- Repository: `opus`
 - Docs root for Mintlify: `/apps/docs`
 - Main config: `apps/docs/docs.json`
 - OpenAPI source file: `apps/docs/openapi.json`

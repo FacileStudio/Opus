@@ -1,6 +1,6 @@
 {
 	"common": {
-		"appName": "Kaneo",
+		"appName": "Opus",
 		"actions": {
 			"cancel": "Ακύρωση",
 			"close": "Κλείσιμο",
@@ -74,7 +74,7 @@
 				"errorToast": "Αποτυχία δημιουργίας έργου"
 			},
 			"createWorkspace": {
-				"breadcrumbKaneo": "KANEO",
+				"breadcrumbOpus": "OPUS",
 				"title": "Δημιουργία νέου χώρου εργασίας",
 				"description": "Δημιουργήστε έναν νέο χώρο εργασίας ορίζοντας ένα όνομα.",
 				"namePlaceholder": "Όνομα χώρου εργασίας",
@@ -241,7 +241,7 @@
 			"workspaceLabel": "Χώρος εργασίας: {{workspaceName}}",
 			"joinWorkspace": "Συμμετοχή στο {{workspaceName}}",
 			"inviteBodySignedIn": "Ο/Η <inviter>{{inviterName}}</inviter> σας προσκάλεσε να συμμετάσχετε στον χώρο εργασίας του/της.",
-			"inviteBodySignedOut": "Ο/Η <inviter>{{inviterName}}</inviter> σας προσκάλεσε να συμμετάσχετε στον χώρο εργασίας του/της στο Kaneo.",
+			"inviteBodySignedOut": "Ο/Η <inviter>{{inviterName}}</inviter> σας προσκάλεσε να συμμετάσχετε στον χώρο εργασίας του/της στο Opus.",
 			"signInToAccept": "Συνδεθείτε για να αποδεχτείτε αυτήν την πρόσκληση.",
 			"accepting": "Γίνεται αποδοχή...",
 			"acceptInvitation": "Αποδοχή πρόσκλησης",
@@ -256,7 +256,7 @@
 			}
 		},
 		"onboarding": {
-			"pageTitle": "Καλώς ήρθατε στο Kaneo",
+			"pageTitle": "Καλώς ήρθατε στο Opus",
 			"workspacePageTitle": "Δημιουργία χώρου εργασίας",
 			"createWorkspaceTitle": "Δημιουργία χώρου εργασίας",
 			"createWorkspaceSubtitle": "Ρυθμίστε τον χώρο εργασίας σας για να ξεκινήσετε τη διαχείριση έργων",
@@ -325,7 +325,7 @@
 		"notificationsPage": {
 			"pageTitle": "Notifications",
 			"title": "Notifications",
-			"subtitle": "Choose how Kaneo delivers your account notifications and which channels to use.",
+			"subtitle": "Choose how Opus delivers your account notifications and which channels to use.",
 			"statusConnected": "Connected",
 			"statusPaused": "Paused",
 			"emailTitle": "Email",
@@ -358,10 +358,10 @@
 			"webhookDescription": "Send account notifications to your own endpoint as JSON.",
 			"endpointUrl": "Endpoint URL",
 			"signingSecret": "Signing secret",
-			"webhookUrlPlaceholder": "https://example.com/webhooks/kaneo",
+			"webhookUrlPlaceholder": "https://example.com/webhooks/opus",
 			"webhookSecretPlaceholder": "Optional shared secret",
 			"webhookSecretHintConfigured": "A signing secret is already configured ({{masked}}). Enter a new one to replace it.",
-			"webhookSecretHintOptional": "Optional. Kaneo signs the request body when a secret is set.",
+			"webhookSecretHintOptional": "Optional. Opus signs the request body when a secret is set.",
 			"connectWebhook": "Connect webhook",
 			"workspaceRulesTitle": "Workspace delivery rules",
 			"workspaceRulesDescription": "Reuse your global channels, then decide which workspaces and projects are allowed to send account notifications.",
@@ -412,7 +412,7 @@
 		},
 		"preferencesPage": {
 			"title": "Προτιμήσεις",
-			"subtitle": "Προσαρμόστε την εμπειρία σας στο Kaneo.",
+			"subtitle": "Προσαρμόστε την εμπειρία σας στο Opus.",
 			"appearanceTitle": "Εμφάνιση",
 			"appearanceSubtitle": "Οπτικές ρυθμίσεις και προτιμήσεις διάταξης.",
 			"theme": "Θέμα",
@@ -455,7 +455,7 @@
 			"title": "Ρυθμίσεις προγραμματιστή",
 			"subtitle": "Διαχειριστείτε τα API keys και τους πόρους προγραμματιστή.",
 			"apiKeysCardTitle": "Κλειδιά API",
-			"apiKeysCardDescription": "Δημιουργήστε και διαχειριστείτε κλειδιά API για προγραμματιστική πρόσβαση στο Kaneo.",
+			"apiKeysCardDescription": "Δημιουργήστε και διαχειριστείτε κλειδιά API για προγραμματιστική πρόσβαση στο Opus.",
 			"createApiKey": "Δημιουργία κλειδιού API",
 			"unnamedKey": "Κλειδί χωρίς όνομα"
 		},
@@ -494,7 +494,7 @@
 			},
 			"createDialog": {
 				"title": "Δημιουργία κλειδιού API",
-				"description": "Δημιουργήστε ένα νέο κλειδί API για πρόσβαση στο Kaneo API προγραμματιστικά.",
+				"description": "Δημιουργήστε ένα νέο κλειδί API για πρόσβαση στο Opus API προγραμματιστικά.",
 				"nameLabel": "Όνομα",
 				"namePlaceholder": "Το κλειδί API μου",
 				"nameDescription": "Ένα περιγραφικό όνομα για αυτό το κλειδί API",
@@ -670,7 +670,7 @@
 				"removeError": "Αποτυχία αφαίρεσης ενσωμάτωσης GitHub",
 				"issuesImported": "Τα issues εισήχθησαν με επιτυχία",
 				"importError": "Αποτυχία εισαγωγής issues",
-				"commentOnEnabled": "Το Kaneo θα δημοσιεύει σχόλιο με σύνδεσμο εργασίας στα νέα issues",
+				"commentOnEnabled": "Το Opus θα δημοσιεύει σχόλιο με σύνδεσμο εργασίας στα νέα issues",
 				"commentOnDisabled": "Τα σχόλια με σύνδεσμο εργασίας στα νέα issues είναι απενεργοποιημένα",
 				"settingsUpdateError": "Αποτυχία ενημέρωσης ενσωμάτωσης GitHub"
 			},
@@ -681,8 +681,8 @@
 			"badgeNotConnected": "Μη συνδεδεμένο",
 			"repository": "Αποθετήριο",
 			"repositoryHint": "Συνδεδεμένο αποθετήριο GitHub",
-			"commentTaskLinkTitle": "Σχολιασμός με σύνδεσμο Kaneo σε νέα issues",
-			"commentTaskLinkHint": "Όταν είναι ενεργό, το Kaneo δημοσιεύει σχόλιο σε κάθε νέο GitHub issue με σύνδεσμο προς την εργασία.",
+			"commentTaskLinkTitle": "Σχολιασμός με σύνδεσμο Opus σε νέα issues",
+			"commentTaskLinkHint": "Όταν είναι ενεργό, το Opus δημοσιεύει σχόλιο σε κάθε νέο GitHub issue με σύνδεσμο προς την εργασία.",
 			"appStatusTitle": "Κατάσταση εφαρμογής GitHub",
 			"appStatusHint": "Κατάσταση εγκατάστασης και δικαιωμάτων",
 			"statusProperlyConfigured": "Σωστά ρυθμισμένο",
@@ -733,7 +733,7 @@
 				"removeError": "Failed to remove Gitea integration",
 				"issuesImported": "Issues imported successfully",
 				"importError": "Failed to import issues",
-				"commentOnEnabled": "Kaneo will comment with a task link on new issues",
+				"commentOnEnabled": "Opus will comment with a task link on new issues",
 				"commentOnDisabled": "Task link comments on new issues are turned off",
 				"settingsUpdateError": "Failed to update Gitea integration",
 				"secretCopied": "Copied",
@@ -749,8 +749,8 @@
 			"badgeNotConnected": "Not connected",
 			"repository": "Repository",
 			"repositoryHint": "Linked Gitea repository",
-			"commentTaskLinkTitle": "Comment Kaneo link on new issues",
-			"commentTaskLinkHint": "When enabled, Kaneo posts a comment on each new issue with a link to the task.",
+			"commentTaskLinkTitle": "Comment Opus link on new issues",
+			"commentTaskLinkHint": "When enabled, Opus posts a comment on each new issue with a link to the task.",
 			"webhookTitle": "Webhook",
 			"webhookHint": "In your Gitea repository, add a webhook with this URL and secret. Enable push, pull request, issues, issue comments, and create (for labels).",
 			"webhookSecretLabel": "Secret (must match the webhook secret in Gitea)",
@@ -863,7 +863,7 @@
 		"genericWebhookIntegration": {
 			"connect": "Σύνδεση webhook",
 			"connected": "Συνδεδεμένο",
-			"connectionHint": "Στείλτε γεγονότα εργασιών στο δικό σας endpoint ως JSON. Περιλαμβάνεται υπογεγραμμένη κεφαλίδα X-Kaneo-Signature όταν έχει ρυθμιστεί μυστικό.",
+			"connectionHint": "Στείλτε γεγονότα εργασιών στο δικό σας endpoint ως JSON. Περιλαμβάνεται υπογεγραμμένη κεφαλίδα X-Opus-Signature όταν έχει ρυθμιστεί μυστικό.",
 			"connectionTitle": "Σύνδεση εξερχόμενου webhook",
 			"disconnect": "Αποσύνδεση",
 			"events": {
@@ -878,7 +878,7 @@
 			"eventsTitle": "Ειδοποιήσεις γεγονότων",
 			"paused": "Σε παύση",
 			"saveChanges": "Αποθήκευση αλλαγών",
-			"secretHint": "Προαιρετικό. Αν δοθεί, το Kaneo υπογράφει το σώμα του αιτήματος και στέλνει το hex digest στην κεφαλίδα X-Kaneo-Signature.",
+			"secretHint": "Προαιρετικό. Αν δοθεί, το Opus υπογράφει το σώμα του αιτήματος και στέλνει το hex digest στην κεφαλίδα X-Opus-Signature.",
 			"secretHintConfigured": "Έχει ήδη ρυθμιστεί ένα μυστικό υπογραφής ({{secret}}). Εισαγάγετε ένα νέο για να το αντικαταστήσετε.",
 			"secretLabel": "Μυστικό υπογραφής",
 			"secretPlaceholder": "Προαιρετικό κοινόχρηστο μυστικό",
@@ -894,9 +894,9 @@
 			"validation": {
 				"webhookInvalid": "Εισαγάγετε ένα έγκυρο URL webhook"
 			},
-			"webhookHint": "Το Kaneo στέλνει αιτήματα POST με JSON payload για κάθε ενεργοποιημένο γεγονός.",
+			"webhookHint": "Το Opus στέλνει αιτήματα POST με JSON payload για κάθε ενεργοποιημένο γεγονός.",
 			"webhookLabel": "URL endpoint",
-			"webhookPlaceholder": "https://example.com/webhooks/kaneo"
+			"webhookPlaceholder": "https://example.com/webhooks/opus"
 		},
 		"telegramIntegration": {
 			"validation": {
@@ -929,7 +929,7 @@
 			"threadIdHint": "Προαιρετικό. Χρησιμοποιήστε το για θέματα forum μέσα σε ομάδες Telegram.",
 			"chatLabelLabel": "Ετικέτα συνομιλίας",
 			"chatLabelPlaceholder": "Engineering Updates",
-			"chatLabelHint": "Προαιρετική ετικέτα για δική σας αναφορά μέσα στο Kaneo.",
+			"chatLabelHint": "Προαιρετική ετικέτα για δική σας αναφορά μέσα στο Opus.",
 			"eventsTitle": "Ειδοποιήσεις συμβάντων",
 			"eventsHint": "Επιλέξτε ποιες αλλαγές έργου θα δημοσιεύονται στο Telegram.",
 			"events": {

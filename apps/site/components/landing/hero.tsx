@@ -13,14 +13,14 @@ export function Hero() {
         <div className="mb-10 max-w-2xl">
           <FadeIn delay={0}>
             <a
-              href="https://www.producthunt.com/products/kaneo?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-kaneo-2"
+              href="https://www.producthunt.com/products/opus?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-opus-2"
               target="_blank"
               rel="noopener noreferrer"
               className="mb-6 inline-block"
             >
               {/* biome-ignore lint/performance/noImgElement: Product Hunt requires their exact embed markup */}
               <img
-                alt="Kaneo - All you need. Nothing you don't. | Product Hunt"
+                alt="Opus - All you need. Nothing you don't. | Product Hunt"
                 width={220}
                 height={48}
                 src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1051454&theme=light&t=1778000906780"
@@ -35,7 +35,7 @@ export function Hero() {
           </FadeIn>
           <FadeIn delay={80}>
             <p className="mt-5 text-balance text-lg text-muted-foreground leading-relaxed md:text-xl">
-              Kaneo gives you clean planning, focused execution, and full
+              Opus gives you clean planning, focused execution, and full
               ownership of your workflow from backlog to release.
             </p>
           </FadeIn>
@@ -46,7 +46,7 @@ export function Hero() {
                 size="lg"
                 className="gap-2"
                 onClick={() => {
-                  window.location.href = "https://cloud.kaneo.app";
+                  window.location.href = "https://cloud.opus.app";
                 }}
               >
                 Cloud
@@ -66,7 +66,7 @@ export function Hero() {
                 size="lg"
                 className="gap-2"
                 onClick={() => {
-                  window.location.href = "https://github.com/usekaneo/kaneo";
+                  window.location.href = "https://github.com/FacileStudio/opus";
                 }}
               >
                 <Github className="h-4 w-4" />
@@ -76,7 +76,7 @@ export function Hero() {
           </FadeIn>
         </div>
 
-        {/* ── App preview — interactive mock of the real Kaneo UI ── */}
+        {/* ── App preview — interactive mock of the real Opus UI ── */}
         <FadeIn delay={240} distance={32}>
           <AppPreview />
         </FadeIn>

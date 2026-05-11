@@ -16,26 +16,26 @@ export type WorkspaceInvitationEmailProps = {
 
 const messages = {
   en: {
-    preview: "You're invited to {{workspaceName}} on Kaneo",
+    preview: "You're invited to {{workspaceName}} on Opus",
     title: "Join {{workspaceName}}",
     subtitle:
-      "{{inviterName}} ({{inviterEmail}}) invited you to collaborate in Kaneo.",
+      "{{inviterName}} ({{inviterEmail}}) invited you to collaborate in Opus.",
     cta: "Accept invitation",
     sameEmail: "You can accept with the same email that received this message.",
     ignore: "If this wasn't expected, you can safely ignore this email.",
-    footer: "Kaneo workspace invitation",
+    footer: "Opus workspace invitation",
   },
   de: {
-    preview: "Du wurdest zu {{workspaceName}} auf Kaneo eingeladen",
+    preview: "Du wurdest zu {{workspaceName}} auf Opus eingeladen",
     title: "{{workspaceName}} beitreten",
     subtitle:
-      "{{inviterName}} ({{inviterEmail}}) hat dich eingeladen, in Kaneo zusammenzuarbeiten.",
+      "{{inviterName}} ({{inviterEmail}}) hat dich eingeladen, in Opus zusammenzuarbeiten.",
     cta: "Einladung annehmen",
     sameEmail:
       "Du kannst die Einladung mit derselben E-Mail-Adresse annehmen, die diese Nachricht erhalten hat.",
     ignore:
       "Falls du damit nicht gerechnet hast, kannst du diese E-Mail einfach ignorieren.",
-    footer: "Kaneo Workspace-Einladung",
+    footer: "Opus Workspace-Einladung",
   },
 } as const;
 
@@ -79,7 +79,7 @@ WorkspaceInvitationEmail.PreviewProps = {
   workspaceName: "Acme Inc",
   inviterName: "John Doe",
   inviterEmail: "john@acme.com",
-  invitationLink: "https://kaneo.app/invite/abc123",
+  invitationLink: "https://opus.app/invite/abc123",
   to: "invitee@example.com",
 } as WorkspaceInvitationEmailProps;
 

@@ -84,15 +84,15 @@ importers:
       '@hono/standard-validator':
         specifier: ^0.2.2
         version: 0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.14)
-      '@kaneo/email':
-        specifier: workspace:*
-        version: link:../../packages/email
       '@modelcontextprotocol/sdk':
         specifier: ^1.26.0
         version: 1.26.0(zod@4.3.6)
       '@octokit/webhooks':
         specifier: ^14.2.0
         version: 14.2.0
+      '@opus/email':
+        specifier: workspace:*
+        version: link:../../packages/email
       '@oslojs/crypto':
         specifier: ^1.0.1
         version: 1.0.1
@@ -489,7 +489,7 @@ importers:
         specifier: ^5.0.12
         version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
     devDependencies:
-      '@kaneo/libs':
+      '@opus/libs':
         specifier: workspace:*
         version: link:../../packages/libs
       '@tailwindcss/postcss':
@@ -577,10 +577,10 @@ importers:
 
   packages/libs:
     devDependencies:
-      '@kaneo/api':
+      '@opus/api':
         specifier: workspace:*
         version: link:../../apps/api
-      '@kaneo/typescript-config':
+      '@opus/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/react':
@@ -620,7 +620,7 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      '@kaneo/typescript-config':
+      '@opus/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
@@ -12907,7 +12907,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.4.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.0.1(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@25.4.0)(typescript@5.9.3))(vite@7.3.2(@types/node@25.4.0)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))
+      vitest: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.0.1(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@25.5.0)(typescript@5.8.3))(vite@7.3.2(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))
 
   '@vitest/expect@4.1.2':
     dependencies:

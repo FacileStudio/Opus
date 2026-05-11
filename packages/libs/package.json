@@ -1,5 +1,5 @@
 {
-	"name": "@kaneo/libs",
+	"name": "@opus/libs",
 	"version": "0.0.0",
 	"main": "./src/index.ts",
 	"types": "./src/index.ts",
@@ -12,10 +12,10 @@
 	"devDependencies": {
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"@kaneo/api": "workspace:*",
+		"@opus/api": "workspace:*",
 		"hono": "^4.12.14",
 		"react": "^19.2.5",
-		"@kaneo/typescript-config": "workspace:*",
+		"@opus/typescript-config": "workspace:*",
 		"typescript": "^5.9.2",
 		"vite": "^7.3.2",
 		"vitest": "^4.1.5"

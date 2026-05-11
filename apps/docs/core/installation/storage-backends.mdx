@@ -5,14 +5,14 @@ description: Configure private uploads with MinIO, AWS S3, or Cloudflare R2.
 
 ## Overview
 
-Kaneo uses S3-compatible object storage for uploads in:
+Opus uses S3-compatible object storage for uploads in:
 
 - task descriptions
 - task comments
 
 The browser uploads directly to the configured storage backend using presigned URLs.
 
-Kaneo then serves uploaded assets back through its own API.
+Opus then serves uploaded assets back through its own API.
 
 Current behavior:
 
@@ -26,7 +26,7 @@ That means one rule matters for every backend:
 
 Do not use a Docker-internal hostname such as `http://minio:9000` for a public deployment unless the browser can actually reach it.
 
-## Required Kaneo variables
+## Required Opus variables
 
 ```env
 S3_ENDPOINT=
@@ -56,14 +56,14 @@ MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=minioadmin
 
 S3_ENDPOINT=http://minio:9000
-S3_BUCKET=kaneo-uploads
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=minioadmin
 S3_SECRET_ACCESS_KEY=minioadmin
 S3_REGION=us-east-1
 S3_FORCE_PATH_STYLE=true
 ```
 
-This works when Kaneo and MinIO are on the same Docker network and your browser reaches MinIO through `localhost`.
+This works when Opus and MinIO are on the same Docker network and your browser reaches MinIO through `localhost`.
 
 ### Public deployment
 
@@ -71,16 +71,16 @@ For a public deployment, expose MinIO on its own hostname through your reverse p
 
 Example:
 
-- Kaneo: `https://cloud.kaneo.app`
-- MinIO: `https://files.cloud.kaneo.app`
+- Opus: `https://cloud.opus.app`
+- MinIO: `https://files.cloud.opus.app`
 
 This can be done with Caddy, Nginx, Traefik, or any other reverse proxy.
 
 Then use:
 
 ```env
-S3_ENDPOINT=https://files.cloud.kaneo.app
-S3_BUCKET=kaneo-uploads
+S3_ENDPOINT=https://files.cloud.opus.app
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=minioadmin
 S3_SECRET_ACCESS_KEY=minioadmin
 S3_REGION=us-east-1
@@ -90,7 +90,7 @@ S3_FORCE_PATH_STYLE=true
 You also need:
 
 - a created bucket
-- MinIO CORS allowing your Kaneo origin
+- MinIO CORS allowing your Opus origin
 - no anonymous bucket read policy is required
 
 ## AWS S3
@@ -103,7 +103,7 @@ Example:
 
 ```env
 S3_ENDPOINT=https://s3.us-east-1.amazonaws.com
-S3_BUCKET=kaneo-uploads
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=AKIA...
 S3_SECRET_ACCESS_KEY=...
 S3_REGION=us-east-1
@@ -121,7 +121,7 @@ Recommended S3 CORS policy:
   {
     "AllowedHeaders": ["*"],
     "AllowedMethods": ["GET", "PUT", "HEAD"],
-    "AllowedOrigins": ["https://cloud.kaneo.app"],
+    "AllowedOrigins": ["https://cloud.opus.app"],
     "ExposeHeaders": ["ETag"]
   }
 ]
@@ -137,7 +137,7 @@ Example:
 
 ```env
 S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
-S3_BUCKET=kaneo-uploads
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=...
 S3_SECRET_ACCESS_KEY=...
 S3_REGION=auto
@@ -147,11 +147,11 @@ S3_FORCE_PATH_STYLE=false
 Notes:
 
 - `S3_REGION=auto` is typical for R2
-- a public bucket is not required for Kaneo's current private asset flow
+- a public bucket is not required for Opus's current private asset flow
 
 ## One copy-paste self-hosted example
 
-This example gives you Kaneo + MinIO in one Compose file.
+This example gives you Opus + MinIO in one Compose file.
 
 ```yml
 services:
@@ -163,13 +163,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kaneo -d kaneo"]
+      test: ["CMD-SHELL", "pg_isready -U opus -d opus"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   api:
-    image: ghcr.io/usekaneo/api:latest
+    image: ghcr.io/FacileStudio/api:latest
     env_file:
       - .env
     depends_on:
@@ -178,7 +178,7 @@ services:
     restart: unless-stopped
 
   web:
-    image: ghcr.io/usekaneo/web:latest
+    image: ghcr.io/FacileStudio/web:latest
     env_file:
       - .env
     depends_on:
@@ -202,14 +202,14 @@ volumes:
 Matching `.env`:
 
 ```env
-KANEO_CLIENT_URL=https://cloud.kaneo.app
-KANEO_API_URL=https://cloud.kaneo.app/api
+OPUS_CLIENT_URL=https://cloud.opus.app
+OPUS_API_URL=https://cloud.opus.app/api
 
 MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=change-me
 
-S3_ENDPOINT=https://files.cloud.kaneo.app
-S3_BUCKET=kaneo-uploads
+S3_ENDPOINT=https://files.cloud.opus.app
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=minioadmin
 S3_SECRET_ACCESS_KEY=change-me
 S3_REGION=us-east-1
@@ -218,9 +218,9 @@ S3_FORCE_PATH_STYLE=true
 
 Before testing uploads:
 
-1. Create the `kaneo-uploads` bucket.
-2. Configure MinIO CORS for your Kaneo origin.
-3. Make sure `files.cloud.kaneo.app` resolves publicly.
+1. Create the `opus-uploads` bucket.
+2. Configure MinIO CORS for your Opus origin.
+3. Make sure `files.cloud.opus.app` resolves publicly.
 
 ## Troubleshooting
 

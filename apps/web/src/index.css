@@ -244,20 +244,20 @@ input:-webkit-autofill:active {
 }
 
 @layer components {
-  .kaneo-tiptap-shell {
+  .opus-tiptap-shell {
     position: relative;
   }
 
-  .kaneo-tiptap-shell:focus-within {
+  .opus-tiptap-shell:focus-within {
     outline: none;
   }
 
-  .kaneo-tiptap-shell.is-drag-active,
-  .kaneo-comment-editor-shell.is-drag-active {
+  .opus-tiptap-shell.is-drag-active,
+  .opus-comment-editor-shell.is-drag-active {
     z-index: 90;
   }
 
-  .kaneo-editor-quick-attach {
+  .opus-editor-quick-attach {
     position: absolute;
     right: 0.75rem;
     bottom: 0.7rem;
@@ -279,21 +279,21 @@ input:-webkit-autofill:active {
       transform 0.15s ease;
   }
 
-  .kaneo-editor-quick-attach:hover {
+  .opus-editor-quick-attach:hover {
     border-color: color-mix(in srgb, var(--foreground) 18%, var(--border));
     background: color-mix(in srgb, var(--accent) 72%, transparent);
     color: var(--foreground);
     transform: translateY(-1px);
   }
 
-  .kaneo-editor-quick-attach:focus-visible {
+  .opus-editor-quick-attach:focus-visible {
     outline: none;
     box-shadow:
       0 0 0 2px color-mix(in srgb, var(--ring) 24%, transparent),
       0 4px 16px color-mix(in srgb, var(--background) 68%, transparent);
   }
 
-  .kaneo-tiptap-bubble {
+  .opus-tiptap-bubble {
     display: inline-flex;
     align-items: center;
     gap: 0.1rem;
@@ -306,13 +306,13 @@ input:-webkit-autofill:active {
       0 1px 2px --alpha(var(--color-black) / 9%);
   }
 
-  .kaneo-tiptap-bubble-btn {
+  .opus-tiptap-bubble-btn {
     height: 1.6rem;
     width: 1.6rem;
     padding: 0;
   }
 
-  .kaneo-tiptap-bubble-separator {
+  .opus-tiptap-bubble-separator {
     display: block;
     width: 1px;
     height: 1rem;
@@ -320,7 +320,7 @@ input:-webkit-autofill:active {
     margin: 0 0.15rem;
   }
 
-  .kaneo-codeblock-language {
+  .opus-codeblock-language {
     position: fixed;
     z-index: 40;
     display: inline-flex;
@@ -329,7 +329,7 @@ input:-webkit-autofill:active {
     transform: translateX(-100%);
   }
 
-  .kaneo-codeblock-language-trigger {
+  .opus-codeblock-language-trigger {
     display: inline-flex;
     max-width: 10rem;
     align-items: center;
@@ -348,22 +348,22 @@ input:-webkit-autofill:active {
       background-color 0.12s ease;
   }
 
-  .kaneo-codeblock-language-trigger:hover {
+  .opus-codeblock-language-trigger:hover {
     border-color: color-mix(in srgb, var(--ring) 42%, var(--border));
     color: var(--foreground);
     background: color-mix(in srgb, var(--background) 96%, transparent);
   }
 
-  .kaneo-codeblock-copy-trigger {
+  .opus-codeblock-copy-trigger {
     min-width: 4.6rem;
     justify-content: center;
   }
 
-  .kaneo-codeblock-copy-trigger > span {
+  .opus-codeblock-copy-trigger > span {
     line-height: 1;
   }
 
-  .kaneo-tiptap-content .ProseMirror {
+  .opus-tiptap-content .ProseMirror {
     min-height: 1.85rem;
     padding: 0.2rem 0 2.9rem;
     font-family: var(--font-sans);
@@ -375,7 +375,7 @@ input:-webkit-autofill:active {
     outline: none;
   }
 
-  .kaneo-tiptap-slash-menu {
+  .opus-tiptap-slash-menu {
     position: fixed;
     z-index: 50;
     min-width: 16rem;
@@ -388,13 +388,13 @@ input:-webkit-autofill:active {
       0 1px 2px --alpha(var(--color-black) / 10%);
   }
 
-  .kaneo-tiptap-slash-group + .kaneo-tiptap-slash-group {
+  .opus-tiptap-slash-group + .opus-tiptap-slash-group {
     margin-top: 0.2rem;
     border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
     padding-top: 0.2rem;
   }
 
-  .kaneo-tiptap-slash-group-title {
+  .opus-tiptap-slash-group-title {
     padding: 0.22rem 0.42rem 0.3rem;
     font-size: 0.68rem;
     font-weight: 600;
@@ -403,7 +403,7 @@ input:-webkit-autofill:active {
     color: color-mix(in srgb, var(--foreground) 48%, transparent);
   }
 
-  .kaneo-tiptap-slash-item {
+  .opus-tiptap-slash-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -416,38 +416,38 @@ input:-webkit-autofill:active {
     color: color-mix(in srgb, var(--foreground) 88%, transparent);
   }
 
-  .kaneo-tiptap-slash-label {
+  .opus-tiptap-slash-label {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .kaneo-tiptap-slash-shortcut {
+  .opus-tiptap-slash-shortcut {
     flex-shrink: 0;
     font-size: 0.68rem;
     color: color-mix(in srgb, var(--foreground) 52%, transparent);
   }
 
-  .kaneo-tiptap-slash-item:hover,
-  .kaneo-tiptap-slash-item.is-selected {
+  .opus-tiptap-slash-item:hover,
+  .opus-tiptap-slash-item.is-selected {
     background: var(--accent);
     color: var(--accent-foreground);
   }
 
-  .kaneo-tiptap-slash-empty {
+  .opus-tiptap-slash-empty {
     padding: 0.4rem 0.55rem;
     font-size: 0.76rem;
     color: color-mix(in srgb, var(--foreground) 56%, transparent);
   }
 
-  .kaneo-tiptap-content .ProseMirror p {
+  .opus-tiptap-content .ProseMirror p {
     margin: 0.2rem 0;
   }
 
-  .kaneo-tiptap-content .ProseMirror h1,
-  .kaneo-tiptap-content .ProseMirror h2,
-  .kaneo-tiptap-content .ProseMirror h3 {
+  .opus-tiptap-content .ProseMirror h1,
+  .opus-tiptap-content .ProseMirror h2,
+  .opus-tiptap-content .ProseMirror h3 {
     margin: 1.05rem 0 0.45rem;
     font-family: var(--font-heading);
     font-weight: 600;
@@ -456,59 +456,59 @@ input:-webkit-autofill:active {
     color: var(--foreground);
   }
 
-  .kaneo-tiptap-content .ProseMirror h1 {
+  .opus-tiptap-content .ProseMirror h1 {
     font-size: 1.24rem;
   }
 
-  .kaneo-tiptap-content .ProseMirror h2 {
+  .opus-tiptap-content .ProseMirror h2 {
     font-size: 1.12rem;
   }
 
-  .kaneo-tiptap-content .ProseMirror h3 {
+  .opus-tiptap-content .ProseMirror h3 {
     font-size: 1.02rem;
   }
 
-  .kaneo-tiptap-content .ProseMirror ul,
-  .kaneo-tiptap-content .ProseMirror ol {
+  .opus-tiptap-content .ProseMirror ul,
+  .opus-tiptap-content .ProseMirror ol {
     margin: 0.3rem 0;
     padding-inline-start: 1.35rem;
   }
 
-  .kaneo-tiptap-content .ProseMirror ul {
+  .opus-tiptap-content .ProseMirror ul {
     list-style-type: disc;
   }
 
-  .kaneo-tiptap-content .ProseMirror ol {
+  .opus-tiptap-content .ProseMirror ol {
     list-style-type: decimal;
   }
 
-  .kaneo-tiptap-content .ProseMirror ul ul {
+  .opus-tiptap-content .ProseMirror ul ul {
     list-style-type: circle;
   }
 
-  .kaneo-tiptap-content .ProseMirror ul ul ul {
+  .opus-tiptap-content .ProseMirror ul ul ul {
     list-style-type: square;
   }
 
-  .kaneo-tiptap-content .ProseMirror ol ol {
+  .opus-tiptap-content .ProseMirror ol ol {
     list-style-type: lower-alpha;
   }
 
-  .kaneo-tiptap-content .ProseMirror li::marker {
+  .opus-tiptap-content .ProseMirror li::marker {
     color: color-mix(in srgb, var(--foreground) 70%, transparent);
   }
 
-  .kaneo-tiptap-content .ProseMirror li {
+  .opus-tiptap-content .ProseMirror li {
     margin: 0.1rem 0;
   }
 
-  .kaneo-tiptap-content .ProseMirror ul[data-type="taskList"] {
+  .opus-tiptap-content .ProseMirror ul[data-type="taskList"] {
     list-style: none;
     margin: 0.3rem 0;
     padding-inline-start: 0;
   }
 
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"] {
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"] {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -517,46 +517,46 @@ input:-webkit-autofill:active {
     text-align: left;
   }
 
-  .kaneo-tiptap-content
+  .opus-tiptap-content
     .ProseMirror
     li[data-type="taskItem"]
-    > :is(label, .kaneo-task-item-checkbox) {
+    > :is(label, .opus-task-item-checkbox) {
     margin-top: 0.15rem;
     display: inline-flex;
     flex-shrink: 0;
     cursor: pointer;
   }
 
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"] > div {
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"] > div {
     flex: 0 1 auto;
     min-width: 0;
     text-align: left;
   }
 
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"] > div > * {
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"] > div > * {
     margin-inline: 0;
   }
 
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"] ul,
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"] ol {
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"] ul,
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"] ol {
     margin-top: 0.2rem;
   }
 
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"] [data-slot="checkbox"] {
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"] [data-slot="checkbox"] {
     margin-top: 0;
   }
 
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"] > div p {
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"] > div p {
     margin: 0;
     line-height: 1.45;
   }
 
-  .kaneo-tiptap-content .ProseMirror li[data-type="taskItem"][data-checked="true"] > div p {
+  .opus-tiptap-content .ProseMirror li[data-type="taskItem"][data-checked="true"] > div p {
     color: color-mix(in srgb, var(--foreground) 62%, transparent);
     text-decoration: line-through;
   }
 
-  .kaneo-tiptap-content .ProseMirror a {
+  .opus-tiptap-content .ProseMirror a {
     color: var(--primary);
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
@@ -571,12 +571,12 @@ input:-webkit-autofill:active {
       text-decoration-color 0.12s ease;
   }
 
-  .kaneo-tiptap-content .ProseMirror a:hover {
+  .opus-tiptap-content .ProseMirror a:hover {
     color: color-mix(in srgb, var(--primary) 84%, var(--foreground));
     text-decoration-color: currentColor;
   }
 
-  .kaneo-tiptap-content .ProseMirror :not(pre) > code {
+  .opus-tiptap-content .ProseMirror :not(pre) > code {
     border: 1px solid var(--border);
     border-radius: 0.34rem;
     background: var(--code-highlight);
@@ -585,7 +585,7 @@ input:-webkit-autofill:active {
     padding: 0.11rem 0.32rem;
   }
 
-  .kaneo-tiptap-content .ProseMirror pre {
+  .opus-tiptap-content .ProseMirror pre {
     margin: 0.45rem 0;
     border: 1px solid var(--border);
     border-radius: calc(var(--radius) - 3px);
@@ -593,21 +593,21 @@ input:-webkit-autofill:active {
     padding: 0.75rem 0.9rem;
   }
 
-  .kaneo-tiptap-content .ProseMirror pre code {
+  .opus-tiptap-content .ProseMirror pre code {
     font-family: var(--font-mono);
     font-size: 0.85rem;
     color: var(--code-foreground);
   }
 
-  .kaneo-tiptap-content .ProseMirror blockquote {
+  .opus-tiptap-content .ProseMirror blockquote {
     margin: 0.5rem 0;
     border-left: 2px solid var(--border);
     padding-left: 0.75rem;
     color: color-mix(in srgb, var(--foreground) 78%, transparent);
   }
 
-  .kaneo-tiptap-content .ProseMirror img.kaneo-editor-image,
-  .kaneo-comment-editor-prose img.kaneo-editor-image {
+  .opus-tiptap-content .ProseMirror img.opus-editor-image,
+  .opus-comment-editor-prose img.opus-editor-image {
     display: block;
     max-width: min(100%, 44rem);
     width: auto;
@@ -620,12 +620,12 @@ input:-webkit-autofill:active {
     overflow: hidden;
   }
 
-  .kaneo-create-task-modal .kaneo-comment-editor-prose img.kaneo-editor-image {
+  .opus-create-task-modal .opus-comment-editor-prose img.opus-editor-image {
     max-height: min(50vh, 28rem);
     width: 100%;
   }
 
-  .kaneo-tiptap-content .ProseMirror .is-editor-empty:first-child::before {
+  .opus-tiptap-content .ProseMirror .is-editor-empty:first-child::before {
     pointer-events: none;
     content: attr(data-placeholder);
     height: 0;
@@ -633,7 +633,7 @@ input:-webkit-autofill:active {
     color: color-mix(in srgb, var(--foreground) 40%, transparent);
   }
 
-  .kaneo-tiptap-content .ProseMirror table {
+  .opus-tiptap-content .ProseMirror table {
     border-collapse: collapse;
     margin: 0.7rem 0;
     overflow: hidden;
@@ -643,21 +643,21 @@ input:-webkit-autofill:active {
     border-radius: calc(var(--radius) - 3px);
   }
 
-  .kaneo-tiptap-content .ProseMirror table td,
-  .kaneo-tiptap-content .ProseMirror table th {
+  .opus-tiptap-content .ProseMirror table td,
+  .opus-tiptap-content .ProseMirror table th {
     min-width: 1em;
     border: 1px solid color-mix(in srgb, var(--border) 84%, transparent);
     padding: 0.45rem 0.55rem;
     vertical-align: top;
   }
 
-  .kaneo-tiptap-content .ProseMirror table th {
+  .opus-tiptap-content .ProseMirror table th {
     background: color-mix(in srgb, var(--accent) 70%, transparent);
     font-weight: 600;
     text-align: left;
   }
 
-  .kaneo-tiptap-content .ProseMirror .selectedCell:after {
+  .opus-tiptap-content .ProseMirror .selectedCell:after {
     pointer-events: none;
     position: absolute;
     inset: 0;
@@ -666,11 +666,11 @@ input:-webkit-autofill:active {
     background: color-mix(in srgb, var(--primary) 16%, transparent);
   }
 
-  .kaneo-tiptap-content .ProseMirror .tableWrapper {
+  .opus-tiptap-content .ProseMirror .tableWrapper {
     overflow-x: auto;
   }
 
-  .kaneo-tiptap-content .ProseMirror [data-type="kaneo-embed"] {
+  .opus-tiptap-content .ProseMirror [data-type="opus-embed"] {
     margin: 0.65rem 0;
     border: 1px solid color-mix(in srgb, var(--border) 76%, transparent);
     border-radius: calc(var(--radius) - 2px);
@@ -681,7 +681,7 @@ input:-webkit-autofill:active {
       box-shadow 0.12s ease;
   }
 
-  .kaneo-tiptap-content .ProseMirror [data-type="kaneo-embed"] iframe {
+  .opus-tiptap-content .ProseMirror [data-type="opus-embed"] iframe {
     width: 100%;
     aspect-ratio: 16 / 9;
     border: 0;
@@ -689,7 +689,7 @@ input:-webkit-autofill:active {
     background: black;
   }
 
-  .kaneo-tiptap-content .ProseMirror [data-type="kaneo-embed"] > a {
+  .opus-tiptap-content .ProseMirror [data-type="opus-embed"] > a {
     display: block;
     padding: 0.6rem 0.7rem;
     color: var(--foreground);
@@ -698,26 +698,26 @@ input:-webkit-autofill:active {
     word-break: break-word;
   }
 
-  .kaneo-tiptap-content .ProseMirror
-    [data-type="kaneo-embed"].ProseMirror-selectednode {
+  .opus-tiptap-content .ProseMirror
+    [data-type="opus-embed"].ProseMirror-selectednode {
     border-color: color-mix(in srgb, var(--ring) 82%, var(--border));
     box-shadow:
       0 0 0 2px color-mix(in srgb, var(--ring) 38%, transparent),
       0 0 0 1px color-mix(in srgb, var(--ring) 70%, transparent) inset;
   }
 
-  .kaneo-tiptap-content .ProseMirror [data-type="kaneo-embed"] .kaneo-embed-unsupported {
+  .opus-tiptap-content .ProseMirror [data-type="opus-embed"] .opus-embed-unsupported {
     padding: 0.62rem 0.72rem;
     font-size: 0.78rem;
     color: color-mix(in srgb, var(--foreground) 62%, transparent);
   }
 
-  .kaneo-issue-link-node {
+  .opus-issue-link-node {
     display: inline-flex;
     vertical-align: baseline;
   }
 
-  .kaneo-issue-link-chip {
+  .opus-issue-link-chip {
     display: inline-flex;
     max-width: min(26rem, 85vw);
     align-items: center;
@@ -732,19 +732,19 @@ input:-webkit-autofill:active {
     transform: translateY(-0.02rem);
   }
 
-  .kaneo-issue-link-chip:hover {
+  .opus-issue-link-chip:hover {
     border-color: color-mix(in srgb, var(--ring) 56%, var(--border));
     background: color-mix(in srgb, var(--accent) 34%, transparent);
   }
 
-  .kaneo-issue-link-key {
+  .opus-issue-link-key {
     flex-shrink: 0;
     font-size: 0.76rem;
     font-weight: 500;
     color: color-mix(in srgb, var(--foreground) 64%, transparent);
   }
 
-  .kaneo-issue-link-title {
+  .opus-issue-link-title {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -754,7 +754,7 @@ input:-webkit-autofill:active {
     color: var(--foreground);
   }
 
-  .kaneo-issue-link-preview {
+  .opus-issue-link-preview {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -764,7 +764,7 @@ input:-webkit-autofill:active {
     text-wrap: pretty;
   }
 
-  .kaneo-issue-link-preview-top {
+  .opus-issue-link-preview-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -773,12 +773,12 @@ input:-webkit-autofill:active {
     color: color-mix(in srgb, var(--foreground) 68%, transparent);
   }
 
-  .kaneo-issue-link-preview-key {
+  .opus-issue-link-preview-key {
     font-weight: 500;
     letter-spacing: 0.01em;
   }
 
-  .kaneo-issue-link-preview-title {
+  .opus-issue-link-preview-title {
     margin-top: 0.45rem;
     font-size: 0.9rem;
     line-height: 1.35;
@@ -786,7 +786,7 @@ input:-webkit-autofill:active {
     color: var(--foreground);
   }
 
-  .kaneo-issue-link-preview-meta {
+  .opus-issue-link-preview-meta {
     margin-top: 0.55rem;
     display: flex;
     align-items: center;
@@ -797,14 +797,14 @@ input:-webkit-autofill:active {
     color: color-mix(in srgb, var(--foreground) 72%, transparent);
   }
 
-  .kaneo-attachment-node {
+  .opus-attachment-node {
     display: inline-flex;
     max-width: 100%;
     vertical-align: middle;
     margin: 0.35rem 0;
   }
 
-  .kaneo-attachment-card {
+  .opus-attachment-card {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -825,7 +825,7 @@ input:-webkit-autofill:active {
       transform 0.18s ease;
   }
 
-  .kaneo-attachment-card:hover {
+  .opus-attachment-card:hover {
     border-color: color-mix(in srgb, var(--foreground) 18%, var(--border));
     background: linear-gradient(
       180deg,
@@ -835,7 +835,7 @@ input:-webkit-autofill:active {
     transform: translateY(-1px);
   }
 
-  .kaneo-attachment-card-icon {
+  .opus-attachment-card-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -847,13 +847,13 @@ input:-webkit-autofill:active {
     flex-shrink: 0;
   }
 
-  .kaneo-attachment-card-content {
+  .opus-attachment-card-content {
     display: flex;
     min-width: 0;
     flex-direction: column;
   }
 
-  .kaneo-attachment-card-title {
+  .opus-attachment-card-title {
     color: var(--foreground);
     font-size: 0.96rem;
     font-weight: 600;
@@ -863,7 +863,7 @@ input:-webkit-autofill:active {
     text-overflow: ellipsis;
   }
 
-  .kaneo-attachment-card-meta {
+  .opus-attachment-card-meta {
     margin-top: 0.18rem;
     color: color-mix(in srgb, var(--foreground) 58%, transparent);
     font-size: 0.76rem;
@@ -873,12 +873,12 @@ input:-webkit-autofill:active {
     text-overflow: ellipsis;
   }
 
-  .kaneo-tiptap-content .ProseMirror [data-type="kaneo-embed"]:focus-within {
+  .opus-tiptap-content .ProseMirror [data-type="opus-embed"]:focus-within {
     border-color: color-mix(in srgb, var(--ring) 80%, var(--border));
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 34%, transparent);
   }
 
-  .kaneo-embed-composer {
+  .opus-embed-composer {
     position: fixed;
     z-index: 60;
     width: min(16.5rem, calc(100vw - 2rem));
@@ -891,20 +891,20 @@ input:-webkit-autofill:active {
       0 1px 2px --alpha(var(--color-black) / 10%);
   }
 
-  .kaneo-embed-composer-form {
+  .opus-embed-composer-form {
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
   }
 
-  .kaneo-embed-choice-menu {
+  .opus-embed-choice-menu {
     display: flex;
     min-width: 0;
     flex-direction: column;
     gap: 0.2rem;
   }
 
-  .kaneo-embed-choice-item {
+  .opus-embed-choice-item {
     display: flex;
     width: 100%;
     align-items: center;
@@ -917,31 +917,31 @@ input:-webkit-autofill:active {
     color: color-mix(in srgb, var(--foreground) 90%, transparent);
   }
 
-  .kaneo-embed-choice-item:hover,
-  .kaneo-embed-choice-item.is-primary {
+  .opus-embed-choice-item:hover,
+  .opus-embed-choice-item.is-primary {
     background: var(--accent);
     color: var(--accent-foreground);
   }
 
-  .kaneo-embed-choice-hint {
+  .opus-embed-choice-hint {
     flex-shrink: 0;
     font-size: 0.68rem;
     color: color-mix(in srgb, currentColor 62%, transparent);
   }
 
-  .kaneo-embed-composer-actions {
+  .opus-embed-composer-actions {
     display: flex;
     align-items: center;
     gap: 0.35rem;
     justify-content: flex-end;
   }
 
-  .kaneo-embed-composer-error {
+  .opus-embed-composer-error {
     font-size: 0.72rem;
     color: var(--destructive);
   }
 
-  .kaneo-comment-composer {
+  .opus-comment-composer {
     border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
     border-radius: 0.62rem;
     background: color-mix(in srgb, var(--background) 96%, transparent);
@@ -950,12 +950,12 @@ input:-webkit-autofill:active {
       box-shadow 0.14s ease;
   }
 
-  .kaneo-comment-composer:focus-within {
+  .opus-comment-composer:focus-within {
     border-color: color-mix(in srgb, var(--ring) 64%, var(--border));
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 20%, transparent);
   }
 
-  .kaneo-comment-card-body {
+  .opus-comment-card-body {
     border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
     border-radius: 0.6rem;
     background: color-mix(in srgb, var(--card) 82%, transparent);
@@ -963,17 +963,17 @@ input:-webkit-autofill:active {
     position: relative;
   }
 
-  .kaneo-comment-editor-shell {
+  .opus-comment-editor-shell {
     position: relative;
     isolation: isolate;
     z-index: 1;
   }
 
-  .kaneo-comment-editor-shell:focus-within {
+  .opus-comment-editor-shell:focus-within {
     z-index: 80;
   }
 
-  .kaneo-editor-drop-indicator {
+  .opus-editor-drop-indicator {
     pointer-events: none;
     position: absolute;
     left: 0.75rem;
@@ -986,15 +986,15 @@ input:-webkit-autofill:active {
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--background) 88%, transparent);
   }
 
-  .kaneo-editor-drop-indicator span {
+  .opus-editor-drop-indicator span {
     display: none;
   }
 
-  .kaneo-comment-editor-shell-readonly {
+  .opus-comment-editor-shell-readonly {
     pointer-events: auto;
   }
 
-  .kaneo-comment-editor-content .ProseMirror {
+  .opus-comment-editor-content .ProseMirror {
     min-height: 2.2rem;
     max-height: 18rem;
     overflow-y: auto;
@@ -1008,71 +1008,71 @@ input:-webkit-autofill:active {
     outline: none;
   }
 
-  .kaneo-comment-editor-shell-readonly .kaneo-comment-editor-content .ProseMirror {
+  .opus-comment-editor-shell-readonly .opus-comment-editor-content .ProseMirror {
     min-height: 0;
     max-height: none;
     overflow: visible;
     padding: 0.62rem 0.75rem;
   }
 
-  .kaneo-comment-viewer .kaneo-comment-editor-content .ProseMirror {
+  .opus-comment-viewer .opus-comment-editor-content .ProseMirror {
     max-height: none;
     overflow: visible;
     padding-bottom: 0.8rem;
   }
 
-  .kaneo-comment-editor-prose p {
+  .opus-comment-editor-prose p {
     margin: 0;
   }
 
-  .kaneo-comment-editor-prose h1,
-  .kaneo-comment-editor-prose h2,
-  .kaneo-comment-editor-prose h3 {
+  .opus-comment-editor-prose h1,
+  .opus-comment-editor-prose h2,
+  .opus-comment-editor-prose h3 {
     margin: 0.12rem 0 0;
     line-height: 1.32;
   }
 
-  .kaneo-comment-editor-prose ul,
-  .kaneo-comment-editor-prose ol {
+  .opus-comment-editor-prose ul,
+  .opus-comment-editor-prose ol {
     margin: 0.12rem 0 0;
     padding-inline-start: 1.2rem;
   }
 
-  .kaneo-comment-editor-prose ul {
+  .opus-comment-editor-prose ul {
     list-style-type: disc;
   }
 
-  .kaneo-comment-editor-prose ol {
+  .opus-comment-editor-prose ol {
     list-style-type: decimal;
   }
 
-  .kaneo-comment-editor-prose ul ul {
+  .opus-comment-editor-prose ul ul {
     list-style-type: circle;
   }
 
-  .kaneo-comment-editor-prose ul ul ul {
+  .opus-comment-editor-prose ul ul ul {
     list-style-type: square;
   }
 
-  .kaneo-comment-editor-prose ol ol {
+  .opus-comment-editor-prose ol ol {
     list-style-type: lower-alpha;
   }
 
-  .kaneo-comment-editor-prose li::marker {
+  .opus-comment-editor-prose li::marker {
     color: color-mix(in srgb, var(--foreground) 70%, transparent);
   }
 
-  .kaneo-comment-editor-prose li {
+  .opus-comment-editor-prose li {
     margin: 0.08rem 0;
   }
 
-  .kaneo-comment-editor-prose ul[data-type="taskList"] {
+  .opus-comment-editor-prose ul[data-type="taskList"] {
     list-style: none;
     margin: 0.12rem 0 0;
     padding-inline-start: 0;
   }
 
-  .kaneo-comment-editor-prose li[data-type="taskItem"] {
+  .opus-comment-editor-prose li[data-type="taskItem"] {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -1081,46 +1081,46 @@ input:-webkit-autofill:active {
     text-align: left;
   }
 
-  .kaneo-comment-editor-prose
+  .opus-comment-editor-prose
     li[data-type="taskItem"]
-    > :is(label, .kaneo-task-item-checkbox) {
+    > :is(label, .opus-task-item-checkbox) {
     margin-top: 0.15rem;
     display: inline-flex;
     flex-shrink: 0;
     cursor: pointer;
   }
 
-  .kaneo-comment-editor-prose li[data-type="taskItem"] > div {
+  .opus-comment-editor-prose li[data-type="taskItem"] > div {
     flex: 0 1 auto;
     min-width: 0;
     text-align: left;
   }
 
-  .kaneo-comment-editor-prose li[data-type="taskItem"] > div > * {
+  .opus-comment-editor-prose li[data-type="taskItem"] > div > * {
     margin-inline: 0;
   }
 
-  .kaneo-comment-editor-prose li[data-type="taskItem"] ul,
-  .kaneo-comment-editor-prose li[data-type="taskItem"] ol {
+  .opus-comment-editor-prose li[data-type="taskItem"] ul,
+  .opus-comment-editor-prose li[data-type="taskItem"] ol {
     margin-top: 0.16rem;
   }
 
-  .kaneo-comment-editor-prose li[data-type="taskItem"] [data-slot="checkbox"] {
+  .opus-comment-editor-prose li[data-type="taskItem"] [data-slot="checkbox"] {
     margin-top: 0;
   }
 
-  .kaneo-comment-editor-prose li[data-type="taskItem"] > div p {
+  .opus-comment-editor-prose li[data-type="taskItem"] > div p {
     margin: 0;
     line-height: 1.45;
   }
 
-  .kaneo-comment-editor-prose li[data-type="taskItem"][data-checked="true"] > div p {
+  .opus-comment-editor-prose li[data-type="taskItem"][data-checked="true"] > div p {
     color: color-mix(in srgb, var(--foreground) 62%, transparent);
     text-decoration: line-through;
   }
 
-  .kaneo-comment-editor-prose a,
-  .kaneo-tiptap-prose a {
+  .opus-comment-editor-prose a,
+  .opus-tiptap-prose a {
     color: color-mix(in srgb, var(--foreground) 88%, #4c9aff 12%);
     cursor: pointer;
     text-decoration: underline;
@@ -1128,7 +1128,7 @@ input:-webkit-autofill:active {
     text-underline-offset: 2px;
   }
 
-  .kaneo-comment-editor-prose :not(pre) > code {
+  .opus-comment-editor-prose :not(pre) > code {
     border: 1px solid color-mix(in srgb, var(--border) 86%, transparent);
     border-radius: 0.34rem;
     background: color-mix(in srgb, var(--accent) 40%, transparent);
@@ -1137,7 +1137,7 @@ input:-webkit-autofill:active {
     font-family: var(--font-mono);
   }
 
-  .kaneo-comment-editor-prose pre {
+  .opus-comment-editor-prose pre {
     margin: 0.12rem 0 0;
     border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
     border-radius: 0.45rem;
@@ -1149,7 +1149,7 @@ input:-webkit-autofill:active {
     line-height: 1.55;
   }
 
-  .kaneo-comment-editor-prose [data-type="kaneo-embed"] {
+  .opus-comment-editor-prose [data-type="opus-embed"] {
     margin: 0.12rem 0 0;
     border: 1px solid color-mix(in srgb, var(--border) 76%, transparent);
     border-radius: calc(var(--radius) - 2px);
@@ -1160,7 +1160,7 @@ input:-webkit-autofill:active {
       box-shadow 0.12s ease;
   }
 
-  .kaneo-comment-editor-prose [data-type="kaneo-embed"] iframe {
+  .opus-comment-editor-prose [data-type="opus-embed"] iframe {
     width: 100%;
     aspect-ratio: 16 / 9;
     border: 0;
@@ -1168,7 +1168,7 @@ input:-webkit-autofill:active {
     background: black;
   }
 
-  .kaneo-comment-editor-prose [data-type="kaneo-embed"] > a {
+  .opus-comment-editor-prose [data-type="opus-embed"] > a {
     display: block;
     padding: 0.6rem 0.7rem;
     color: var(--foreground);
@@ -1177,20 +1177,20 @@ input:-webkit-autofill:active {
     word-break: break-word;
   }
 
-  .kaneo-comment-editor-prose
-    [data-type="kaneo-embed"].ProseMirror-selectednode {
+  .opus-comment-editor-prose
+    [data-type="opus-embed"].ProseMirror-selectednode {
     border-color: color-mix(in srgb, var(--ring) 82%, var(--border));
     box-shadow:
       0 0 0 2px color-mix(in srgb, var(--ring) 38%, transparent),
       0 0 0 1px color-mix(in srgb, var(--ring) 70%, transparent) inset;
   }
 
-  .kaneo-comment-editor-prose [data-type="kaneo-embed"]:focus-within {
+  .opus-comment-editor-prose [data-type="opus-embed"]:focus-within {
     border-color: color-mix(in srgb, var(--ring) 80%, var(--border));
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 34%, transparent);
   }
 
-  .kaneo-comment-editor-prose table {
+  .opus-comment-editor-prose table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
@@ -1200,25 +1200,25 @@ input:-webkit-autofill:active {
     overflow: hidden;
   }
 
-  .kaneo-comment-editor-prose table td,
-  .kaneo-comment-editor-prose table th {
+  .opus-comment-editor-prose table td,
+  .opus-comment-editor-prose table th {
     min-width: 1em;
     border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
     padding: 0.4rem 0.5rem;
     vertical-align: top;
   }
 
-  .kaneo-comment-editor-prose table th {
+  .opus-comment-editor-prose table th {
     background: color-mix(in srgb, var(--accent) 65%, transparent);
     font-weight: 600;
     text-align: left;
   }
 
-  .kaneo-comment-editor-prose .tableWrapper {
+  .opus-comment-editor-prose .tableWrapper {
     overflow-x: auto;
   }
 
-  .kaneo-comment-editor-prose .is-editor-empty:first-child::before {
+  .opus-comment-editor-prose .is-editor-empty:first-child::before {
     content: attr(data-placeholder);
     color: color-mix(in srgb, var(--foreground) 42%, transparent);
     pointer-events: none;
@@ -1226,11 +1226,11 @@ input:-webkit-autofill:active {
     height: 0;
   }
 
-  .kaneo-comment-editor-prose p > .ProseMirror-trailingBreak {
+  .opus-comment-editor-prose p > .ProseMirror-trailingBreak {
     line-height: 1;
   }
 
-  .kaneo-comment-editor-bubble {
+  .opus-comment-editor-bubble {
     display: inline-flex;
     align-items: center;
     gap: 0.12rem;
@@ -1243,13 +1243,13 @@ input:-webkit-autofill:active {
       0 1px 2px --alpha(var(--color-black) / 9%);
   }
 
-  .kaneo-comment-editor-bubble-btn {
+  .opus-comment-editor-bubble-btn {
     height: 1.58rem;
     width: 1.58rem;
     padding: 0;
   }
 
-  .kaneo-comment-editor-shell .kaneo-tiptap-slash-menu {
+  .opus-comment-editor-shell .opus-tiptap-slash-menu {
     position: absolute;
     z-index: 120;
     opacity: 1;
@@ -1258,7 +1258,7 @@ input:-webkit-autofill:active {
     backdrop-filter: none;
   }
 
-  .kaneo-tiptap-content .ProseMirror ::selection {
+  .opus-tiptap-content .ProseMirror ::selection {
     background: color-mix(in srgb, var(--primary) 18%, transparent);
   }
 

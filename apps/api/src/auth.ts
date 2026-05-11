@@ -3,7 +3,7 @@ import {
   sendMagicLinkEmail,
   sendOtpEmail,
   sendWorkspaceInvitationEmail,
-} from "@kaneo/email";
+} from "@opus/email";
 import bcrypt from "bcrypt";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -35,8 +35,8 @@ const isRegistrationDisabled = process.env.DISABLE_REGISTRATION === "true";
 const isPasswordRegistrationDisabled =
   process.env.DISABLE_PASSWORD_REGISTRATION === "true";
 
-const apiUrl = process.env.KANEO_API_URL || "http://localhost:1337";
-const clientUrl = process.env.KANEO_CLIENT_URL || "http://localhost:5173";
+const apiUrl = process.env.OPUS_API_URL || "http://localhost:1337";
+const clientUrl = process.env.OPUS_CLIENT_URL || "http://localhost:5173";
 const isHttps = apiUrl.startsWith("https://");
 const isCrossSubdomain = (() => {
   try {
@@ -94,12 +94,12 @@ function getLocaleKey(locale?: string | null) {
 function getAuthEmailCopy(locale?: string | null) {
   return getLocaleKey(locale) === "de"
     ? {
-        magicLinkSubject: "Anmeldelink fuer Kaneo",
-        otpSubject: "Bestaetigungscode fuer Kaneo",
+        magicLinkSubject: "Anmeldelink fuer Opus",
+        otpSubject: "Bestaetigungscode fuer Opus",
       }
     : {
-        magicLinkSubject: "Login for Kaneo",
-        otpSubject: "Authentication code for Kaneo",
+        magicLinkSubject: "Login for Opus",
+        otpSubject: "Authentication code for Opus",
       };
 }
 
@@ -113,7 +113,7 @@ function getDeviceAuthClientIds(): Set<string> {
         .filter(Boolean),
     );
   }
-  return new Set(["kaneo-cli", "kaneo-mcp"]);
+  return new Set(["opus-cli", "opus-mcp"]);
 }
 
 function getDeviceAuthVerificationUri(): string {
@@ -127,8 +127,8 @@ function getInvitationEmailSubject(
   workspaceName: string,
 ) {
   return getLocaleKey(locale) === "de"
-    ? `${inviterName} hat dich eingeladen, ${workspaceName} auf Kaneo beizutreten`
-    : `${inviterName} invited you to join ${workspaceName} on Kaneo`;
+    ? `${inviterName} hat dich eingeladen, ${workspaceName} auf Opus beizutreten`
+    : `${inviterName} invited you to join ${workspaceName} on Opus`;
 }
 
 export const auth = betterAuth({
@@ -194,7 +194,7 @@ export const auth = betterAuth({
       ? [
           anonymous({
             generateName: async () => generateDemoName(),
-            emailDomainName: "kaneo.app",
+            emailDomainName: "opus.app",
           }),
         ]
       : []),
@@ -277,7 +277,7 @@ export const auth = betterAuth({
         },
       },
       async sendInvitationEmail(data) {
-        const inviteLink = `${process.env.KANEO_CLIENT_URL}/invitation/accept/${data.id}`;
+        const inviteLink = `${process.env.OPUS_CLIENT_URL}/invitation/accept/${data.id}`;
         const locale = await getUserLocale(data.email);
 
         const result = await sendWorkspaceInvitationEmail(

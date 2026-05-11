@@ -5,16 +5,16 @@ description: Configure S3-compatible storage for private images and attachments 
 
 ## Overview
 
-Kaneo supports private uploads in task descriptions and task comments.
+Opus supports private uploads in task descriptions and task comments.
 
 Uploads use an S3-compatible object storage backend:
 
-- the Kaneo API creates presigned upload URLs
+- the Opus API creates presigned upload URLs
 - the browser uploads files directly to the storage backend
-- Kaneo finalizes uploads into private asset records
-- Kaneo serves uploaded files back through its own API
+- Opus finalizes uploads into private asset records
+- Opus serves uploaded files back through its own API
 
-This means Kaneo can work with multiple backends as long as they expose a compatible S3-style API.
+This means Opus can work with multiple backends as long as they expose a compatible S3-style API.
 
 Current behavior:
 
@@ -42,7 +42,7 @@ MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=minioadmin
 
 S3_ENDPOINT=http://minio:9000
-S3_BUCKET=kaneo-uploads
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=minioadmin
 S3_SECRET_ACCESS_KEY=minioadmin
 S3_REGION=us-east-1
@@ -55,7 +55,7 @@ You do not need to make the bucket public.
 
 ## Important: internal Docker URLs are not enough in production
 
-When Kaneo generates a presigned upload URL, the browser uploads directly to your storage backend.
+When Opus generates a presigned upload URL, the browser uploads directly to your storage backend.
 
 That means `S3_ENDPOINT` must be reachable by the browser, not just by Docker containers.
 
@@ -64,13 +64,13 @@ For example:
 - `http://minio:9000` works only inside Docker
 - `https://files.example.com` works from the browser
 
-If your Kaneo deployment is public, do not leave `S3_ENDPOINT` set to `http://minio:9000`.
+If your Opus deployment is public, do not leave `S3_ENDPOINT` set to `http://minio:9000`.
 
 Use a public MinIO hostname instead, for example:
 
 ```env
-S3_ENDPOINT=https://files.cloud.kaneo.app
-S3_BUCKET=kaneo-uploads
+S3_ENDPOINT=https://files.cloud.opus.app
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=minioadmin
 S3_SECRET_ACCESS_KEY=minioadmin
 S3_REGION=us-east-1
@@ -81,24 +81,24 @@ S3_FORCE_PATH_STYLE=true
 
 The simplest production setup is:
 
-- `cloud.kaneo.app` for Kaneo
-- `files.cloud.kaneo.app` for MinIO
+- `cloud.opus.app` for Opus
+- `files.cloud.opus.app` for MinIO
 
 Expose MinIO on its own public hostname through your reverse proxy.
 
 Why this is needed:
 
-- Kaneo signs uploads against `S3_ENDPOINT`
+- Opus signs uploads against `S3_ENDPOINT`
 - the browser uses that signed URL directly
 - Docker-internal names like `minio` are not resolvable from a user's browser
 
 Using a dedicated subdomain is recommended over proxying MinIO under a path.
 
-Reads do not need a public bucket URL, because Kaneo serves uploaded assets back through `/api/asset/:id`.
+Reads do not need a public bucket URL, because Opus serves uploaded assets back through `/api/asset/:id`.
 
 ## Other S3-compatible backends
 
-Kaneo is not tied to MinIO. Any deployment can point Kaneo at another S3-compatible backend by changing the `S3_*` environment variables.
+Opus is not tied to MinIO. Any deployment can point Opus at another S3-compatible backend by changing the `S3_*` environment variables.
 
 Examples:
 
@@ -109,13 +109,13 @@ Examples:
 
 ## Using `fs`
 
-`fs` is another S3-compatible option if you want a lightweight local object store. It is built by friends of Kaneo.
+`fs` is another S3-compatible option if you want a lightweight local object store. It is built by friends of Opus.
 
-When using `fs`, configure Kaneo like this:
+When using `fs`, configure Opus like this:
 
 ```env
 S3_ENDPOINT=http://fs:2600
-S3_BUCKET=kaneo-uploads
+S3_BUCKET=opus-uploads
 S3_ACCESS_KEY_ID=<your-access-key>
 S3_SECRET_ACCESS_KEY=<your-secret-key>
 S3_REGION=us-east-1
@@ -125,16 +125,16 @@ S3_FORCE_PATH_STYLE=true
 Important notes for `fs`:
 
 - buckets are created through the S3 API or CLI, not through a web dashboard
-- Kaneo still expects the bucket to exist before uploads start
+- Opus still expects the bucket to exist before uploads start
 - direct browser uploads may need reverse-proxy CORS headers, because `fs` does not currently implement S3 CORS APIs
 
-## Required Kaneo storage variables
+## Required Opus storage variables
 
-Set these in your Kaneo deployment:
+Set these in your Opus deployment:
 
 | Name | Description |
 | --- | --- |
-| `S3_ENDPOINT` | S3-compatible API endpoint used by Kaneo |
+| `S3_ENDPOINT` | S3-compatible API endpoint used by Opus |
 | `S3_BUCKET` | Bucket used for uploaded files |
 | `S3_ACCESS_KEY_ID` | Access key used to create presigned upload URLs |
 | `S3_SECRET_ACCESS_KEY` | Secret key used to create presigned upload URLs |
@@ -145,7 +145,7 @@ Optional:
 
 | Name | Description |
 | --- | --- |
-| `S3_PUBLIC_BASE_URL` | Optional public asset base URL. Kaneo does not require this for the current private asset flow. |
+| `S3_PUBLIC_BASE_URL` | Optional public asset base URL. Opus does not require this for the current private asset flow. |
 | `S3_MAX_IMAGE_UPLOAD_BYTES` | Maximum allowed upload size in bytes for images and other uploaded files |
 | `S3_PRESIGN_TTL_SECONDS` | Presigned upload URL lifetime |
 

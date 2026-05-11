@@ -82,9 +82,9 @@ export async function handleIssueEdited(payload: IssueEditedPayload) {
       if (lastTitleSync) {
         if (
           lastTitleSync.value === issue.title &&
-          lastTitleSync.source === "kaneo"
+          lastTitleSync.source === "opus"
         ) {
-          console.log("Skipping title update - already synced from Kaneo");
+          console.log("Skipping title update - already synced from Opus");
           shouldUpdateTitle = false;
         }
 
@@ -120,11 +120,9 @@ export async function handleIssueEdited(payload: IssueEditedPayload) {
       if (lastDescSync) {
         if (
           lastDescSync.value === formattedDescription &&
-          lastDescSync.source === "kaneo"
+          lastDescSync.source === "opus"
         ) {
-          console.log(
-            "Skipping description update - already synced from Kaneo",
-          );
+          console.log("Skipping description update - already synced from Opus");
           shouldUpdateDescription = false;
         }
 

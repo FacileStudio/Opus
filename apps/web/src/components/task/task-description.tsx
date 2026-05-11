@@ -63,7 +63,7 @@ import { toast } from "@/lib/toast";
 import { uploadTaskImage } from "@/lib/upload-task-image";
 import { AttachmentCard } from "./extensions/attachment-card";
 import { EmbedBlock } from "./extensions/embed-block";
-import { KaneoIssueLink } from "./extensions/kaneo-issue-link";
+import { OpusIssueLink } from "./extensions/opus-issue-link";
 import {
   SHIKI_CODEBLOCK_REFRESH_META,
   ShikiCodeBlock,
@@ -540,7 +540,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
       extensions: [
         StarterKit.configure({
           codeBlock: {
-            HTMLAttributes: { class: "kaneo-tiptap-codeblock" },
+            HTMLAttributes: { class: "opus-tiptap-codeblock" },
           },
           trailingNode: false,
           heading: { levels: [1, 2, 3] },
@@ -565,11 +565,11 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
         }),
         EmbedBlock,
         AttachmentCard,
-        KaneoIssueLink,
+        OpusIssueLink,
         TaskList,
         Image.configure({
           HTMLAttributes: {
-            class: "kaneo-editor-image",
+            class: "opus-editor-image",
             loading: "lazy",
           },
         }),
@@ -588,7 +588,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
       ],
       editorProps: {
         attributes: {
-          class: "kaneo-tiptap-prose",
+          class: "opus-tiptap-prose",
         },
         handlePaste: (view, event) => {
           const pastedFiles = Array.from(event.clipboardData?.files || []);
@@ -628,7 +628,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             event.preventDefault();
             view.dispatch(
               view.state.tr.replaceSelectionWith(
-                view.state.schema.nodes.kaneoIssueLink.create({
+                view.state.schema.nodes.opusIssueLink.create({
                   url,
                   issueKey: issueKey || "",
                   taskId: taskIdFromUrl || "",
@@ -788,7 +788,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
     const handleImagePreviewClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (!(target instanceof HTMLImageElement)) return;
-      if (!target.classList.contains("kaneo-editor-image")) return;
+      if (!target.classList.contains("opus-editor-image")) return;
 
       event.preventDefault();
       setPreviewImage({
@@ -1285,9 +1285,9 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
   const handleEditorMouseMove = useCallback(
     (event: ReactMouseEvent<HTMLElement>) => {
       const target = event.target as HTMLElement;
-      if (target.closest(".kaneo-codeblock-language")) return;
+      if (target.closest(".opus-codeblock-language")) return;
       const hovered = target.closest(
-        "pre.kaneo-tiptap-codeblock",
+        "pre.opus-tiptap-codeblock",
       ) as HTMLElement | null;
 
       if (!hovered) {
@@ -1306,7 +1306,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
   const handleEditorMouseLeave = useCallback(
     (event: ReactMouseEvent<HTMLElement>) => {
       const relatedTarget = event.relatedTarget as HTMLElement | null;
-      if (relatedTarget?.closest(".kaneo-codeblock-language")) return;
+      if (relatedTarget?.closest(".opus-codeblock-language")) return;
       if (isCodeLanguageMenuOpen) return;
       hoveredCodeBlockElementRef.current = null;
       setHoveredCodeBlock(null);
@@ -1319,7 +1319,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
       ref={editorShellRef}
       aria-label={t("tasks:detail.editor.ariaLabel")}
       className={cn(
-        "kaneo-tiptap-shell group",
+        "opus-tiptap-shell group",
         isDragActive && "is-drag-active",
       )}
       onDragEnter={handleShellDragEnter}
@@ -1348,7 +1348,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
       />
       {editor && hoveredCodeBlock && (
         <div
-          className="kaneo-codeblock-language"
+          className="opus-codeblock-language"
           style={{
             top: hoveredCodeBlock.top,
             left: hoveredCodeBlock.left,
@@ -1357,7 +1357,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
         >
           <button
             type="button"
-            className="kaneo-codeblock-language-trigger kaneo-codeblock-copy-trigger"
+            className="opus-codeblock-language-trigger opus-codeblock-copy-trigger"
             aria-label={
               isCodeCopied
                 ? t("tasks:detail.editor.copied")
@@ -1386,10 +1386,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             onOpenChange={setIsCodeLanguageMenuOpen}
           >
             <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="kaneo-codeblock-language-trigger"
-              >
+              <button type="button" className="opus-codeblock-language-trigger">
                 <span className="truncate">{activeCodeLanguageLabel}</span>
                 <ChevronDown className="size-3.5 opacity-70" />
               </button>
@@ -1422,7 +1419,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
       {editor && (
         <BubbleMenu
           editor={editor}
-          className="kaneo-tiptap-bubble"
+          className="opus-tiptap-bubble"
           shouldShow={({ editor: activeEditor, from, to }) => {
             if (activeEditor.isActive("embedBlock")) return false;
             if (activeEditor.isActive("image")) return false;
@@ -1435,7 +1432,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("heading", { level: 2 }) &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1450,7 +1447,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("bulletList") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1463,7 +1460,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("taskList") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleTaskList().run()}
@@ -1475,7 +1472,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("orderedList") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1488,7 +1485,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("blockquote") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1501,7 +1498,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("codeBlock") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1513,20 +1510,20 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             type="button"
             variant="ghost"
             size="xs"
-            className="kaneo-tiptap-bubble-btn"
+            className="opus-tiptap-bubble-btn"
             onClick={() =>
               editor.chain().focus().insertTable({ cols: 3, rows: 3 }).run()
             }
           >
             <Table2 className="size-3.5" />
           </Button>
-          <span className="kaneo-tiptap-bubble-separator" />
+          <span className="opus-tiptap-bubble-separator" />
           <Button
             type="button"
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("bold") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -1538,7 +1535,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("italic") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -1550,7 +1547,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("underline") &&
                 "bg-accent text-accent-foreground",
             )}
@@ -1563,7 +1560,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("strike") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -1575,7 +1572,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("code") && "bg-accent text-accent-foreground",
             )}
             onClick={() => editor.chain().focus().toggleCode().run()}
@@ -1587,7 +1584,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             variant="ghost"
             size="xs"
             className={cn(
-              "kaneo-tiptap-bubble-btn",
+              "opus-tiptap-bubble-btn",
               editor.isActive("link") && "bg-accent text-accent-foreground",
             )}
             onClick={() => setLink()}
@@ -1599,7 +1596,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
 
       {editor && slashMenu && (
         <div
-          className="kaneo-tiptap-slash-menu"
+          className="opus-tiptap-slash-menu"
           style={{
             top: slashMenu.top,
             left: slashMenu.left,
@@ -1610,8 +1607,8 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             groupedSlashCommands.map((group) => {
               if (!group.items.length) return null;
               return (
-                <div key={group.title} className="kaneo-tiptap-slash-group">
-                  <div className="kaneo-tiptap-slash-group-title">
+                <div key={group.title} className="opus-tiptap-slash-group">
+                  <div className="opus-tiptap-slash-group-title">
                     {group.title}
                   </div>
                   {group.items.map((command) => {
@@ -1623,7 +1620,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
                         key={command.id}
                         type="button"
                         className={cn(
-                          "kaneo-tiptap-slash-item",
+                          "opus-tiptap-slash-item",
                           slashMenu.selectedIndex === index && "is-selected",
                         )}
                         onMouseEnter={() =>
@@ -1638,11 +1635,11 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
                           runSlashCommand(command);
                         }}
                       >
-                        <span className="kaneo-tiptap-slash-label">
+                        <span className="opus-tiptap-slash-label">
                           {command.label}
                         </span>
                         {command.shortcut && (
-                          <span className="kaneo-tiptap-slash-shortcut">
+                          <span className="opus-tiptap-slash-shortcut">
                             {command.shortcut}
                           </span>
                         )}
@@ -1653,7 +1650,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
               );
             })
           ) : (
-            <div className="kaneo-tiptap-slash-empty">
+            <div className="opus-tiptap-slash-empty">
               {t("tasks:detail.editor.slash.empty")}
             </div>
           )}
@@ -1662,7 +1659,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
 
       {editor && embedComposer && (
         <div
-          className="kaneo-embed-composer"
+          className="opus-embed-composer"
           style={{
             top: embedComposer.top,
             left: embedComposer.left,
@@ -1670,21 +1667,21 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
           }}
         >
           {embedComposer.mode === "choice" ? (
-            <div className="kaneo-embed-choice-menu">
+            <div className="opus-embed-choice-menu">
               <button
                 type="button"
-                className="kaneo-embed-choice-item is-primary"
+                className="opus-embed-choice-item is-primary"
                 onMouseDown={(event) => {
                   event.preventDefault();
                   submitEmbedComposer("embed");
                 }}
               >
                 <span>{t("tasks:detail.editor.embed.choice.embedVideo")}</span>
-                <span className="kaneo-embed-choice-hint">Tab</span>
+                <span className="opus-embed-choice-hint">Tab</span>
               </button>
               <button
                 type="button"
-                className="kaneo-embed-choice-item"
+                className="opus-embed-choice-item"
                 onMouseDown={(event) => {
                   event.preventDefault();
                   setEmbedComposer(null);
@@ -1692,12 +1689,12 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
                 }}
               >
                 <span>{t("tasks:detail.editor.embed.choice.keepAsLink")}</span>
-                <span className="kaneo-embed-choice-hint">Esc</span>
+                <span className="opus-embed-choice-hint">Esc</span>
               </button>
             </div>
           ) : (
             <form
-              className="kaneo-embed-composer-form"
+              className="opus-embed-composer-form"
               onSubmit={(event) => {
                 event.preventDefault();
                 submitEmbedComposer("embed");
@@ -1715,7 +1712,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
                 placeholder={t("tasks:detail.editor.embed.inputPlaceholder")}
                 autoFocus
               />
-              <div className="kaneo-embed-composer-actions">
+              <div className="opus-embed-composer-actions">
                 <Button
                   type="button"
                   size="xs"
@@ -1740,7 +1737,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
                 </Button>
               </div>
               {embedComposerError && (
-                <p className="kaneo-embed-composer-error">
+                <p className="opus-embed-composer-error">
                   {embedComposerError}
                 </p>
               )}
@@ -1751,13 +1748,13 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
 
       <EditorContent
         editor={editor}
-        className="kaneo-tiptap-content"
+        className="opus-tiptap-content"
         onMouseMove={handleEditorMouseMove}
         onMouseLeave={handleEditorMouseLeave}
       />
       <button
         type="button"
-        className="kaneo-editor-quick-attach"
+        className="opus-editor-quick-attach"
         onMouseDown={(event) => {
           event.preventDefault();
         }}
@@ -1767,7 +1764,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
         <Paperclip className="size-3.5" />
       </button>
       {isDragActive && (
-        <div className="kaneo-editor-drop-indicator">
+        <div className="opus-editor-drop-indicator">
           <span>{t("tasks:detail.editor.dropToUpload")}</span>
         </div>
       )}

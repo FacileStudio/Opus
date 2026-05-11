@@ -30,7 +30,7 @@ jobs:
           avatarSize: 42
 
       - name: Generate Sponsors Section
-        if: ${{ github.repository_owner == 'usekaneo' }}
+        if: ${{ github.repository_owner == 'FacileStudio' }}
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
           token: ${{ secrets.GH_ANDREJ }}

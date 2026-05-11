@@ -51,7 +51,7 @@ function readDatabaseUrlFromEnvFile() {
 }
 
 const defaultTestDatabaseUrl =
-  "postgresql://postgres:postgres@localhost:5432/kaneo_test";
+  "postgresql://postgres:postgres@localhost:5432/opus_test";
 const envDatabaseUrl = process.env.DATABASE_URL?.trim();
 const fromEnv = envDatabaseUrl ? stripEnvValueQuotes(envDatabaseUrl) : "";
 const rawDatabaseUrl =
@@ -61,8 +61,8 @@ assertTestDatabaseUrl(process.env.DATABASE_URL);
 
 process.env.NODE_ENV = "test";
 process.env.AUTH_SECRET = "test-secret-with-at-least-32-chars";
-process.env.KANEO_API_URL = "http://localhost:1337";
-process.env.KANEO_CLIENT_URL = "http://localhost:5173";
+process.env.OPUS_API_URL = "http://localhost:1337";
+process.env.OPUS_CLIENT_URL = "http://localhost:5173";
 process.env.DISABLE_GUEST_ACCESS = "false";
 process.env.DISABLE_REGISTRATION = "false";
 process.env.DISABLE_PASSWORD_REGISTRATION = "false";
@@ -88,7 +88,7 @@ process.env.CUSTOM_OAUTH_USER_INFO_URL = "";
 process.env.CUSTOM_OAUTH_SCOPES = "";
 process.env.CUSTOM_OAUTH_RESPONSE_TYPE = "";
 process.env.CUSTOM_OAUTH_DISCOVERY_URL = "";
-process.env.DEVICE_AUTH_CLIENT_IDS = "kaneo-cli";
+process.env.DEVICE_AUTH_CLIENT_IDS = "opus-cli";
 
 afterEach(() => {
   vi.restoreAllMocks();

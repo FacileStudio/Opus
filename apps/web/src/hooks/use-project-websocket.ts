@@ -1,4 +1,4 @@
-import { windowId } from "@kaneo/libs";
+import { windowId } from "@opus/libs";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { authClient } from "@/lib/auth-client";

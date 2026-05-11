@@ -131,7 +131,7 @@ export function createApp() {
   const { upgradeWebSocket, injectWebSocket } = nodeWs;
   const corsOriginSource = [
     process.env.CORS_ORIGINS,
-    process.env.KANEO_CLIENT_URL,
+    process.env.OPUS_CLIENT_URL,
   ].find((value) => value?.trim());
   const corsOrigins = corsOriginSource
     ?.split(",")
@@ -280,17 +280,17 @@ export function createApp() {
     documentation: {
       openapi: "3.0.3",
       info: {
-        title: "Kaneo API",
+        title: "Opus API",
         version: "1.0.0",
         description:
-          "Kaneo Project Management API - Manage projects, tasks, labels, and more",
+          "Opus Project Management API - Manage projects, tasks, labels, and more",
       },
       servers: [
         {
           url: normalizeApiServerUrl(
-            process.env.KANEO_API_URL || "https://cloud.kaneo.app",
+            process.env.OPUS_API_URL || "https://cloud.opus.app",
           ),
-          description: "Kaneo API Server",
+          description: "Opus API Server",
         },
       ],
       components: {
@@ -396,7 +396,7 @@ export function createApp() {
       // Optional `ui=1` forces redirect when Sec-Fetch-* headers are missing (e.g. some clients).
       if (forceUiRedirect || secFetchDest === "document") {
         const clientUrl = (
-          process.env.KANEO_CLIENT_URL || "http://localhost:5173"
+          process.env.OPUS_CLIENT_URL || "http://localhost:5173"
         ).replace(/\/$/, "");
         const deviceUrl = new URL(`${clientUrl}/device`);
         if (userCode) {
@@ -455,7 +455,7 @@ export function createApp() {
       throw new HTTPException(500, { message: "Internal Server Error" });
     }
 
-    const windowId = c.req.header("X-Kaneo-Window-Id");
+    const windowId = c.req.header("X-Opus-Window-Id");
     const userId = c.get("userId");
     const initiatorId = windowId ? `${userId}:${windowId}` : userId;
 
@@ -504,7 +504,7 @@ export function createApp() {
   app.route(
     "/",
     mcpWellKnownRoutes(
-      (process.env.KANEO_API_URL || "http://localhost:1337").replace(
+      (process.env.OPUS_API_URL || "http://localhost:1337").replace(
         /\/api\/?$/,
         "",
       ),
@@ -640,7 +640,7 @@ export async function startServer(
     },
     () => {
       console.log(
-        `⚡ API is running at ${process.env.KANEO_API_URL || "http://localhost:1337"}`,
+        `⚡ API is running at ${process.env.OPUS_API_URL || "http://localhost:1337"}`,
       );
     },
   );

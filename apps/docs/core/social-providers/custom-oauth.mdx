@@ -1,11 +1,11 @@
 ---
 title: Custom OAuth/OIDC
-description: Configure Kaneo with your custom OpenID Connect (OIDC) provider.
+description: Configure Opus with your custom OpenID Connect (OIDC) provider.
 ---
 
 ## Overview
 
-Kaneo supports custom OAuth 2.0 and OpenID Connect (OIDC) providers, allowing you to integrate with any standards-compliant identity provider such as Keycloak, Auth0, Okta, Azure AD, or self-hosted solutions like Pocket ID.
+Opus supports custom OAuth 2.0 and OpenID Connect (OIDC) providers, allowing you to integrate with any standards-compliant identity provider such as Keycloak, Auth0, Okta, Azure AD, or self-hosted solutions like Pocket ID.
 
 ## Configuration
 
@@ -39,8 +39,8 @@ First, create an OAuth 2.0 or OIDC application in your identity provider:
 
 1. Log in to your identity provider's admin console
 2. Create a new OAuth 2.0 or OIDC application
-3. Set the redirect URI to: `{KANEO_API_URL}/api/auth/oauth2/callback/custom`
-   - Example: `https://api.kaneo.example.com/api/auth/oauth2/callback/custom`
+3. Set the redirect URI to: `{OPUS_API_URL}/api/auth/oauth2/callback/custom`
+   - Example: `https://api.opus.example.com/api/auth/oauth2/callback/custom`
 4. Copy the client ID and client secret
 5. Note the authorization, token, and userinfo endpoint URLs
 
@@ -69,7 +69,7 @@ CUSTOM_AUTH_PKCE=false
 
 ### 3. Restart Services
 
-After updating the environment variables, restart your Kaneo services:
+After updating the environment variables, restart your Opus services:
 
 ```bash
 docker compose down
@@ -93,7 +93,7 @@ CUSTOM_OAUTH_SCOPES=profile,email
 ### Keycloak
 
 ```bash
-CUSTOM_OAUTH_CLIENT_ID=kaneo-client
+CUSTOM_OAUTH_CLIENT_ID=opus-client
 CUSTOM_OAUTH_CLIENT_SECRET=your-secret-here
 CUSTOM_OAUTH_DISCOVERY_URL=https://keycloak.example.com/realms/your-realm/.well-known/openid-configuration
 CUSTOM_OAUTH_LOGOUT_URL=https://keycloak.example.com/realms/your-realm/protocol/openid-connect/logout
@@ -146,13 +146,13 @@ CUSTOM_OAUTH_SCOPES=openid,profile,email
 Verify that your redirect URI in the OAuth provider matches exactly:
 
 ```
-{KANEO_API_URL}/api/auth/oauth2/callback/custom
+{OPUS_API_URL}/api/auth/oauth2/callback/custom
 ```
 
-For example, if `KANEO_API_URL=https://api.kaneo.example.com`, the redirect URI should be:
+For example, if `OPUS_API_URL=https://api.opus.example.com`, the redirect URI should be:
 
 ```
-https://api.kaneo.example.com/api/auth/oauth2/callback/custom
+https://api.opus.example.com/api/auth/oauth2/callback/custom
 ```
 
 ## Discovery URL

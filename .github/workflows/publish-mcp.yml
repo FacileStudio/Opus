@@ -34,8 +34,8 @@ jobs:
 
       - name: Run MCP checks
         run: |
-          pnpm --filter @kaneo/mcp test
-          pnpm --filter @kaneo/mcp build
+          pnpm --filter @opus/mcp test
+          pnpm --filter @opus/mcp build
 
       - name: Validate MCP release tag
         run: |
@@ -52,19 +52,19 @@ jobs:
             exit 1
           fi
 
-      - name: Check whether @kaneo/mcp version is already published
+      - name: Check whether @opus/mcp version is already published
         id: version_check
         run: |
           PACKAGE_VERSION=$(node -p "require('./packages/mcp/package.json').version")
 
-          if npm view "@kaneo/mcp@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
+          if npm view "@opus/mcp@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
             echo "already_published=true" >> "$GITHUB_OUTPUT"
-            echo "@kaneo/mcp@${PACKAGE_VERSION} is already published; skipping publish."
+            echo "@opus/mcp@${PACKAGE_VERSION} is already published; skipping publish."
           else
             echo "already_published=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Publish @kaneo/mcp
+      - name: Publish @opus/mcp
         if: ${{ steps.version_check.outputs.already_published == 'false' }}
         run: |
           cd packages/mcp

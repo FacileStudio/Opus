@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "kaneo.name" -}}
+{{- define "opus.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "kaneo.fullname" -}}
+{{- define "opus.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "kaneo.chart" -}}
+{{- define "opus.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "kaneo.labels" -}}
-helm.sh/chart: {{ include "kaneo.chart" . }}
-{{ include "kaneo.selectorLabels" . }}
+{{- define "opus.labels" -}}
+helm.sh/chart: {{ include "opus.chart" . }}
+{{ include "opus.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "kaneo.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "kaneo.name" . }}
+{{- define "opus.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opus.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "kaneo.serviceAccountName" -}}
+{{- define "opus.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "kaneo.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "opus.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -64,9 +64,9 @@ Create the name of the service account to use
 {{/*
 API component common labels
 */}}
-{{- define "kaneo.api.labels" -}}
-helm.sh/chart: {{ include "kaneo.chart" . }}
-{{ include "kaneo.api.selectorLabels" . }}
+{{- define "opus.api.labels" -}}
+helm.sh/chart: {{ include "opus.chart" . }}
+{{ include "opus.api.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -77,17 +77,17 @@ app.kubernetes.io/component: api
 {{/*
 API component selector labels
 */}}
-{{- define "kaneo.api.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "kaneo.name" . }}-api
+{{- define "opus.api.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opus.name" . }}-api
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Web component common labels
 */}}
-{{- define "kaneo.web.labels" -}}
-helm.sh/chart: {{ include "kaneo.chart" . }}
-{{ include "kaneo.web.selectorLabels" . }}
+{{- define "opus.web.labels" -}}
+helm.sh/chart: {{ include "opus.chart" . }}
+{{ include "opus.web.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -98,7 +98,7 @@ app.kubernetes.io/component: web
 {{/*
 Web component selector labels
 */}}
-{{- define "kaneo.web.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "kaneo.name" . }}-web
+{{- define "opus.web.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "opus.name" . }}-web
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

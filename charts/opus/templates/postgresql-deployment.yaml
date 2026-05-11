@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "kaneo.fullname" . }}-postgresql
+  name: {{ include "opus.fullname" . }}-postgresql
   labels:
-    {{- include "kaneo.labels" . | nindent 4 }}
+    {{- include "opus.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgresql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "kaneo.selectorLabels" . | nindent 6 }}
+      {{- include "opus.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: postgresql
   template:
     metadata:
       labels:
-        {{- include "kaneo.selectorLabels" . | nindent 8 }}
+        {{- include "opus.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgresql
     spec:
       containers:
@@ -75,6 +75,6 @@ spec:
       volumes:
         - name: postgresql-data
           persistentVolumeClaim:
-            claimName: {{ include "kaneo.fullname" . }}-postgresql-data
+            claimName: {{ include "opus.fullname" . }}-postgresql-data
       {{- end }}
 {{- end }}

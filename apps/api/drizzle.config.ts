@@ -10,6 +10,6 @@ export default defineConfig({
   dbCredentials: {
     url:
       process.env.DATABASE_URL ||
-      "postgresql://kaneo_user:kaneo_password@localhost:5432/kaneo",
+      "postgresql://opus_user:opus_password@localhost:5432/opus",
   },
 }) satisfies Config;

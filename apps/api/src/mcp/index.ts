@@ -11,8 +11,8 @@ import {
 } from "./oauth";
 import { registerMcpTools } from "./tools";
 
-const clientUrl = process.env.KANEO_CLIENT_URL || "http://localhost:5173";
-const apiUrl = (process.env.KANEO_API_URL || "http://localhost:1337").replace(
+const clientUrl = process.env.OPUS_CLIENT_URL || "http://localhost:5173";
+const apiUrl = (process.env.OPUS_API_URL || "http://localhost:1337").replace(
   /\/api\/?$/,
   "",
 );
@@ -21,7 +21,7 @@ const sessions = new Map<string, WebStandardStreamableHTTPServerTransport>();
 
 function createMcpServerForUser(token: string): McpServer {
   const server = new McpServer({
-    name: "kaneo-mcp",
+    name: "opus-mcp",
     version: "1.0.0",
   });
   registerMcpTools(server, apiUrl, token);
@@ -99,7 +99,7 @@ mcp.get("/mcp/authorize", async (c) => {
   const deviceRes = await fetch(`${apiUrl}/api/auth/device/code`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ client_id: "kaneo-mcp" }),
+    body: JSON.stringify({ client_id: "opus-mcp" }),
   });
 
   if (!deviceRes.ok) {
@@ -121,10 +121,10 @@ mcp.get("/mcp/authorize", async (c) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kaneo MCP</title>
+  <title>Opus MCP</title>
   <script>window.location.href = ${JSON.stringify(devicePageUrl)};</script>
 </head>
-<body>Redirecting to Kaneo…</body>
+<body>Redirecting to Opus…</body>
 <script>
   const deviceCode = ${JSON.stringify(device.device_code)};
   const interval = ${device.interval} * 1000;
@@ -142,7 +142,7 @@ mcp.get("/mcp/authorize", async (c) => {
         body: JSON.stringify({
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
           device_code: deviceCode,
-          client_id: "kaneo-mcp"
+          client_id: "opus-mcp"
         })
       });
       const data = await res.json();
