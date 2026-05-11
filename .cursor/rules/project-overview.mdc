@@ -23,7 +23,7 @@ opus/
 │   └── typescript-config/  # TypeScript configurations
 ├── charts/           # Kubernetes Helm charts
 ├── .cursor/          # Cursor IDE rules
-└── compose.yml       # Docker Compose configuration
+└── docker-compose.yml       # Docker Compose configuration
 ```
 
 ## Technology Stack

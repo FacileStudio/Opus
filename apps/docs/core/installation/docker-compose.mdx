@@ -1,11 +1,11 @@
 ---
-title: The compose.yml file
+title: The docker-compose.yml file
 description: The Docker Compose file is used to start the required services.
 ---
 
 ## The initial compose file
 
-The first step is to create a Docker Compose file. We will call it `compose.yml`.
+The first step is to create a Docker Compose file. We will call it `docker-compose.yml`.
 
 ```yml
 services:
@@ -83,7 +83,7 @@ Opus uses S3-compatible object storage for private uploads in task descriptions 
 
 ### Optional MinIO service
 
-Add this service and volume to your `compose.yml` only if you want uploads:
+Add this service and volume to your `docker-compose.yml` only if you want uploads:
 
 ```yml
 services:
