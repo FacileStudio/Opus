@@ -18,6 +18,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      network: host
     image: ghcr.io/facilestudio/opus:latest
     ports:
       - "5173:5173"
