@@ -1,7 +1,9 @@
 FROM oven/bun:1 AS api-builder
 WORKDIR /app
 
-COPY package.json pnpm-workspace.yaml ./
+RUN npm install -g corepack@latest && corepack enable && corepack prepare pnpm@10.32.1 --activate
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/email/package.json ./packages/email/
 COPY packages/libs/package.json ./packages/libs/
@@ -10,20 +12,22 @@ COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 COPY apps/site/package.json ./apps/site/
 
-RUN bun install
+RUN pnpm install --frozen-lockfile
 
 COPY packages/typescript-config ./packages/typescript-config
 COPY packages/email ./packages/email
 COPY packages/libs ./packages/libs
 COPY apps/api ./apps/api
 
-RUN cd packages/email && bun run build
-RUN cd apps/api && bun run build
+RUN cd packages/email && pnpm run build
+RUN cd apps/api && pnpm run build
 
 FROM oven/bun:1 AS api-deps
 WORKDIR /app
 
-COPY --from=api-builder /app/package.json /app/pnpm-workspace.yaml ./
+RUN npm install -g corepack@latest && corepack enable && corepack prepare pnpm@10.32.1 --activate
+
+COPY --from=api-builder /app/package.json /app/pnpm-workspace.yaml /app/pnpm-lock.yaml ./
 COPY --from=api-builder /app/packages/typescript-config/package.json ./packages/typescript-config/
 COPY --from=api-builder /app/packages/email/package.json ./packages/email/
 COPY --from=api-builder /app/packages/libs/package.json ./packages/libs/
@@ -33,7 +37,7 @@ COPY --from=api-builder /app/apps/web/package.json ./apps/web/
 COPY --from=api-builder /app/apps/site/package.json ./apps/site/
 
 RUN sed -i 's/"prepare": "husky"/"prepare": ""/g' package.json && \
-  bun install --production
+  HUSKY=0 NODE_ENV=production pnpm install --prod --frozen-lockfile --no-optional
 
 COPY --from=api-builder /app/apps/api/dist ./apps/api/dist
 COPY --from=api-builder /app/apps/api/drizzle ./apps/api/drizzle
@@ -42,7 +46,9 @@ COPY --from=api-builder /app/packages/email ./packages/email
 FROM oven/bun:1 AS web-builder
 WORKDIR /app
 
-COPY package.json pnpm-workspace.yaml ./
+RUN npm install -g corepack@latest && corepack enable && corepack prepare pnpm@10.32.1 --activate
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/email/package.json ./packages/email/
 COPY packages/libs/package.json ./packages/libs/
@@ -51,14 +57,14 @@ COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 COPY apps/site/package.json ./apps/site/
 
-RUN bun install
+RUN pnpm install --frozen-lockfile
 
 COPY packages/typescript-config ./packages/typescript-config
 COPY packages/libs ./packages/libs
 COPY i18n ./i18n
 COPY apps/web ./apps/web
 
-RUN cd apps/web && bun run build
+RUN cd apps/web && pnpm run build
 
 FROM oven/bun:1-slim AS runtime
 
