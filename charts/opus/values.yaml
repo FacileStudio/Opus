@@ -60,7 +60,7 @@ postgresql:
 # Opus application configuration (combined API + web frontend)
 opus:
   image:
-    repository: ghcr.io/FacileStudio/opus
+    repository: ghcr.io/facilestudio/opus
     tag: latest
     pullPolicy: IfNotPresent
   securityContext: {}

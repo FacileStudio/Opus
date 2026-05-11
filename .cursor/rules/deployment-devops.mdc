@@ -33,7 +33,7 @@ services:
       retries: 5
 
   api:
-    image: ghcr.io/FacileStudio/api:latest
+    image: ghcr.io/facilestudio/api:latest
     ports:
       - "1337:1337"
     env_file:
@@ -44,7 +44,7 @@ services:
     restart: unless-stopped
 
   web:
-    image: ghcr.io/FacileStudio/web:latest
+    image: ghcr.io/facilestudio/web:latest
     ports:
       - "5173:5173"
     env_file:
@@ -241,7 +241,7 @@ For production, consider running migrations separately:
 
 ```bash
 # In Kubernetes, use a Job
-kubectl run migrate-db --image=ghcr.io/FacileStudio/api:latest -- \
+kubectl run migrate-db --image=ghcr.io/facilestudio/api:latest -- \
   node -e "require('./dist/migrate.js')"
 ```
 

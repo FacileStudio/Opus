@@ -121,7 +121,7 @@ helm uninstall my-opus
 
 | Name                                | Description                                                                                                        | Value                           |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `api.image.repository`              | API image repository                                                                                              | `ghcr.io/FacileStudio/api`          |
+| `api.image.repository`              | API image repository                                                                                              | `ghcr.io/facilestudio/api`          |
 | `api.image.tag`                     | API image tag                                                                                                     | `latest`                        |
 | `api.image.pullPolicy`              | API image pull policy                                                                                             | `IfNotPresent`                  |
 | `api.service.type`                  | API service type                                                                                                  | `ClusterIP`                     |
@@ -146,7 +146,7 @@ helm uninstall my-opus
 
 | Name                                | Description                                                                                                        | Value                           |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `web.image.repository`              | Web image repository                                                                                               | `ghcr.io/FacileStudio/web`          |
+| `web.image.repository`              | Web image repository                                                                                               | `ghcr.io/facilestudio/web`          |
 | `web.image.tag`                     | Web image tag                                                                                                      | `latest`                        |
 | `web.image.pullPolicy`              | Web image pull policy                                                                                              | `IfNotPresent`                  |
 | `web.service.type`                  | Web service type                                                                                                   | `ClusterIP`                     |
