@@ -134,7 +134,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./Dockerfile.opus
+          file: ./Dockerfile
           platforms: linux/amd64
           push: false
           cache-from: type=gha

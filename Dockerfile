@@ -1,86 +1,72 @@
-FROM --platform=$BUILDPLATFORM node:20.20.2-alpine AS api-builder
-
-RUN apk add --no-cache python3 make g++ && \
-  corepack enable && \
-  corepack prepare pnpm@10.32.1 --activate
-
+FROM oven/bun:1 AS api-builder
 WORKDIR /app
 
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/email/package.json ./packages/email/
 COPY packages/libs/package.json ./packages/libs/
 COPY apps/api/package.json ./apps/api/
 
-RUN pnpm install --frozen-lockfile
+RUN bun install
 
 COPY packages/typescript-config ./packages/typescript-config
 COPY packages/email ./packages/email
 COPY packages/libs ./packages/libs
 COPY apps/api ./apps/api
 
-WORKDIR /app/packages/email
-RUN pnpm run build
+RUN cd packages/email && bun run build
+RUN cd apps/api && bun run build
 
-WORKDIR /app/apps/api
-RUN pnpm run build
-
-FROM node:20.20.2-alpine AS api-runtime
-
+FROM oven/bun:1 AS api-deps
 WORKDIR /app
 
-COPY --from=api-builder /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+COPY --from=api-builder /app/package.json /app/pnpm-workspace.yaml ./
 COPY --from=api-builder /app/apps/api/package.json ./apps/api/
 COPY --from=api-builder /app/packages/typescript-config/package.json ./packages/typescript-config/
 COPY --from=api-builder /app/packages/libs/package.json ./packages/libs/
 COPY --from=api-builder /app/packages/email/package.json ./packages/email/
 
 RUN sed -i 's/"prepare": "husky"/"prepare": ""/g' package.json && \
-  corepack enable && \
-  corepack prepare pnpm@10.32.1 --activate && \
-  HUSKY=0 NODE_ENV=production pnpm install --prod --frozen-lockfile --no-optional
+  bun install --production
 
 COPY --from=api-builder /app/apps/api/dist ./apps/api/dist
 COPY --from=api-builder /app/apps/api/drizzle ./apps/api/drizzle
 COPY --from=api-builder /app/packages/email ./packages/email
 
-FROM --platform=$BUILDPLATFORM node:20.20.2-alpine AS web-builder
-
-RUN apk add --no-cache python3 make g++ && \
-  corepack enable && \
-  corepack prepare pnpm@10.32.1 --activate
-
+FROM oven/bun:1 AS web-builder
 WORKDIR /app
 
-COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY package.json pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/libs/package.json ./packages/libs/
 
-RUN pnpm install --frozen-lockfile
+RUN bun install
 
 COPY packages/typescript-config ./packages/typescript-config
 COPY packages/libs ./packages/libs
 COPY i18n ./i18n
 COPY apps/web ./apps/web
 
-WORKDIR /app/apps/web
-RUN pnpm run build
+RUN cd apps/web && bun run build
 
-FROM node:20.20.2-alpine AS runtime
+FROM oven/bun:1-slim AS runtime
 
-RUN apk add --no-cache nginx=1.28.3-r0 && \
-  addgroup -g 1001 appuser && \
-  adduser -u 1001 -G appuser -D appuser && \
-  mkdir -p /app /app/apps/api/data /var/cache/nginx /var/run/nginx /var/log/nginx /var/lib/nginx/logs /var/lib/nginx/tmp /usr/share/nginx/html /docker-entrypoint.d && \
-  chown -R appuser:appuser /app /app/apps/api/data /var/cache/nginx /var/run/nginx /var/log/nginx /var/lib/nginx /usr/share/nginx/html /docker-entrypoint.d && \
-  touch /var/run/nginx.pid && \
-  chown appuser:appuser /var/run/nginx.pid && \
-  printf 'worker_processes auto;\nerror_log /var/log/nginx/error.log warn;\npid /var/run/nginx.pid;\nevents { worker_connections 1024; }\nhttp {\n  include /etc/nginx/mime.types;\n  default_type application/octet-stream;\n  include /etc/nginx/conf.d/*.conf;\n}\n' > /etc/nginx/nginx.conf
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends nginx wget && \
+  rm -rf /var/lib/apt/lists/* && \
+  groupadd -g 1001 appuser && \
+  useradd -u 1001 -g appuser -d /home/appuser -m appuser && \
+  mkdir -p /app /app/apps/api/data /var/cache/nginx /run/nginx /var/log/nginx /usr/share/nginx/html /docker-entrypoint.d && \
+  chown -R appuser:appuser /app /var/cache/nginx /run/nginx /var/log/nginx /usr/share/nginx/html /docker-entrypoint.d && \
+  touch /run/nginx.pid && \
+  chown appuser:appuser /run/nginx.pid && \
+  rm -f /etc/nginx/sites-enabled/default && \
+  printf 'worker_processes auto;\nerror_log /var/log/nginx/error.log warn;\npid /run/nginx.pid;\nevents { worker_connections 1024; }\nhttp {\n  include /etc/nginx/mime.types;\n  default_type application/octet-stream;\n  include /etc/nginx/conf.d/*.conf;\n}\n' > /etc/nginx/nginx.conf
 
 WORKDIR /app
 
-COPY --from=api-runtime --chown=appuser:appuser /app /app
+COPY --from=api-deps --chown=appuser:appuser /app /app
 COPY --from=web-builder --chown=appuser:appuser /app/apps/web/dist /usr/share/nginx/html
 COPY --chown=appuser:appuser apps/web/nginx.opus.conf /etc/nginx/conf.d/default.conf
 RUN chown -R appuser:appuser /etc/nginx/conf.d

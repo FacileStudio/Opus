@@ -24,12 +24,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./Dockerfile.opus
+          - dockerfile: ./Dockerfile
             image: ghcr.io/${{ github.repository_owner }}/opus
-          - dockerfile: ./apps/web/Dockerfile
-            image: ghcr.io/${{ github.repository_owner }}/web
-          - dockerfile: ./apps/api/Dockerfile
-            image: ghcr.io/${{ github.repository_owner }}/api
     permissions:
       contents: read
       packages: write

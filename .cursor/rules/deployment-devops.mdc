@@ -15,6 +15,8 @@ The main Docker Compose configuration is in `docker-compose.yml` at the project 
 
 ### Service Structure
 
+Single-container deployment: API + Nginx frontend in one image built with Bun.
+
 ```yaml
 services:
   postgres:
@@ -32,25 +34,18 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
-    image: ghcr.io/facilestudio/api:latest
-    ports:
-      - "1337:1337"
-    env_file:
-      - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-
-  web:
-    image: ghcr.io/facilestudio/web:latest
+  opus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/facilestudio/opus:latest
     ports:
       - "5173:5173"
     env_file:
       - .env
     depends_on:
-      - api
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 ```
 
