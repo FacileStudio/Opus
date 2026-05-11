@@ -2,7 +2,7 @@
 set -eu
 
 urlencode() {
-  node -e 'const input = process.argv[1]; process.stdout.write(encodeURIComponent(input).replace(/[!\x27()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`));' "$1"
+  bun -e 'const input = process.argv[1]; process.stdout.write(encodeURIComponent(input).replace(/[!\x27()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`));' "$1"
 }
 
 api_pid=""
@@ -45,14 +45,14 @@ fi
 
 # Auto-generate AUTH_SECRET if not set
 if [ -z "${AUTH_SECRET:-}" ]; then
-  export AUTH_SECRET="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(32).toString("hex"))')"
+  export AUTH_SECRET="$(bun -e 'process.stdout.write(require("node:crypto").randomBytes(32).toString("hex"))')"
   echo "WARNING: AUTH_SECRET not set — generated a random secret for this session."
   echo "WARNING: Set AUTH_SECRET in your .env to persist sessions across restarts."
 fi
 
 /docker-entrypoint.d/env.sh
 
-node --enable-source-maps /app/apps/api/dist/index.js &
+bun /app/apps/api/dist/index.js &
 api_pid=$!
 
 echo "Waiting for API to be ready..."
