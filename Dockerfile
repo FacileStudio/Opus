@@ -64,7 +64,7 @@ COPY packages/libs ./packages/libs
 COPY i18n ./i18n
 COPY apps/web ./apps/web
 
-RUN cd apps/web && pnpm run build
+RUN cd apps/web && NODE_ENV=production pnpm run build
 
 FROM oven/bun:1-slim AS runtime
 
