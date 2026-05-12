@@ -72,6 +72,7 @@ import { validateWorkspaceAccess } from "./utils/validate-workspace-access";
 import workflowRule from "./workflow-rule";
 import workspace from "./workspace";
 import workspaceWebhook from "./workspace-webhook";
+import { initializeWorkspaceWebhookDispatcher } from "./workspace-webhook/dispatcher";
 import {
   addConnection,
   initializeWebSocketAdapter,
@@ -619,6 +620,7 @@ export async function runStartupTasks() {
   await migrateColumns();
 
   initializePlugins();
+  initializeWorkspaceWebhookDispatcher();
   initializeScheduler();
   await initializeWebSocketAdapter();
 }

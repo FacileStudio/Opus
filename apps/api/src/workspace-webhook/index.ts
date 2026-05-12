@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
@@ -257,23 +258,9 @@ workspaceWebhook
           "X-Opus-Webhook-Id": webhook.id,
         };
         if (webhook.secret) {
-          const encoder = new TextEncoder();
-          const key = await crypto.subtle.importKey(
-            "raw",
-            encoder.encode(webhook.secret),
-            { name: "HMAC", hash: "SHA-256" },
-            false,
-            ["sign"],
-          );
-          const signature = await crypto.subtle.sign(
-            "HMAC",
-            key,
-            encoder.encode(payload),
-          );
-          const hexSignature = Array.from(new Uint8Array(signature))
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
-          headers["X-Opus-Signature"] = `sha256=${hexSignature}`;
+          headers["X-Opus-Signature"] = createHmac("sha256", webhook.secret)
+            .update(payload)
+            .digest("hex");
         }
         const response = await fetch(webhook.url, {
           method: "POST",
