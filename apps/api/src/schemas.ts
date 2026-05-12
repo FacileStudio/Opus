@@ -243,6 +243,20 @@ export const commentSchema = v.object({
   ),
 });
 
+export const shareLinkSchema = v.object({
+  id: v.string(),
+  projectId: v.string(),
+  token: v.string(),
+  label: v.nullable(v.string()),
+  expiresAt: v.nullable(v.date()),
+  isActive: v.boolean(),
+  lastAccessedAt: v.nullable(v.date()),
+  accessCount: v.number(),
+  createdBy: v.string(),
+  createdAt: v.date(),
+  updatedAt: v.date(),
+});
+
 export const configSchema = v.object({
   ssoOnly: v.nullable(v.boolean()),
   disableRegistration: v.nullable(v.boolean()),

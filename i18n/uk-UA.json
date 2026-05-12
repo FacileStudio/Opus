@@ -582,7 +582,9 @@
 				"keyShort": "Ключ має містити щонайменше 2 символи",
 				"keyMax": "Ключ може містити не більше 8 символів",
 				"iconRequired": "Іконка є обов'язковою"
-			}
+			},
+			"importExportTasks": "Import/Export",
+			"importExportTasksDescription": "Import and export tasks."
 		},
 		"projectIntegrations": {
 			"pageTitle": "Інтеґрації проєкту",
@@ -614,7 +616,30 @@
 			"copy": "Копіювати",
 			"copiedToast": "Скопійовано",
 			"toastUpdated": "Видимість оновлено",
-			"toastUpdateError": "Не вдалося оновити видимість"
+			"toastUpdateError": "Не вдалося оновити видимість",
+			"shareLinks": {
+				"accessCount": "{{count}} view",
+				"accessCount_other": "{{count}} views",
+				"active": "Active",
+				"copyToast": "Share link copied",
+				"create": "Create Link",
+				"createError": "Failed to create share link",
+				"createToast": "Share link created",
+				"deleteConfirm": "Delete this share link? Anyone using it will lose access.",
+				"deleteError": "Failed to delete share link",
+				"deleteToast": "Share link deleted",
+				"empty": "No share links yet.",
+				"expired": "Expired",
+				"expiresAt": "Expires",
+				"labelPlaceholder": "Link label (optional)",
+				"lastAccessed": "Last viewed {{date}}",
+				"neverAccessed": "Never viewed",
+				"noExpiry": "No expiry",
+				"revoked": "Revoked",
+				"subtitle": "Create private links to share a read-only view of this board.",
+				"title": "Share Links",
+				"updateError": "Failed to update share link"
+			}
 		},
 		"projectWorkflow": {
 			"pageTitle": "Налаштування робочого процесу",
@@ -1006,6 +1031,33 @@
 			"merged": "Змерджено",
 			"draft": "Чернетка",
 			"open": "Відкрито"
+		},
+		"workspaceNotifications": {
+			"addWebhook": "Add Webhook",
+			"allEvents": "All events",
+			"createSuccess": "Webhook created successfully",
+			"createWebhook": "Create Webhook",
+			"deleteSuccess": "Webhook deleted successfully",
+			"disabled": "Disabled",
+			"emptyState": "No webhooks configured yet. Add one to start receiving notifications.",
+			"enabled": "Enabled",
+			"eventsLabel": "Events",
+			"nameLabel": "Name",
+			"namePlaceholder": "e.g. Slack notifications",
+			"pageTitle": "Workspace Notifications",
+			"secretLabel": "Signing Secret",
+			"secretPlaceholder": "Optional HMAC secret for signature verification",
+			"subtitle": "Configure webhook endpoints to receive real-time notifications about workspace events.",
+			"test": "Test",
+			"testFailed": "Webhook test failed",
+			"testSuccess": "Webhook test successful (status {{statusCode}})",
+			"title": "Notifications",
+			"toggleSuccess": "Webhook updated successfully",
+			"updateSuccess": "Webhook updated successfully",
+			"urlLabel": "Endpoint URL",
+			"urlPlaceholder": "https://example.com/webhook",
+			"webhooksSubtitle": "Manage webhook endpoints that receive event notifications.",
+			"webhooksTitle": "Webhooks"
 		}
 	},
 	"navigation": {
@@ -1036,7 +1088,8 @@
 			"projects": "Проєкти",
 			"members": "Учасники",
 			"invitations": "Запрошення",
-			"more": "Більше"
+			"more": "Більше",
+			"backToBoard": "Back to board"
 		},
 		"projectList": {
 			"viewProject": "Переглянути проєкт",
@@ -1253,7 +1306,9 @@
 					"yaml": "YAML"
 				}
 			}
-		}
+		},
+		"created": "created this task",
+		"moved": "moved task from \"{{from}}\" to \"{{to}}\""
 	},
 	"tasks": {
 		"status": {
@@ -1280,7 +1335,9 @@
 		},
 		"common": {
 			"selectTask": "Обрати завдання",
-			"loadingTask": "Завантаження завдання..."
+			"loadingTask": "Завантаження завдання...",
+			"taskNotFound": "Task not found",
+			"taskNotFoundDescription": "The task you are looking for does not exist or has been deleted."
 		},
 		"detail": {
 			"subtaskOf": "Підзавдання",
@@ -1802,5 +1859,14 @@
 		"branding": {
 			"poweredBy": "Працює на"
 		}
+	},
+	"sharedProject": {
+		"badge": "Shared",
+		"error": {
+			"description": "This share link doesn't exist, has been revoked, or has expired.",
+			"title": "Link Not Found"
+		},
+		"pageTitle": "Shared View",
+		"readOnly": "Read-only"
 	}
 }

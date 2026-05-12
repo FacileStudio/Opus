@@ -42,6 +42,8 @@ import project from "./project";
 import { getPublicProject } from "./project/controllers/get-public-project";
 import { initializeScheduler, shutdownScheduler } from "./scheduler";
 import search from "./search";
+import shareLink from "./share-link";
+import getSharedProject from "./share-link/controllers/get-shared-project";
 import slackIntegration from "./slack-integration";
 import { getPrivateObject } from "./storage/s3";
 import task from "./task";
@@ -171,6 +173,12 @@ export function createApp() {
     return c.json(project);
   });
 
+  const sharedProjectApi = api.get("/shared-project/:token", async (c) => {
+    const { token } = c.req.param();
+    const project = await getSharedProject(token);
+    return c.json(project);
+  });
+
   api.post("/github-integration/webhook", handleGithubWebhookRoute);
 
   api.post(
@@ -232,6 +240,7 @@ export function createApp() {
           mimeType: schema.assetTable.mimeType,
           filename: schema.assetTable.filename,
           workspaceId: schema.assetTable.workspaceId,
+          projectId: schema.assetTable.projectId,
           isPublic: schema.projectTable.isPublic,
         })
         .from(schema.assetTable)
@@ -251,7 +260,25 @@ export function createApp() {
       if (userId) {
         await validateWorkspaceAccess(userId, asset.workspaceId, apiKeyId);
       } else if (!asset.isPublic) {
-        throw new HTTPException(401, { message: "Unauthorized" });
+        const shareToken = c.req.query("share_token");
+        if (shareToken) {
+          const [link] = await db
+            .select()
+            .from(schema.shareLinkTable)
+            .where(eq(schema.shareLinkTable.token, shareToken))
+            .limit(1);
+
+          const isValid =
+            link?.isActive &&
+            link.projectId === asset.projectId &&
+            (!link.expiresAt || link.expiresAt > new Date());
+
+          if (!isValid) {
+            throw new HTTPException(401, { message: "Unauthorized" });
+          }
+        } else {
+          throw new HTTPException(401, { message: "Unauthorized" });
+        }
       }
 
       try {
@@ -503,6 +530,7 @@ export function createApp() {
   const invitationApi = api.route("/invitation", invitation);
   const workspaceApi = api.route("/workspace", workspace);
   const workspaceWebhookApi = api.route("/workspace-webhook", workspaceWebhook);
+  const shareLinkApi = api.route("/share-link", shareLink);
 
   app.route(
     "/",
@@ -586,6 +614,8 @@ export function createApp() {
     notificationPreferencesApi,
     projectApi,
     publicProjectApi,
+    sharedProjectApi,
+    shareLinkApi,
     searchApi,
     slackIntegrationApi,
     taskApi,
@@ -737,6 +767,8 @@ export type AppType =
   | typeof workspaceApi
   | typeof workspaceWebhookApi
   | typeof publicProjectApi
+  | typeof sharedProjectApi
+  | typeof shareLinkApi
   | typeof invitationPublicApi
   | typeof oauthApi;
 

@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DeviceIndexRouteImport } from './routes/device/index'
+import { Route as SharedTokenRouteImport } from './routes/shared.$token'
 import { Route as PublicProjectProjectIdRouteImport } from './routes/public-project.$projectId'
 import { Route as DeviceApproveRouteImport } from './routes/device/approve'
 import { Route as AuthVerifyOtpRouteImport } from './routes/auth/verify-otp'
@@ -82,6 +83,11 @@ const DeviceIndexRoute = DeviceIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DeviceRoute,
+} as any)
+const SharedTokenRoute = SharedTokenRouteImport.update({
+  id: '/shared/$token',
+  path: '/shared/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PublicProjectProjectIdRoute = PublicProjectProjectIdRouteImport.update({
   id: '/public-project/$projectId',
@@ -338,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/device/approve': typeof DeviceApproveRoute
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
+  '/shared/$token': typeof SharedTokenRoute
   '/device/': typeof DeviceIndexRoute
   '/dashboard': typeof LayoutAuthenticatedDashboardRouteWithChildren
   '/invitations': typeof LayoutAuthenticatedInvitationsRoute
@@ -381,6 +388,7 @@ export interface FileRoutesByTo {
   '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/device/approve': typeof DeviceApproveRoute
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
+  '/shared/$token': typeof SharedTokenRoute
   '/device': typeof DeviceIndexRoute
   '/invitations': typeof LayoutAuthenticatedInvitationsRoute
   '/onboarding': typeof LayoutAuthenticatedOnboardingRoute
@@ -426,6 +434,7 @@ export interface FileRoutesById {
   '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/device/approve': typeof DeviceApproveRoute
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
+  '/shared/$token': typeof SharedTokenRoute
   '/device/': typeof DeviceIndexRoute
   '/_layout/_authenticated/dashboard': typeof LayoutAuthenticatedDashboardRouteWithChildren
   '/_layout/_authenticated/invitations': typeof LayoutAuthenticatedInvitationsRoute
@@ -472,6 +481,7 @@ export interface FileRouteTypes {
     | '/auth/verify-otp'
     | '/device/approve'
     | '/public-project/$projectId'
+    | '/shared/$token'
     | '/device/'
     | '/dashboard'
     | '/invitations'
@@ -515,6 +525,7 @@ export interface FileRouteTypes {
     | '/auth/verify-otp'
     | '/device/approve'
     | '/public-project/$projectId'
+    | '/shared/$token'
     | '/device'
     | '/invitations'
     | '/onboarding'
@@ -559,6 +570,7 @@ export interface FileRouteTypes {
     | '/auth/verify-otp'
     | '/device/approve'
     | '/public-project/$projectId'
+    | '/shared/$token'
     | '/device/'
     | '/_layout/_authenticated/dashboard'
     | '/_layout/_authenticated/invitations'
@@ -600,6 +612,7 @@ export interface RootRouteChildren {
   DeviceRoute: typeof DeviceRouteWithChildren
   TestErrorRoute: typeof TestErrorRoute
   PublicProjectProjectIdRoute: typeof PublicProjectProjectIdRoute
+  SharedTokenRoute: typeof SharedTokenRoute
   InvitationAcceptInviteIdRoute: typeof InvitationAcceptInviteIdRoute
 }
 
@@ -646,6 +659,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/device/'
       preLoaderRoute: typeof DeviceIndexRouteImport
       parentRoute: typeof DeviceRoute
+    }
+    '/shared/$token': {
+      id: '/shared/$token'
+      path: '/shared/$token'
+      fullPath: '/shared/$token'
+      preLoaderRoute: typeof SharedTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/public-project/$projectId': {
       id: '/public-project/$projectId'
@@ -1131,6 +1151,7 @@ const rootRouteChildren: RootRouteChildren = {
   DeviceRoute: DeviceRouteWithChildren,
   TestErrorRoute: TestErrorRoute,
   PublicProjectProjectIdRoute: PublicProjectProjectIdRoute,
+  SharedTokenRoute: SharedTokenRoute,
   InvitationAcceptInviteIdRoute: InvitationAcceptInviteIdRoute,
 }
 export const routeTree = rootRouteImport

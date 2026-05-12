@@ -582,7 +582,9 @@
 				"keyShort": "Ключ должен содержать не менее 2 символов",
 				"keyMax": "Ключ должен содержать не более 8 символов",
 				"iconRequired": "Иконка обязательна"
-			}
+			},
+			"importExportTasks": "Import/Export",
+			"importExportTasksDescription": "Import and export tasks."
 		},
 		"projectIntegrations": {
 			"pageTitle": "Интеграции проекта",
@@ -614,7 +616,30 @@
 			"copy": "Копировать",
 			"copiedToast": "Скопировано",
 			"toastUpdated": "Видимость обновлена",
-			"toastUpdateError": "Не удалось обновить видимость"
+			"toastUpdateError": "Не удалось обновить видимость",
+			"shareLinks": {
+				"accessCount": "{{count}} view",
+				"accessCount_other": "{{count}} views",
+				"active": "Active",
+				"copyToast": "Share link copied",
+				"create": "Create Link",
+				"createError": "Failed to create share link",
+				"createToast": "Share link created",
+				"deleteConfirm": "Delete this share link? Anyone using it will lose access.",
+				"deleteError": "Failed to delete share link",
+				"deleteToast": "Share link deleted",
+				"empty": "No share links yet.",
+				"expired": "Expired",
+				"expiresAt": "Expires",
+				"labelPlaceholder": "Link label (optional)",
+				"lastAccessed": "Last viewed {{date}}",
+				"neverAccessed": "Never viewed",
+				"noExpiry": "No expiry",
+				"revoked": "Revoked",
+				"subtitle": "Create private links to share a read-only view of this board.",
+				"title": "Share Links",
+				"updateError": "Failed to update share link"
+			}
 		},
 		"projectWorkflow": {
 			"pageTitle": "Настройки рабочего процесса",
@@ -985,7 +1010,9 @@
 			"importError": "Не удалось импортировать задачи",
 			"invalidFormat": "Некорректный формат файла импорта",
 			"noFileDropped": "Файл не был перетащен",
-			"notJsonFile": "Пожалуйста, загрузите JSON-файл"
+			"notJsonFile": "Пожалуйста, загрузите JSON-файл",
+			"importPartialError": "Failed to import {{count}} tasks",
+			"importSuccess": "Imported {{count}} tasks successfully"
 		},
 		"workflowEditor": {
 			"loading": "Загрузка...",
@@ -1012,6 +1039,33 @@
 			"merged": "Влит",
 			"draft": "Черновик",
 			"open": "Открыт"
+		},
+		"workspaceNotifications": {
+			"addWebhook": "Add Webhook",
+			"allEvents": "All events",
+			"createSuccess": "Webhook created successfully",
+			"createWebhook": "Create Webhook",
+			"deleteSuccess": "Webhook deleted successfully",
+			"disabled": "Disabled",
+			"emptyState": "No webhooks configured yet. Add one to start receiving notifications.",
+			"enabled": "Enabled",
+			"eventsLabel": "Events",
+			"nameLabel": "Name",
+			"namePlaceholder": "e.g. Slack notifications",
+			"pageTitle": "Workspace Notifications",
+			"secretLabel": "Signing Secret",
+			"secretPlaceholder": "Optional HMAC secret for signature verification",
+			"subtitle": "Configure webhook endpoints to receive real-time notifications about workspace events.",
+			"test": "Test",
+			"testFailed": "Webhook test failed",
+			"testSuccess": "Webhook test successful (status {{statusCode}})",
+			"title": "Notifications",
+			"toggleSuccess": "Webhook updated successfully",
+			"updateSuccess": "Webhook updated successfully",
+			"urlLabel": "Endpoint URL",
+			"urlPlaceholder": "https://example.com/webhook",
+			"webhooksSubtitle": "Manage webhook endpoints that receive event notifications.",
+			"webhooksTitle": "Webhooks"
 		}
 	},
 	"navigation": {
@@ -1042,7 +1096,8 @@
 			"projects": "Проекты",
 			"members": "Участники",
 			"invitations": "Приглашения",
-			"more": "Ещё"
+			"more": "Ещё",
+			"backToBoard": "Back to board"
 		},
 		"projectList": {
 			"viewProject": "Открыть проект",
@@ -1259,7 +1314,9 @@
 					"yaml": "YAML"
 				}
 			}
-		}
+		},
+		"created": "created this task",
+		"moved": "moved task from \"{{from}}\" to \"{{to}}\""
 	},
 	"tasks": {
 		"status": {
@@ -1286,7 +1343,9 @@
 		},
 		"common": {
 			"selectTask": "Выбрать задачу",
-			"loadingTask": "Загрузка задачи..."
+			"loadingTask": "Загрузка задачи...",
+			"taskNotFound": "Task not found",
+			"taskNotFoundDescription": "The task you are looking for does not exist or has been deleted."
 		},
 		"detail": {
 			"subtaskOf": "Подзадача",
@@ -1513,7 +1572,8 @@
 				"dueThisWeek": "Срок на этой неделе",
 				"dueNextWeek": "Срок на следующей неделе",
 				"noDueDate": "Без срока"
-			}
+			},
+			"moveAllSuccess": "Moved {{count}} tasks to To Do"
 		},
 		"sort": {
 			"label": "Сортировка",
@@ -1551,7 +1611,8 @@
 			"operators": {
 				"isAnyOf": "любой из",
 				"includeAnyOf": "включает любой из"
-			}
+			},
+			"selectedCount": "{{count}} selected"
 		},
 		"gantt": {
 			"pageTitle": "{{name}} — Гант",
@@ -1580,7 +1641,8 @@
 			"success_one": "{{count}} задача архивирована",
 			"success_few": "{{count}} задачи архивированы",
 			"success_many": "{{count}} задач архивировано",
-			"success_other": "{{count}} задач архивировано"
+			"success_other": "{{count}} задач архивировано",
+			"success": "Archived {{count}} tasks"
 		},
 		"listView": {
 			"addTask": "Добавить задачу",
@@ -1686,7 +1748,16 @@
 			"actions": "Действия",
 			"searchActions": "Поиск действий...",
 			"noActionsFound": "Действия не найдены.",
-			"changeStatus": "Изменить статус"
+			"changeStatus": "Изменить статус",
+			"addLabelSuccess": "Label added to {{count}} tasks",
+			"archiveSuccess": "{{count}} tasks archived",
+			"assignSuccess": "{{count}} tasks assigned",
+			"deleteConfirm": "Delete {{count}} tasks? This action cannot be undone.",
+			"deleteSuccess": "{{count}} tasks deleted",
+			"moveToBacklogSuccess": "{{count}} tasks moved to backlog",
+			"moveToBoardSuccess": "{{count}} tasks moved to board",
+			"selectedCount": "{{count}} selected",
+			"updateSuccess": "{{count}} tasks updated"
 		}
 	},
 	"invitations": {
@@ -1844,5 +1915,14 @@
 		"branding": {
 			"poweredBy": "Работает на"
 		}
+	},
+	"sharedProject": {
+		"badge": "Shared",
+		"error": {
+			"description": "This share link doesn't exist, has been revoked, or has expired.",
+			"title": "Link Not Found"
+		},
+		"pageTitle": "Shared View",
+		"readOnly": "Read-only"
 	}
 }

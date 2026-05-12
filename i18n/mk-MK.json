@@ -616,7 +616,30 @@
 			"copy": "Копирај",
 			"copiedToast": "Копирано",
 			"toastUpdated": "Видливоста е ажурирана",
-			"toastUpdateError": "Неуспешно ажурирање на видливоста"
+			"toastUpdateError": "Неуспешно ажурирање на видливоста",
+			"shareLinks": {
+				"accessCount": "{{count}} view",
+				"accessCount_other": "{{count}} views",
+				"active": "Active",
+				"copyToast": "Share link copied",
+				"create": "Create Link",
+				"createError": "Failed to create share link",
+				"createToast": "Share link created",
+				"deleteConfirm": "Delete this share link? Anyone using it will lose access.",
+				"deleteError": "Failed to delete share link",
+				"deleteToast": "Share link deleted",
+				"empty": "No share links yet.",
+				"expired": "Expired",
+				"expiresAt": "Expires",
+				"labelPlaceholder": "Link label (optional)",
+				"lastAccessed": "Last viewed {{date}}",
+				"neverAccessed": "Never viewed",
+				"noExpiry": "No expiry",
+				"revoked": "Revoked",
+				"subtitle": "Create private links to share a read-only view of this board.",
+				"title": "Share Links",
+				"updateError": "Failed to update share link"
+			}
 		},
 		"projectWorkflow": {
 			"pageTitle": "Поставки на работен тек",
@@ -997,7 +1020,9 @@
 				"pr_merged": "PR спoен",
 				"issue_opened": "Issue отворен",
 				"issue_closed": "Issue затворен"
-			}
+			},
+			"giteaHeading": "Gitea",
+			"giteaHint": "When a Gitea webhook event occurs, move the linked task to a column."
 		},
 		"externalLinks": {
 			"resources": "Ресурси",
@@ -1006,6 +1031,33 @@
 			"merged": "Споен",
 			"draft": "Нацрт",
 			"open": "Отворен"
+		},
+		"workspaceNotifications": {
+			"addWebhook": "Add Webhook",
+			"allEvents": "All events",
+			"createSuccess": "Webhook created successfully",
+			"createWebhook": "Create Webhook",
+			"deleteSuccess": "Webhook deleted successfully",
+			"disabled": "Disabled",
+			"emptyState": "No webhooks configured yet. Add one to start receiving notifications.",
+			"enabled": "Enabled",
+			"eventsLabel": "Events",
+			"nameLabel": "Name",
+			"namePlaceholder": "e.g. Slack notifications",
+			"pageTitle": "Workspace Notifications",
+			"secretLabel": "Signing Secret",
+			"secretPlaceholder": "Optional HMAC secret for signature verification",
+			"subtitle": "Configure webhook endpoints to receive real-time notifications about workspace events.",
+			"test": "Test",
+			"testFailed": "Webhook test failed",
+			"testSuccess": "Webhook test successful (status {{statusCode}})",
+			"title": "Notifications",
+			"toggleSuccess": "Webhook updated successfully",
+			"updateSuccess": "Webhook updated successfully",
+			"urlLabel": "Endpoint URL",
+			"urlPlaceholder": "https://example.com/webhook",
+			"webhooksSubtitle": "Manage webhook endpoints that receive event notifications.",
+			"webhooksTitle": "Webhooks"
 		}
 	},
 	"navigation": {
@@ -1801,5 +1853,14 @@
 		"branding": {
 			"poweredBy": "Овозможено од"
 		}
+	},
+	"sharedProject": {
+		"badge": "Shared",
+		"error": {
+			"description": "This share link doesn't exist, has been revoked, or has expired.",
+			"title": "Link Not Found"
+		},
+		"pageTitle": "Shared View",
+		"readOnly": "Read-only"
 	}
 }
