@@ -1,5 +1,9 @@
+import {
+  ArrowLeft,
+  Refresh as Loader2,
+  Magnifier as Search,
+} from "@solar-icons/react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Loader2, Search } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import WorkspaceLayout from "@/components/common/workspace-layout";

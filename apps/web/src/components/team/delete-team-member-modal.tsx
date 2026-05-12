@@ -1,5 +1,8 @@
+import {
+  TrashBinMinimalistic as Trash2,
+  CloseCircle as X,
+} from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Trash2, X } from "lucide-react";
 import useDeleteWorkspaceUser from "@/hooks/mutations/workspace-user/use-delete-workspace-user";
 import { Route } from "@/routes/_layout/_authenticated/dashboard/workspace/$workspaceId/members";
 import { Button } from "../ui/button";

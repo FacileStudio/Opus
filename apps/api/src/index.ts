@@ -71,6 +71,7 @@ import {
 import { validateWorkspaceAccess } from "./utils/validate-workspace-access";
 import workflowRule from "./workflow-rule";
 import workspace from "./workspace";
+import workspaceWebhook from "./workspace-webhook";
 import {
   addConnection,
   initializeWebSocketAdapter,
@@ -500,6 +501,7 @@ export function createApp() {
   const workflowRuleApi = api.route("/workflow-rule", workflowRule);
   const invitationApi = api.route("/invitation", invitation);
   const workspaceApi = api.route("/workspace", workspace);
+  const workspaceWebhookApi = api.route("/workspace-webhook", workspaceWebhook);
 
   app.route(
     "/",
@@ -591,6 +593,7 @@ export function createApp() {
     timeEntryApi,
     workflowRuleApi,
     workspaceApi,
+    workspaceWebhookApi,
     oauthApi,
   };
 }
@@ -695,6 +698,7 @@ const {
   timeEntryApi,
   workflowRuleApi,
   workspaceApi,
+  workspaceWebhookApi,
   oauthApi,
 } = createdApp;
 
@@ -729,6 +733,7 @@ export type AppType =
   | typeof workflowRuleApi
   | typeof invitationApi
   | typeof workspaceApi
+  | typeof workspaceWebhookApi
   | typeof publicProjectApi
   | typeof invitationPublicApi
   | typeof oauthApi;

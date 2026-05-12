@@ -1,31 +1,31 @@
 import {
   Archive,
-  CheckCircle2,
-  Circle,
-  CircleDashed,
-  CircleDot,
-  Search,
-} from "lucide-react";
+  CheckCircle as CheckCircle2,
+  Record as Circle,
+  Stopwatch as CircleDashed,
+  RecordCircle as CircleDot,
+  Magnifier as Search,
+} from "@solar-icons/react";
 
 export const getColumnIcon = (columnId: string, isFinal?: boolean) => {
   switch (columnId) {
     case "to-do":
-      return <Circle className="w-4 h-4 text-muted-foreground" />;
+      return <Circle size={16} className="text-muted-foreground" />;
     case "in-progress":
-      return <CircleDot className="w-4 h-4 text-muted-foreground" />;
+      return <CircleDot size={16} className="text-muted-foreground" />;
     case "in-review":
-      return <Search className="w-4 h-4 text-muted-foreground" />;
+      return <Search size={16} className="text-muted-foreground" />;
     case "done":
-      return <CheckCircle2 className="w-4 h-4 text-muted-foreground" />;
+      return <CheckCircle2 size={16} className="text-muted-foreground" />;
     case "archived":
-      return <Archive className="w-4 h-4 text-muted-foreground" />;
+      return <Archive size={16} className="text-muted-foreground" />;
     case "planned":
-      return <CircleDashed className="w-4 h-4 text-muted-foreground" />;
+      return <CircleDashed size={16} className="text-muted-foreground" />;
     default:
       return isFinal ? (
-        <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
+        <CheckCircle2 size={16} className="text-muted-foreground" />
       ) : (
-        <Circle className="w-4 h-4 text-muted-foreground" />
+        <Circle size={16} className="text-muted-foreground" />
       );
   }
 };

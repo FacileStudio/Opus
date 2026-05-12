@@ -1,5 +1,5 @@
+import { ArrowUp, Paperclip } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowUp, Paperclip } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CommentEditor from "@/components/activity/comment-editor";
@@ -79,7 +79,7 @@ export default function CommentInput({ taskId }: CommentInputProps) {
             className="text-muted-foreground"
             aria-label={t("activity:comment.attachFile")}
           >
-            <Paperclip className="size-3.5" />
+            <Paperclip size={14} />
           </Button>
           <TooltipProvider>
             <Tooltip>
@@ -96,7 +96,7 @@ export default function CommentInput({ taskId }: CommentInputProps) {
                       "bg-primary text-primary-foreground",
                   )}
                 >
-                  <ArrowUp className="size-3.5" />
+                  <ArrowUp size={14} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

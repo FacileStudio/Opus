@@ -1,5 +1,5 @@
+import { Magnifier as Search } from "@solar-icons/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Search } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BoardToolbar from "@/components/board/board-toolbar";

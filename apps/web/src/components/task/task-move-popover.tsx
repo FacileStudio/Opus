@@ -1,5 +1,5 @@
+import { TransferHorizontal as ArrowRightLeft } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRightLeft } from "lucide-react";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -136,7 +136,7 @@ export default function TaskMovePopover({
           title={t("tasks:move.title")}
           aria-label={t("tasks:move.title")}
         >
-          <ArrowRightLeft className="size-4" />
+          <ArrowRightLeft size={16} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-3" align="end" sideOffset={4}>

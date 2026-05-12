@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react";
+import { Bell } from "@solar-icons/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -177,7 +177,7 @@ const NotificationDropdown = forwardRef<NotificationDropdownRef>(
                     size="sm"
                     className="relative h-9 w-9 p-0"
                   >
-                    <Bell className="h-4 w-4" />
+                    <Bell size={16} />
                     {unreadNotifications.length > 0 && (
                       <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-destructive" />
                     )}
@@ -228,7 +228,7 @@ const NotificationDropdown = forwardRef<NotificationDropdownRef>(
             <div className="relative max-h-96 overflow-y-auto">
               {!hasNotifications ? (
                 <div className="p-6 text-center text-sm text-muted-foreground">
-                  <Bell className="mx-auto h-12 w-12 opacity-50 mb-2" />
+                  <Bell size={48} className="mx-auto opacity-50 mb-2" />
                   <p>{t("notifications:emptyTitle")}</p>
                   <p className="text-xs mt-1">
                     {t("notifications:emptySubtitle")}

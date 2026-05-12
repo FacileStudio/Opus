@@ -1,6 +1,10 @@
+import {
+  AltArrowDown as ChevronDown,
+  AltArrowRight as ChevronRight,
+  AddCircle as Plus,
+} from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronRight, Plus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -279,9 +283,9 @@ export default function TaskSubtasks({
                 className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {isOpen ? (
-                  <ChevronDown className="size-4" />
+                  <ChevronDown size={16} />
                 ) : (
-                  <ChevronRight className="size-4" />
+                  <ChevronRight size={16} />
                 )}
                 <span>{t("tasks:subtasks.title")}</span>
               </button>
@@ -304,7 +308,7 @@ export default function TaskSubtasks({
             className="text-muted-foreground"
             onClick={() => setIsAdding(true)}
           >
-            <Plus className="size-3.5" />
+            <Plus size={14} />
           </Button>
         </div>
 

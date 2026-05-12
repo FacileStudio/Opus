@@ -1,5 +1,5 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeClosed } from "@solar-icons/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -124,7 +124,11 @@ export function SignInForm({ onSuccess, defaultEmail }: SignInFormProps) {
                       }
                       aria-pressed={showPassword}
                     >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showPassword ? (
+                        <EyeClosed size={16} />
+                      ) : (
+                        <Eye size={16} />
+                      )}
                     </button>
                   </div>
                 </FormControl>

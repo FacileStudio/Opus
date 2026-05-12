@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
-import { ChevronDownIcon } from "lucide-react";
+import { AltArrowDown } from "@solar-icons/react";
 
 import { cn } from "@/lib/cn";
 
@@ -35,9 +35,10 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <ChevronDownIcon
-          className="pointer-events-none size-4 shrink-0 translate-y-0.5 opacity-80 transition-transform duration-200 ease-in-out"
+        <AltArrowDown
+          className="pointer-events-none shrink-0 translate-y-0.5 opacity-80 transition-transform duration-200 ease-in-out"
           data-slot="accordion-indicator"
+          size={16}
         />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>

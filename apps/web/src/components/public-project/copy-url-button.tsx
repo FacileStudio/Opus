@@ -1,4 +1,4 @@
-import { Check, Copy } from "lucide-react";
+import { CheckRead, Copy } from "@solar-icons/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -29,12 +29,12 @@ export function CopyUrlButton() {
     >
       {copied ? (
         <>
-          <Check className="h-3 w-3" />
+          <CheckRead size={12} />
           <span className="text-xs">{t("publicProject:copyUrl.copied")}</span>
         </>
       ) : (
         <>
-          <Copy className="h-3 w-3" />
+          <Copy size={12} />
           <span className="text-xs">{t("publicProject:copyUrl.share")}</span>
         </>
       )}

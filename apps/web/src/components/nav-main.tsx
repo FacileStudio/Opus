@@ -1,5 +1,5 @@
+import { AltArrowRight } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
   Collapsible,
@@ -61,7 +61,10 @@ export function NavMain() {
           }
         >
           <span>{t("navigation:sidebar.overview")}</span>
-          <ChevronRight className="h-3.5 w-3.5 text-sidebar-foreground/60 transition-transform duration-200" />
+          <AltArrowRight
+            size={14}
+            className="text-sidebar-foreground/60 transition-transform duration-200"
+          />
         </CollapsibleTrigger>
         <CollapsiblePanel>
           <SidebarGroupContent>

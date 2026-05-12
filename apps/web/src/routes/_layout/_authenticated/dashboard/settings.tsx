@@ -1,10 +1,10 @@
+import { AltArrowLeft as ChevronLeft } from "@solar-icons/react";
 import {
   createFileRoute,
   Outlet,
   useLocation,
   useNavigate,
 } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";

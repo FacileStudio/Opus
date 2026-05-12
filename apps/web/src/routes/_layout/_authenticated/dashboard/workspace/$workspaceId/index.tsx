@@ -1,5 +1,5 @@
+import { Widget as LayoutGrid, AddCircle as Plus } from "@solar-icons/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { LayoutGrid, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import WorkspaceLayout from "@/components/common/workspace-layout";

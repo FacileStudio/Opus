@@ -1,4 +1,4 @@
-import { Check, Copy } from "lucide-react";
+import { CheckCircle as Check, Copy } from "@solar-icons/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "@/lib/toast";
@@ -61,12 +61,12 @@ export function ApiKeyCreatedModal({
               >
                 {copied ? (
                   <>
-                    <Check className="h-3 w-3 text-success-foreground" />
+                    <Check size={12} className="text-success-foreground" />
                     {t("settings:apiKey.createdModal.copied")}
                   </>
                 ) : (
                   <>
-                    <Copy className="h-3 w-3" />
+                    <Copy size={12} />
                     {t("settings:apiKey.createdModal.copy")}
                   </>
                 )}

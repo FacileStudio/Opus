@@ -1,18 +1,18 @@
 import {
+  DangerCircle as AlertCircle,
+  CheckCircle,
+  ClockCircle as Clock,
+  Refresh as Loader2,
+  Login as LogIn,
+  UsersGroupTwoRounded as Users,
+  CloseCircle as XCircle,
+} from "@solar-icons/react";
+import {
   createFileRoute,
   Link,
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
-import {
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  Loader2,
-  LogIn,
-  Users,
-  XCircle,
-} from "lucide-react";
 import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";

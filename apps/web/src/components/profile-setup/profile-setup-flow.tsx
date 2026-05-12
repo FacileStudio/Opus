@@ -1,8 +1,8 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { CheckCircle, User } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, User } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -104,7 +104,7 @@ export function ProfileSetupFlow() {
       <div className="bg-card/50 backdrop-blur-xl rounded-xl border border-border/50 p-6 shadow-xl shadow-background/20">
         <div className="text-center mb-6">
           <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <User className="h-6 w-6 text-primary" />
+            <User size={24} className="text-primary" />
           </div>
           <h1 className="text-xl font-semibold text-foreground mb-2">
             {t("auth:profileSetup.completeTitle")}
@@ -162,7 +162,7 @@ export function ProfileSetupFlow() {
       <div className="bg-card/50 backdrop-blur-xl rounded-xl border border-border/50 p-6 shadow-xl shadow-background/20">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 bg-success/12 rounded-full flex items-center justify-center mx-auto">
-            <CheckCircle2 className="h-6 w-6 text-success-foreground" />
+            <CheckCircle size={24} className="text-success-foreground" />
           </div>
 
           <div className="space-y-2">

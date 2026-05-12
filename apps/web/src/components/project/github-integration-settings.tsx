@@ -1,16 +1,16 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import {
-  AlertTriangle,
+  BranchingPathsDown,
   CheckCircle,
-  ExternalLink,
-  GitBranch,
-  Github,
+  CloseCircle,
+  Code,
+  DangerTriangle,
   Import,
   Link,
-  RefreshCw,
-  Unlink,
-  XCircle,
-} from "lucide-react";
+  LinkBroken,
+  Refresh,
+  SquareArrowRightUp,
+} from "@solar-icons/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -90,7 +90,7 @@ export function GitHubIntegrationSettings({
   const [showRepositoryBrowser, setShowRepositoryBrowser] =
     React.useState(false);
 
-  const form = useForm<GithubIntegrationFormValues>({
+  const form = useForm<CodeIntegrationFormValues>({
     resolver: standardSchemaResolver(githubIntegrationSchema),
     defaultValues: {
       repositoryOwner: integration?.repositoryOwner || "",
@@ -284,13 +284,13 @@ export function GitHubIntegrationSettings({
             {isConnected ? (
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="gap-1">
-                  <CheckCircle className="w-3 h-3" />
+                  <CheckCircle size={12} />
                   {t("settings:githubIntegration.badgeConnected")}
                 </Badge>
               </div>
             ) : (
               <Badge variant="outline" className="gap-1">
-                <XCircle className="w-3 h-3" />
+                <CloseCircle size={12} />
                 {t("settings:githubIntegration.badgeNotConnected")}
               </Badge>
             )}
@@ -310,7 +310,7 @@ export function GitHubIntegrationSettings({
                 </p>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <Github className="w-4 h-4" />
+                <Code size={16} />
                 <span className="font-medium">
                   {integration.repositoryOwner}/{integration.repositoryName}
                 </span>
@@ -320,7 +320,7 @@ export function GitHubIntegrationSettings({
                   rel="noopener noreferrer"
                   className="text-primary hover:text-primary/80 transition-colors"
                 >
-                  <ExternalLink className="w-3 h-3" />
+                  <SquareArrowRightUp size={12} />
                 </a>
               </div>
             </div>
@@ -382,21 +382,30 @@ export function GitHubIntegrationSettings({
                 {verificationResult.isInstalled &&
                 verificationResult.hasRequiredPermissions ? (
                   <>
-                    <CheckCircle className="h-4 w-4 text-success-foreground" />
+                    <CheckCircle
+                      size={16}
+                      className="text-success-foreground"
+                    />
                     <span className="font-medium text-success-foreground">
                       {t("settings:githubIntegration.statusProperlyConfigured")}
                     </span>
                   </>
                 ) : verificationResult.isInstalled ? (
                   <>
-                    <AlertTriangle className="h-4 w-4 text-warning-foreground" />
+                    <DangerTriangle
+                      size={16}
+                      className="text-warning-foreground"
+                    />
                     <span className="font-medium text-warning-foreground">
                       {t("settings:githubIntegration.statusMissingPermissions")}
                     </span>
                   </>
                 ) : (
                   <>
-                    <XCircle className="h-4 w-4 text-destructive-foreground" />
+                    <CloseCircle
+                      size={16}
+                      className="text-destructive-foreground"
+                    />
                     <span className="font-medium text-destructive-foreground">
                       {t("settings:githubIntegration.statusNotInstalled")}
                     </span>
@@ -491,7 +500,7 @@ export function GitHubIntegrationSettings({
                   onClick={() => setShowRepositoryBrowser(true)}
                   className="gap-2"
                 >
-                  <GitBranch className="size-3" />
+                  <BranchingPathsDown size={12} />
                   {t("settings:githubIntegration.browse")}
                 </Button>
 
@@ -503,8 +512,9 @@ export function GitHubIntegrationSettings({
                   disabled={isVerifying || !form.formState.isValid}
                   className="gap-2"
                 >
-                  <RefreshCw
-                    className={cn("size-3", isVerifying && "animate-spin")}
+                  <Refresh
+                    size={12}
+                    className={cn(isVerifying && "animate-spin")}
                   />
                   {t("settings:githubIntegration.verify")}
                 </Button>
@@ -523,7 +533,7 @@ export function GitHubIntegrationSettings({
                   }
                   className="gap-2"
                 >
-                  <Link className="size-3" />
+                  <Link size={12} />
                   {isConnected
                     ? t("settings:githubIntegration.update")
                     : t("settings:githubIntegration.connect")}
@@ -538,7 +548,7 @@ export function GitHubIntegrationSettings({
                     disabled={isCreating || isDeleting}
                     className="gap-2"
                   >
-                    <Unlink className="size-3" />
+                    <LinkBroken size={12} />
                     {t("settings:githubIntegration.disconnect")}
                   </Button>
                 )}
@@ -566,12 +576,21 @@ export function GitHubIntegrationSettings({
               >
                 {verificationResult.isInstalled &&
                 verificationResult.hasRequiredPermissions ? (
-                  <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-success-foreground" />
+                  <CheckCircle
+                    size={16}
+                    className="mt-0.5 flex-shrink-0 text-success-foreground"
+                  />
                 ) : verificationResult.isInstalled ||
                   verificationResult.repositoryExists ? (
-                  <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-warning-foreground" />
+                  <DangerTriangle
+                    size={16}
+                    className="mt-0.5 flex-shrink-0 text-warning-foreground"
+                  />
                 ) : (
-                  <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive-foreground" />
+                  <CloseCircle
+                    size={16}
+                    className="mt-0.5 flex-shrink-0 text-destructive-foreground"
+                  />
                 )}
                 <div className="flex-1">
                   <p className="font-medium">{verificationResult.message}</p>
@@ -601,7 +620,7 @@ export function GitHubIntegrationSettings({
                               }
                               className="gap-2"
                             >
-                              <ExternalLink className="w-3 h-3" />
+                              <SquareArrowRightUp size={12} />
                               {t(
                                 "settings:githubIntegration.updatePermissions",
                               )}
@@ -626,7 +645,7 @@ export function GitHubIntegrationSettings({
                             }
                             className="gap-2"
                           >
-                            <ExternalLink className="w-3 h-3" />
+                            <SquareArrowRightUp size={12} />
                             {t("settings:githubIntegration.installGithubApp")}
                           </Button>
                         )}
@@ -659,9 +678,9 @@ export function GitHubIntegrationSettings({
                 variant="outline"
               >
                 {isImporting ? (
-                  <RefreshCw className="size-3 animate-spin" />
+                  <Refresh size={12} className="animate-spin" />
                 ) : (
-                  <Import className="size-3" />
+                  <Import size={12} />
                 )}
                 {isImporting
                   ? t("settings:githubIntegration.importing")

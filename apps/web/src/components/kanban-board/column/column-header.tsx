@@ -1,5 +1,5 @@
+import { AddCircle, Archive } from "@solar-icons/react";
 import { produce } from "immer";
-import { Archive, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import CreateTaskModal from "@/components/shared/modals/create-task-modal";
@@ -68,7 +68,7 @@ export function ColumnHeader({ column }: ColumnHeaderProps) {
             className="flex items-center rounded-md px-2 py-1 text-left text-muted-foreground transition-all hover:bg-accent/50"
             title={t("tasks:listView.archiveAllTooltip")}
           >
-            <Archive className="w-4 h-4 text-muted-foreground" />
+            <Archive size={16} className="text-muted-foreground" />
           </button>
         )}
         <button
@@ -77,7 +77,7 @@ export function ColumnHeader({ column }: ColumnHeaderProps) {
           className="flex items-center rounded-md px-2 py-1 text-left text-muted-foreground transition-all hover:bg-accent/50"
           title={t("tasks:kanban.addTask")}
         >
-          <Plus className="w-4 h-4 text-muted-foreground" />
+          <AddCircle size={16} className="text-muted-foreground" />
         </button>
       </div>
 

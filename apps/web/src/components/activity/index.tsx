@@ -1,4 +1,9 @@
-import { Calendar, CircleAlert, History, UserRound } from "lucide-react";
+import {
+  Calendar,
+  DangerCircle,
+  History,
+  UserRounded,
+} from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import useGetWorkspaceUsers from "@/hooks/queries/workspace-users/use-get-workspace-users";
@@ -48,19 +53,18 @@ type WorkspaceUser = {
 };
 
 function getActivityTypeIcon(type: string) {
-  const iconClass = "h-4 w-4";
   switch (type) {
     case "status_changed":
-      return <History className={iconClass} />;
+      return <History size={16} />;
     case "priority_changed":
-      return <CircleAlert className={iconClass} />;
+      return <DangerCircle size={16} />;
     case "due_date_changed":
-      return <Calendar className={iconClass} />;
+      return <Calendar size={16} />;
     case "assignee_changed":
     case "unassigned":
-      return <UserRound className={iconClass} />;
+      return <UserRounded size={16} />;
     default:
-      return <History className={iconClass} />;
+      return <History size={16} />;
   }
 }
 

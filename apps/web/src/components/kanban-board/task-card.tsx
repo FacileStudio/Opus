@@ -1,14 +1,14 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import {
+  BranchingPathsDown,
+  BranchingPathsUp,
+  Calendar,
+  CalendarDate,
+  CalendarMark,
+} from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import {
-  Calendar,
-  CalendarClock,
-  CalendarX,
-  GitMerge,
-  GitPullRequest,
-} from "lucide-react";
 import { type CSSProperties, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -85,7 +85,7 @@ function TaskCard({ task }: TaskCardProps) {
 
     if (isMerged) {
       return {
-        icon: <GitMerge className="h-3 w-3 text-info-foreground" />,
+        icon: <BranchingPathsUp size={12} className="text-info-foreground" />,
         status: t("tasks:pr.merged"),
         statusClass: "text-info-foreground",
       };
@@ -93,14 +93,18 @@ function TaskCard({ task }: TaskCardProps) {
 
     if (isDraft) {
       return {
-        icon: <GitPullRequest className="h-3 w-3 text-muted-foreground" />,
+        icon: (
+          <BranchingPathsDown size={12} className="text-muted-foreground" />
+        ),
         status: t("tasks:pr.draft"),
         statusClass: "text-muted-foreground",
       };
     }
 
     return {
-      icon: <GitPullRequest className="h-3 w-3 text-success-foreground" />,
+      icon: (
+        <BranchingPathsDown size={12} className="text-success-foreground" />
+      ),
       status: t("tasks:pr.open"),
       statusClass: "text-success-foreground",
     };
@@ -260,14 +264,14 @@ function TaskCard({ task }: TaskCardProps) {
                   className={`flex items-center gap-1 text-[10px] px-2 py-1 rounded ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
                 >
                   {getDueDateStatus(task.dueDate) === "overdue" && (
-                    <CalendarX className="w-3 h-3" />
+                    <CalendarMark size={12} />
                   )}
                   {getDueDateStatus(task.dueDate) === "due-soon" && (
-                    <CalendarClock className="w-3 h-3" />
+                    <CalendarDate size={12} />
                   )}
                   {(getDueDateStatus(task.dueDate) === "far-future" ||
                     getDueDateStatus(task.dueDate) === "no-due-date") && (
-                    <Calendar className="w-3 h-3" />
+                    <Calendar size={12} />
                   )}
                   <span>{format(new Date(task.dueDate), "MMM d")}</span>
                 </div>
@@ -331,7 +335,7 @@ function TaskCard({ task }: TaskCardProps) {
                           onClick={(e) => e.stopPropagation()}
                           className="inline-flex items-center gap-1.5 rounded border border-border/70 bg-muted/55 px-2 py-1 text-[10px] font-medium text-muted-foreground"
                         >
-                          <GitPullRequest className={`h-3 w-3 ${iconColor}`} />
+                          <BranchingPathsDown size={12} className={iconColor} />
                           <span>
                             {t("tasks:pr.count", {
                               count: pullRequests.length,

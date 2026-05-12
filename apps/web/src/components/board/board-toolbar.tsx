@@ -1,4 +1,4 @@
-import { Filter, PanelsTopLeft, Rows3, X } from "lucide-react";
+import { CloseCircle, Filter, List, Widget3 } from "@solar-icons/react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import SortControl from "@/components/common/sort-control";
@@ -100,7 +100,7 @@ function ActiveFilterChip({
         onClick={onClear}
         type="button"
       >
-        <X className="h-3.5 w-3.5" />
+        <CloseCircle size={14} />
       </button>
     </div>
   );
@@ -264,7 +264,7 @@ export default function BoardToolbar({
                   />
                 }
               >
-                <Filter className="h-3 w-3" />
+                <Filter size={12} />
                 {t("common:actions.filter")}
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="start">
@@ -652,7 +652,7 @@ export default function BoardToolbar({
               }`}
               onClick={() => setViewMode("board")}
             >
-              <PanelsTopLeft className="h-3 w-3" />
+              <Widget3 size={12} />
               {t("tasks:view.board")}
             </button>
             <button
@@ -664,7 +664,7 @@ export default function BoardToolbar({
               }`}
               onClick={() => setViewMode("list")}
             >
-              <Rows3 className="h-3 w-3" />
+              <List size={12} />
               {t("tasks:view.list")}
             </button>
           </div>

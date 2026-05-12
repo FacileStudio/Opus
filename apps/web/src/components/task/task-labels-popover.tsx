@@ -1,5 +1,10 @@
+import {
+  CheckCircle as Check,
+  AddCircle as Plus,
+  Magnifier as Search,
+  CloseCircle as X,
+} from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Plus, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
@@ -202,7 +207,7 @@ export default function TaskLabelsPopover({
   const renderSelectStep = () => (
     <div className="w-auto">
       <div className="flex items-center gap-2 p-2 border-b border-border">
-        <Search className="w-3 h-3 text-muted-foreground" />
+        <Search size={12} className="text-muted-foreground" />
         <Input
           ref={searchInputRef}
           value={searchValue}
@@ -226,9 +231,7 @@ export default function TaskLabelsPopover({
             onClick={() => handleToggleLabel(label.id)}
           >
             <div className="flex-shrink-0 w-3 flex justify-center">
-              {taskLabelNames.includes(label.name) && (
-                <Check className="w-3 h-3" />
-              )}
+              {taskLabelNames.includes(label.name) && <Check size={12} />}
             </div>
             <span
               className="w-2 h-2 rounded-full flex-shrink-0"
@@ -252,7 +255,7 @@ export default function TaskLabelsPopover({
             onClick={handleCreateNewClick}
           >
             <div className="flex-shrink-0 w-3 flex justify-center">
-              <Plus className="w-3 h-3" />
+              <Plus size={12} />
             </div>
             <span
               className="w-2 h-2 rounded-full flex-shrink-0"
@@ -282,7 +285,7 @@ export default function TaskLabelsPopover({
           onClick={() => setStep("select")}
           className="w-4 h-4 flex items-center justify-center hover:bg-accent/50 rounded"
         >
-          <X className="h-3 w-3" />
+          <X size={12} />
         </button>
       </div>
 
@@ -305,7 +308,7 @@ export default function TaskLabelsPopover({
               {t(`tasks:popover.labels.colors.${color.key}`)}
             </span>
             {selectedColor === color.value && (
-              <Check className="w-3 h-3 ml-auto" />
+              <Check size={12} className="ml-auto" />
             )}
           </button>
         ))}

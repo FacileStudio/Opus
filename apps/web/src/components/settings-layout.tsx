@@ -1,5 +1,5 @@
+import { DangerTriangle as AlertTriangle, ArrowLeft } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
-import { AlertTriangle, ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/common/layout";
@@ -104,7 +104,7 @@ export function SettingsLayout({
                 onClick={handleBack}
                 className="gap-1.5 text-xs"
               >
-                <ArrowLeft className="w-3 h-3" />
+                <ArrowLeft size={12} />
                 {resolvedBackLabel}
               </Button>
             )}
@@ -175,7 +175,7 @@ export function DangerZoneSection({
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-md border border-destructive/20 bg-destructive/10">
-          <AlertTriangle className="h-4 w-4 text-destructive" />
+          <AlertTriangle size={16} className="text-destructive" />
         </div>
         <div className="space-y-1">
           <h2 className="text-lg font-semibold tracking-tight text-destructive">

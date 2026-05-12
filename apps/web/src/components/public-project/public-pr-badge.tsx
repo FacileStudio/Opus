@@ -1,4 +1,4 @@
-import { GitMerge, GitPullRequest } from "lucide-react";
+import { BranchingPathsDown, BranchingPathsUp } from "@solar-icons/react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -27,7 +27,7 @@ export function PublicPRBadge({ externalLinks }: PublicPRBadgeProps) {
 
     if (isMerged) {
       return {
-        icon: <GitMerge className="h-3 w-3 text-info-foreground" />,
+        icon: <BranchingPathsUp size={12} className="text-info-foreground" />,
         status: t("tasks:pr.merged"),
         statusClass: "text-info-foreground",
       };
@@ -35,14 +35,18 @@ export function PublicPRBadge({ externalLinks }: PublicPRBadgeProps) {
 
     if (isDraft) {
       return {
-        icon: <GitPullRequest className="h-3 w-3 text-muted-foreground" />,
+        icon: (
+          <BranchingPathsDown size={12} className="text-muted-foreground" />
+        ),
         status: t("tasks:pr.draft"),
         statusClass: "text-muted-foreground",
       };
     }
 
     return {
-      icon: <GitPullRequest className="h-3 w-3 text-success-foreground" />,
+      icon: (
+        <BranchingPathsDown size={12} className="text-success-foreground" />
+      ),
       status: t("tasks:pr.open"),
       statusClass: "text-success-foreground",
     };
@@ -104,7 +108,7 @@ export function PublicPRBadge({ externalLinks }: PublicPRBadgeProps) {
             onClick={(e) => e.stopPropagation()}
             className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-border bg-sidebar text-[10px] font-medium text-muted-foreground hover:bg-muted/50 transition-colors"
           >
-            <GitPullRequest className={`h-3 w-3 ${iconColor}`} />
+            <BranchingPathsDown size={12} className={iconColor} />
             <span>{t("tasks:pr.count", { count: pullRequests.length })}</span>
           </button>
         </HoverCardTrigger>

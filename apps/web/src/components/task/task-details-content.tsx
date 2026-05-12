@@ -1,5 +1,5 @@
+import { ArrowRightUp as ArrowUpRight } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Activity from "@/components/activity";
 import CommentInput from "@/components/activity/comment-input";
@@ -66,7 +66,7 @@ export default function TaskDetailsContent({
               })
             }
           >
-            <ArrowUpRight className="size-3" />
+            <ArrowUpRight size={12} />
             <span>
               {t("tasks:detail.subtaskOf")}{" "}
               <span className="font-medium">{parentTask.title}</span>

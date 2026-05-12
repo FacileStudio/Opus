@@ -1,10 +1,10 @@
+import { BellBing, Settings } from "@solar-icons/react";
 import {
   createFileRoute,
   Link,
   Outlet,
   useLocation,
 } from "@tanstack/react-router";
-import { Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,11 @@ function RouteComponent() {
       title: t("settings:workspaceGeneral.title"),
       url: "/dashboard/settings/workspace/general",
       icon: Settings,
+    },
+    {
+      title: t("settings:workspaceNotifications.title"),
+      url: "/dashboard/settings/workspace/notifications",
+      icon: BellBing,
     },
   ];
   const isActivePath = (path: string) => location.pathname === path;
@@ -84,7 +89,7 @@ function RouteComponent() {
                           "bg-sidebar-accent text-sidebar-accent-foreground",
                       )}
                     >
-                      <item.icon className="h-4 w-4" />
+                      <item.icon size={16} weight="Linear" />
                       <span>{item.title}</span>
                     </Button>
                   </SidebarMenuItem>

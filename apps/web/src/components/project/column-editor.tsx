@@ -1,4 +1,10 @@
-import { CheckCircle2, Circle, GripVertical, Plus, Trash2 } from "lucide-react";
+import {
+  AddCircle,
+  CheckCircle,
+  RecordCircle,
+  Reorder,
+  TrashBinTrash,
+} from "@solar-icons/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -129,7 +135,10 @@ export default function ColumnEditor({ projectId }: ColumnEditorProps) {
             onDragEnd={handleDragEnd}
             className="flex items-center gap-2 p-2 border border-border rounded-md bg-sidebar hover:bg-sidebar-accent/50 transition-colors"
           >
-            <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab shrink-0" />
+            <Reorder
+              size={16}
+              className="text-muted-foreground cursor-grab shrink-0"
+            />
             <Input
               defaultValue={col.name}
               className="h-8 text-sm flex-1"
@@ -151,9 +160,9 @@ export default function ColumnEditor({ projectId }: ColumnEditorProps) {
                 title={t("settings:columnEditor.doneColumnTooltip")}
               >
                 {col.isFinal ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-muted-foreground" />
+                  <CheckCircle size={14} className="text-muted-foreground" />
                 ) : (
-                  <Circle className="w-3.5 h-3.5 text-muted-foreground" />
+                  <RecordCircle size={14} className="text-muted-foreground" />
                 )}
                 <span className="text-xs text-muted-foreground whitespace-nowrap">
                   {t("settings:columnEditor.doneColumn")}
@@ -180,7 +189,7 @@ export default function ColumnEditor({ projectId }: ColumnEditorProps) {
                 className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
                 onClick={() => handleDelete(col.id)}
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <TrashBinTrash size={14} />
               </Button>
             </div>
           </div>
@@ -204,7 +213,7 @@ export default function ColumnEditor({ projectId }: ColumnEditorProps) {
           disabled={!newColumnName.trim()}
           className="h-8 gap-1"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <AddCircle size={14} />
           {t("settings:columnEditor.add")}
         </Button>
       </div>

@@ -1,5 +1,5 @@
+import { Widget2 as Layout, List } from "@solar-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Layout, List } from "lucide-react";
 import { createElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";

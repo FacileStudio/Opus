@@ -1,6 +1,11 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import {
+  CheckCircle as Check,
+  Copy,
+  Link,
+  CloseCircle as X,
+} from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Copy, Link, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";

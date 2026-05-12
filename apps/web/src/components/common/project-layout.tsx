@@ -1,5 +1,5 @@
+import { CalendarDate, Widget2, Widget5 } from "@solar-icons/react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { CalendarDays, SquareKanban, SquircleDashed } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import MobileProjectNav from "@/components/common/header/mobile-project-nav";
 import ProjectCrumbSelect from "@/components/common/header/project-crumb-select";

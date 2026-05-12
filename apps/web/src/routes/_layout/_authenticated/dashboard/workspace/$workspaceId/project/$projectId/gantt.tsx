@@ -1,3 +1,8 @@
+import {
+  AltArrowLeft as ChevronLeft,
+  AltArrowRight as ChevronRight,
+  Magnifier as Search,
+} from "@solar-icons/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   addDays,
@@ -11,7 +16,6 @@ import {
   startOfWeek,
   subDays,
 } from "date-fns";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ProjectLayout from "@/components/common/project-layout";

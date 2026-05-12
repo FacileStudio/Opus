@@ -1,6 +1,6 @@
+import { Logout as LogOut, Settings } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { LogOut, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/components/providers/auth-provider/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -105,7 +105,7 @@ export function UserAvatar() {
             onClick={handleSettings}
             className="h-7 gap-2 px-2 text-sm font-normal"
           >
-            <Settings className="size-3.5" />
+            <Settings size={14} />
             {t("navigation:userMenu.settings")}
           </DropdownMenuItem>
         </div>
@@ -118,7 +118,7 @@ export function UserAvatar() {
             disabled={isPending}
             className="h-7 gap-2 px-2 text-sm font-normal"
           >
-            <LogOut className="size-3.5" />
+            <LogOut size={14} />
             {isPending
               ? t("navigation:userMenu.signingOut")
               : t("navigation:userMenu.logOut")}

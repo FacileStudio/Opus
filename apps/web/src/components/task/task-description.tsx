@@ -1,3 +1,22 @@
+import {
+  TextBold as Bold,
+  Code2 as Braces,
+  CheckCircle as Check,
+  AltArrowDown as ChevronDown,
+  Code,
+  Copy,
+  TextSquare as Heading2,
+  TextItalic as Italic,
+  Link as Link2,
+  List,
+  ListCheck as ListOrdered,
+  Checklist as ListTodo,
+  Paperclip,
+  ChatSquare as Quote,
+  TextCross as Strikethrough,
+  Widget4 as Table2,
+  TextUnderline as UnderlineIcon,
+} from "@solar-icons/react";
 import type { Editor } from "@tiptap/core";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -13,25 +32,6 @@ import { TextSelection } from "@tiptap/pm/state";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
-import {
-  Bold,
-  Braces,
-  Check,
-  ChevronDown,
-  Code,
-  Copy,
-  Heading2,
-  Italic,
-  Link2,
-  List,
-  ListOrdered,
-  ListTodo,
-  Paperclip,
-  Quote,
-  Strikethrough,
-  Table2,
-  Underline as UnderlineIcon,
-} from "lucide-react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -1370,11 +1370,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
               void copyHoveredCodeBlock();
             }}
           >
-            {isCodeCopied ? (
-              <Check className="size-3.5" />
-            ) : (
-              <Copy className="size-3.5" />
-            )}
+            {isCodeCopied ? <Check size={14} /> : <Copy size={14} />}
             <span>
               {isCodeCopied
                 ? t("tasks:detail.editor.copied")
@@ -1388,7 +1384,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             <DropdownMenuTrigger asChild>
               <button type="button" className="opus-codeblock-language-trigger">
                 <span className="truncate">{activeCodeLanguageLabel}</span>
-                <ChevronDown className="size-3.5 opacity-70" />
+                <ChevronDown size={14} className="opacity-70" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -1440,7 +1436,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
               editor.chain().focus().toggleHeading({ level: 2 }).run()
             }
           >
-            <Heading2 className="size-3.5" />
+            <Heading2 size={14} />
           </Button>
           <Button
             type="button"
@@ -1453,7 +1449,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
-            <List className="size-3.5" />
+            <List size={14} />
           </Button>
           <Button
             type="button"
@@ -1465,7 +1461,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleTaskList().run()}
           >
-            <ListTodo className="size-3.5" />
+            <ListTodo size={14} />
           </Button>
           <Button
             type="button"
@@ -1478,7 +1474,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
-            <ListOrdered className="size-3.5" />
+            <ListOrdered size={14} />
           </Button>
           <Button
             type="button"
@@ -1491,7 +1487,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
           >
-            <Quote className="size-3.5" />
+            <Quote size={14} />
           </Button>
           <Button
             type="button"
@@ -1504,7 +1500,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           >
-            <Braces className="size-3.5" />
+            <Braces size={14} />
           </Button>
           <Button
             type="button"
@@ -1515,7 +1511,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
               editor.chain().focus().insertTable({ cols: 3, rows: 3 }).run()
             }
           >
-            <Table2 className="size-3.5" />
+            <Table2 size={14} />
           </Button>
           <span className="opus-tiptap-bubble-separator" />
           <Button
@@ -1528,7 +1524,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleBold().run()}
           >
-            <Bold className="size-3.5" />
+            <Bold size={14} />
           </Button>
           <Button
             type="button"
@@ -1540,7 +1536,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleItalic().run()}
           >
-            <Italic className="size-3.5" />
+            <Italic size={14} />
           </Button>
           <Button
             type="button"
@@ -1553,7 +1549,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleUnderline().run()}
           >
-            <UnderlineIcon className="size-3.5" />
+            <UnderlineIcon size={14} />
           </Button>
           <Button
             type="button"
@@ -1565,7 +1561,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleStrike().run()}
           >
-            <Strikethrough className="size-3.5" />
+            <Strikethrough size={14} />
           </Button>
           <Button
             type="button"
@@ -1577,7 +1573,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => editor.chain().focus().toggleCode().run()}
           >
-            <Code className="size-3.5" />
+            <Code size={14} />
           </Button>
           <Button
             type="button"
@@ -1589,7 +1585,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
             )}
             onClick={() => setLink()}
           >
-            <Link2 className="size-3.5" />
+            <Link2 size={14} />
           </Button>
         </BubbleMenu>
       )}
@@ -1761,7 +1757,7 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
         onClick={() => openImagePicker(editor)}
         aria-label={t("tasks:detail.editor.attachFile")}
       >
-        <Paperclip className="size-3.5" />
+        <Paperclip size={14} />
       </button>
       {isDragActive && (
         <div className="opus-editor-drop-indicator">

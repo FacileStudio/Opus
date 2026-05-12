@@ -1,12 +1,12 @@
 import {
   Calendar,
-  CalendarClock,
-  CalendarDays,
-  CalendarX,
+  CalendarSearch as CalendarClock,
+  CalendarDate as CalendarDays,
+  CalendarMark as CalendarX,
   Copy,
-  GitBranch,
-  Plus,
-} from "lucide-react";
+  BranchingPathsUp as GitBranch,
+  AddCircle as Plus,
+} from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -154,7 +154,7 @@ export default function TaskPropertiesSidebar({
                       )}
                       onClick={() => handleCopyTaskLink()}
                     >
-                      <Copy className="size-4" />
+                      <Copy size={16} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -176,7 +176,7 @@ export default function TaskPropertiesSidebar({
                       className="text-foreground rounded-l-none"
                       onClick={() => handleCopyTaskBranch()}
                     >
-                      <GitBranch className="size-4" />
+                      <GitBranch size={16} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -259,7 +259,7 @@ export default function TaskPropertiesSidebar({
                     size="sm"
                     className="justify-start h-7 px-1.5 gap-1.5"
                   >
-                    <CalendarDays className="w-3.5 h-3.5 text-muted-foreground" />
+                    <CalendarDays size={14} className="text-muted-foreground" />
                     <span
                       className={`text-xs font-semibold ${task.startDate ? "" : "text-muted-foreground"}`}
                     >
@@ -281,18 +281,33 @@ export default function TaskPropertiesSidebar({
                       <>
                         {getDueDateStatus(task.dueDate) === "overdue" && (
                           <CalendarX
-                            className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                            size={14}
+                            className={
+                              dueDateStatusColors[
+                                getDueDateStatus(task.dueDate)
+                              ]
+                            }
                           />
                         )}
                         {getDueDateStatus(task.dueDate) === "due-soon" && (
                           <CalendarClock
-                            className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                            size={14}
+                            className={
+                              dueDateStatusColors[
+                                getDueDateStatus(task.dueDate)
+                              ]
+                            }
                           />
                         )}
                         {(getDueDateStatus(task.dueDate) === "far-future" ||
                           getDueDateStatus(task.dueDate) === "no-due-date") && (
                           <Calendar
-                            className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                            size={14}
+                            className={
+                              dueDateStatusColors[
+                                getDueDateStatus(task.dueDate)
+                              ]
+                            }
                           />
                         )}
                         <span className="text-xs font-semibold">
@@ -301,7 +316,7 @@ export default function TaskPropertiesSidebar({
                       </>
                     ) : (
                       <>
-                        <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                        <Calendar size={14} className="text-muted-foreground" />
                         <span className="text-xs font-semibold text-muted-foreground">
                           {t("tasks:properties.noDate")}
                         </span>
@@ -338,7 +353,7 @@ export default function TaskPropertiesSidebar({
                         )}
                         onClick={() => handleCopyTaskLink()}
                       >
-                        <Copy className="size-4" />
+                        <Copy size={16} />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -360,7 +375,7 @@ export default function TaskPropertiesSidebar({
                         className="text-foreground rounded-l-none"
                         onClick={() => handleCopyTaskBranch()}
                       >
-                        <GitBranch className="size-4" />
+                        <GitBranch size={16} />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -443,7 +458,10 @@ export default function TaskPropertiesSidebar({
                       size="sm"
                       className="justify-start h-7 px-1.5 gap-1.5"
                     >
-                      <CalendarDays className="w-3.5 h-3.5 text-muted-foreground" />
+                      <CalendarDays
+                        size={14}
+                        className="text-muted-foreground"
+                      />
                       <span
                         className={`text-xs font-semibold ${task.startDate ? "" : "text-muted-foreground"}`}
                       >
@@ -465,19 +483,34 @@ export default function TaskPropertiesSidebar({
                         <>
                           {getDueDateStatus(task.dueDate) === "overdue" && (
                             <CalendarX
-                              className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                              size={14}
+                              className={
+                                dueDateStatusColors[
+                                  getDueDateStatus(task.dueDate)
+                                ]
+                              }
                             />
                           )}
                           {getDueDateStatus(task.dueDate) === "due-soon" && (
                             <CalendarClock
-                              className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                              size={14}
+                              className={
+                                dueDateStatusColors[
+                                  getDueDateStatus(task.dueDate)
+                                ]
+                              }
                             />
                           )}
                           {(getDueDateStatus(task.dueDate) === "far-future" ||
                             getDueDateStatus(task.dueDate) ===
                               "no-due-date") && (
                             <Calendar
-                              className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                              size={14}
+                              className={
+                                dueDateStatusColors[
+                                  getDueDateStatus(task.dueDate)
+                                ]
+                              }
                             />
                           )}
                           <span className="text-xs font-semibold">
@@ -486,7 +519,10 @@ export default function TaskPropertiesSidebar({
                         </>
                       ) : (
                         <>
-                          <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                          <Calendar
+                            size={14}
+                            className="text-muted-foreground"
+                          />
                           <span className="text-xs font-semibold text-muted-foreground">
                             {t("tasks:properties.noDate")}
                           </span>
@@ -524,7 +560,7 @@ export default function TaskPropertiesSidebar({
                           )}
                           onClick={() => handleCopyTaskLink()}
                         >
-                          <Copy className="size-4" />
+                          <Copy size={16} />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -546,7 +582,7 @@ export default function TaskPropertiesSidebar({
                           className="text-foreground rounded-l-none"
                           onClick={() => handleCopyTaskBranch()}
                         >
-                          <GitBranch className="size-4" />
+                          <GitBranch size={16} />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -630,7 +666,10 @@ export default function TaskPropertiesSidebar({
                       size="sm"
                       className="justify-start h-7 px-1.5 gap-1.5 w-full"
                     >
-                      <CalendarDays className="w-3.5 h-3.5 text-muted-foreground" />
+                      <CalendarDays
+                        size={14}
+                        className="text-muted-foreground"
+                      />
                       <span
                         className={`text-xs font-semibold ${task.startDate ? "" : "text-muted-foreground"}`}
                       >
@@ -652,19 +691,34 @@ export default function TaskPropertiesSidebar({
                         <>
                           {getDueDateStatus(task.dueDate) === "overdue" && (
                             <CalendarX
-                              className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                              size={14}
+                              className={
+                                dueDateStatusColors[
+                                  getDueDateStatus(task.dueDate)
+                                ]
+                              }
                             />
                           )}
                           {getDueDateStatus(task.dueDate) === "due-soon" && (
                             <CalendarClock
-                              className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                              size={14}
+                              className={
+                                dueDateStatusColors[
+                                  getDueDateStatus(task.dueDate)
+                                ]
+                              }
                             />
                           )}
                           {(getDueDateStatus(task.dueDate) === "far-future" ||
                             getDueDateStatus(task.dueDate) ===
                               "no-due-date") && (
                             <Calendar
-                              className={`w-3.5 h-3.5 ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
+                              size={14}
+                              className={
+                                dueDateStatusColors[
+                                  getDueDateStatus(task.dueDate)
+                                ]
+                              }
                             />
                           )}
                           <span className="text-xs font-semibold">
@@ -673,7 +727,10 @@ export default function TaskPropertiesSidebar({
                         </>
                       ) : (
                         <>
-                          <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                          <Calendar
+                            size={14}
+                            className="text-muted-foreground"
+                          />
                           <span className="text-xs font-semibold text-muted-foreground">
                             {t("tasks:properties.noDate")}
                           </span>
@@ -730,7 +787,7 @@ export default function TaskPropertiesSidebar({
                     size="sm"
                     className="h-5 w-5 p-0 rounded-full"
                   >
-                    <Plus className="h-3 w-3" />
+                    <Plus size={12} />
                   </Button>
                 </TaskLabelsPopover>
               )}

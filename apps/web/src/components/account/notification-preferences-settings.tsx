@@ -1,4 +1,4 @@
-import { CheckCircle, Trash2 } from "lucide-react";
+import { CheckCircle, TrashBinTrash } from "@solar-icons/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -229,7 +229,7 @@ function WorkspaceRuleCard({
         <div className="flex shrink-0 items-center gap-3">
           {isConnected ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <CheckCircle className="size-4 text-green-600" />
+              <CheckCircle size={16} className="text-green-600" />
               <span>
                 {state.isActive
                   ? t("settings:notificationsPage.statusConnected")
@@ -430,7 +430,7 @@ function WorkspaceRuleCard({
             type="button"
             variant="outline"
           >
-            <Trash2 className="size-4" />
+            <TrashBinTrash size={16} />
             {t("settings:notificationsPage.removeRule")}
           </Button>
         ) : null}
@@ -531,7 +531,7 @@ export function NotificationPreferencesSettings() {
           <div className="flex items-center gap-3">
             {preferences?.emailEnabled ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="size-4 text-green-600" />
+                <CheckCircle size={16} className="text-green-600" />
                 <span>{t("settings:notificationsPage.statusConnected")}</span>
               </div>
             ) : null}
@@ -609,7 +609,7 @@ export function NotificationPreferencesSettings() {
                 type="button"
                 variant="outline"
               >
-                <Trash2 className="size-4" />
+                <TrashBinTrash size={16} />
                 {t("settings:notificationsPage.disconnect")}
               </Button>
             ) : null}
@@ -621,7 +621,7 @@ export function NotificationPreferencesSettings() {
           <div className="flex items-center gap-3">
             {preferences?.gotifyConfigured ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="size-4 text-green-600" />
+                <CheckCircle size={16} className="text-green-600" />
                 <span>
                   {preferences.gotifyEnabled
                     ? t("settings:notificationsPage.statusConnected")
@@ -739,7 +739,7 @@ export function NotificationPreferencesSettings() {
                 type="button"
                 variant="outline"
               >
-                <Trash2 className="size-4" />
+                <TrashBinTrash size={16} />
                 {t("settings:notificationsPage.disconnect")}
               </Button>
             ) : null}
@@ -751,7 +751,7 @@ export function NotificationPreferencesSettings() {
           <div className="flex items-center gap-3">
             {preferences?.ntfyConfigured ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="size-4 text-green-600" />
+                <CheckCircle size={16} className="text-green-600" />
                 <span>
                   {preferences.ntfyEnabled
                     ? t("settings:notificationsPage.statusConnected")
@@ -880,7 +880,7 @@ export function NotificationPreferencesSettings() {
                 type="button"
                 variant="outline"
               >
-                <Trash2 className="size-4" />
+                <TrashBinTrash size={16} />
                 {t("settings:notificationsPage.disconnect")}
               </Button>
             ) : null}
@@ -892,7 +892,7 @@ export function NotificationPreferencesSettings() {
           <div className="flex items-center gap-3">
             {preferences?.webhookConfigured ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="size-4 text-green-600" />
+                <CheckCircle size={16} className="text-green-600" />
                 <span>
                   {preferences.webhookEnabled
                     ? t("settings:notificationsPage.statusConnected")

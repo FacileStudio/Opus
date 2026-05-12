@@ -1,12 +1,12 @@
-import { useNavigate } from "@tanstack/react-router";
 import {
-  ChevronDown,
-  ChevronRight,
-  Link2,
-  Plus,
-  Search,
-  X,
-} from "lucide-react";
+  AltArrowDown as ChevronDown,
+  AltArrowRight as ChevronRight,
+  Link as Link2,
+  AddCircle as Plus,
+  Magnifier as Search,
+  CloseCircle as X,
+} from "@solar-icons/react";
+import { useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -247,9 +247,9 @@ export default function TaskRelations({
                 className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {isOpen ? (
-                  <ChevronDown className="size-4" />
+                  <ChevronDown size={16} />
                 ) : (
-                  <ChevronRight className="size-4" />
+                  <ChevronRight size={16} />
                 )}
                 <span>{t("tasks:relations.title")}</span>
               </button>
@@ -266,7 +266,7 @@ export default function TaskRelations({
             className="text-muted-foreground"
             onClick={() => setCommandOpen(true)}
           >
-            <Plus className="size-3.5" />
+            <Plus size={14} />
           </Button>
         </div>
 
@@ -387,7 +387,10 @@ export default function TaskRelations({
             <CommandPanel>
               <CommandEmpty>
                 <div className="text-center py-6">
-                  <Search className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                  <Search
+                    size={32}
+                    className="mx-auto mb-2 text-muted-foreground"
+                  />
                   <p className="text-sm text-muted-foreground">
                     {t("tasks:relations.noTasksFound")}
                   </p>
@@ -431,7 +434,7 @@ export default function TaskRelations({
                   className={`flex items-center gap-1.5 text-xs px-2 py-1 rounded-md transition-colors ${selectedRelationType === "related" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                   onClick={() => setSelectedRelationType("related")}
                 >
-                  <Link2 className="size-3" />
+                  <Link2 size={12} />
                   {t("tasks:relations.related")}
                 </button>
                 <button
@@ -439,7 +442,7 @@ export default function TaskRelations({
                   className={`flex items-center gap-1.5 text-xs px-2 py-1 rounded-md transition-colors ${selectedRelationType === "blocks" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                   onClick={() => setSelectedRelationType("blocks")}
                 >
-                  <X className="size-3" />
+                  <X size={12} />
                   {t("tasks:relations.blocks")}
                 </button>
               </div>

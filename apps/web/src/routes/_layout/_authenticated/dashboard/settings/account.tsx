@@ -1,10 +1,10 @@
+import { Bell, Code, Settings, User } from "@solar-icons/react";
 import {
   createFileRoute,
   Link,
   Outlet,
   useLocation,
 } from "@tanstack/react-router";
-import { Bell, Code, Settings, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import useAuth from "@/components/providers/auth-provider/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

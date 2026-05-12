@@ -1,4 +1,8 @@
-import { Check, Copy, Trash2 } from "lucide-react";
+import {
+  CheckCircle as Check,
+  Copy,
+  TrashBinMinimalistic as Trash2,
+} from "@solar-icons/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useCancelInvitation from "@/hooks/mutations/workspace-user/use-cancel-invitation";

@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { TrashBinMinimalistic as Trash2 } from "@solar-icons/react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useDeleteApiKey from "@/hooks/mutations/api-key/use-delete-api-key";
@@ -179,7 +179,7 @@ export function ApiKeyTable({ apiKeys, isLoading }: ApiKeyTableProps) {
                           t("settings:apiKey.table.deleteAriaFallback"),
                       })}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 size={16} />
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -1,13 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
 import {
-  ChevronDown,
-  FolderGit,
-  Github,
-  MessageCircle,
+  AltArrowDown as ChevronDown,
+  BranchingPathsDown as FolderGit,
+  BranchingPathsUp as Github,
+  ChatRoundDots as MessageCircle,
   Radio,
-  Send,
-  Webhook,
-} from "lucide-react";
+  Plain as Send,
+  Global as Webhook,
+} from "@solar-icons/react";
+import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";
