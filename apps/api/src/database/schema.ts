@@ -255,10 +255,7 @@ export const shareLinkTable = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [
-    index("share_link_projectId_idx").on(table.projectId),
-    index("share_link_token_idx").on(table.token),
-  ],
+  (table) => [index("share_link_projectId_idx").on(table.projectId)],
 );
 
 export const columnTable = pgTable(

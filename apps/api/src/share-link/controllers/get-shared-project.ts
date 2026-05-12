@@ -36,6 +36,5 @@ export default async function getSharedProject(token: string) {
     throw new HTTPException(404, { message: "Project not found" });
   }
 
-  const { workspaceId: _, ...safeData } = result.data;
-  return safeData;
+  return result.data;
 }

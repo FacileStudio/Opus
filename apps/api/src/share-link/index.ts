@@ -127,8 +127,17 @@ const shareLink = new Hono<{
         isActive?: boolean;
       } = {};
       if (body.label !== undefined) data.label = body.label;
-      if (body.expiresAt !== undefined)
-        data.expiresAt = body.expiresAt ? new Date(body.expiresAt) : null;
+      if (body.expiresAt !== undefined) {
+        if (body.expiresAt) {
+          const parsed = new Date(body.expiresAt);
+          if (Number.isNaN(parsed.getTime())) {
+            throw new HTTPException(400, { message: "Invalid expiry date" });
+          }
+          data.expiresAt = parsed;
+        } else {
+          data.expiresAt = null;
+        }
+      }
       if (body.isActive !== undefined) data.isActive = body.isActive;
       const link = await updateShareLinkCtrl(id, data);
       return c.json(link);

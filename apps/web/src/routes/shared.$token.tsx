@@ -60,7 +60,12 @@ function RouteComponent() {
   }
 
   if (error || !project) {
-    return <ErrorView />;
+    return (
+      <ErrorView
+        titleKey="sharedProject:error.title"
+        descriptionKey="sharedProject:error.description"
+      />
+    );
   }
 
   return (

@@ -218,6 +218,9 @@ function ShareLinksSection({ projectId }: { projectId: string }) {
       .writeText(`${origin}/shared/${token}`)
       .then(() =>
         toast.success(t("settings:projectVisibility.shareLinks.copyToast")),
+      )
+      .catch(() =>
+        toast.error(t("settings:projectVisibility.shareLinks.createError")),
       );
   };
 
@@ -269,6 +272,7 @@ function ShareLinksSection({ projectId }: { projectId: string }) {
               <Input
                 type="date"
                 value={newExpiry}
+                min={new Date().toISOString().split("T")[0]}
                 onChange={(e) => setNewExpiry(e.target.value)}
                 className="w-44"
               />
