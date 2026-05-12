@@ -151,7 +151,7 @@ export default function ProjectLayout({
                     resolvedView !== "backlog" && "text-muted-foreground",
                   )}
                 >
-                  <SquircleDashed className="size-3.5" />
+                  <Widget2 size={14} />
                   Backlog
                 </Button>
                 <Button
@@ -163,7 +163,7 @@ export default function ProjectLayout({
                     resolvedView !== "board" && "text-muted-foreground",
                   )}
                 >
-                  <SquareKanban className="size-3.5" />
+                  <Widget5 size={14} />
                   Tasks
                 </Button>
                 <Button
@@ -175,7 +175,7 @@ export default function ProjectLayout({
                     resolvedView !== "gantt" && "text-muted-foreground",
                   )}
                 >
-                  <CalendarDays className="size-3.5" />
+                  <CalendarDate size={14} />
                   Gantt
                 </Button>
               </div>

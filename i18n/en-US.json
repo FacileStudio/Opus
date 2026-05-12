@@ -1007,6 +1007,33 @@
 			"merged": "Merged",
 			"draft": "Draft",
 			"open": "Open"
+		},
+		"workspaceNotifications": {
+			"pageTitle": "Workspace Notifications",
+			"title": "Notifications",
+			"subtitle": "Configure webhook endpoints to receive real-time notifications about workspace events.",
+			"webhooksTitle": "Webhooks",
+			"webhooksSubtitle": "Manage webhook endpoints that receive event notifications.",
+			"addWebhook": "Add Webhook",
+			"nameLabel": "Name",
+			"namePlaceholder": "e.g. Slack notifications",
+			"urlLabel": "Endpoint URL",
+			"urlPlaceholder": "https://example.com/webhook",
+			"secretLabel": "Signing Secret",
+			"secretPlaceholder": "Optional HMAC secret for signature verification",
+			"eventsLabel": "Events",
+			"allEvents": "All events",
+			"enabled": "Enabled",
+			"disabled": "Disabled",
+			"test": "Test",
+			"createWebhook": "Create Webhook",
+			"createSuccess": "Webhook created successfully",
+			"updateSuccess": "Webhook updated successfully",
+			"deleteSuccess": "Webhook deleted successfully",
+			"toggleSuccess": "Webhook updated successfully",
+			"testSuccess": "Webhook test successful (status {{statusCode}})",
+			"testFailed": "Webhook test failed",
+			"emptyState": "No webhooks configured yet. Add one to start receiving notifications."
 		}
 	},
 	"navigation": {
