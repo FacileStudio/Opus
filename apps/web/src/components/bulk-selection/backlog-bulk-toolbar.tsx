@@ -1,12 +1,12 @@
 import {
+  AltArrowDown,
   Archive,
-  ArrowUpToLine,
-  CalendarIcon,
-  ChevronDown,
-  Menu,
-  Trash2,
-  X,
-} from "lucide-react";
+  Calendar as CalendarIcon,
+  CloseCircle,
+  Export,
+  HamburgerMenu,
+  TrashBinTrash,
+} from "@solar-icons/react";
 import {
   Fragment,
   type ReactNode,
@@ -263,7 +263,7 @@ function BacklogBulkToolbar() {
           {
             value: "bulk-delete",
             label: t("tasks:bulk.delete"),
-            icon: <Trash2 className="h-4 w-4 text-muted-foreground" />,
+            icon: <TrashBinTrash size={16} className="text-muted-foreground" />,
             onRun: () => {
               void handleBulkDelete();
             },
@@ -271,7 +271,7 @@ function BacklogBulkToolbar() {
           {
             value: "bulk-archive",
             label: t("tasks:bulk.archive"),
-            icon: <Archive className="h-4 w-4 text-muted-foreground" />,
+            icon: <Archive size={16} className="text-muted-foreground" />,
             onRun: () => {
               void handleBulkArchive();
             },
@@ -364,9 +364,9 @@ function BacklogBulkToolbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="ghost" className="gap-1.5">
-                <ArrowUpToLine className="size-4" />
+                <Export size={16} />
                 {t("tasks:bulk.moveToBoard")}
-                <ChevronDown className="size-3 opacity-60" />
+                <AltArrowDown size={12} className="opacity-60" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center" className="w-48">
@@ -389,7 +389,7 @@ function BacklogBulkToolbar() {
           <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
             <PopoverTrigger asChild>
               <Button size="sm" variant="ghost">
-                <CalendarIcon className="size-4" />
+                <CalendarIcon size={16} />
                 {t("tasks:bulk.setDueDate")}
               </Button>
             </PopoverTrigger>
@@ -406,7 +406,7 @@ function BacklogBulkToolbar() {
                   className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground rounded-none"
                   onClick={() => handleBulkDueDate(undefined)}
                 >
-                  <X className="h-4 w-4" />
+                  <CloseCircle size={16} />
                   {t("tasks:dueDate.clear")}
                 </Button>
               </div>
@@ -422,7 +422,7 @@ function BacklogBulkToolbar() {
             variant="ghost"
             onClick={() => setIsActionsOpen(true)}
           >
-            <Menu className="size-4" />
+            <HamburgerMenu size={16} />
             {t("tasks:bulk.actions")}
           </Button>
         </ToolbarGroup>
@@ -431,7 +431,7 @@ function BacklogBulkToolbar() {
 
         <ToolbarGroup>
           <Button size="sm" variant="ghost" onClick={clearSelection}>
-            <X className="size-4" />
+            <CloseCircle size={16} />
           </Button>
         </ToolbarGroup>
       </Toolbar>

@@ -1,11 +1,11 @@
 import {
   Archive,
-  ArrowDownToLine,
-  CalendarIcon,
-  Menu,
-  Trash2,
-  X,
-} from "lucide-react";
+  Calendar as CalendarIcon,
+  CloseCircle,
+  HamburgerMenu,
+  Import,
+  TrashBinTrash,
+} from "@solar-icons/react";
 import {
   Fragment,
   type ReactNode,
@@ -268,7 +268,7 @@ function BulkToolbar() {
           {
             value: "bulk-delete",
             label: t("tasks:bulk.delete"),
-            icon: <Trash2 className="h-4 w-4 text-muted-foreground" />,
+            icon: <TrashBinTrash size={16} className="text-muted-foreground" />,
             onRun: () => {
               void handleBulkDelete();
             },
@@ -276,7 +276,7 @@ function BulkToolbar() {
           {
             value: "bulk-archive",
             label: t("tasks:bulk.archive"),
-            icon: <Archive className="h-4 w-4 text-muted-foreground" />,
+            icon: <Archive size={16} className="text-muted-foreground" />,
             onRun: () => {
               void handleBulkArchive();
             },
@@ -381,7 +381,7 @@ function BulkToolbar() {
 
         <ToolbarGroup>
           <Button size="sm" variant="ghost" onClick={handleMoveToBacklog}>
-            <ArrowDownToLine className="size-4" />
+            <Import size={16} />
             {t("tasks:bulk.moveToBacklog")}
           </Button>
         </ToolbarGroup>
@@ -392,7 +392,7 @@ function BulkToolbar() {
           <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
             <PopoverTrigger asChild>
               <Button size="sm" variant="ghost">
-                <CalendarIcon className="size-4" />
+                <CalendarIcon size={16} />
                 {t("tasks:bulk.setDueDate")}
               </Button>
             </PopoverTrigger>
@@ -409,7 +409,7 @@ function BulkToolbar() {
                   className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground rounded-none"
                   onClick={() => handleBulkDueDate(undefined)}
                 >
-                  <X className="h-4 w-4" />
+                  <CloseCircle size={16} />
                   {t("tasks:dueDate.clear")}
                 </Button>
               </div>
@@ -425,7 +425,7 @@ function BulkToolbar() {
             variant="ghost"
             onClick={() => setIsActionsOpen(true)}
           >
-            <Menu className="size-4" />
+            <HamburgerMenu size={16} />
             {t("tasks:bulk.actions")}
           </Button>
         </ToolbarGroup>
@@ -434,7 +434,7 @@ function BulkToolbar() {
 
         <ToolbarGroup>
           <Button size="sm" variant="ghost" onClick={clearSelection}>
-            <X className="size-4" />
+            <CloseCircle size={16} />
           </Button>
         </ToolbarGroup>
       </Toolbar>

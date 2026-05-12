@@ -2,24 +2,43 @@
 
 import { Toast } from "@base-ui/react/toast";
 import {
-  CircleAlertIcon,
-  CircleCheckIcon,
-  InfoIcon,
-  LoaderCircleIcon,
-  TriangleAlertIcon,
-} from "lucide-react";
+  CheckCircle,
+  DangerCircle,
+  DangerTriangle,
+  InfoCircle,
+} from "@solar-icons/react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+
+function LoaderCircle(props: React.ComponentProps<"svg">) {
+  return (
+    <svg
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+  );
+}
 
 const toastManager = Toast.createToastManager();
 const anchoredToastManager = Toast.createToastManager();
 
 const TOAST_ICONS = {
-  error: CircleAlertIcon,
-  info: InfoIcon,
-  loading: LoaderCircleIcon,
-  success: CircleCheckIcon,
-  warning: TriangleAlertIcon,
+  error: DangerCircle,
+  info: InfoCircle,
+  loading: LoaderCircle,
+  success: CheckCircle,
+  warning: DangerTriangle,
 } as const;
 
 type ToastPosition =

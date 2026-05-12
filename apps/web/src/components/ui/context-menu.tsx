@@ -1,5 +1,5 @@
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
+import { AltArrowRight } from "@solar-icons/react";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
@@ -120,7 +120,7 @@ function ContextMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="-me-0.5 ms-auto opacity-80" />
+      <AltArrowRight className="-me-0.5 ms-auto opacity-80" />
     </ContextMenuPrimitive.SubmenuTrigger>
   );
 }
@@ -189,7 +189,20 @@ function ContextMenuCheckboxItem({
       {...props}
     >
       <ContextMenuPrimitive.CheckboxItemIndicator className="col-start-1">
-        <CheckIcon />
+        <svg
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
+        </svg>
       </ContextMenuPrimitive.CheckboxItemIndicator>
       <div className="col-start-2 inline-flex items-center gap-2">
         {children}
@@ -213,7 +226,14 @@ function ContextMenuRadioItem({
       {...props}
     >
       <ContextMenuPrimitive.RadioItemIndicator className="col-start-1">
-        <CircleIcon className="size-2 fill-current" />
+        <svg
+          className="size-2 fill-current"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="12" />
+        </svg>
       </ContextMenuPrimitive.RadioItemIndicator>
       <div className="col-start-2 inline-flex items-center gap-2">
         {children}
