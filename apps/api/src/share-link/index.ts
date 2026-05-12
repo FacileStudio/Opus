@@ -68,7 +68,7 @@ const shareLink = new Hono<{
         expiresAt: v.optional(v.string()),
       }),
     ),
-    workspaceAccess.fromBody("projectId"),
+    workspaceAccess.fromProject("projectId"),
     async (c) => {
       const userId = c.get("userId");
       const { projectId, label, expiresAt } = c.req.valid("json");
