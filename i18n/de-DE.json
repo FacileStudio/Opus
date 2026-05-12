@@ -1737,6 +1737,7 @@
 			"emailPlaceholder": "kollege@firma.com",
 			"sendInvitation": "Einladung senden",
 			"success": "Einladung erfolgreich gesendet",
+			"linkCopied": "Einladungslink in die Zwischenablage kopiert",
 			"error": "Teammitglied konnte nicht eingeladen werden"
 		},
 		"membersTable": {
@@ -1749,7 +1750,9 @@
 				"actions": "Aktionen"
 			},
 			"memberRolePending": "{{role}} (Ausstehend)",
+			"ariaCopyInviteLink": "Einladungslink kopieren",
 			"ariaCancelInvitation": "Einladung abbrechen",
+			"linkCopied": "Einladungslink in die Zwischenablage kopiert",
 			"ariaRemoveMember": "Mitglied entfernen",
 			"removeDialogTitle": "Teammitglied entfernen?",
 			"removeDialogDescription": "Bist du sicher, dass du {{name}} aus dem Workspace entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",

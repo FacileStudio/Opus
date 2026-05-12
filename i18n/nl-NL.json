@@ -1510,6 +1510,7 @@
 			"emailPlaceholder": "collega@bedrijf.nl",
 			"sendInvitation": "Uitnodiging versturen",
 			"success": "Uitnodiging succesvol verzonden",
+			"linkCopied": "Uitnodigingslink gekopieerd naar klembord",
 			"error": "Uitnodigen teamlid mislukt"
 		},
 		"membersTable": {
@@ -1522,7 +1523,9 @@
 				"actions": "Acties"
 			},
 			"memberRolePending": "{{role}} (In afwachting)",
+			"ariaCopyInviteLink": "Uitnodigingslink kopiëren",
 			"ariaCancelInvitation": "Uitnodiging annuleren",
+			"linkCopied": "Uitnodigingslink gekopieerd naar klembord",
 			"ariaRemoveMember": "Lid verwijderen",
 			"removeDialogTitle": "Teamlid verwijderen?",
 			"removeDialogDescription": "Weet je zeker dat je {{name}} wilt verwijderen uit de werkruimte? Dit kan niet ongedaan worden gemaakt.",

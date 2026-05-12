@@ -1735,6 +1735,7 @@
 			"emailPlaceholder": "colleague@company.com",
 			"sendInvitation": "Αποστολή πρόσκλησης",
 			"success": "Η πρόσκληση στάλθηκε με επιτυχία",
+			"linkCopied": "Ο σύνδεσμος πρόσκλησης αντιγράφηκε στο πρόχειρο",
 			"error": "Αποτυχία πρόσκλησης μέλους ομάδας"
 		},
 		"membersTable": {
@@ -1747,7 +1748,9 @@
 				"actions": "Ενέργειες"
 			},
 			"memberRolePending": "{{role}} (Σε εκκρεμότητα)",
+			"ariaCopyInviteLink": "Αντιγραφή συνδέσμου πρόσκλησης",
 			"ariaCancelInvitation": "Ακύρωση πρόσκλησης",
+			"linkCopied": "Ο σύνδεσμος πρόσκλησης αντιγράφηκε στο πρόχειρο",
 			"ariaRemoveMember": "Αφαίρεση μέλους",
 			"removeDialogTitle": "Αφαίρεση μέλους ομάδας;",
 			"removeDialogDescription": "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε τον/την {{name}} από τον χώρο εργασίας; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",

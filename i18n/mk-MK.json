@@ -1735,6 +1735,7 @@
 			"emailPlaceholder": "kolega@kompanija.com",
 			"sendInvitation": "Испрати покана",
 			"success": "Поканата е успешно испратена",
+			"linkCopied": "Линкот за покана е копиран во клипборд",
 			"error": "Неуспешно поканување на член на тим"
 		},
 		"membersTable": {
@@ -1747,7 +1748,9 @@
 				"actions": "Акции"
 			},
 			"memberRolePending": "{{role}} (На чекање)",
+			"ariaCopyInviteLink": "Копирај линк за покана",
 			"ariaCancelInvitation": "Откажи покана",
+			"linkCopied": "Линкот за покана е копиран во клипборд",
 			"ariaRemoveMember": "Отстрани член",
 			"removeDialogTitle": "Отстрани член на тим?",
 			"removeDialogDescription": "Дали си сигурен дека сакаш да го отстраниш {{name}} од работниот простор? Оваа акција не може да се врати.",
