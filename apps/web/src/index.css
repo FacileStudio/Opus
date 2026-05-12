@@ -26,6 +26,30 @@ input:-webkit-autofill:active {
 }
 
 @font-face {
+  font-family: "Goga";
+  src: url("/fonts/goga/Goga-Medium.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Goga";
+  src: url("/fonts/goga/Goga-Bold.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Goga";
+  src: url("/fonts/goga/Goga-Black.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 900;
+}
+
+@font-face {
   font-family: "Paper Mono";
   src: url("./assets/fonts/PaperMono-Regular.woff2") format("woff2");
   font-display: swap;
@@ -98,7 +122,7 @@ input:-webkit-autofill:active {
     ui-sans-serif,
     system-ui,
     sans-serif;
-  --font-heading: "Cal Sans Heading", var(--font-sans);
+  --font-heading: "Goga", "Cal Sans Heading", var(--font-sans);
   --font-mono:
     "Paper Mono",
     ui-monospace,

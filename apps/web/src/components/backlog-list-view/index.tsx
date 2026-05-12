@@ -18,9 +18,15 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import {
+  AddCircle,
+  AltArrowRight,
+  Archive,
+  ClockCircle,
+  Flag,
+} from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
-import { Archive, ChevronRight, Clock, Flag, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { priorityColorsTaskCard } from "@/constants/priority-colors";
@@ -296,7 +302,7 @@ function BacklogListView({
   }: {
     sectionId: string;
     title: string;
-    icon: typeof Clock;
+    icon: React.ComponentType<{ size?: number; className?: string }>;
     tasks: Task[];
     showAddButton?: boolean;
   }) {
@@ -323,14 +329,18 @@ function BacklogListView({
             onClick={() => toggleSection(sectionId)}
             className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-foreground transition-colors"
           >
-            <ChevronRight
+            <AltArrowRight
+              size={12}
               className={cn(
-                "w-3 h-3 transition-transform",
+                "transition-transform",
                 expandedSections[sectionId] && "rotate-90",
               )}
             />
             <div className="flex items-center gap-2 h-4">
-              <IconComponent className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
+              <IconComponent
+                size={16}
+                className="flex-shrink-0 text-muted-foreground"
+              />
               <div className="flex items-center gap-1">
                 <span className="mt-1 mr-1">
                   {t(`tasks:backlog.sections.${sectionId}`, {
@@ -355,7 +365,7 @@ function BacklogListView({
                 className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors"
                 title={t("tasks:backlog.addTask")}
               >
-                <Plus className="w-3 h-3" />
+                <AddCircle size={12} />
               </button>
             )}
           </div>
@@ -412,7 +422,7 @@ function BacklogListView({
           <BacklogSection
             sectionId="planned"
             title={t("tasks:backlog.sections.planned")}
-            icon={Clock}
+            icon={ClockCircle}
             tasks={plannedTasks}
             showAddButton={true}
           />
@@ -432,8 +442,8 @@ function BacklogListView({
             <div className="flex items-center gap-2">
               <div className="flex-shrink-0">
                 <Flag
+                  size={12}
                   className={cn(
-                    "w-3 h-3",
                     priorityColorsTaskCard[
                       activeTask.priority as keyof typeof priorityColorsTaskCard
                     ],
