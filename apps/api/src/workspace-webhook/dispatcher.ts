@@ -127,7 +127,10 @@ function buildEventData(eventType: string, data: EventData): EventData {
     if (data.oldDescription) filtered.oldDescription = data.oldDescription;
     if (data.newDescription) filtered.newDescription = data.newDescription;
   }
-  if (eventType === "task.assignee_changed") {
+  if (
+    eventType === "task.assignee_changed" ||
+    eventType === "task.unassigned"
+  ) {
     if (data.oldAssignee) filtered.oldAssignee = data.oldAssignee;
     if (data.newAssignee) filtered.newAssignee = data.newAssignee;
   }
