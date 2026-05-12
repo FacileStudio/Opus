@@ -16,6 +16,7 @@ import {
   notificationTableRelations,
   projectTableRelations,
   sessionTableRelations,
+  shareLinkTableRelations,
   taskRelationTableRelations,
   taskTableRelations,
   teamMemberTableRelations,
@@ -47,6 +48,7 @@ import {
   notificationTable,
   projectTable,
   sessionTable,
+  shareLinkTable,
   taskRelationTable,
   taskTable,
   teamMemberTable,
@@ -87,6 +89,7 @@ export const schema = {
   notificationTable,
   projectTable,
   sessionTable,
+  shareLinkTable,
   taskRelationTable,
   taskTable,
   teamMemberTable,
@@ -129,6 +132,7 @@ export const schema = {
   workspaceTableRelations,
   workspaceUserTableRelations,
   workspaceWebhookTableRelations,
+  shareLinkTableRelations,
 };
 
 const db = drizzle(pool, {
