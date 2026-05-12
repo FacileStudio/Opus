@@ -5,6 +5,7 @@ config();
 
 function getSettings() {
   return {
+    ssoOnly: process.env.SSO_ONLY === "true",
     disableRegistration: process.env.DISABLE_REGISTRATION === "true",
     disablePasswordRegistration:
       process.env.DISABLE_PASSWORD_REGISTRATION === "true",

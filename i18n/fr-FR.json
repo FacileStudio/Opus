@@ -149,7 +149,8 @@
 			"oidcError": "Échec de la connexion avec OIDC",
 			"googleError": "Échec de la connexion avec Google",
 			"githubError": "Échec de la connexion avec GitHub",
-			"discordError": "Échec de la connexion avec Discord"
+			"discordError": "Échec de la connexion avec Discord",
+			"ssoOnlyMessage": "Connectez-vous avec un fournisseur SSO configuré ci-dessus."
 		},
 		"providers": {
 			"google": "Google",

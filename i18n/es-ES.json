@@ -148,7 +148,8 @@
 			"oidcError": "Error al iniciar sesión con OIDC",
 			"googleError": "Error al iniciar sesión con Google",
 			"githubError": "Error al iniciar sesión con GitHub",
-			"discordError": "Error al iniciar sesión con Discord"
+			"discordError": "Error al iniciar sesión con Discord",
+			"ssoOnlyMessage": "Inicia sesión con un proveedor SSO configurado arriba."
 		},
 		"providers": {
 			"google": "Google",

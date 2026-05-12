@@ -149,7 +149,8 @@
 			"oidcError": "Неуспешна најава со OIDC",
 			"googleError": "Неуспешна најава со Google",
 			"githubError": "Неуспешна најава со GitHub",
-			"discordError": "Неуспешна најава со Discord"
+			"discordError": "Неуспешна најава со Discord",
+			"ssoOnlyMessage": "Најавете се со конфигуриран SSO провајдер погоре."
 		},
 		"providers": {
 			"google": "Google",

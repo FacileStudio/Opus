@@ -149,7 +149,8 @@
 			"oidcError": "Anmeldung mit OIDC fehlgeschlagen",
 			"googleError": "Anmeldung mit Google fehlgeschlagen",
 			"githubError": "Anmeldung mit GitHub fehlgeschlagen",
-			"discordError": "Anmeldung mit Discord fehlgeschlagen"
+			"discordError": "Anmeldung mit Discord fehlgeschlagen",
+			"ssoOnlyMessage": "Melden Sie sich mit einem konfigurierten SSO-Anbieter oben an."
 		},
 		"providers": {
 			"google": "Google",

@@ -244,6 +244,7 @@ export const commentSchema = v.object({
 });
 
 export const configSchema = v.object({
+  ssoOnly: v.nullable(v.boolean()),
   disableRegistration: v.nullable(v.boolean()),
   disablePasswordRegistration: v.nullable(v.boolean()),
   isDemoMode: v.boolean(),

@@ -31,6 +31,7 @@ config();
 
 const githubSso = getGithubSsoOAuthCredentials();
 
+const isSsoOnly = process.env.SSO_ONLY === "true";
 const isRegistrationDisabled = process.env.DISABLE_REGISTRATION === "true";
 const isPasswordRegistrationDisabled =
   process.env.DISABLE_PASSWORD_REGISTRATION === "true";
@@ -365,6 +366,24 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
+      if (isSsoOnly) {
+        const blockedPaths = [
+          "/sign-in/email",
+          "/sign-up/email",
+          "/sign-in/magic-link",
+          "/magic-link/verify",
+          "/email-otp/send-verification-otp",
+          "/email-otp/verify-email",
+          "/sign-in/anonymous",
+        ];
+        if (blockedPaths.some((p) => ctx.path === p)) {
+          throw new APIError("FORBIDDEN", {
+            message:
+              "SSO-only mode is enabled. Please use a configured SSO provider to sign in.",
+          });
+        }
+      }
+
       const isSignUpPath =
         ctx.path === "/sign-up/email" ||
         ctx.path.startsWith("/callback/") ||

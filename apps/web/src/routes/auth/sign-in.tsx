@@ -335,48 +335,59 @@ function SignIn() {
                   </div>
                 )}
 
-                {config?.hasGuestAccess && !invitationId && (
-                  <Button
-                    variant="outline"
-                    onClick={handleGuestAccess}
-                    disabled={isGuestLoading}
-                    className="w-full"
-                  >
-                    <UserCheck className="w-4 h-4 mr-2" />
-                    {isGuestLoading
-                      ? t("auth:signIn.signingIn")
-                      : t("auth:signUp.continueAsGuest")}
-                  </Button>
-                )}
+                {config?.hasGuestAccess &&
+                  !config?.ssoOnly &&
+                  !invitationId && (
+                    <Button
+                      variant="outline"
+                      onClick={handleGuestAccess}
+                      disabled={isGuestLoading}
+                      className="w-full"
+                    >
+                      <UserCheck className="w-4 h-4 mr-2" />
+                      {isGuestLoading
+                        ? t("auth:signIn.signingIn")
+                        : t("auth:signUp.continueAsGuest")}
+                    </Button>
+                  )}
               </div>
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border" />
+              {!config?.ssoOnly && (
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-card text-muted-foreground">
+                      {t("auth:forms.or")}
+                    </span>
+                  </div>
                 </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-card text-muted-foreground">
-                    {t("auth:forms.or")}
-                  </span>
-                </div>
-              </div>
+              )}
             </>
           )}
-          {config?.hasSmtp ? (
-            <OtpSignInForm
-              invitationId={invitationId}
-              defaultEmail={defaultEmail}
-              redirect={getSafeRedirectPath()}
-              onSuccess={handleSignInSuccess}
-            />
-          ) : (
-            <SignInForm
-              defaultEmail={defaultEmail}
-              onSuccess={handleSignInSuccess}
-            />
-          )}
-          {config?.disableRegistration ||
-          config?.disablePasswordRegistration ? (
+          {!config?.ssoOnly &&
+            (config?.hasSmtp ? (
+              <OtpSignInForm
+                invitationId={invitationId}
+                defaultEmail={defaultEmail}
+                redirect={getSafeRedirectPath()}
+                onSuccess={handleSignInSuccess}
+              />
+            ) : (
+              <SignInForm
+                defaultEmail={defaultEmail}
+                onSuccess={handleSignInSuccess}
+              />
+            ))}
+          {config?.ssoOnly ? (
+            <div className="text-center pt-4">
+              <p className="text-sm text-muted-foreground">
+                {t("auth:signIn.ssoOnlyMessage")}
+              </p>
+            </div>
+          ) : config?.disableRegistration ||
+            config?.disablePasswordRegistration ? (
             <div className="text-center pt-4">
               <p className="text-sm text-muted-foreground">
                 {config?.disableRegistration

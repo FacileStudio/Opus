@@ -1,6 +1,7 @@
 import { UserCheck } from "@solar-icons/react";
 import {
   createFileRoute,
+  Navigate,
   useNavigate,
   useSearch,
 } from "@tanstack/react-router";
@@ -36,6 +37,10 @@ function SignUp() {
 
   const invitationId = search.invitationId;
   const prefillEmail = search.email;
+
+  if (config?.ssoOnly) {
+    return <Navigate to="/auth/sign-in" />;
+  }
 
   const handleGuestAccess = async () => {
     setIsGuestLoading(true);

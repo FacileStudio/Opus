@@ -569,6 +569,9 @@
 						},
 						"discordError": {
 							"type": "string"
+						},
+						"ssoOnlyMessage": {
+							"type": "string"
 						}
 					},
 					"required": [
@@ -592,7 +595,8 @@
 						"oidcError",
 						"googleError",
 						"githubError",
-						"discordError"
+						"discordError",
+						"ssoOnlyMessage"
 					]
 				},
 				"providers": {
