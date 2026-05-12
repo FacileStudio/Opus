@@ -29,6 +29,7 @@ import {
   workflowRuleTableRelations,
   workspaceTableRelations,
   workspaceUserTableRelations,
+  workspaceWebhookTableRelations,
 } from "./relations";
 import {
   accountTable,
@@ -59,6 +60,7 @@ import {
   workflowRuleTable,
   workspaceTable,
   workspaceUserTable,
+  workspaceWebhookTable,
 } from "./schema";
 
 config();
@@ -98,6 +100,7 @@ export const schema = {
   workflowRuleTable,
   workspaceTable,
   workspaceUserTable,
+  workspaceWebhookTable,
   accountTableRelations,
   assetTableRelations,
   activityTableRelations,
@@ -125,6 +128,7 @@ export const schema = {
   workflowRuleTableRelations,
   workspaceTableRelations,
   workspaceUserTableRelations,
+  workspaceWebhookTableRelations,
 };
 
 const db = drizzle(pool, {
