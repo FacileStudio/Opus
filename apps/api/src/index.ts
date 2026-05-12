@@ -722,6 +722,8 @@ const {
   notificationPreferencesApi,
   projectApi,
   publicProjectApi,
+  sharedProjectApi,
+  shareLinkApi,
   searchApi,
   slackIntegrationApi,
   taskApi,

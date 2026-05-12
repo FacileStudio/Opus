@@ -2,7 +2,13 @@ import { SquareArrowRightUp } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import { OpusBranding } from "./opus-branding";
 
-export function ErrorView() {
+export function ErrorView({
+  titleKey = "publicProject:error.title",
+  descriptionKey = "publicProject:error.description",
+}: {
+  titleKey?: string;
+  descriptionKey?: string;
+} = {}) {
   const { t } = useTranslation();
   return (
     <div className="min-h-screen bg-background flex flex-col w-full">
@@ -16,10 +22,10 @@ export function ErrorView() {
           </div>
           <div className="space-y-2">
             <h1 className="text-3xl font-semibold text-foreground">
-              {t("publicProject:error.title")}
+              {t(titleKey)}
             </h1>
             <p className="text-muted-foreground max-w-md mx-auto">
-              {t("publicProject:error.description")}
+              {t(descriptionKey)}
             </p>
           </div>
           <OpusBranding />
