@@ -10,7 +10,11 @@ type AuthToggleProps = {
 export function AuthToggle({ message, linkText, linkTo }: AuthToggleProps) {
   const { data: config } = useGetConfig();
 
-  if (config?.disableRegistration || config?.disablePasswordRegistration) {
+  if (
+    config?.ssoOnly ||
+    config?.disableRegistration ||
+    config?.disablePasswordRegistration
+  ) {
     return null;
   }
 

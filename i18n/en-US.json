@@ -149,7 +149,8 @@
 			"oidcError": "Failed to sign in with OIDC",
 			"googleError": "Failed to sign in with Google",
 			"githubError": "Failed to sign in with GitHub",
-			"discordError": "Failed to sign in with Discord"
+			"discordError": "Failed to sign in with Discord",
+			"ssoOnlyMessage": "Sign in using a configured SSO provider above."
 		},
 		"providers": {
 			"google": "Google",

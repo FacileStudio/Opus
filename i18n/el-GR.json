@@ -149,7 +149,8 @@
 			"oidcError": "Αποτυχία σύνδεσης με OIDC",
 			"googleError": "Αποτυχία σύνδεσης με Google",
 			"githubError": "Αποτυχία σύνδεσης με GitHub",
-			"discordError": "Αποτυχία σύνδεσης με Discord"
+			"discordError": "Αποτυχία σύνδεσης με Discord",
+			"ssoOnlyMessage": "Συνδεθείτε χρησιμοποιώντας έναν ρυθμισμένο πάροχο SSO παραπάνω."
 		},
 		"providers": {
 			"google": "Google",

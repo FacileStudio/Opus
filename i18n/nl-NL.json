@@ -148,7 +148,8 @@
 			"oidcError": "Inloggen met OIDC mislukt",
 			"googleError": "Inloggen met Google mislukt",
 			"githubError": "Inloggen met GitHub mislukt",
-			"discordError": "Inloggen met Discord mislukt"
+			"discordError": "Inloggen met Discord mislukt",
+			"ssoOnlyMessage": "Log in met een geconfigureerde SSO-provider hierboven."
 		},
 		"providers": {
 			"google": "Google",

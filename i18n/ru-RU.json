@@ -149,7 +149,8 @@
 			"oidcError": "Не удалось войти через OIDC",
 			"googleError": "Не удалось войти через Google",
 			"githubError": "Не удалось войти через GitHub",
-			"discordError": "Не удалось войти через Discord"
+			"discordError": "Не удалось войти через Discord",
+			"ssoOnlyMessage": "Войдите через настроенного провайдера SSO выше."
 		},
 		"providers": {
 			"google": "Google",

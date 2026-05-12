@@ -92,6 +92,7 @@ opus:
       enabled: false
       name: ""
       key: auth-secret
+    ssoOnly: false
     disableRegistration: false
     disablePasswordRegistration: false
     # Database configuration
