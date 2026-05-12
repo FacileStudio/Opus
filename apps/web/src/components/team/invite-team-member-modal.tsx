@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 import useInviteWorkspaceUser from "@/hooks/mutations/workspace-user/use-invite-workspace-user";
+import { authClient } from "@/lib/auth-client";
 import { toast } from "@/lib/toast";
 import { Route } from "@/routes/_layout/_authenticated/dashboard/workspace/$workspaceId/members";
 import { Button } from "../ui/button";
@@ -61,8 +62,23 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
         queryKey: ["workspace-users", workspaceId],
       });
 
-      if (data?.id) {
-        setInviteLink(buildInviteLink(data.id));
+      let invitationId = data?.id;
+
+      if (!invitationId) {
+        const { data: invitations } =
+          await authClient.organization.listInvitations({
+            query: { organizationId: workspaceId },
+          });
+        const match = invitations?.find(
+          (inv) =>
+            inv.email.toLowerCase() === email.toLowerCase() &&
+            inv.status === "pending",
+        );
+        invitationId = match?.id;
+      }
+
+      if (invitationId) {
+        setInviteLink(buildInviteLink(invitationId));
       } else {
         toast.success(t("team:inviteModal.success"));
         resetAndCloseModal();
