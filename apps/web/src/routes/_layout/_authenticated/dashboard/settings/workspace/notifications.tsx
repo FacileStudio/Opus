@@ -78,13 +78,16 @@ function EventCheckboxes({
   selected: string[];
   onChange: (events: string[]) => void;
 }) {
+  const { t } = useTranslation();
   const allSelected = selected.length === 0;
 
   return (
     <div className="space-y-2">
       <label className="flex items-center gap-2 text-xs">
         <Checkbox checked={allSelected} onCheckedChange={() => onChange([])} />
-        <span className="text-muted-foreground">All events</span>
+        <span className="text-muted-foreground">
+          {t("settings:workspaceNotifications.allEvents")}
+        </span>
       </label>
       <div className="grid grid-cols-2 gap-1.5">
         {AVAILABLE_EVENTS.map((event) => (
@@ -238,7 +241,7 @@ function WebhookCard({
             <Input
               value={form.url}
               onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
-              placeholder="https://example.com/webhook"
+              placeholder={t("settings:workspaceNotifications.urlPlaceholder")}
             />
           </div>
           <div className="space-y-1">
@@ -474,7 +477,9 @@ function RouteComponent() {
                     onChange={(e) =>
                       setForm((f) => ({ ...f, url: e.target.value }))
                     }
-                    placeholder="https://example.com/webhook"
+                    placeholder={t(
+                      "settings:workspaceNotifications.urlPlaceholder",
+                    )}
                   />
                 </div>
                 <div className="space-y-1">
