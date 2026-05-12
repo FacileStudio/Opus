@@ -6316,6 +6316,9 @@
 						"success": {
 							"type": "string"
 						},
+						"linkCopied": {
+							"type": "string"
+						},
 						"error": {
 							"type": "string"
 						}
@@ -6326,6 +6329,7 @@
 						"emailPlaceholder",
 						"sendInvitation",
 						"success",
+						"linkCopied",
 						"error"
 					]
 				},
@@ -6361,7 +6365,13 @@
 						"memberRolePending": {
 							"type": "string"
 						},
+						"ariaCopyInviteLink": {
+							"type": "string"
+						},
 						"ariaCancelInvitation": {
+							"type": "string"
+						},
+						"linkCopied": {
 							"type": "string"
 						},
 						"ariaRemoveMember": {
@@ -6403,7 +6413,9 @@
 						"emptyDescription",
 						"columns",
 						"memberRolePending",
+						"ariaCopyInviteLink",
 						"ariaCancelInvitation",
+						"linkCopied",
 						"ariaRemoveMember",
 						"removeDialogTitle",
 						"removeDialogDescription",

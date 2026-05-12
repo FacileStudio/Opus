@@ -1,6 +1,7 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useQueryClient } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { Check, Copy, Link, X } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
@@ -32,9 +33,11 @@ type TeamMemberFormValues = z.infer<typeof teamMemberSchema>;
 
 function InviteTeamMemberModal({ open, onClose }: Props) {
   const { t } = useTranslation();
-  const { mutateAsync } = useInviteWorkspaceUser();
+  const { mutateAsync, isPending } = useInviteWorkspaceUser();
   const queryClient = useQueryClient();
   const { workspaceId } = Route.useParams();
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const form = useForm<TeamMemberFormValues>({
     resolver: standardSchemaResolver(teamMemberSchema),
@@ -43,17 +46,22 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
     },
   });
 
+  const buildInviteLink = (invitationId: string) =>
+    `${window.location.origin}/invitation/accept/${invitationId}`;
+
   const onSubmit = async ({ email }: TeamMemberFormValues) => {
     try {
-      await mutateAsync({ email, workspaceId, role: "member" }); // TODO: role and email
+      const data = await mutateAsync({ email, workspaceId, role: "member" });
       await queryClient.refetchQueries({
         queryKey: ["workspace-users", workspaceId],
       });
 
-      toast.success(t("team:inviteModal.success"));
-
-      resetInviteTeamMember();
-      onClose();
+      if (data?.id) {
+        setInviteLink(buildInviteLink(data.id));
+      } else {
+        toast.success(t("team:inviteModal.success"));
+        resetAndCloseModal();
+      }
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : t("team:inviteModal.error"),
@@ -61,11 +69,21 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
     }
   };
 
+  const handleCopyLink = async () => {
+    if (!inviteLink) return;
+    await navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
+    toast.success(t("team:inviteModal.linkCopied"));
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const resetInviteTeamMember = async () => {
     await queryClient.invalidateQueries({
       queryKey: ["workspace-users", workspaceId],
     });
     form.reset();
+    setInviteLink(null);
+    setCopied(false);
   };
 
   const resetAndCloseModal = () => {
@@ -89,50 +107,84 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
             </DialogClose>
           </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
-              <div className="space-y-4">
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="block text-sm font-medium text-foreground mb-1">
-                          {t("team:inviteModal.emailLabel")}
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t("team:inviteModal.emailPlaceholder")}
-                            className="bg-card/50"
-                            autoFocus
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+          {inviteLink ? (
+            <div className="p-4 space-y-4">
+              <p className="text-sm text-muted-foreground">
+                {t("team:inviteModal.success")}
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-1 rounded-md border border-border bg-muted/50 px-3 py-2 text-sm text-muted-foreground overflow-hidden">
+                  <Link className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{inviteLink}</span>
                 </div>
-              </div>
-
-              <div className="flex justify-end gap-2 mt-6">
-                <DialogClose
-                  render={
-                    <Button
-                      className="bg-muted text-foreground hover:bg-accent"
-                      type="button"
-                    />
-                  }
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={handleCopyLink}
+                  className="shrink-0"
                 >
-                  {t("common:actions.cancel")}
-                </DialogClose>
-                <Button type="submit">
-                  {t("team:inviteModal.sendInvitation")}
+                  {copied ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
-            </form>
-          </Form>
+              <div className="flex justify-end">
+                <Button type="button" onClick={resetAndCloseModal}>
+                  {t("common:actions.close")}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="block text-sm font-medium text-foreground mb-1">
+                            {t("team:inviteModal.emailLabel")}
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder={t(
+                                "team:inviteModal.emailPlaceholder",
+                              )}
+                              className="bg-card/50"
+                              autoFocus
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 mt-6">
+                  <DialogClose
+                    render={
+                      <Button
+                        className="bg-muted text-foreground hover:bg-accent"
+                        type="button"
+                      />
+                    }
+                  >
+                    {t("common:actions.cancel")}
+                  </DialogClose>
+                  <Button type="submit" disabled={isPending}>
+                    {t("team:inviteModal.sendInvitation")}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          )}
         </div>
       </DialogPopup>
     </Dialog>

@@ -1737,6 +1737,7 @@
 			"emailPlaceholder": "colleague@company.com",
 			"sendInvitation": "Send Invitation",
 			"success": "Invitation sent successfully",
+			"linkCopied": "Invite link copied to clipboard",
 			"error": "Failed to invite team member"
 		},
 		"membersTable": {
@@ -1749,7 +1750,9 @@
 				"actions": "Actions"
 			},
 			"memberRolePending": "{{role}} (Pending)",
+			"ariaCopyInviteLink": "Copy invite link",
 			"ariaCancelInvitation": "Cancel invitation",
+			"linkCopied": "Invite link copied to clipboard",
 			"ariaRemoveMember": "Remove member",
 			"removeDialogTitle": "Remove Team Member?",
 			"removeDialogDescription": "Are you sure you want to remove {{name}} from the workspace? This action cannot be undone.",

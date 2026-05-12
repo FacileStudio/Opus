@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Check, Copy, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useCancelInvitation from "@/hooks/mutations/workspace-user/use-cancel-invitation";
@@ -43,6 +43,7 @@ function MembersTable({
   );
   const [invitationToCancel, setInvitationToCancel] =
     useState<WorkspaceUserInvitation | null>(null);
+  const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null);
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
   const { workspaceId } = Route.useParams();
@@ -89,6 +90,14 @@ function MembersTable({
     } finally {
       setInvitationToCancel(null);
     }
+  };
+
+  const handleCopyInviteLink = async (invitationId: string) => {
+    const link = `${window.location.origin}/invitation/accept/${invitationId}`;
+    await navigator.clipboard.writeText(link);
+    setCopiedInviteId(invitationId);
+    toast.success(t("team:membersTable.linkCopied"));
+    setTimeout(() => setCopiedInviteId(null), 2000);
   };
 
   if (users?.length === 0) {
@@ -165,18 +174,36 @@ function MembersTable({
                   </span>
                 </TableCell>
                 <TableCell className="py-3 pr-6 text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setInvitationToCancel(invitation);
-                    }}
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                    aria-label={t("team:membersTable.ariaCancelInvitation")}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center justify-end gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyInviteLink(invitation.id);
+                      }}
+                      className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent"
+                      aria-label={t("team:membersTable.ariaCopyInviteLink")}
+                    >
+                      {copiedInviteId === invitation.id ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setInvitationToCancel(invitation);
+                      }}
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      aria-label={t("team:membersTable.ariaCancelInvitation")}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

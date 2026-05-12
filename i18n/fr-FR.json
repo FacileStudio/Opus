@@ -1735,6 +1735,7 @@
 			"emailPlaceholder": "collegue@entreprise.fr",
 			"sendInvitation": "Envoyer l'invitation",
 			"success": "Invitation envoyée avec succès",
+			"linkCopied": "Lien d'invitation copié dans le presse-papiers",
 			"error": "Échec de l'envoi de l'invitation"
 		},
 		"membersTable": {
@@ -1747,7 +1748,9 @@
 				"actions": "Actions"
 			},
 			"memberRolePending": "{{role}} (En attente)",
+			"ariaCopyInviteLink": "Copier le lien d'invitation",
 			"ariaCancelInvitation": "Annuler l'invitation",
+			"linkCopied": "Lien d'invitation copié dans le presse-papiers",
 			"ariaRemoveMember": "Supprimer le membre",
 			"removeDialogTitle": "Supprimer un membre de l'équipe ?",
 			"removeDialogDescription": "Êtes-vous sûr de vouloir supprimer {{name}} de l'équipe ? Cette action ne peut pas être annulée.",

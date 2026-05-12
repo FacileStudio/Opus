@@ -1736,6 +1736,7 @@
 			"emailPlaceholder": "colleague@company.com",
 			"sendInvitation": "Надіслати запрошення",
 			"success": "Запрошення успішно надіслано",
+			"linkCopied": "Посилання-запрошення скопійовано до буфера обміну",
 			"error": "Не вдалося запросити учасника команди"
 		},
 		"membersTable": {
@@ -1748,7 +1749,9 @@
 				"actions": "Дії"
 			},
 			"memberRolePending": "{{role}} (Очікує)",
+			"ariaCopyInviteLink": "Скопіювати посилання-запрошення",
 			"ariaCancelInvitation": "Скасувати запрошення",
+			"linkCopied": "Посилання-запрошення скопійовано до буфера обміну",
 			"ariaRemoveMember": "Видалити учасника",
 			"removeDialogTitle": "Видалити учасника команди?",
 			"removeDialogDescription": "Ви впевнені, що хочете видалити {{name}} з робочого простору? Цю дію неможливо скасувати.",
