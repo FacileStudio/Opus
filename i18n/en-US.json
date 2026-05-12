@@ -616,7 +616,30 @@
 			"copy": "Copy",
 			"copiedToast": "Copied",
 			"toastUpdated": "Visibility updated",
-			"toastUpdateError": "Failed to update visibility"
+			"toastUpdateError": "Failed to update visibility",
+			"shareLinks": {
+				"title": "Share Links",
+				"subtitle": "Create private links to share a read-only view of this board.",
+				"create": "Create Link",
+				"labelPlaceholder": "Link label (optional)",
+				"expiresAt": "Expires",
+				"noExpiry": "No expiry",
+				"active": "Active",
+				"revoked": "Revoked",
+				"expired": "Expired",
+				"empty": "No share links yet.",
+				"copyToast": "Share link copied",
+				"deleteConfirm": "Delete this share link? Anyone using it will lose access.",
+				"deleteToast": "Share link deleted",
+				"createToast": "Share link created",
+				"createError": "Failed to create share link",
+				"deleteError": "Failed to delete share link",
+				"updateError": "Failed to update share link",
+				"accessCount": "{{count}} view",
+				"accessCount_other": "{{count}} views",
+				"lastAccessed": "Last viewed {{date}}",
+				"neverAccessed": "Never viewed"
+			}
 		},
 		"projectWorkflow": {
 			"pageTitle": "Workflow Settings",
@@ -1829,6 +1852,15 @@
 		},
 		"branding": {
 			"poweredBy": "Powered by"
+		}
+	},
+	"sharedProject": {
+		"pageTitle": "Shared View",
+		"badge": "Shared",
+		"readOnly": "Read-only",
+		"error": {
+			"title": "Link Not Found",
+			"description": "This share link doesn't exist, has been revoked, or has expired."
 		}
 	}
 }

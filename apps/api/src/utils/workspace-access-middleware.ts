@@ -18,7 +18,8 @@ type WorkspaceIdSource =
         | "activity"
         | "comment"
         | "column"
-        | "workflowRule";
+        | "workflowRule"
+        | "shareLink";
       idKey: string;
     };
 
@@ -99,7 +100,8 @@ async function lookupWorkspaceId(
     | "activity"
     | "comment"
     | "column"
-    | "workflowRule",
+    | "workflowRule"
+    | "shareLink",
   id: string,
 ): Promise<string | null> {
   try {
@@ -224,6 +226,21 @@ async function lookupWorkspaceId(
         return workflowRule?.workspaceId || null;
       }
 
+      case "shareLink": {
+        const [shareLink] = await db
+          .select({
+            workspaceId: schema.projectTable.workspaceId,
+          })
+          .from(schema.shareLinkTable)
+          .innerJoin(
+            schema.projectTable,
+            eq(schema.shareLinkTable.projectId, schema.projectTable.id),
+          )
+          .where(eq(schema.shareLinkTable.id, id))
+          .limit(1);
+        return shareLink?.workspaceId || null;
+      }
+
       default:
         return null;
     }
@@ -311,6 +328,14 @@ export const workspaceAccess = {
     workspaceAccessMiddleware({
       sources: [
         { type: "lookup", resource: "workflowRule", idKey },
+        { type: "query", key: "workspaceId" },
+      ],
+    }),
+
+  fromShareLink: (idKey = "id") =>
+    workspaceAccessMiddleware({
+      sources: [
+        { type: "lookup", resource: "shareLink", idKey },
         { type: "query", key: "workspaceId" },
       ],
     }),

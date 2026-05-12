@@ -14,6 +14,7 @@ import {
   notificationTable,
   projectTable,
   sessionTable,
+  shareLinkTable,
   taskRelationTable,
   taskReminderSentTable,
   taskTable,
@@ -109,6 +110,7 @@ export const projectTableRelations = relations(
     githubIntegration: many(githubIntegrationTable),
     integrations: many(integrationTable),
     notificationWorkspaceProjects: many(userNotificationWorkspaceProjectTable),
+    shareLinks: many(shareLinkTable),
   }),
 );
 
@@ -390,6 +392,17 @@ export const commentTableRelations = relations(commentTable, ({ one }) => ({
   }),
   user: one(userTable, {
     fields: [commentTable.userId],
+    references: [userTable.id],
+  }),
+}));
+
+export const shareLinkTableRelations = relations(shareLinkTable, ({ one }) => ({
+  project: one(projectTable, {
+    fields: [shareLinkTable.projectId],
+    references: [projectTable.id],
+  }),
+  creator: one(userTable, {
+    fields: [shareLinkTable.createdBy],
     references: [userTable.id],
   }),
 }));

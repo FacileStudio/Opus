@@ -222,6 +222,45 @@ export const projectTable = pgTable(
   ],
 );
 
+export const shareLinkTable = pgTable(
+  "share_link",
+  {
+    id: text("id")
+      .$defaultFn(() => createId())
+      .primaryKey(),
+    projectId: text("project_id")
+      .notNull()
+      .references(() => projectTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    token: text("token")
+      .notNull()
+      .$defaultFn(() => createId())
+      .unique(),
+    label: text("label"),
+    expiresAt: timestamp("expires_at", { mode: "date" }),
+    isActive: boolean("is_active").default(true).notNull(),
+    lastAccessedAt: timestamp("last_accessed_at", { mode: "date" }),
+    accessCount: integer("access_count").default(0).notNull(),
+    createdBy: text("created_by")
+      .notNull()
+      .references(() => userTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date" })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("share_link_projectId_idx").on(table.projectId),
+    index("share_link_token_idx").on(table.token),
+  ],
+);
+
 export const columnTable = pgTable(
   "column",
   {
