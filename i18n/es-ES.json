@@ -1100,7 +1100,10 @@
 			"deleteConfirmDescription": "Esto eliminará permanentemente el proyecto y todos sus datos. Esta acción no se puede deshacer.",
 			"deletedToast": "Proyecto eliminado",
 			"deleteProject": "Eliminar proyecto",
-			"projectSettings": "Project settings"
+			"projectSettings": "Project settings",
+			"createShareLink": "Create Share Link",
+			"shareLinkCreated": "Share link created and copied",
+			"shareLinkError": "Failed to create share link"
 		},
 		"search": {
 			"inputPlaceholder": "Busca tareas, proyectos, comentarios...",

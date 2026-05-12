@@ -1100,7 +1100,10 @@
 			"deleteConfirmTitle": "Διαγραφή έργου;",
 			"deleteConfirmDescription": "Αυτό θα αφαιρέσει οριστικά το έργο και όλα τα δεδομένα του. Δεν μπορείτε να αναιρέσετε αυτήν την ενέργεια.",
 			"deletedToast": "Το έργο διαγράφηκε",
-			"deleteProject": "Διαγραφή έργου"
+			"deleteProject": "Διαγραφή έργου",
+			"createShareLink": "Create Share Link",
+			"shareLinkCreated": "Share link created and copied",
+			"shareLinkError": "Failed to create share link"
 		},
 		"search": {
 			"inputPlaceholder": "Αναζήτηση εργασιών, έργων, σχολίων...",

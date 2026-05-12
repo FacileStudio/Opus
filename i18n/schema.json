@@ -4404,6 +4404,15 @@
 						"linkCopied": {
 							"type": "string"
 						},
+						"createShareLink": {
+							"type": "string"
+						},
+						"shareLinkCreated": {
+							"type": "string"
+						},
+						"shareLinkError": {
+							"type": "string"
+						},
 						"addProject": {
 							"type": "string"
 						},
@@ -4425,6 +4434,9 @@
 						"shareProject",
 						"projectSettings",
 						"linkCopied",
+						"createShareLink",
+						"shareLinkCreated",
+						"shareLinkError",
 						"addProject",
 						"deleteConfirmTitle",
 						"deleteConfirmDescription",

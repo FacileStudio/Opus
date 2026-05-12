@@ -1100,7 +1100,10 @@
 			"deleteConfirmTitle": "Supprimer le projet?",
 			"deleteConfirmDescription": "Cela supprimera définitivement le projet et toutes ses données. Vous ne pouvez pas annuler cette action.",
 			"deletedToast": "Projet supprimé",
-			"deleteProject": "Supprimer le projet"
+			"deleteProject": "Supprimer le projet",
+			"createShareLink": "Create Share Link",
+			"shareLinkCreated": "Share link created and copied",
+			"shareLinkError": "Failed to create share link"
 		},
 		"search": {
 			"inputPlaceholder": "Rechercher des tâches, projets, commentaires...",

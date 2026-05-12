@@ -1100,7 +1100,10 @@
 			"deleteConfirmTitle": "Видалити проєкт?",
 			"deleteConfirmDescription": "Це назавжди видалить проєкт та всі його дані. Цю дію неможливо скасувати.",
 			"deletedToast": "Проєкт видалено",
-			"deleteProject": "Видалити проєкт"
+			"deleteProject": "Видалити проєкт",
+			"createShareLink": "Create Share Link",
+			"shareLinkCreated": "Share link created and copied",
+			"shareLinkError": "Failed to create share link"
 		},
 		"search": {
 			"inputPlaceholder": "Пошук завдань, проєктів, коментарів...",
