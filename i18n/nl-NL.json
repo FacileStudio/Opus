@@ -1100,7 +1100,10 @@
 			"deleteConfirmTitle": "Project verwijderen?",
 			"deleteConfirmDescription": "Dit zal het project en alle data permanent verwijderen. Dit kan niet ongedaan worden gemaakt.",
 			"deletedToast": "Project verwijderd",
-			"deleteProject": "Project verwijderen"
+			"deleteProject": "Project verwijderen",
+			"createShareLink": "Create Share Link",
+			"shareLinkCreated": "Share link created and copied",
+			"shareLinkError": "Failed to create share link"
 		},
 		"search": {
 			"inputPlaceholder": "Zoek taken, projecten, reacties...",

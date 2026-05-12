@@ -1108,7 +1108,10 @@
 			"deleteConfirmTitle": "Удалить проект?",
 			"deleteConfirmDescription": "Проект и все его данные будут безвозвратно удалены. Это действие нельзя отменить.",
 			"deletedToast": "Проект удалён",
-			"deleteProject": "Удалить проект"
+			"deleteProject": "Удалить проект",
+			"createShareLink": "Create Share Link",
+			"shareLinkCreated": "Share link created and copied",
+			"shareLinkError": "Failed to create share link"
 		},
 		"search": {
 			"inputPlaceholder": "Поиск задач, проектов, комментариев...",

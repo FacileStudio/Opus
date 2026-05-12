@@ -2,6 +2,7 @@ import {
   AltArrowRight,
   Folder,
   Forward,
+  Link as LinkIcon,
   MenuDots,
   Settings,
   TrashBinTrash,
@@ -31,6 +32,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import createShareLink from "@/fetchers/share-link/create-share-link";
 import useDeleteProject from "@/hooks/mutations/project/use-delete-project";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
@@ -162,6 +164,31 @@ export function NavProjects() {
                             <Forward className="text-muted-foreground" />
                             <span>
                               {t("navigation:projectList.shareProject")}
+                            </span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="h-7 items-start cursor-pointer text-sm"
+                            onClick={async () => {
+                              try {
+                                const link = await createShareLink({
+                                  projectId: project.id,
+                                });
+                                await navigator.clipboard.writeText(
+                                  `${window.location.origin}/shared/${link.token}`,
+                                );
+                                toast.success(
+                                  t("navigation:projectList.shareLinkCreated"),
+                                );
+                              } catch {
+                                toast.error(
+                                  t("navigation:projectList.shareLinkError"),
+                                );
+                              }
+                            }}
+                          >
+                            <LinkIcon className="text-muted-foreground" />
+                            <span>
+                              {t("navigation:projectList.createShareLink")}
                             </span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
