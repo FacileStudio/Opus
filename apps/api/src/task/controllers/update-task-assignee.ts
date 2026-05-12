@@ -40,21 +40,31 @@ async function updateTaskAssignee({
     });
   }
 
-  const newAssigneeName = userId
-    ? (
-        await db
+  const [newAssigneeName, oldAssigneeName] = await Promise.all([
+    userId
+      ? db
           .select({ name: userTable.name })
           .from(userTable)
           .where(eq(userTable.id, userId))
           .limit(1)
-      )[0]?.name
-    : undefined;
+          .then((rows) => rows[0]?.name)
+      : undefined,
+    existingTask.userId
+      ? db
+          .select({ name: userTable.name })
+          .from(userTable)
+          .where(eq(userTable.id, existingTask.userId))
+          .limit(1)
+          .then((rows) => rows[0]?.name)
+      : undefined,
+  ]);
 
   if (!userId) {
     await publishEvent("task.unassigned", {
       taskId: updatedTask.id,
       projectId: updatedTask.projectId,
       userId: currentUserId,
+      oldAssignee: oldAssigneeName,
       title: updatedTask.title,
       type: "unassigned",
     });
@@ -66,7 +76,7 @@ async function updateTaskAssignee({
     taskId: updatedTask.id,
     projectId: updatedTask.projectId,
     userId: currentUserId,
-    oldAssignee: existingTask.userId,
+    oldAssignee: oldAssigneeName,
     newAssignee: newAssigneeName,
     newAssigneeId: userId,
     title: updatedTask.title,
