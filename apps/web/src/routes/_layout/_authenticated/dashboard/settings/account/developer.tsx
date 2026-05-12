@@ -1,5 +1,5 @@
+import { KeySquare as KeyRound, AddCircle as Plus } from "@solar-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { KeyRound, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";

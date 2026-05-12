@@ -1,11 +1,11 @@
 import {
-  ChevronDown,
-  ChevronRight,
-  FolderGit,
-  Github,
-  GitMerge,
-  GitPullRequest,
-} from "lucide-react";
+  AltArrowDown,
+  AltArrowRight,
+  BranchingPathsDown,
+  BranchingPathsUp,
+  Code,
+  FolderPathConnect,
+} from "@solar-icons/react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -78,7 +78,7 @@ export function ExternalLinksAccordion({
     if (isMerged) {
       return (
         <span className="flex items-center gap-1 font-medium text-info-foreground text-xs">
-          <GitMerge className="size-3" />
+          <BranchingPathsUp size={12} />
           {t("settings:externalLinks.merged")}
         </span>
       );
@@ -87,7 +87,7 @@ export function ExternalLinksAccordion({
     if (isDraft) {
       return (
         <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-          <GitPullRequest className="size-3" />
+          <BranchingPathsDown size={12} />
           {t("settings:externalLinks.draft")}
         </span>
       );
@@ -95,7 +95,7 @@ export function ExternalLinksAccordion({
 
     return (
       <span className="flex items-center gap-1 font-medium text-success-foreground text-xs">
-        <GitPullRequest className="size-3" />
+        <BranchingPathsDown size={12} />
         {t("settings:externalLinks.open")}
       </span>
     );
@@ -110,9 +110,9 @@ export function ExternalLinksAccordion({
           className="w-full justify-start gap-1 px-0 h-8 hover:bg-transparent"
         >
           {isOpen ? (
-            <ChevronDown className="size-4 text-muted-foreground" />
+            <AltArrowDown size={16} className="text-muted-foreground" />
           ) : (
-            <ChevronRight className="size-4 text-muted-foreground" />
+            <AltArrowRight size={16} className="text-muted-foreground" />
           )}
           <span className="text-sm text-muted-foreground">
             {t("settings:externalLinks.resources")}
@@ -130,9 +130,15 @@ export function ExternalLinksAccordion({
               className="group flex items-center gap-3 py-2 px-3 rounded-md hover:bg-accent/50 transition-colors"
             >
               {isGiteaResourceLink(link) ? (
-                <FolderGit className="size-4 flex-shrink-0 text-muted-foreground" />
+                <FolderPathConnect
+                  size={16}
+                  className="flex-shrink-0 text-muted-foreground"
+                />
               ) : (
-                <Github className="size-4 flex-shrink-0 text-muted-foreground" />
+                <Code
+                  size={16}
+                  className="flex-shrink-0 text-muted-foreground"
+                />
               )}
               <span className="text-sm truncate flex-1 text-foreground/90 group-hover:text-foreground">
                 {link.title || link.externalId}

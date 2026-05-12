@@ -1,5 +1,5 @@
+import { ArrowDown, ArrowUp, Reply } from "@solar-icons/react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { ArrowDownIcon, ArrowUpIcon, CornerDownLeftIcon } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import SearchCommandMenu from "@/components/search-command-menu";
@@ -292,17 +292,17 @@ function CommandPalette() {
                 <div className="flex items-center gap-2">
                   <KbdGroup>
                     <Kbd>
-                      <ArrowUpIcon />
+                      <ArrowUp />
                     </Kbd>
                     <Kbd>
-                      <ArrowDownIcon />
+                      <ArrowDown />
                     </Kbd>
                   </KbdGroup>
                   <span>{t("navigation:commandPalette.footer.navigate")}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Kbd>
-                    <CornerDownLeftIcon />
+                    <Reply size={16} />
                   </Kbd>
                   <span>{t("navigation:commandPalette.footer.open")}</span>
                 </div>

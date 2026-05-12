@@ -1,4 +1,4 @@
-import { ArrowDownAZ, ArrowUpAZ } from "lucide-react";
+import { SortByAlphabet } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
@@ -76,9 +76,9 @@ export default function SortControl({ sort, onSortChange }: SortControlProps) {
           }
         >
           {sort.direction === "asc" ? (
-            <ArrowUpAZ className="h-3 w-3" />
+            <SortByAlphabet size={12} />
           ) : (
-            <ArrowDownAZ className="h-3 w-3" />
+            <SortByAlphabet size={12} />
           )}
           {isActive ? activeLabel : t("tasks:sort.label")}
         </DropdownMenuTrigger>
@@ -139,9 +139,9 @@ export default function SortControl({ sort, onSortChange }: SortControlProps) {
           }
         >
           {sort.direction === "asc" ? (
-            <ArrowUpAZ className="h-3 w-3" />
+            <SortByAlphabet size={12} />
           ) : (
-            <ArrowDownAZ className="h-3 w-3" />
+            <SortByAlphabet size={12} />
           )}
         </button>
       )}

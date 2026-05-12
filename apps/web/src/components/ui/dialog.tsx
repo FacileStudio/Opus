@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
-import { XIcon } from "lucide-react";
+import { CloseCircle } from "@solar-icons/react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -122,7 +122,7 @@ function DialogPopup({
               className="absolute end-2 top-2"
               render={<Button size="icon" variant="ghost" />}
             >
-              <XIcon />
+              <CloseCircle />
             </DialogPrimitive.Close>
           )}
         </DialogPrimitive.Popup>

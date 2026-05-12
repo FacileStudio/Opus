@@ -28,6 +28,7 @@ import {
   workflowRuleTable,
   workspaceTable,
   workspaceUserTable,
+  workspaceWebhookTable,
 } from "./schema";
 
 export const userTableRelations = relations(userTable, ({ many, one }) => ({
@@ -76,6 +77,7 @@ export const workspaceTableRelations = relations(
     assets: many(assetTable),
     invitations: many(invitationTable),
     notificationWorkspaceRules: many(userNotificationWorkspaceRuleTable),
+    webhooks: many(workspaceWebhookTable),
   }),
 );
 
@@ -367,6 +369,16 @@ export const taskReminderSentTableRelations = relations(
     task: one(taskTable, {
       fields: [taskReminderSentTable.taskId],
       references: [taskTable.id],
+    }),
+  }),
+);
+
+export const workspaceWebhookTableRelations = relations(
+  workspaceWebhookTable,
+  ({ one }) => ({
+    workspace: one(workspaceTable, {
+      fields: [workspaceWebhookTable.workspaceId],
+      references: [workspaceTable.id],
     }),
   }),
 );

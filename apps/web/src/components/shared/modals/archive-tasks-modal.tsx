@@ -1,4 +1,4 @@
-import { Archive } from "lucide-react";
+import { Archive } from "@solar-icons/react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

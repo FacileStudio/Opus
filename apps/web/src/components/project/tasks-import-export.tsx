@@ -1,6 +1,6 @@
+import { CloseCircle, Download, Refresh, Upload } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { saveAs } from "file-saver";
-import { Download, Loader2, Upload, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -143,9 +143,9 @@ export function TasksImportExport({ project }: TasksImportExportProps) {
           disabled={isExporting}
         >
           {isExporting ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Refresh size={16} className="animate-spin" />
           ) : (
-            <Download className="h-4 w-4" />
+            <Download size={16} />
           )}
           {t("settings:tasksImportExport.exportTasks")}
         </Button>
@@ -155,7 +155,7 @@ export function TasksImportExport({ project }: TasksImportExportProps) {
           size="sm"
           onClick={() => setIsImportOpen(true)}
         >
-          <Upload className="h-4 w-4" />
+          <Upload size={16} />
           {t("settings:tasksImportExport.importTasks")}
         </Button>
 
@@ -179,7 +179,7 @@ export function TasksImportExport({ project }: TasksImportExportProps) {
                 className="text-muted-foreground hover:text-foreground"
                 render={<button type="button" />}
               >
-                <X size={20} className="cursor-pointer" />
+                <CloseCircle size={20} className="cursor-pointer" />
               </DialogClose>
             </div>
 
@@ -222,7 +222,7 @@ export function TasksImportExport({ project }: TasksImportExportProps) {
                 onDragOver={handleDragOver}
               >
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <Upload className="h-8 w-8 text-muted-foreground" />
+                  <Upload size={32} className="text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
                     {t("settings:tasksImportExport.dropHint")}
                   </p>
@@ -233,7 +233,7 @@ export function TasksImportExport({ project }: TasksImportExportProps) {
                     disabled={isImporting}
                   >
                     {isImporting ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Refresh size={16} className="mr-2 animate-spin" />
                     ) : (
                       t("settings:tasksImportExport.selectFile")
                     )}

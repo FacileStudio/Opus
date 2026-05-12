@@ -1,9 +1,13 @@
 import {
+  BranchingPathsUp as Github,
+  KeySquare as KeyRound,
+  UserCheck,
+} from "@solar-icons/react";
+import {
   createFileRoute,
   useNavigate,
   useSearch,
 } from "@tanstack/react-router";
-import { Github, KeyRound, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";

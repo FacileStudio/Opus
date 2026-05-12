@@ -18,9 +18,9 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { AddCircle, AltArrowRight, Archive, Flag } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
-import { Archive, ChevronRight, Flag, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { priorityColorsTaskCard } from "@/constants/priority-colors";
@@ -303,9 +303,10 @@ function ListView({ project, disableDragDrop = false }: ListViewProps) {
             onClick={() => toggleSection(column.id)}
             className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-foreground transition-colors"
           >
-            <ChevronRight
+            <AltArrowRight
+              size={12}
               className={cn(
-                "w-3 h-3 transition-transform",
+                "transition-transform",
                 expandedSections[column.id] && "rotate-90",
               )}
             />
@@ -330,7 +331,7 @@ function ListView({ project, disableDragDrop = false }: ListViewProps) {
               className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors"
               title={t("tasks:listView.addTask")}
             >
-              <Plus className="w-3 h-3" />
+              <AddCircle size={12} />
             </button>
 
             {column.isFinal && column.tasks.length > 0 && (
@@ -340,7 +341,7 @@ function ListView({ project, disableDragDrop = false }: ListViewProps) {
                 className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors"
                 title={t("tasks:listView.archiveAllTooltip")}
               >
-                <Archive className="w-3 h-3" />
+                <Archive size={12} />
               </button>
             )}
           </div>
@@ -405,8 +406,8 @@ function ListView({ project, disableDragDrop = false }: ListViewProps) {
             <div className="flex items-center gap-2">
               <div className="flex-shrink-0">
                 <Flag
+                  size={12}
                   className={cn(
-                    "w-3 h-3",
                     priorityColorsTaskCard[
                       activeTask.priority as keyof typeof priorityColorsTaskCard
                     ],

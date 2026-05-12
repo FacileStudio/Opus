@@ -1,3 +1,16 @@
+import {
+  AltArrowDown,
+  Checklist,
+  CheckRead,
+  Copy,
+  LinkMinimalistic,
+  List,
+  ListDown,
+  Paperclip,
+  TextBold,
+  TextItalic,
+  TextUnderline,
+} from "@solar-icons/react";
 import type { Editor } from "@tiptap/core";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -13,19 +26,6 @@ import { TextSelection } from "@tiptap/pm/state";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
-import {
-  Bold,
-  Check,
-  ChevronDown,
-  Copy,
-  Italic,
-  Link2,
-  List,
-  ListOrdered,
-  ListTodo,
-  Paperclip,
-  UnderlineIcon,
-} from "lucide-react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -1452,11 +1452,7 @@ export default function CommentEditor({
               void copyHoveredCodeBlock();
             }}
           >
-            {isCodeCopied ? (
-              <Check className="size-3.5" />
-            ) : (
-              <Copy className="size-3.5" />
-            )}
+            {isCodeCopied ? <CheckRead size={14} /> : <Copy size={14} />}
             <span>
               {isCodeCopied
                 ? t("activity:comment.editor.copied")
@@ -1474,7 +1470,7 @@ export default function CommentEditor({
                   className="opus-codeblock-language-trigger"
                 >
                   <span className="truncate">{activeCodeLanguageLabel}</span>
-                  <ChevronDown className="size-3.5 opacity-70" />
+                  <AltArrowDown size={14} className="opacity-70" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -1523,7 +1519,7 @@ export default function CommentEditor({
             )}
             onClick={() => editor.chain().focus().toggleBold().run()}
           >
-            <Bold className="size-3.5" />
+            <TextBold size={14} />
           </Button>
           <Button
             type="button"
@@ -1535,7 +1531,7 @@ export default function CommentEditor({
             )}
             onClick={() => editor.chain().focus().toggleItalic().run()}
           >
-            <Italic className="size-3.5" />
+            <TextItalic size={14} />
           </Button>
           <Button
             type="button"
@@ -1548,7 +1544,7 @@ export default function CommentEditor({
             )}
             onClick={() => editor.chain().focus().toggleUnderline().run()}
           >
-            <UnderlineIcon className="size-3.5" />
+            <TextUnderline size={14} />
           </Button>
           <Button
             type="button"
@@ -1561,7 +1557,7 @@ export default function CommentEditor({
             )}
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
-            <List className="size-3.5" />
+            <List size={14} />
           </Button>
           <Button
             type="button"
@@ -1573,7 +1569,7 @@ export default function CommentEditor({
             )}
             onClick={() => editor.chain().focus().toggleTaskList().run()}
           >
-            <ListTodo className="size-3.5" />
+            <Checklist size={14} />
           </Button>
           <Button
             type="button"
@@ -1586,7 +1582,7 @@ export default function CommentEditor({
             )}
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
-            <ListOrdered className="size-3.5" />
+            <ListDown size={14} />
           </Button>
           <Button
             type="button"
@@ -1598,7 +1594,7 @@ export default function CommentEditor({
             )}
             onClick={setLink}
           >
-            <Link2 className="size-3.5" />
+            <LinkMinimalistic size={14} />
           </Button>
           <Button
             type="button"
@@ -1607,7 +1603,7 @@ export default function CommentEditor({
             className="opus-comment-editor-bubble-btn"
             onClick={() => openImagePicker(editor)}
           >
-            <Paperclip className="size-3.5" />
+            <Paperclip size={14} />
           </Button>
         </BubbleMenu>
       )}
@@ -1786,7 +1782,7 @@ export default function CommentEditor({
           onClick={() => openImagePicker(editor)}
           aria-label={t("activity:comment.attachFile")}
         >
-          <Paperclip className="size-3.5" />
+          <Paperclip size={14} />
         </button>
       )}
       {isDragActive && (

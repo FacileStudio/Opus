@@ -1,4 +1,4 @@
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "@solar-icons/react";
 import type { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -27,11 +27,7 @@ export function ThemeToggle() {
           : t("publicProject:theme.switchToDark")
       }
     >
-      {theme === "dark" ? (
-        <Sun className="w-3.5 h-3.5" />
-      ) : (
-        <Moon className="w-3.5 h-3.5" />
-      )}
+      {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
     </Button>
   );
 }

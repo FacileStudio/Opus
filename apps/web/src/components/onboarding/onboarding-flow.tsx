@@ -1,8 +1,8 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { CheckCircle } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Trans, useTranslation } from "react-i18next";
@@ -193,7 +193,7 @@ export function OnboardingFlow() {
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 bg-success/12 rounded-full flex items-center justify-center mx-auto">
-            <CheckCircle2 className="h-6 w-6 text-success-foreground" />
+            <CheckCircle size={24} className="text-success-foreground" />
           </div>
 
           <div className="space-y-2">

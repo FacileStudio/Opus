@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import {
-  Check,
-  Clock,
-  ExternalLink,
-  GitBranch,
-  Globe,
+  BranchingPathsDown,
+  CheckRead,
+  ClockCircle,
+  Global,
   Lock,
-  Search,
+  Magnifier,
   Settings,
-} from "lucide-react";
+  SquareArrowRightUp,
+} from "@solar-icons/react";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -118,7 +118,7 @@ export function RepositoryBrowserModal({
       <DialogContent className="!max-w-2xl max-h-[85vh] p-0 gap-0 flex flex-col">
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2">
-            <GitBranch className="w-5 h-5" />
+            <BranchingPathsDown size={20} />
             {t("settings:repositoryBrowser.title")}
           </DialogTitle>
           <DialogDescription className="mt-1.5">
@@ -130,7 +130,10 @@ export function RepositoryBrowserModal({
 
         <div className="px-6 py-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Magnifier
+              size={16}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+            />
             <Input
               placeholder={t("settings:repositoryBrowser.searchPlaceholder")}
               value={searchTerm}
@@ -177,7 +180,10 @@ export function RepositoryBrowserModal({
             <>
               {data.repositories.length === 0 && (
                 <div className="text-center py-12 px-6">
-                  <GitBranch className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <BranchingPathsDown
+                    size={48}
+                    className="text-muted-foreground mx-auto mb-4"
+                  />
                   <h3 className="text-lg font-medium mb-2">
                     {t("settings:repositoryBrowser.emptyTitle")}
                   </h3>
@@ -193,7 +199,7 @@ export function RepositoryBrowserModal({
                         )
                       }
                     >
-                      <ExternalLink className="w-4 h-4 mr-2" />
+                      <SquareArrowRightUp size={16} className="mr-2" />
                       {t("settings:repositoryBrowser.installGithubApp")}
                     </Button>
                   )}
@@ -231,9 +237,15 @@ export function RepositoryBrowserModal({
                               </span>
                               <div className="flex items-center gap-1 flex-shrink-0">
                                 {repository.private ? (
-                                  <Lock className="w-3 h-3 text-muted-foreground" />
+                                  <Lock
+                                    size={12}
+                                    className="text-muted-foreground"
+                                  />
                                 ) : (
-                                  <Globe className="w-3 h-3 text-muted-foreground" />
+                                  <Global
+                                    size={12}
+                                    className="text-muted-foreground"
+                                  />
                                 )}
                                 <Badge variant="secondary" className="text-xs">
                                   {repository.owner.type}
@@ -249,7 +261,7 @@ export function RepositoryBrowserModal({
 
                             <div className="flex items-center gap-4 text-xs text-muted-foreground">
                               <div className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                                <ClockCircle size={12} />
                                 {t("settings:repositoryBrowser.updatedPrefix")}{" "}
                                 {formatTimeAgo(repository.updated_at)}
                               </div>
@@ -259,7 +271,7 @@ export function RepositoryBrowserModal({
 
                         <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                           {selectedRepository === repository.full_name && (
-                            <Check className="w-4 h-4 text-primary" />
+                            <CheckRead size={16} className="text-primary" />
                           )}
                           <Button
                             variant="ghost"
@@ -270,7 +282,7 @@ export function RepositoryBrowserModal({
                             }}
                             className="opacity-0 group-hover:opacity-100 transition-opacity"
                           >
-                            <ExternalLink className="w-4 h-4" />
+                            <SquareArrowRightUp size={16} />
                           </Button>
                         </div>
                       </div>
@@ -282,7 +294,10 @@ export function RepositoryBrowserModal({
               {filteredRepositories.length === 0 &&
                 data.repositories.length > 0 && (
                   <div className="text-center py-12 px-6">
-                    <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <Magnifier
+                      size={48}
+                      className="text-muted-foreground mx-auto mb-4"
+                    />
                     <h3 className="text-lg font-medium mb-2">
                       {t("settings:repositoryBrowser.noSearchMatchTitle")}
                     </h3>
@@ -316,7 +331,7 @@ export function RepositoryBrowserModal({
                     )
                   }
                 >
-                  <Settings className="w-4 h-4 mr-2" />
+                  <Settings size={16} className="mr-2" />
                   {t("settings:repositoryBrowser.manageInstallations")}
                 </Button>
               </div>

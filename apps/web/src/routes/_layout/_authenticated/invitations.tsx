@@ -1,6 +1,11 @@
+import {
+  CheckCircle,
+  Refresh as Loader2,
+  Letter as Mail,
+  CloseCircle as X,
+} from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { CheckCircle, Loader2, Mail, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";

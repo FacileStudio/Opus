@@ -1,13 +1,13 @@
-import { useNavigate } from "@tanstack/react-router";
 import {
   FileText,
-  FolderKanban,
-  Hash,
-  MessageSquare,
-  Search,
-  Users,
-  Zap,
-} from "lucide-react";
+  Widget5 as FolderKanban,
+  Hashtag as Hash,
+  ChatSquare as MessageSquare,
+  Magnifier as Search,
+  UsersGroupTwoRounded as Users,
+  Bolt as Zap,
+} from "@solar-icons/react";
+import { useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -202,7 +202,10 @@ function SearchCommandMenu({ open, setOpen }: SearchCommandMenuProps) {
           <CommandPanel>
             <CommandEmpty>
               <div className="text-center py-6">
-                <Search className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                <Search
+                  size={32}
+                  className="mx-auto mb-2 text-muted-foreground"
+                />
                 <p className="text-sm text-muted-foreground">
                   {searchEnabled
                     ? t("navigation:commandPalette.empty")
@@ -227,7 +230,8 @@ function SearchCommandMenu({ open, setOpen }: SearchCommandMenuProps) {
                             aria-label={`${item.type}: ${item.title}`}
                           >
                             <Icon
-                              className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0"
+                              size={16}
+                              className="mt-0.5 text-muted-foreground flex-shrink-0"
                               aria-hidden="true"
                             />
                             <div className="flex-1 min-w-0">

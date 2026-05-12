@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { CloseCircle } from "@solar-icons/react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -230,7 +230,7 @@ export default function TaskCardContextMenuContent({
                   }
                 }}
               >
-                <X className="h-4 w-4" />
+                <CloseCircle size={16} />
                 <span>{t("tasks:dueDate.clear")}</span>
               </ContextMenuItem>
             </>

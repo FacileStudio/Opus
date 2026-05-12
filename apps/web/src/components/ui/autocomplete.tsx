@@ -1,7 +1,7 @@
 "use client";
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
-import { ChevronsUpDownIcon, XIcon } from "lucide-react";
+import { CloseCircle, SortVertical } from "@solar-icons/react";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/cn";
@@ -56,7 +56,7 @@ function AutocompleteInput({
           )}
         >
           <AutocompletePrimitive.Icon data-slot="autocomplete-icon">
-            <ChevronsUpDownIcon />
+            <SortVertical />
           </AutocompletePrimitive.Icon>
         </AutocompleteTrigger>
       )}
@@ -67,7 +67,7 @@ function AutocompleteInput({
             sizeValue === "sm" ? "end-0" : "end-0.5",
           )}
         >
-          <XIcon />
+          <CloseCircle />
         </AutocompleteClear>
       )}
     </div>
@@ -247,7 +247,7 @@ function AutocompleteClear({
       data-slot="autocomplete-clear"
       {...props}
     >
-      <XIcon />
+      <CloseCircle />
     </AutocompletePrimitive.Clear>
   );
 }

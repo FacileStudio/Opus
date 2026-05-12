@@ -1,4 +1,10 @@
-import { CalendarDays, Check, Menu, Plus, SquareKanban } from "lucide-react";
+import {
+  AddCircle,
+  CalendarDate,
+  CheckRead,
+  HamburgerMenu,
+  Widget5,
+} from "@solar-icons/react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -43,7 +49,7 @@ export default function MobileProjectNav({
           />
         }
       >
-        <Menu className="size-4" />
+        <HamburgerMenu size={16} />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-72 p-2">
         <div className="space-y-3">
@@ -74,7 +80,7 @@ export default function MobileProjectNav({
                     : "border-transparent text-muted-foreground hover:bg-accent",
                 )}
               >
-                <SquareKanban className="size-3.5" />
+                <Widget5 size={14} />
                 Board
               </button>
               <button
@@ -87,7 +93,7 @@ export default function MobileProjectNav({
                     : "border-transparent text-muted-foreground hover:bg-accent",
                 )}
               >
-                <CalendarDays className="size-3.5" />
+                <CalendarDate size={14} />
                 Gantt
               </button>
             </div>
@@ -117,7 +123,7 @@ export default function MobileProjectNav({
                   >
                     <Icon className="size-3.5" />
                     <span className="flex-1 truncate">{project.name}</span>
-                    {isCurrentProject && <Check className="size-3.5" />}
+                    {isCurrentProject && <CheckRead size={14} />}
                   </button>
                 );
               })}
@@ -129,7 +135,7 @@ export default function MobileProjectNav({
             onClick={onAddProject}
             className="flex w-full items-center gap-2 rounded-md border border-border px-2 py-1.5 text-left text-sm text-foreground transition-colors hover:bg-accent"
           >
-            <Plus className="size-3.5" />
+            <AddCircle size={14} />
             Add project
           </button>
         </div>

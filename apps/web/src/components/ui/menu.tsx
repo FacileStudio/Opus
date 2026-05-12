@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import { ChevronRightIcon } from "lucide-react";
+import { AltArrowRight } from "@solar-icons/react";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
@@ -267,7 +267,7 @@ function MenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="-me-0.5 ms-auto opacity-80" />
+      <AltArrowRight className="-me-0.5 ms-auto opacity-80" />
     </MenuPrimitive.SubmenuTrigger>
   );
 }

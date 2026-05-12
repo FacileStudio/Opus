@@ -1,4 +1,4 @@
-import { AlertTriangle, ExternalLink, RefreshCw } from "lucide-react";
+import { DangerTriangle, LinkMinimalistic, Restart } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import {
   getCorsTroubleshootingSteps,
@@ -51,7 +51,7 @@ export function ErrorDisplay({
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/12">
-            <AlertTriangle className="h-6 w-6 text-destructive-foreground" />
+            <DangerTriangle size={24} className="text-destructive-foreground" />
           </div>
           <CardTitle className="text-lg">{resolvedTitle}</CardTitle>
           <CardDescription className="text-sm">
@@ -83,7 +83,7 @@ export function ErrorDisplay({
                 size="sm"
                 className="w-full"
               >
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <Restart size={16} className="mr-2" />
                 {t("common:error.tryAgain")}
               </Button>
             )}
@@ -95,7 +95,7 @@ export function ErrorDisplay({
                 size="icon"
                 className="w-full"
               >
-                <ExternalLink className="w-4 h-4 mr-2" />
+                <LinkMinimalistic size={16} className="mr-2" />
                 {t("common:error.viewDeploymentGuide")}
               </Button>
             )}
@@ -106,7 +106,7 @@ export function ErrorDisplay({
               size="icon"
               className="w-full"
             >
-              <RefreshCw className="w-4 h-4 mr-2" />
+              <Restart size={16} className="mr-2" />
               {t("common:error.refreshPage")}
             </Button>
           </div>

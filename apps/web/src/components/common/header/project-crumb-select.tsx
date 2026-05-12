@@ -1,4 +1,4 @@
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { AddCircle, SortVertical } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,7 +44,7 @@ export default function ProjectCrumbSelect({
         <span className="truncate text-left">
           {projectName || t("settings:projectSwitcher.selectProject")}
         </span>
-        <ChevronsUpDown className="size-3 text-foreground/70" />
+        <SortVertical size={12} className="text-foreground/70" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="start">
         <DropdownMenuGroup>
@@ -82,7 +82,7 @@ export default function ProjectCrumbSelect({
             onClick={onAddProject}
             className="h-8 gap-2 text-sm"
           >
-            <Plus className="size-3.5" />
+            <AddCircle size={14} />
             {t("navigation:projectList.addProject")}
           </DropdownMenuItem>
         </DropdownMenuGroup>

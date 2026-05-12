@@ -1,7 +1,7 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { ArrowLeft, Refresh as RefreshCcw } from "@solar-icons/react";
 import { createFileRoute, useRouter, useSearch } from "@tanstack/react-router";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { ArrowLeft, RefreshCcw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";

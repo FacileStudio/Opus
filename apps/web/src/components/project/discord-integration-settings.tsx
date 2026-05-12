@@ -1,5 +1,5 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { CheckCircle, Trash2 } from "lucide-react";
+import { CheckCircle, TrashBinTrash } from "@solar-icons/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -294,7 +294,7 @@ export function DiscordIntegrationSettings({
               <div className="flex items-center gap-3">
                 {isConnected && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle className="size-4 text-green-600" />
+                    <CheckCircle size={16} className="text-green-600" />
                     <span>
                       {integration?.isActive
                         ? t("settings:discordIntegration.connected")
@@ -420,7 +420,7 @@ export function DiscordIntegrationSettings({
                 type="button"
                 variant="outline"
               >
-                <Trash2 className="size-4" />
+                <TrashBinTrash size={16} />
                 {t("settings:discordIntegration.disconnect")}
               </Button>
             )}

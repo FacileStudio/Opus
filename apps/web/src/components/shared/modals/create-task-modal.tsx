@@ -1,14 +1,14 @@
+import {
+  Calendar as CalendarIcon,
+  CheckCircle as Check,
+  AddCircle as Plus,
+  Magnifier as Search,
+  Tag,
+  User as UserIcon,
+  CloseCircle as X,
+} from "@solar-icons/react";
 import { useLocation } from "@tanstack/react-router";
 import { produce } from "immer";
-import {
-  CalendarIcon,
-  Check,
-  Plus,
-  Search,
-  Tag,
-  UserIcon,
-  X,
-} from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TaskDescriptionEditor from "@/components/task/task-description-editor";

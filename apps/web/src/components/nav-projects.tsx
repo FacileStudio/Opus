@@ -1,13 +1,13 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "@tanstack/react-router";
 import {
-  ChevronRight,
+  AltArrowRight,
   Folder,
   Forward,
-  MoreHorizontal,
+  MenuDots,
   Settings,
-  Trash2,
-} from "lucide-react";
+  TrashBinTrash,
+} from "@solar-icons/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -100,7 +100,10 @@ export function NavProjects() {
             }
           >
             <span>{t("navigation:sidebar.projects")}</span>
-            <ChevronRight className="h-3.5 w-3.5 text-sidebar-foreground/60 transition-transform duration-200" />
+            <AltArrowRight
+              size={14}
+              className="text-sidebar-foreground/60 transition-transform duration-200"
+            />
           </CollapsibleTrigger>
           <CollapsiblePanel>
             <SidebarGroupContent>
@@ -126,7 +129,7 @@ export function NavProjects() {
                             />
                           }
                         >
-                          <MoreHorizontal />
+                          <MenuDots />
                           <span className="sr-only">
                             {t("navigation:sidebar.more")}
                           </span>
@@ -183,7 +186,7 @@ export function NavProjects() {
                               setIsDeleteProjectModalOpen(true);
                             }}
                           >
-                            <Trash2 className="text-destructive" />
+                            <TrashBinTrash className="text-destructive" />
                             <span>
                               {t("navigation:projectList.deleteProject")}
                             </span>

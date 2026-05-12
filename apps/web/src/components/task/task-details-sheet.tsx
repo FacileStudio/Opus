@@ -1,5 +1,5 @@
+import { Maximize as Maximize2, CloseCircle as X } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
-import { Maximize2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -84,7 +84,7 @@ export default function TaskDetailsSheet({
                     onClick={handleOpenFullPage}
                     className="text-foreground"
                   >
-                    <Maximize2 className="size-4" />
+                    <Maximize2 size={16} />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -98,7 +98,7 @@ export default function TaskDetailsSheet({
               onClick={onClose}
               className="text-foreground"
             >
-              <X className="size-4" />
+              <X size={16} />
             </Button>
           </div>
         </div>

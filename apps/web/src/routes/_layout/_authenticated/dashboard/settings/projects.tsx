@@ -1,11 +1,16 @@
 import {
+  Eye,
+  BranchingPathsUp as GitBranch,
+  PlugCircle as Plug,
+  Settings,
+} from "@solar-icons/react";
+import {
   createFileRoute,
   Link,
   Outlet,
   useLocation,
   useNavigate,
 } from "@tanstack/react-router";
-import { Eye, GitBranch, Plug, Settings } from "lucide-react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

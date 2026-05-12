@@ -1,4 +1,9 @@
-import { Check, Circle, CircleDot, Search } from "lucide-react";
+import {
+  CheckCircle as Check,
+  Record as Circle,
+  RecordCircle as CircleDot,
+  Magnifier as Search,
+} from "@solar-icons/react";
 
 export const DEFAULT_COLUMNS = [
   { id: "to-do", name: "To Do", icon: Circle },

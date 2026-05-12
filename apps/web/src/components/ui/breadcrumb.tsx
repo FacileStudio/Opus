@@ -2,7 +2,7 @@
 
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { AltArrowRight, MenuDots } from "@solar-icons/react";
 import type * as React from "react";
 
 import { cn } from "@/lib/cn";
@@ -85,7 +85,7 @@ function BreadcrumbSeparator({
       role="presentation"
       {...props}
     >
-      {children ?? <ChevronRight />}
+      {children ?? <AltArrowRight />}
     </li>
   );
 }
@@ -102,7 +102,7 @@ function BreadcrumbEllipsis({
       role="presentation"
       {...props}
     >
-      <MoreHorizontal className="size-4" />
+      <MenuDots size={16} />
       <span className="sr-only">{i18n.t("common:breadcrumb.more")}</span>
     </span>
   );

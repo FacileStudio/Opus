@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsUpDownIcon,
-} from "lucide-react";
+import { AltArrowLeft, AltArrowRight, SortVertical } from "@solar-icons/react";
 import type * as React from "react";
 import { DayPicker } from "react-day-picker";
 
@@ -86,7 +82,7 @@ function Calendar({
     }) => {
       if (orientation === "left") {
         return (
-          <ChevronLeftIcon
+          <AltArrowLeft
             className={cn(className, "rtl:rotate-180")}
             {...props}
             aria-hidden="true"
@@ -96,7 +92,7 @@ function Calendar({
 
       if (orientation === "right") {
         return (
-          <ChevronRightIcon
+          <AltArrowRight
             className={cn(className, "rtl:rotate-180")}
             {...props}
             aria-hidden="true"
@@ -105,11 +101,7 @@ function Calendar({
       }
 
       return (
-        <ChevronsUpDownIcon
-          className={className}
-          {...props}
-          aria-hidden="true"
-        />
+        <SortVertical className={className} {...props} aria-hidden="true" />
       );
     },
   };

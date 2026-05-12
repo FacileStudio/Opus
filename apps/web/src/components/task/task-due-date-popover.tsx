@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { CloseCircle as X } from "@solar-icons/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";

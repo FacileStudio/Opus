@@ -1,4 +1,4 @@
-import { MoonIcon, SunIcon } from "lucide-react";
+import { Moon as MoonIcon, Sun as SunIcon } from "@solar-icons/react";
 import { useId } from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";

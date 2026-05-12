@@ -1,5 +1,10 @@
+import {
+  BranchingPathsDown,
+  Lock,
+  Magnifier,
+  SquareArrowRightUp,
+} from "@solar-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { ExternalLink, GitBranch, Lock, Search } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
@@ -79,7 +84,7 @@ export function GiteaRepositoryBrowserModal({
       <DialogContent className="!max-w-2xl max-h-[85vh] p-0 gap-0 flex flex-col">
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2">
-            <GitBranch className="size-5" />
+            <BranchingPathsDown size={20} />
             {t("settings:giteaIntegration.browseModalTitle")}
           </DialogTitle>
           <DialogDescription>
@@ -89,7 +94,10 @@ export function GiteaRepositoryBrowserModal({
 
         <div className="px-6 pb-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Magnifier
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
             <Input
               className="pl-9"
               placeholder={t("settings:giteaIntegration.searchRepos")}
@@ -143,7 +151,7 @@ export function GiteaRepositoryBrowserModal({
                       </span>
                       <div className="flex items-center gap-2 shrink-0">
                         {repo.private ? (
-                          <Lock className="size-3.5 text-muted-foreground" />
+                          <Lock size={14} className="text-muted-foreground" />
                         ) : null}
                         <Badge variant="secondary" className="text-xs">
                           {repo.owner.login}
@@ -156,7 +164,7 @@ export function GiteaRepositoryBrowserModal({
                       rel="noopener noreferrer"
                       className="rounded-md p-2 text-primary hover:bg-muted/80 transition-colors"
                     >
-                      <ExternalLink className="size-3.5" />
+                      <SquareArrowRightUp size={14} />
                     </a>
                   </div>
                 </li>

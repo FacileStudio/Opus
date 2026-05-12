@@ -851,6 +851,32 @@ export const deviceCodeTable = pgTable(
   ],
 );
 
+export const workspaceWebhookTable = pgTable(
+  "workspace_webhook",
+  {
+    id: text("id")
+      .$defaultFn(() => createId())
+      .primaryKey(),
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => workspaceTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    name: text("name").notNull(),
+    url: text("url").notNull(),
+    secret: text("secret"),
+    events: text("events").notNull().default("*"),
+    enabled: boolean("enabled").default(true).notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date" })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("workspace_webhook_workspaceId_idx").on(table.workspaceId)],
+);
+
 // Auth-schema compatible aliases in schema.ts
 export const user = userTable;
 export const session = sessionTable;

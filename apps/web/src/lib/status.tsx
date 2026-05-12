@@ -1,11 +1,14 @@
-import { CheckCircle2, Clock } from "lucide-react";
+import {
+  CheckCircle as CheckCircle2,
+  ClockCircle as Clock,
+} from "@solar-icons/react";
 
 export function getStatusIcon(status: "active" | "pending") {
   switch (status) {
     case "active":
-      return <CheckCircle2 className="h-4 w-4 text-success-foreground" />;
+      return <CheckCircle2 size={16} className="text-success-foreground" />;
     case "pending":
-      return <Clock className="h-4 w-4 text-warning-foreground" />;
+      return <Clock size={16} className="text-warning-foreground" />;
   }
 }
 

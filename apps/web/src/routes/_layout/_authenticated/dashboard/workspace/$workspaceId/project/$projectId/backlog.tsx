@@ -1,7 +1,14 @@
+import {
+  ArrowRight,
+  Calendar,
+  Filter,
+  AddCircle as Plus,
+  User,
+  CloseCircle as X,
+} from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
-import { ArrowRight, Calendar, Filter, Plus, User, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BacklogListView from "@/components/backlog-list-view";

@@ -1,5 +1,5 @@
+import { UserPlus } from "@solar-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import WorkspaceLayout from "@/components/common/workspace-layout";

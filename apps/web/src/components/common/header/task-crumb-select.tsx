@@ -1,4 +1,4 @@
-import { ChevronsUpDown } from "lucide-react";
+import { SortVertical } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,7 +47,7 @@ export default function TaskCrumbSelect({
         <span className="truncate text-left">
           {taskLabel || t("tasks:common.selectTask")}
         </span>
-        <ChevronsUpDown className="size-3.5 text-muted-foreground" />
+        <SortVertical size={14} className="text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80" align="start">
         <DropdownMenuGroup>

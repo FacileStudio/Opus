@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { SquareArrowRightUp } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
 import { OpusBranding } from "./opus-branding";
 
@@ -9,7 +9,10 @@ export function ErrorView() {
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-6">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-destructive/12">
-            <ExternalLink className="h-10 w-10 text-destructive-foreground" />
+            <SquareArrowRightUp
+              size={40}
+              className="text-destructive-foreground"
+            />
           </div>
           <div className="space-y-2">
             <h1 className="text-3xl font-semibold text-foreground">

@@ -1,7 +1,7 @@
+import { FileText } from "@solar-icons/react";
 import { mergeAttributes, Node } from "@tiptap/core";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
-import { FileText } from "lucide-react";
 
 function formatBytes(size: number) {
   if (!Number.isFinite(size) || size <= 0) return "";

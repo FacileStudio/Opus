@@ -1,5 +1,5 @@
+import { Code, Pen2, SquareArrowRightUp } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Github, Pencil } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CommentEditor from "@/components/activity/comment-editor";
@@ -140,7 +140,7 @@ export default function CommentCard({
                   )}
                   {isFromGitHub && (
                     <div className="mt-1.5 flex items-center gap-1">
-                      <Github className="size-3 text-muted-foreground" />
+                      <Code size={12} className="text-muted-foreground" />
                       <span className="text-xs text-muted-foreground">
                         {t("activity:comment.github")}
                       </span>
@@ -155,7 +155,7 @@ export default function CommentCard({
                   rel="noopener noreferrer"
                   className="mt-3 flex items-center gap-1.5 border-t border-border pt-3 text-xs text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <ExternalLink className="size-3" />
+                  <SquareArrowRightUp size={12} />
                   {t("activity:comment.viewGithubProfile")}
                 </a>
               )}
@@ -189,7 +189,7 @@ export default function CommentCard({
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
-                <Github className="size-3" />
+                <Code size={12} />
                 {t("activity:comment.commentedOnGithub")}
               </a>
             </>
@@ -205,7 +205,7 @@ export default function CommentCard({
                 onClick={handleEdit}
                 className="absolute top-2 right-2 h-6 w-6 rounded-md p-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground"
               >
-                <Pencil className="size-3.5" />
+                <Pen2 size={14} />
               </Button>
             </TooltipTrigger>
             <TooltipContent>

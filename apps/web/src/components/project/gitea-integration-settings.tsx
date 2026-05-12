@@ -1,15 +1,15 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import {
-  AlertTriangle,
+  BranchingPathsDown,
   CheckCircle,
-  ExternalLink,
-  GitBranch,
+  CloseCircle,
+  DangerTriangle,
   Import,
   Link,
-  RefreshCw,
-  Unlink,
-  XCircle,
-} from "lucide-react";
+  LinkBroken,
+  Refresh,
+  SquareArrowRightUp,
+} from "@solar-icons/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -472,12 +472,12 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
           </div>
           {isConnected ? (
             <Badge variant="secondary" className="gap-1">
-              <CheckCircle className="w-3 h-3" />
+              <CheckCircle size={12} />
               {t("settings:giteaIntegration.badgeConnected")}
             </Badge>
           ) : (
             <Badge variant="outline" className="gap-1">
-              <XCircle className="w-3 h-3" />
+              <CloseCircle size={12} />
               {t("settings:giteaIntegration.badgeNotConnected")}
             </Badge>
           )}
@@ -506,7 +506,7 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
                     rel="noopener noreferrer"
                     className="text-primary hover:text-primary/80 transition-colors"
                   >
-                    <ExternalLink className="w-3 h-3" />
+                    <SquareArrowRightUp size={12} />
                   </a>
                 )}
               </div>
@@ -751,7 +751,7 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
                   className="gap-2"
                   disabled={!baseUrl || !accessToken.trim()}
                 >
-                  <GitBranch className="size-3" />
+                  <BranchingPathsDown size={12} />
                   {t("settings:giteaIntegration.browse")}
                 </Button>
 
@@ -767,8 +767,9 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
                   }
                   className="gap-2"
                 >
-                  <RefreshCw
-                    className={cn("size-3", isVerifying && "animate-spin")}
+                  <Refresh
+                    size={12}
+                    className={cn(isVerifying && "animate-spin")}
                   />
                   {t("settings:giteaIntegration.verify")}
                 </Button>
@@ -784,7 +785,7 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
                   }
                   className="gap-2"
                 >
-                  <Link className="size-3" />
+                  <Link size={12} />
                   {isConnected
                     ? t("settings:giteaIntegration.update")
                     : t("settings:giteaIntegration.connect")}
@@ -799,7 +800,7 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
                     disabled={isCreating || isDeleting}
                     className="gap-2"
                   >
-                    <Unlink className="size-3" />
+                    <LinkBroken size={12} />
                     {t("settings:giteaIntegration.disconnect")}
                   </Button>
                 )}
@@ -824,11 +825,20 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
             >
               {verificationResult.result.isInstalled &&
               verificationResult.result.hasRequiredPermissions ? (
-                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-success-foreground" />
+                <CheckCircle
+                  size={16}
+                  className="mt-0.5 flex-shrink-0 text-success-foreground"
+                />
               ) : verificationResult.result.repositoryExists ? (
-                <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-warning-foreground" />
+                <DangerTriangle
+                  size={16}
+                  className="mt-0.5 flex-shrink-0 text-warning-foreground"
+                />
               ) : (
-                <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive-foreground" />
+                <CloseCircle
+                  size={16}
+                  className="mt-0.5 flex-shrink-0 text-destructive-foreground"
+                />
               )}
               <div className="flex-1">
                 <p className="font-medium">
@@ -859,9 +869,9 @@ export function GiteaIntegrationSettings({ projectId }: { projectId: string }) {
               variant="outline"
             >
               {isImporting ? (
-                <RefreshCw className="size-3 animate-spin" />
+                <Refresh size={12} className="animate-spin" />
               ) : (
-                <Import className="size-3" />
+                <Import size={12} />
               )}
               {isImporting
                 ? t("settings:giteaIntegration.importing")

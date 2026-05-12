@@ -3,8 +3,8 @@ import {
   defaultLocale,
   supportedLocales,
 } from "@i18n/resources";
+import { Refresh as RotateCcw } from "@solar-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { RotateCcw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";

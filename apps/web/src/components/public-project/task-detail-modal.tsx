@@ -1,13 +1,12 @@
 import {
+  BranchingPathsDown,
+  BranchingPathsUp,
   Calendar,
-  CalendarClock,
-  CalendarX,
-  ExternalLink as ExternalLinkIcon,
-  GitBranch,
-  GitMerge,
-  GitPullRequest,
-  X,
-} from "lucide-react";
+  CalendarDate,
+  CalendarMark,
+  CloseCircle,
+  SquareArrowRightUp,
+} from "@solar-icons/react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -44,20 +43,20 @@ export function PublicTaskDetailModal({
     () => (pr: { metadata?: { merged?: boolean; draft?: boolean } | null }) => {
       if (pr.metadata?.merged) {
         return {
-          icon: <GitMerge className="w-3.5 h-3.5" />,
+          icon: <BranchingPathsUp size={14} />,
           label: t("publicProject:taskDetail.prStatusMerged"),
           className: "text-info-foreground",
         };
       }
       if (pr.metadata?.draft) {
         return {
-          icon: <GitPullRequest className="w-3.5 h-3.5" />,
+          icon: <BranchingPathsDown size={14} />,
           label: t("publicProject:taskDetail.prStatusDraft"),
           className: "text-muted-foreground",
         };
       }
       return {
-        icon: <GitPullRequest className="w-3.5 h-3.5" />,
+        icon: <BranchingPathsDown size={14} />,
         label: t("publicProject:taskDetail.prStatusOpen"),
         className: "text-success-foreground",
       };
@@ -103,7 +102,7 @@ export function PublicTaskDetailModal({
               className="shrink-0 p-1.5 hover:bg-muted rounded transition-colors"
               render={<button type="button" />}
             >
-              <X className="w-4 h-4 text-muted-foreground" />
+              <CloseCircle size={16} className="text-muted-foreground" />
             </DialogClose>
           </div>
 
@@ -126,14 +125,14 @@ export function PublicTaskDetailModal({
                     className={`flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md ${dueDateStatusColors[getDueDateStatus(task.dueDate)]}`}
                   >
                     {getDueDateStatus(task.dueDate) === "overdue" && (
-                      <CalendarX className="w-3 h-3" />
+                      <CalendarMark size={12} />
                     )}
                     {getDueDateStatus(task.dueDate) === "due-soon" && (
-                      <CalendarClock className="w-3 h-3" />
+                      <CalendarDate size={12} />
                     )}
                     {(getDueDateStatus(task.dueDate) === "far-future" ||
                       getDueDateStatus(task.dueDate) === "no-due-date") && (
-                      <Calendar className="w-3 h-3" />
+                      <Calendar size={12} />
                     )}
                     <span>
                       {t("publicProject:taskDetail.dueWithDate", {
@@ -214,7 +213,10 @@ export function PublicTaskDetailModal({
                               {status.icon}
                               {status.label}
                             </span>
-                            <ExternalLinkIcon className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <SquareArrowRightUp
+                              size={14}
+                              className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                            />
                           </div>
                         </a>
                       );
@@ -233,7 +235,10 @@ export function PublicTaskDetailModal({
                         className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md border border-border/50 transition-colors group"
                       >
                         <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                          <GitPullRequest className="w-3.5 h-3.5 text-muted-foreground" />
+                          <BranchingPathsDown
+                            size={14}
+                            className="text-muted-foreground"
+                          />
                           <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                             <span className="text-sm font-medium text-foreground truncate">
                               {issue.title ||
@@ -244,7 +249,10 @@ export function PublicTaskDetailModal({
                             </span>
                           </div>
                         </div>
-                        <ExternalLinkIcon className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <SquareArrowRightUp
+                          size={14}
+                          className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                        />
                       </a>
                     ))}
                   </div>
@@ -261,12 +269,18 @@ export function PublicTaskDetailModal({
                         className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md border border-border/50 transition-colors group"
                       >
                         <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                          <GitBranch className="w-3.5 h-3.5 text-muted-foreground" />
+                          <BranchingPathsDown
+                            size={14}
+                            className="text-muted-foreground"
+                          />
                           <span className="text-sm font-medium text-foreground truncate">
                             {branch.title || branch.externalId}
                           </span>
                         </div>
-                        <ExternalLinkIcon className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <SquareArrowRightUp
+                          size={14}
+                          className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                        />
                       </a>
                     ))}
                   </div>
