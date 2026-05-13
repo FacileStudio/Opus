@@ -1,10 +1,28 @@
-import { Widget as LayoutGrid, AddCircle as Plus } from "@solar-icons/react";
+import {
+  Folder,
+  Forward,
+  Widget as LayoutGrid,
+  Link as LinkIcon,
+  AddCircle as Plus,
+  Settings,
+  TrashBinTrash,
+} from "@solar-icons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { type MouseEvent, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import WorkspaceLayout from "@/components/common/workspace-layout";
 import PageTitle from "@/components/page-title";
 import CreateProjectModal from "@/components/shared/modals/create-project-modal";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +33,12 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/menu";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -27,9 +51,27 @@ import {
 } from "@/components/ui/table";
 import icons from "@/constants/project-icons";
 import { shortcuts } from "@/constants/shortcuts";
+import createShareLink from "@/fetchers/share-link/create-share-link";
+import useDeleteProject from "@/hooks/mutations/project/use-delete-project";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { formatDateMedium } from "@/lib/format";
+import { toast } from "@/lib/toast";
+
+function makeVirtualAnchor(x: number, y: number) {
+  const rect = {
+    x,
+    y,
+    width: 0,
+    height: 0,
+    top: y,
+    right: x,
+    bottom: y,
+    left: x,
+    toJSON: () => rect,
+  };
+  return { getBoundingClientRect: () => rect };
+}
 
 export const Route = createFileRoute(
   "/_layout/_authenticated/dashboard/workspace/$workspaceId/",
@@ -42,9 +84,26 @@ function RouteComponent() {
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const { workspaceId } = Route.useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: projects, isLoading } = useGetProjects({
     workspaceId,
   });
+  const { mutateAsync: deleteProject } = useDeleteProject();
+
+  const [contextMenu, setContextMenu] = useState<{
+    projectId: string;
+    x: number;
+    y: number;
+  } | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [projectToDeleteId, setProjectToDeleteId] = useState<string | null>(
+    null,
+  );
+
+  const handleContextMenu = useCallback((e: MouseEvent, projectId: string) => {
+    e.preventDefault();
+    setContextMenu({ projectId, x: e.clientX, y: e.clientY });
+  }, []);
 
   const handleCreateProject = () => {
     setIsCreateProjectOpen(true);
@@ -233,6 +292,7 @@ function RouteComponent() {
                   key={project.id}
                   className="cursor-pointer"
                   onClick={() => handleProjectClick(project.id)}
+                  onContextMenu={(e) => handleContextMenu(e, project.id)}
                 >
                   <TableCell className="py-3">
                     <div className="flex items-center gap-3">
@@ -268,12 +328,129 @@ function RouteComponent() {
             })}
           </TableBody>
         </Table>
+
+        <DropdownMenu
+          open={contextMenu !== null}
+          onOpenChange={(open) => {
+            if (!open) setContextMenu(null);
+          }}
+        >
+          <DropdownMenuContent
+            className="w-44 rounded-lg"
+            side="bottom"
+            align="start"
+            anchor={
+              contextMenu
+                ? makeVirtualAnchor(contextMenu.x, contextMenu.y)
+                : undefined
+            }
+          >
+            <DropdownMenuItem
+              className="h-7 items-start cursor-pointer text-sm"
+              onClick={() => {
+                if (contextMenu) handleProjectClick(contextMenu.projectId);
+              }}
+            >
+              <Folder className="text-muted-foreground" />
+              <span>{t("navigation:projectList.viewProject")}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="h-7 items-start cursor-pointer text-sm"
+              onClick={() => {
+                if (!contextMenu) return;
+                navigator.clipboard.writeText(
+                  `${window.location.origin}/dashboard/workspace/${workspaceId}/project/${contextMenu.projectId}`,
+                );
+                toast.success(t("navigation:projectList.linkCopied"));
+              }}
+            >
+              <Forward className="text-muted-foreground" />
+              <span>{t("navigation:projectList.shareProject")}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="h-7 items-start cursor-pointer text-sm"
+              onClick={async () => {
+                if (!contextMenu) return;
+                try {
+                  const link = await createShareLink({
+                    projectId: contextMenu.projectId,
+                  });
+                  await navigator.clipboard.writeText(
+                    `${window.location.origin}/shared/${link.token}`,
+                  );
+                  toast.success(t("navigation:projectList.shareLinkCreated"));
+                } catch {
+                  toast.error(t("navigation:projectList.shareLinkError"));
+                }
+              }}
+            >
+              <LinkIcon className="text-muted-foreground" />
+              <span>{t("navigation:projectList.createShareLink")}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="h-7 items-start cursor-pointer text-sm"
+              onClick={() => {
+                if (!contextMenu) return;
+                navigate({
+                  to: "/dashboard/settings/projects/$projectId/general",
+                  params: { projectId: contextMenu.projectId },
+                });
+              }}
+            >
+              <Settings className="text-muted-foreground" />
+              <span>{t("navigation:projectList.projectSettings")}</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="h-7 items-start text-destructive cursor-pointer text-sm"
+              onClick={() => {
+                if (!contextMenu) return;
+                setProjectToDeleteId(contextMenu.projectId);
+                setIsDeleteModalOpen(true);
+              }}
+            >
+              <TrashBinTrash className="text-destructive" />
+              <span>{t("navigation:projectList.deleteProject")}</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </WorkspaceLayout>
 
       <CreateProjectModal
         open={isCreateProjectOpen}
         onClose={() => setIsCreateProjectOpen(false)}
       />
+
+      <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("navigation:projectList.deleteConfirmTitle")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("navigation:projectList.deleteConfirmDescription")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogClose>
+              <Button variant="outline" size="sm">
+                {t("common:actions.cancel")}
+              </Button>
+            </AlertDialogClose>
+            <AlertDialogClose
+              onClick={async () => {
+                await deleteProject({ id: projectToDeleteId || "" });
+                toast.success(t("navigation:projectList.deletedToast"));
+                queryClient.invalidateQueries({ queryKey: ["projects"] });
+              }}
+            >
+              <Button variant="destructive" size="sm">
+                {t("navigation:projectList.deleteProject")}
+              </Button>
+            </AlertDialogClose>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
