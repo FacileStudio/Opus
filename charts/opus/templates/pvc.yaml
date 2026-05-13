@@ -20,3 +20,26 @@ spec:
     requests:
       storage: {{ .Values.postgresql.persistence.size | default "8Gi" }}
 {{- end }}
+---
+{{- if .Values.opus.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "opus.fullname" . }}-uploads
+  labels:
+    {{- include "opus.labels" . | nindent 4 }}
+    app.kubernetes.io/component: uploads
+spec:
+  accessModes:
+    - {{ .Values.opus.persistence.accessMode | default "ReadWriteOnce" }}
+  {{- if .Values.opus.persistence.storageClass }}
+  {{- if (eq "-" .Values.opus.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.opus.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.opus.persistence.size | default "1Gi" }}
+{{- end }}

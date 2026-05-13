@@ -78,6 +78,12 @@ opus:
   #     cpu: 100m
   #     memory: 128Mi
 
+  persistence:
+    enabled: false
+    size: 1Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+
   env:
     # Public URL of this Opus instance (e.g. https://opus.example.com)
     # OPUS_API_URL is derived automatically as clientUrl/api if not set

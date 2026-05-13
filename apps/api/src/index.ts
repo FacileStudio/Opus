@@ -72,7 +72,7 @@ import {
 } from "./utils/openapi-spec";
 import { validateWorkspaceAccess } from "./utils/validate-workspace-access";
 import workflowRule from "./workflow-rule";
-import workspace from "./workspace";
+import workspace, { workspaceLogoUpload } from "./workspace";
 import workspaceWebhook from "./workspace-webhook";
 import { initializeWorkspaceWebhookDispatcher } from "./workspace-webhook/dispatcher";
 import {
@@ -303,6 +303,36 @@ export function createApp() {
     },
   );
 
+  api.get(
+    "/workspace/:workspaceId/logo",
+    validator("param", v.object({ workspaceId: v.string() })),
+    async (c) => {
+      const { workspaceId } = c.req.valid("param");
+      const { readWorkspaceLogo } = await import("./storage/local");
+      const logo = await readWorkspaceLogo(workspaceId);
+
+      if (!logo) {
+        throw new HTTPException(404, { message: "No logo found" });
+      }
+
+      const mimeMap: Record<string, string> = {
+        png: "image/png",
+        jpg: "image/jpeg",
+        webp: "image/webp",
+        svg: "image/svg+xml",
+        gif: "image/gif",
+      };
+
+      return new Response(logo.buffer, {
+        headers: {
+          "Content-Type": mimeMap[logo.extension] || "application/octet-stream",
+          "Cache-Control": "public, max-age=31536000, immutable",
+          "Content-Length": logo.buffer.length.toString(),
+        },
+      });
+    },
+  );
+
   const configApi = api.route("/config", config);
 
   const honoOpenApiHandler = openAPIRouteHandler(api, {
@@ -529,6 +559,7 @@ export function createApp() {
   const workflowRuleApi = api.route("/workflow-rule", workflowRule);
   const invitationApi = api.route("/invitation", invitation);
   const workspaceApi = api.route("/workspace", workspace);
+  api.route("/workspace", workspaceLogoUpload);
   const workspaceWebhookApi = api.route("/workspace-webhook", workspaceWebhook);
   const shareLinkApi = api.route("/share-link", shareLink);
 

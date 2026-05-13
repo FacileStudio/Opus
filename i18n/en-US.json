@@ -540,6 +540,16 @@
 			"toastUpdateError": "Failed to update workspace",
 			"toastDeleted": "Workspace deleted successfully",
 			"toastDeleteError": "Failed to delete workspace",
+			"logoTitle": "Workspace Logo",
+			"logoSubtitle": "Upload an image to represent your workspace.",
+			"logoLabel": "Logo",
+			"logoHint": "PNG, JPEG, WebP, SVG or GIF. Max 2MB.",
+			"logoUpload": "Upload",
+			"logoUploading": "Uploading...",
+			"logoUpdated": "Logo updated successfully",
+			"logoUploadError": "Failed to upload logo",
+			"logoDeleted": "Logo removed",
+			"logoDeleteError": "Failed to remove logo",
 			"validation": {
 				"nameRequired": "Workspace name is required",
 				"nameShort": "Workspace name must be at least 2 characters"

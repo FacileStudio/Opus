@@ -32,6 +32,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import icons from "@/constants/project-icons";
 import createShareLink from "@/fetchers/share-link/create-share-link";
 import useDeleteProject from "@/hooks/mutations/project/use-delete-project";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
@@ -95,14 +96,17 @@ function ProjectItem({
     setOpen(true);
   }, []);
 
+  const ProjectIcon = icons[project.icon as keyof typeof icons] || icons.Layout;
+
   return (
     <SidebarMenuItem onContextMenu={handleContextMenu}>
       <SidebarMenuButton
         isActive={isActive}
         size="default"
-        className="h-8 gap-0 ps-3.5 text-sm hover:bg-transparent hover:text-sidebar-accent-foreground active:bg-transparent"
+        className="h-8 ps-3.5 text-sm hover:bg-transparent hover:text-sidebar-accent-foreground active:bg-transparent"
         onClick={onProjectClick}
       >
+        <ProjectIcon className="size-4 shrink-0 text-sidebar-foreground/60" />
         <span>{project.name}</span>
       </SidebarMenuButton>
 

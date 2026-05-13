@@ -1,4 +1,5 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { CloseCircle, Gallery } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -15,6 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,6 +28,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { getApiUrl } from "@/fetchers/get-api-url";
+import {
+  deleteWorkspaceLogo,
+  uploadWorkspaceLogo,
+} from "@/fetchers/workspace/upload-workspace-logo";
 import useDeleteWorkspace from "@/hooks/mutations/workspace/use-delete-workspace";
 import useUpdateWorkspace from "@/hooks/mutations/workspace/use-update-workspace";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
@@ -100,6 +107,9 @@ function RouteComponent() {
   const queuedSaveRef = useRef<WorkspaceFormValues | null>(null);
   const lastSavedRef = useRef<NormalizedWorkspaceValues | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [logoVersion, setLogoVersion] = useState(Date.now);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const { data: workspace } = useActiveWorkspace();
   const { mutateAsync: updateWorkspace } = useUpdateWorkspace();
@@ -336,6 +346,128 @@ function RouteComponent() {
                 />
               </form>
             </Form>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="space-y-1">
+            <h2 className="text-md font-medium">
+              {t("settings:workspaceGeneral.logoTitle")}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {t("settings:workspaceGeneral.logoSubtitle")}
+            </p>
+          </div>
+
+          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Avatar className="size-14 rounded-lg">
+                  {workspace?.logo ? (
+                    <AvatarImage
+                      src={getApiUrl(
+                        `/workspace/${workspace.id}/logo?v=${logoVersion}`,
+                      )}
+                      alt={workspace.name}
+                    />
+                  ) : null}
+                  <AvatarFallback className="rounded-lg bg-muted text-lg">
+                    {workspace?.name?.charAt(0)?.toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-0.5">
+                  <p className="text-sm font-medium">
+                    {t("settings:workspaceGeneral.logoLabel")}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("settings:workspaceGeneral.logoHint")}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {workspace?.logo && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground"
+                    disabled={isUploadingLogo}
+                    onClick={async () => {
+                      if (!workspace?.id) return;
+                      try {
+                        await deleteWorkspaceLogo(workspace.id);
+                        await updateWorkspace({
+                          workspaceId: workspace.id,
+                          logo: "",
+                        });
+                        setLogoVersion(Date.now());
+                        await queryClient.invalidateQueries({
+                          queryKey: ["active-organization"],
+                        });
+                        toast.success(
+                          t("settings:workspaceGeneral.logoDeleted"),
+                        );
+                      } catch {
+                        toast.error(
+                          t("settings:workspaceGeneral.logoDeleteError"),
+                        );
+                      }
+                    }}
+                  >
+                    <CloseCircle className="size-4" />
+                    {t("common:actions.remove")}
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isUploadingLogo}
+                  onClick={() => logoInputRef.current?.click()}
+                >
+                  <Gallery className="size-4" />
+                  {isUploadingLogo
+                    ? t("settings:workspaceGeneral.logoUploading")
+                    : t("settings:workspaceGeneral.logoUpload")}
+                </Button>
+                <input
+                  ref={logoInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file || !workspace?.id) return;
+
+                    setIsUploadingLogo(true);
+                    try {
+                      const result = await uploadWorkspaceLogo(
+                        workspace.id,
+                        file,
+                      );
+                      await updateWorkspace({
+                        workspaceId: workspace.id,
+                        logo: result.url,
+                      });
+                      setLogoVersion(Date.now());
+                      await queryClient.invalidateQueries({
+                        queryKey: ["active-organization"],
+                      });
+                      toast.success(t("settings:workspaceGeneral.logoUpdated"));
+                    } catch (error) {
+                      toast.error(
+                        error instanceof Error
+                          ? error.message
+                          : t("settings:workspaceGeneral.logoUploadError"),
+                      );
+                    } finally {
+                      setIsUploadingLogo(false);
+                      if (logoInputRef.current) {
+                        logoInputRef.current.value = "";
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
 

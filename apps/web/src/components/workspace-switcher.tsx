@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { UserAvatar } from "@/components/user-avatar";
 import { shortcuts } from "@/constants/shortcuts";
+import { getApiUrl } from "@/fetchers/get-api-url";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import useGetWorkspaces from "@/hooks/queries/workspace/use-get-workspaces";
 import {
@@ -120,7 +122,20 @@ export function WorkspaceSwitcher() {
                   />
                 }
               >
-                <div className="flex items-center min-w-0 w-full">
+                <div className="flex items-center gap-2 min-w-0 w-full">
+                  <Avatar className="size-5 shrink-0 rounded-md">
+                    {workspace.logo ? (
+                      <AvatarImage
+                        src={getApiUrl(
+                          `/workspace/${workspace.id}/logo?v=${workspace.logo}`,
+                        )}
+                        alt={workspace.name}
+                      />
+                    ) : null}
+                    <AvatarFallback className="rounded-md text-[10px]">
+                      {workspace.name?.charAt(0)?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                   <span
                     className={`truncate text-sm font-medium text-foreground ${isSwitching ? "opacity-50" : ""}`}
                   >
