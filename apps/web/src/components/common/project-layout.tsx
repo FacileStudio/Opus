@@ -1,4 +1,9 @@
-import { CalendarDate, Widget2, Widget5 } from "@solar-icons/react";
+import {
+  CalendarDate,
+  SettingsMinimalistic,
+  Widget2,
+  Widget5,
+} from "@solar-icons/react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
 import MobileProjectNav from "@/components/common/header/mobile-project-nav";
@@ -184,6 +189,28 @@ export default function ProjectLayout({
 
           <div className="flex shrink-0 items-center gap-1.5">
             {headerActions}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                    onClick={() =>
+                      navigate({
+                        to: "/dashboard/settings/projects/$projectId/general",
+                        params: { projectId },
+                      })
+                    }
+                  >
+                    <SettingsMinimalistic className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-[10px]">Project settings</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </Layout.Header>
