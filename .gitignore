@@ -40,6 +40,9 @@ yarn-error.log*
 # DB
 *.db
 
+# Uploads
+apps/api/data/uploads/
+
 # Cache
 .cache/
 

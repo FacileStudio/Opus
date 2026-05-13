@@ -84,7 +84,17 @@ spec:
             {{- toYaml .Values.opus.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.opus.resources | nindent 12 }}
-
+          {{- if .Values.opus.persistence.enabled }}
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/apps/api/data/uploads
+          {{- end }}
+      {{- if .Values.opus.persistence.enabled }}
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: {{ include "opus.fullname" . }}-uploads
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

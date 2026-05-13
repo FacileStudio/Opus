@@ -1,4 +1,9 @@
-import { AltArrowRight } from "@solar-icons/react";
+import {
+  AltArrowRight,
+  Folder,
+  Letter,
+  UsersGroupTwoRounded,
+} from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,6 +36,7 @@ export function NavMain() {
     {
       title: t("navigation:sidebar.projects"),
       url: `/dashboard/workspace/${workspace.id}`,
+      icon: Folder,
       isActive:
         window.location.pathname === `/dashboard/workspace/${workspace.id}`,
       badge: null,
@@ -38,6 +44,7 @@ export function NavMain() {
     {
       title: t("navigation:sidebar.members"),
       url: `/dashboard/workspace/${workspace.id}/members`,
+      icon: UsersGroupTwoRounded,
       isActive:
         window.location.pathname ===
         `/dashboard/workspace/${workspace.id}/members`,
@@ -46,6 +53,7 @@ export function NavMain() {
     {
       title: t("navigation:sidebar.invitations"),
       url: "/dashboard/invitations",
+      icon: Letter,
       isActive: window.location.pathname === "/dashboard/invitations",
       badge: pendingCount > 0 ? pendingCount : null,
     },
@@ -78,6 +86,7 @@ export function NavMain() {
                     className="h-8 ps-3.5 text-sm hover:bg-transparent hover:text-sidebar-accent-foreground active:bg-transparent"
                     onClick={() => navigate({ to: item.url })}
                   >
+                    <item.icon className="size-4 shrink-0 text-sidebar-foreground/60" />
                     <span>{item.title}</span>
                     {item.badge !== null && (
                       <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm border border-sidebar-border/60 px-1 text-[11px] font-medium text-sidebar-foreground/80">
