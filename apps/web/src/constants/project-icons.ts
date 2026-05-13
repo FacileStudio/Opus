@@ -1,129 +1,89 @@
-import {
-  Bookmark,
-  Book2 as BookOpen,
-  Box,
-  Widget3 as Boxes,
-  Case as Briefcase,
-  Buildings2 as Building2,
-  Calendar,
-  Cpu as CircuitBoard,
-  Code,
-  SettingsMinimalistic as Cog,
-  Database,
-  FileText,
-  Flag,
-  TestTube as FlaskConical,
-  Folder,
-  Widget5 as FolderKanban,
-  BranchingPathsUp as GitBranch,
-  Global as Globe,
-  Heart,
-  Home,
-  Gallery as Image,
-  Layers,
-  Widget2 as Layout,
-  Lightbulb,
-  Link as Link2,
-  List,
-  ChatSquare as MessageSquare,
-  MusicNote as Music,
-  BoxMinimalistic as Package,
-  Palette,
-  Pen as PenTool,
-  Phone,
-  PieChart,
-  Widget6 as Puzzle,
-  Radio,
-  Rocket,
-  DocumentText as ScrollText,
-  Magnifier as Search,
-  Settings,
-  Share as Share2,
-  Shield,
-  Bag as ShoppingBag,
-  SmileCircle as Smile,
-  Star,
-  Widget4 as Table,
-  Tag as Tags,
-  Target,
-  Programming as Terminal,
-  Like as ThumbsUp,
-  Stopwatch as Timer,
-  PenNewSquare as Tool,
-  TrashBinMinimalistic as Trash2,
-  CupFirst as Trophy,
-  Tv as Tv2,
-  User,
-  UsersGroupTwoRounded as Users,
-  Videocamera as Video,
-  Wallet,
-  MagicStick2 as Wand2,
-  WatchRound as Watch,
-  Bolt as Zap,
-} from "@solar-icons/react";
+import * as SolarIcons from "@solar-icons/react";
+import type { ComponentType, SVGProps } from "react";
 
-const icons = {
-  Layout,
-  Briefcase,
-  FolderKanban,
-  Target,
-  Rocket,
-  Code,
-  Box,
-  Boxes,
-  BookOpen,
-  Bookmark,
-  Building2,
-  Calendar,
-  CircuitBoard,
-  Cog,
-  Database,
-  FileText,
-  Flag,
-  FlaskConical,
-  Folder,
-  GitBranch,
-  Globe,
-  Heart,
-  Home,
-  Image,
-  Layers,
-  Lightbulb,
-  Link2,
-  List,
-  MessageSquare,
-  Music,
-  Package,
-  Palette,
-  PenTool,
-  Phone,
-  PieChart,
-  Puzzle,
-  Radio,
-  ScrollText,
-  Search,
-  Settings,
-  Share2,
-  Shield,
-  ShoppingBag,
-  Smile,
-  Star,
-  Table,
-  Tags,
-  Terminal,
-  ThumbsUp,
-  Timer,
-  Tool,
-  Trash2,
-  Trophy,
-  Tv2,
-  User,
-  Users,
-  Video,
-  Wallet,
-  Wand2,
-  Watch,
-  Zap,
-};
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+
+const EXCLUDED = new Set(["IconBase", "SolarProvider", "useSolar", "default"]);
+
+function isTypoDuplicate(name: string): boolean {
+  if (name.includes("Minimlistic") || name.includes("Minimlistic")) return true;
+  if (name.includes("Minimlistik")) return true;
+  if (
+    name.startsWith("Clound") ||
+    name.startsWith("Pallete") ||
+    name.startsWith("Siderbar")
+  )
+    return true;
+  if (name.startsWith("Plaaylist")) return true;
+  if (name.startsWith("Magnifer") && !name.startsWith("Magnifier")) return true;
+  if (name.startsWith("MinimalisticMagnifer")) return true;
+  if (name.startsWith("MinimlisticMagnifier")) return true;
+  if (name.startsWith("RoundedMagnifer")) return true;
+  if (
+    name === "Recive" ||
+    name === "ReciveSquare" ||
+    name === "ReciveTwiceSquare"
+  )
+    return true;
+  if (name === "CardRecive") return true;
+  if (name === "ColourTuneing") return true;
+  if (name === "Condicioner" || name === "Condicioner2") return true;
+  if (name === "MaskHapply") return true;
+  if (
+    name === "SpedometerLow" ||
+    name === "SpedometerMax" ||
+    name === "SpedometerMiddle"
+  )
+    return true;
+  if (name === "AirbudsCaseMinimlistic") return true;
+  return false;
+}
+
+const icons: Record<string, IconComponent> = {};
+
+for (const [name, component] of Object.entries(SolarIcons)) {
+  if (EXCLUDED.has(name)) continue;
+  if (typeof component !== "function") continue;
+  if (isTypoDuplicate(name)) continue;
+  icons[name] = component as IconComponent;
+}
+
+icons.Layout = SolarIcons.Widget2;
+icons.Briefcase = SolarIcons.Case;
+icons.FolderKanban = SolarIcons.Widget5;
+icons.BookOpen = SolarIcons.Book2;
+icons.Boxes = SolarIcons.Widget3;
+icons.Building2 = SolarIcons.Buildings2;
+icons.CircuitBoard = SolarIcons.Cpu;
+icons.Cog = SolarIcons.SettingsMinimalistic;
+icons.FlaskConical = SolarIcons.TestTube;
+icons.GitBranch = SolarIcons.BranchingPathsUp;
+icons.Globe = SolarIcons.Global;
+icons.Image = SolarIcons.Gallery;
+icons.Link2 = SolarIcons.Link;
+icons.MessageSquare = SolarIcons.ChatSquare;
+icons.Music = SolarIcons.MusicNote;
+icons.Package = SolarIcons.BoxMinimalistic;
+icons.PenTool = SolarIcons.Pen;
+icons.Puzzle = SolarIcons.Widget6;
+icons.ScrollText = SolarIcons.DocumentText;
+icons.Search = SolarIcons.Magnifier;
+icons.Share2 = SolarIcons.Share;
+icons.ShoppingBag = SolarIcons.Bag;
+icons.Smile = SolarIcons.SmileCircle;
+icons.Table = SolarIcons.Widget4;
+icons.Tags = SolarIcons.Tag;
+icons.Terminal = SolarIcons.Programming;
+icons.ThumbsUp = SolarIcons.Like;
+icons.Timer = SolarIcons.Stopwatch;
+icons.Tool = SolarIcons.PenNewSquare;
+icons.Trash2 = SolarIcons.TrashBinMinimalistic;
+icons.Trophy = SolarIcons.CupFirst;
+icons.Tv2 = SolarIcons.Tv;
+icons.Users = SolarIcons.UsersGroupTwoRounded;
+icons.Video = SolarIcons.Videocamera;
+icons.Wand2 = SolarIcons.MagicStick2;
+icons.Watch = SolarIcons.WatchRound;
+icons.Zap = SolarIcons.Bolt;
 
 export default icons;
