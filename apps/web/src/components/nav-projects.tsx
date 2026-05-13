@@ -1,4 +1,5 @@
 import {
+  AddCircle,
   AltArrowRight,
   Folder,
   Forward,
@@ -283,6 +284,7 @@ export function NavProjects() {
                     className="h-8 ps-3.5 text-sm hover:bg-transparent hover:text-sidebar-accent-foreground active:bg-transparent"
                     onClick={() => setIsCreateProjectModalOpen(true)}
                   >
+                    <AddCircle className="size-4 shrink-0 text-sidebar-foreground/60" />
                     <span>{t("navigation:projectList.addProject")}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
