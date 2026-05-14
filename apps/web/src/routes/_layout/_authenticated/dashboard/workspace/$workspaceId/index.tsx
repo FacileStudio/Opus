@@ -3,7 +3,6 @@ import {
   Forward,
   Widget as LayoutGrid,
   Link as LinkIcon,
-  AddCircle as Plus,
   Settings,
   TrashBinTrash,
 } from "@solar-icons/react";
@@ -12,6 +11,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { type MouseEvent, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import WorkspaceLayout from "@/components/common/workspace-layout";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import PageTitle from "@/components/page-title";
 import CreateProjectModal from "@/components/shared/modals/create-project-modal";
 import {

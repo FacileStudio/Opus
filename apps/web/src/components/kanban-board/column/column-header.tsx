@@ -1,7 +1,8 @@
-import { AddCircle, Archive } from "@solar-icons/react";
+import { Archive } from "@solar-icons/react";
 import { produce } from "immer";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as AddCircle } from "@/components/icons/mdi-plus";
 import CreateTaskModal from "@/components/shared/modals/create-task-modal";
 import { useUpdateTask } from "@/hooks/mutations/task/use-update-task";
 import { getColumnIcon } from "@/lib/column";

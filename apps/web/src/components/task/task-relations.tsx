@@ -2,13 +2,13 @@ import {
   AltArrowDown as ChevronDown,
   AltArrowRight as ChevronRight,
   Link as Link2,
-  AddCircle as Plus,
   Magnifier as Search,
   CloseCircle as X,
 } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {

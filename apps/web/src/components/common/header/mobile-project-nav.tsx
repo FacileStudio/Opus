@@ -1,10 +1,10 @@
 import {
-  AddCircle,
   CalendarDate,
   CheckRead,
   HamburgerMenu,
   Widget5,
 } from "@solar-icons/react";
+import { MdiPlus as AddCircle } from "@/components/icons/mdi-plus";
 import { Button } from "@/components/ui/button";
 import {
   Popover,

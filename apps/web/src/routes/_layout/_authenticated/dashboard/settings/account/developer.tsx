@@ -1,7 +1,8 @@
-import { KeySquare as KeyRound, AddCircle as Plus } from "@solar-icons/react";
+import { KeySquare as KeyRound } from "@solar-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import PageTitle from "@/components/page-title";
 import { ApiKeyCreatedModal } from "@/components/settings/api-key-created-modal";
 import { ApiKeyTable } from "@/components/settings/api-key-table";

@@ -1,12 +1,12 @@
 import {
   AltArrowDown as ChevronDown,
   AltArrowRight as ChevronRight,
-  AddCircle as Plus,
 } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import {
   AlertDialog,
   AlertDialogClose,

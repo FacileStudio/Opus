@@ -1,5 +1,4 @@
 import {
-  AddCircle,
   BellBing,
   CheckCircle,
   LinkMinimalistic,
@@ -10,6 +9,7 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as AddCircle } from "@/components/icons/mdi-plus";
 import PageTitle from "@/components/page-title";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

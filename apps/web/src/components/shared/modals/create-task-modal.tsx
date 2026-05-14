@@ -1,7 +1,6 @@
 import {
   Calendar as CalendarIcon,
   CheckCircle as Check,
-  AddCircle as Plus,
   Magnifier as Search,
   Tag,
   User as UserIcon,
@@ -11,6 +10,7 @@ import { useLocation } from "@tanstack/react-router";
 import { produce } from "immer";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import TaskDescriptionEditor from "@/components/task/task-description-editor";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
