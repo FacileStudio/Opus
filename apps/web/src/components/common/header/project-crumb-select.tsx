@@ -1,5 +1,6 @@
-import { AddCircle, SortVertical } from "@solar-icons/react";
+import { SortVertical } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as AddCircle } from "@/components/icons/mdi-plus";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

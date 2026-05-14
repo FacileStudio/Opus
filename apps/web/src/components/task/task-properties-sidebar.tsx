@@ -5,9 +5,9 @@ import {
   CalendarMark as CalendarX,
   Copy,
   BranchingPathsUp as GitBranch,
-  AddCircle as Plus,
 } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

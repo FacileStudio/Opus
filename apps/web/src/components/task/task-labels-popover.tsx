@@ -1,12 +1,12 @@
 import {
   CheckCircle as Check,
-  AddCircle as Plus,
   Magnifier as Search,
   CloseCircle as X,
 } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import { Input } from "@/components/ui/input";
 import {
   Popover,

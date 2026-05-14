@@ -2,7 +2,6 @@ import {
   ArrowRight,
   Calendar,
   Filter,
-  AddCircle as Plus,
   User,
   CloseCircle as X,
 } from "@solar-icons/react";
@@ -14,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import BacklogListView from "@/components/backlog-list-view";
 import ProjectLayout from "@/components/common/project-layout";
 import SortControl from "@/components/common/sort-control";
+import { MdiPlus as Plus } from "@/components/icons/mdi-plus";
 import PageTitle from "@/components/page-title";
 import CreateTaskModal from "@/components/shared/modals/create-task-modal";
 import TaskDetailsSheet from "@/components/task/task-details-sheet";

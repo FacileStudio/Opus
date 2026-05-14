@@ -18,11 +18,12 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { AddCircle, AltArrowRight, Archive, Flag } from "@solar-icons/react";
+import { AltArrowRight, Archive, Flag } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as AddCircle } from "@/components/icons/mdi-plus";
 import { priorityColorsTaskCard } from "@/constants/priority-colors";
 import { useUpdateTask } from "@/hooks/mutations/task/use-update-task";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";

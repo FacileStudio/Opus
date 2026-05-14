@@ -1,5 +1,4 @@
 import {
-  AddCircle,
   AltArrowRight,
   Folder,
   Forward,
@@ -12,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { type MouseEvent, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MdiPlus as AddCircle } from "@/components/icons/mdi-plus";
 import {
   Collapsible,
   CollapsiblePanel,
