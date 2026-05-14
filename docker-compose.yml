@@ -20,6 +20,8 @@ services:
     image: ghcr.io/facilestudio/opus:latest
     env_file:
       - .env
+    volumes:
+      - opus_uploads:/app/apps/api/data/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -39,3 +41,4 @@ services:
 
 volumes:
   postgres_data:
+  opus_uploads:
