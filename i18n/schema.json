@@ -1863,6 +1863,12 @@
 								"alertDescription": {
 									"type": "string"
 								},
+								"configTitle": {
+									"type": "string"
+								},
+								"configSnippet": {
+									"type": "string"
+								},
 								"done": {
 									"type": "string"
 								},
@@ -1879,6 +1885,8 @@
 								"toastCopied",
 								"alertTitle",
 								"alertDescription",
+								"configTitle",
+								"configSnippet",
 								"done",
 								"copyToContinue"
 							]

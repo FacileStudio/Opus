@@ -79,6 +79,17 @@ export function ApiKeyCreatedModal({
             </div>
           </div>
 
+          <div className="space-y-2">
+            <p className="text-xs font-medium">
+              {t("settings:apiKey.createdModal.configTitle")}
+            </p>
+            <div className="bg-sidebar border border-border rounded-sm p-2.5">
+              <pre className="text-xs font-mono text-foreground leading-relaxed whitespace-pre">
+                {t("settings:apiKey.createdModal.configSnippet", { apiKey })}
+              </pre>
+            </div>
+          </div>
+
           <Alert>
             <AlertTitle>
               {t("settings:apiKey.createdModal.alertTitle")}

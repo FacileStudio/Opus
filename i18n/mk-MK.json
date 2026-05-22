@@ -454,9 +454,9 @@
 		"developerPage": {
 			"pageTitle": "Програмерски поставки",
 			"title": "Програмерски поставки",
-			"subtitle": "Управувај со твоите API клучеви и програмерски ресурси.",
+			"subtitle": "API клучевите ги автентицираат надворешните алатки како opus-cli со твојата Opus сметка. Креирај API клуч подолу и додај го во твојот ~/.opus.yml конфигурациски фајл.",
 			"apiKeysCardTitle": "API клучеви",
-			"apiKeysCardDescription": "Креирај и управувај со API клучеви за програмски пристап до Opus.",
+			"apiKeysCardDescription": "Креирај и управувај со API клучеви за opus-cli и програмски пристап до Opus.",
 			"createApiKey": "Креирај API клуч",
 			"unnamedKey": "Неименуван клуч"
 		},
@@ -470,6 +470,8 @@
 				"toastCopied": "API клучот е копиран во клипборд",
 				"alertTitle": "Успешно! Твојот API клуч е креиран",
 				"alertDescription": "Копирај го клучот сега. Нема да можеш да го видиш повторно.",
+				"configTitle": "Користење со opus-cli",
+				"configSnippet": "# Додај во ~/.opus.yml\napi_key: \"{{apiKey}}\"",
 				"done": "Готово",
 				"copyToContinue": "Копирај го клучот за да продолжиш"
 			},
@@ -497,7 +499,7 @@
 				"title": "Креирај API клуч",
 				"description": "Креирај нов API клуч за програмски пристап до Opus API.",
 				"nameLabel": "Име",
-				"namePlaceholder": "Мојот API клуч",
+				"namePlaceholder": "пр. opus-cli на MacBook",
 				"nameDescription": "Описно име за овој API клуч",
 				"expirationLabel": "Истекување",
 				"expirationPlaceholder": "Избери истекување",

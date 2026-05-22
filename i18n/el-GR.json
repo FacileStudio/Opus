@@ -454,9 +454,9 @@
 		"developerPage": {
 			"pageTitle": "Ρυθμίσεις προγραμματιστή",
 			"title": "Ρυθμίσεις προγραμματιστή",
-			"subtitle": "Διαχειριστείτε τα API keys και τους πόρους προγραμματιστή.",
+			"subtitle": "Τα κλειδιά API πιστοποιούν εξωτερικά εργαλεία όπως το opus-cli με τον λογαριασμό σας στο Opus. Δημιουργήστε ένα κλειδί API παρακάτω και προσθέστε το στο αρχείο ρυθμίσεων ~/.opus.yml.",
 			"apiKeysCardTitle": "Κλειδιά API",
-			"apiKeysCardDescription": "Δημιουργήστε και διαχειριστείτε κλειδιά API για προγραμματιστική πρόσβαση στο Opus.",
+			"apiKeysCardDescription": "Δημιουργήστε και διαχειριστείτε κλειδιά API για opus-cli και προγραμματιστική πρόσβαση στο Opus.",
 			"createApiKey": "Δημιουργία κλειδιού API",
 			"unnamedKey": "Κλειδί χωρίς όνομα"
 		},
@@ -470,6 +470,8 @@
 				"toastCopied": "Το κλειδί API αντιγράφηκε στο πρόχειρο",
 				"alertTitle": "Επιτυχία! Το κλειδί API σας δημιουργήθηκε",
 				"alertDescription": "Αντιγράψτε αυτό το κλειδί τώρα. Δεν θα μπορείτε να το δείτε ξανά.",
+				"configTitle": "Χρήση με opus-cli",
+				"configSnippet": "# Προσθήκη στο ~/.opus.yml\napi_key: \"{{apiKey}}\"",
 				"done": "Ολοκλήρωση",
 				"copyToContinue": "Αντιγράψτε το κλειδί για να συνεχίσετε"
 			},
@@ -497,7 +499,7 @@
 				"title": "Δημιουργία κλειδιού API",
 				"description": "Δημιουργήστε ένα νέο κλειδί API για πρόσβαση στο Opus API προγραμματιστικά.",
 				"nameLabel": "Όνομα",
-				"namePlaceholder": "Το κλειδί API μου",
+				"namePlaceholder": "π.χ. opus-cli σε MacBook",
 				"nameDescription": "Ένα περιγραφικό όνομα για αυτό το κλειδί API",
 				"expirationLabel": "Λήξη",
 				"expirationPlaceholder": "Επιλέξτε λήξη",

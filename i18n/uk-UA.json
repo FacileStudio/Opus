@@ -454,9 +454,9 @@
 		"developerPage": {
 			"pageTitle": "Налаштування розробника",
 			"title": "Налаштування розробника",
-			"subtitle": "Керуйте вашими API-ключами та ресурсами для розробників.",
+			"subtitle": "API-ключі автентифікують зовнішні інструменти, як-от opus-cli, з вашим обліковим записом Opus. Створіть API-ключ нижче та додайте його у файл конфігурації ~/.opus.yml.",
 			"apiKeysCardTitle": "API-ключі",
-			"apiKeysCardDescription": "Створюйте та керуйте API-ключами для програмного доступу до Opus.",
+			"apiKeysCardDescription": "Створюйте та керуйте API-ключами для opus-cli та програмного доступу до Opus.",
 			"createApiKey": "Створити API-ключ",
 			"unnamedKey": "Ключ без назви"
 		},
@@ -470,6 +470,8 @@
 				"toastCopied": "API-ключ скопійовано до буфера обміну",
 				"alertTitle": "Ваш API-ключ успішно створено",
 				"alertDescription": "Скопіюйте цей ключ зараз. Ви більше не зможете його побачити.",
+				"configTitle": "Використання з opus-cli",
+				"configSnippet": "# Додати в ~/.opus.yml\napi_key: \"{{apiKey}}\"",
 				"done": "Готово",
 				"copyToContinue": "Скопіюйте ключ, щоб продовжити"
 			},
@@ -497,7 +499,7 @@
 				"title": "Створити API-ключ",
 				"description": "Створіть новий API-ключ для програмного доступу до Opus API.",
 				"nameLabel": "Назва",
-				"namePlaceholder": "Мій API-ключ",
+				"namePlaceholder": "напр., opus-cli на MacBook",
 				"nameDescription": "Описова назва для цього API-ключа",
 				"expirationLabel": "Термін дії",
 				"expirationPlaceholder": "Оберіть термін дії",
