@@ -83,8 +83,8 @@ export function ApiKeyCreatedModal({
             <p className="text-xs font-medium">
               {t("settings:apiKey.createdModal.configTitle")}
             </p>
-            <div className="bg-sidebar border border-border rounded-sm p-2.5">
-              <pre className="text-xs font-mono text-foreground leading-relaxed whitespace-pre">
+            <div className="bg-sidebar border border-border rounded-sm p-2.5 overflow-x-auto">
+              <pre className="text-xs font-mono text-foreground leading-relaxed whitespace-pre-wrap break-all">
                 {t("settings:apiKey.createdModal.configSnippet", { apiKey })}
               </pre>
             </div>
