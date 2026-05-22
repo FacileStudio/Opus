@@ -365,9 +365,9 @@
 		"developerPage": {
 			"pageTitle": "Ontwikkelaarsinstellingen",
 			"title": "Ontwikkelaarsinstellingen",
-			"subtitle": "Beheer je API-sleutels en ontwikkelaarsbronnen.",
+			"subtitle": "API-sleutels authenticeren externe tools zoals opus-cli met je Opus-account. Maak hieronder een API-sleutel aan en voeg deze toe aan je ~/.opus.yml configuratiebestand.",
 			"apiKeysCardTitle": "API-sleutels",
-			"apiKeysCardDescription": "Maak en beheer API-sleutels voor programmatische toegang tot Opus.",
+			"apiKeysCardDescription": "Maak en beheer API-sleutels voor opus-cli en programmatische toegang tot Opus.",
 			"createApiKey": "API-sleutel maken",
 			"unnamedKey": "Naamloze sleutel"
 		},
@@ -381,6 +381,8 @@
 				"toastCopied": "API-sleutel gekopieerd naar klembord",
 				"alertTitle": "Succes! Je API-sleutel is aangemaakt",
 				"alertDescription": "Kopieer deze sleutel nu. Je kunt hem later niet meer inzien.",
+				"configTitle": "Gebruik met opus-cli",
+				"configSnippet": "# Toevoegen aan ~/.opus.yml\napi_key: \"{{apiKey}}\"",
 				"done": "Klaar",
 				"copyToContinue": "Kopieer de sleutel om door te gaan"
 			},
@@ -408,7 +410,7 @@
 				"title": "API-sleutel maken",
 				"description": "Maak een nieuwe API-sleutel aan om programmatisch toegang te krijgen tot de Opus API.",
 				"nameLabel": "Naam",
-				"namePlaceholder": "Mijn API-sleutel",
+				"namePlaceholder": "bijv. opus-cli op MacBook",
 				"nameDescription": "Een beschrijvende naam voor deze API-sleutel",
 				"expirationLabel": "Vervaldatum",
 				"expirationPlaceholder": "Selecteer verloop",

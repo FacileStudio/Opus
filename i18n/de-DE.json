@@ -454,9 +454,9 @@
 		"developerPage": {
 			"pageTitle": "Entwicklereinstellungen",
 			"title": "Entwicklereinstellungen",
-			"subtitle": "Verwalte deine API-Schlüssel und Entwicklerressourcen.",
+			"subtitle": "API-Schlüssel authentifizieren externe Tools wie opus-cli mit deinem Opus-Konto. Erstelle unten einen API-Schlüssel und füge ihn in deine ~/.opus.yml Konfigurationsdatei ein.",
 			"apiKeysCardTitle": "API-Schlüssel",
-			"apiKeysCardDescription": "Erstelle und verwalte API-Schlüssel für den programmgesteuerten Zugriff auf Opus.",
+			"apiKeysCardDescription": "Erstelle und verwalte API-Schlüssel für opus-cli und den programmgesteuerten Zugriff auf Opus.",
 			"createApiKey": "API-Schlüssel erstellen",
 			"unnamedKey": "Unbenannter Schlüssel"
 		},
@@ -470,6 +470,8 @@
 				"toastCopied": "API-Schlüssel in die Zwischenablage kopiert",
 				"alertTitle": "Erfolg! Dein API-Schlüssel wurde erstellt",
 				"alertDescription": "Kopiere diesen Schlüssel jetzt. Du wirst ihn später nicht mehr sehen können.",
+				"configTitle": "Verwendung mit opus-cli",
+				"configSnippet": "# In ~/.opus.yml eintragen\napi_key: \"{{apiKey}}\"",
 				"done": "Fertig",
 				"copyToContinue": "Schlüssel kopieren, um fortzufahren"
 			},
@@ -497,7 +499,7 @@
 				"title": "API-Schlüssel erstellen",
 				"description": "Erstelle einen neuen API-Schlüssel, um programmgesteuert auf die Opus-API zuzugreifen.",
 				"nameLabel": "Name",
-				"namePlaceholder": "Mein API-Schlüssel",
+				"namePlaceholder": "z. B. opus-cli auf MacBook",
 				"nameDescription": "Ein beschreibender Name für diesen API-Schlüssel",
 				"expirationLabel": "Ablauf",
 				"expirationPlaceholder": "Ablauf auswählen",

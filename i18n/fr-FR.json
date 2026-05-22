@@ -454,9 +454,9 @@
 		"developerPage": {
 			"pageTitle": "Paramètres développeur",
 			"title": "Paramètres développeur",
-			"subtitle": "Gérez vos clés API et vos ressources développeur.",
+			"subtitle": "Les clés API authentifient les outils externes comme opus-cli avec votre compte Opus. Créez une clé API ci-dessous, puis ajoutez-la dans votre fichier de configuration ~/.opus.yml.",
 			"apiKeysCardTitle": "Clés API",
-			"apiKeysCardDescription": "Créez et gérez des clés API pour un accès programmatique à Opus.",
+			"apiKeysCardDescription": "Créez et gérez des clés API pour opus-cli et l'accès programmatique à Opus.",
 			"createApiKey": "Créer une clé API",
 			"unnamedKey": "Clé sans nom"
 		},
@@ -470,6 +470,8 @@
 				"toastCopied": "Clé API copiée dans le presse-papiers",
 				"alertTitle": "Succès! Votre clé API a été créée",
 				"alertDescription": "Copiez cette clé maintenant. Vous ne pourrez plus la voir.",
+				"configTitle": "Utilisation avec opus-cli",
+				"configSnippet": "# Ajouter dans ~/.opus.yml\napi_key: \"{{apiKey}}\"",
 				"done": "Terminé",
 				"copyToContinue": "Copier la clé pour continuer"
 			},
@@ -497,7 +499,7 @@
 				"title": "Créer une clé API",
 				"description": "Créez une nouvelle clé API pour accéder à l'API Opus par programme.",
 				"nameLabel": "Nom",
-				"namePlaceholder": "Ma clé API",
+				"namePlaceholder": "ex : opus-cli sur MacBook",
 				"nameDescription": "Un nom descriptif pour cette clé API",
 				"expirationLabel": "Expiration",
 				"expirationPlaceholder": "Sélectionner une expiration",

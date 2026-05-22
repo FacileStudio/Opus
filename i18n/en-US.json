@@ -454,9 +454,9 @@
 		"developerPage": {
 			"pageTitle": "Developer Settings",
 			"title": "Developer Settings",
-			"subtitle": "Manage your API keys and developer resources.",
+			"subtitle": "API keys authenticate external tools like opus-cli with your Opus account. Create an API key below, then add it to your ~/.opus.yml config file.",
 			"apiKeysCardTitle": "API Keys",
-			"apiKeysCardDescription": "Create and manage API keys for programmatic access to Opus.",
+			"apiKeysCardDescription": "Create and manage API keys for opus-cli and programmatic access to Opus.",
 			"createApiKey": "Create API Key",
 			"unnamedKey": "Unnamed Key"
 		},
@@ -470,6 +470,8 @@
 				"toastCopied": "API key copied to clipboard",
 				"alertTitle": "Success! Your API key has been created",
 				"alertDescription": "Copy this key now. You won't be able to see it again.",
+				"configTitle": "Usage with opus-cli",
+				"configSnippet": "# Add to ~/.opus.yml\napi_key: \"{{apiKey}}\"",
 				"done": "Done",
 				"copyToContinue": "Copy key to continue"
 			},
@@ -497,7 +499,7 @@
 				"title": "Create API Key",
 				"description": "Create a new API key to access the Opus API programmatically.",
 				"nameLabel": "Name",
-				"namePlaceholder": "My API Key",
+				"namePlaceholder": "e.g., opus-cli on MacBook",
 				"nameDescription": "A descriptive name for this API key",
 				"expirationLabel": "Expiration",
 				"expirationPlaceholder": "Select expiration",
