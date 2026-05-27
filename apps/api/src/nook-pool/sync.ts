@@ -1,6 +1,6 @@
 import { PoolClient } from "@facile/pool";
 import { createId } from "@paralleldrive/cuid2";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, max } from "drizzle-orm";
 import db from "../database";
 import {
   columnTable,
@@ -284,12 +284,19 @@ async function handleIncomingTask(
       ),
     });
 
+    const [maxResult] = await db
+      .select({ maxNumber: max(taskTable.number) })
+      .from(taskTable)
+      .where(eq(taskTable.projectId, project.id));
+    const nextNumber = (maxResult?.maxNumber ?? 0) + 1;
+
     await db.insert(taskTable).values({
       projectId: project.id,
       title: data.payload.name,
       status,
       columnId: column?.id ?? null,
       facileId,
+      number: nextNumber,
     });
   } else if (action === "updated") {
     const updateData: Record<string, unknown> = {};
