@@ -5,7 +5,11 @@ import { describeRoute, resolver, validator } from "hono-openapi";
 import * as v from "valibot";
 import db, { schema } from "../database";
 import { workspaceAccess } from "../utils/workspace-access-middleware";
-import { connectPoolForWorkspace, disconnectPoolForWorkspace } from "./sync";
+import {
+  connectPoolForWorkspace,
+  disconnectPoolForWorkspace,
+  getPoolClient,
+} from "./sync";
 
 const nookPoolConfigSchema = v.object({
   id: v.string(),
@@ -56,7 +60,13 @@ const nookPool = new Hono<{
         .where(eq(schema.nookPoolConfigTable.workspaceId, workspaceId))
         .limit(1);
 
-      return c.json(config ?? null);
+      if (!config) return c.json(null);
+
+      const poolClient = getPoolClient(workspaceId);
+      return c.json({
+        ...config,
+        connected: poolClient?.isConnected ?? false,
+      });
     },
   )
   .post(
@@ -135,11 +145,13 @@ const nookPool = new Hono<{
         disconnectPoolForWorkspace(workspaceId);
       }
 
+      const poolClient = getPoolClient(workspaceId);
       return c.json({
         id: config.id,
         workspaceId: config.workspaceId,
         instanceUrl: config.instanceUrl,
         enabled: config.enabled,
+        connected: poolClient?.isConnected ?? false,
         createdAt: config.createdAt,
         updatedAt: config.updatedAt,
       });
