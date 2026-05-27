@@ -5,6 +5,8 @@ export type NookPoolConfig = {
   workspaceId: string;
   instanceUrl: string;
   enabled: boolean;
+  connected: boolean;
+  fromEnv?: boolean;
   createdAt: string;
   updatedAt: string;
 } | null;

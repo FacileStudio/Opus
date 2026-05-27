@@ -60,7 +60,18 @@ const nookPool = new Hono<{
         .where(eq(schema.nookPoolConfigTable.workspaceId, workspaceId))
         .limit(1);
 
-      if (!config) return c.json(null);
+      if (!config) {
+        const envUrl = process.env.NOOK_POOL_URL;
+        if (envUrl) {
+          return c.json({
+            instanceUrl: envUrl,
+            enabled: false,
+            connected: false,
+            fromEnv: true,
+          });
+        }
+        return c.json(null);
+      }
 
       const poolClient = getPoolClient(workspaceId);
       return c.json({

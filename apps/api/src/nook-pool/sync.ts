@@ -75,18 +75,28 @@ export function getPoolClient(workspaceId: string): PoolClient | undefined {
 }
 
 export async function initPoolSync(): Promise<void> {
+  const envUrl = process.env.NOOK_POOL_URL;
+  const envSecret = process.env.NOOK_POOL_SECRET;
+
+  if (envUrl && envSecret) {
+    console.log(
+      "Pool: NOOK_POOL_URL and NOOK_POOL_SECRET set, available as defaults",
+    );
+  }
+
   const configs = await db
     .select()
     .from(nookPoolConfigTable)
     .where(eq(nookPoolConfigTable.enabled, true));
 
   for (const config of configs) {
+    const url = config.instanceUrl || envUrl;
+    const secret = config.secret || envSecret;
+
+    if (!url || !secret) continue;
+
     try {
-      await connectPoolForWorkspace(
-        config.workspaceId,
-        config.instanceUrl,
-        config.secret,
-      );
+      await connectPoolForWorkspace(config.workspaceId, url, secret);
     } catch (error) {
       console.error(
         `Failed to init Pool for workspace ${config.workspaceId}:`,

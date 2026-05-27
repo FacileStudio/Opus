@@ -27,7 +27,8 @@ function RouteComponent() {
   const [secret, setSecret] = useState("");
   const [urlTouched, setUrlTouched] = useState(false);
 
-  const isConnected = !!(config as any)?.connected;
+  const isConnected = !!config?.connected;
+  const isFromEnv = !!config?.fromEnv;
 
   const handleConnect = useCallback(async () => {
     if (!workspace?.id) return;
@@ -131,6 +132,11 @@ function RouteComponent() {
                 <p className="text-xs text-muted-foreground">
                   The URL of your Nook Pool server
                 </p>
+                {isFromEnv && !urlTouched && (
+                  <p className="text-xs text-blue-500">
+                    Pre-filled from environment variable
+                  </p>
+                )}
               </div>
               <Input
                 className="w-64"
