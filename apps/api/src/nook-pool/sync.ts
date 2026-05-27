@@ -272,7 +272,25 @@ async function handleIncomingTask(
   } else if (action === "updated") {
     const updateData: Record<string, unknown> = {};
     if (data.payload.name) updateData.title = data.payload.name;
-    if (data.payload.status) updateData.status = data.payload.status;
+    if (data.payload.status) {
+      updateData.status = data.payload.status;
+
+      const [task] = await db
+        .select({ projectId: taskTable.projectId })
+        .from(taskTable)
+        .where(eq(taskTable.facileId, facileId))
+        .limit(1);
+
+      if (task) {
+        const column = await db.query.columnTable.findFirst({
+          where: and(
+            eq(columnTable.projectId, task.projectId),
+            eq(columnTable.slug, data.payload.status),
+          ),
+        });
+        if (column) updateData.columnId = column.id;
+      }
+    }
 
     if (Object.keys(updateData).length > 0) {
       await db
