@@ -9,6 +9,7 @@ import {
   connectPoolForWorkspace,
   disconnectPoolForWorkspace,
   getPoolClient,
+  performInitialSync,
 } from "./sync";
 
 const nookPoolConfigSchema = v.object({
@@ -266,6 +267,45 @@ const nookPool = new Hono<{
         return c.json({
           success: false,
           error: err instanceof Error ? err.message : "Connection failed",
+        });
+      }
+    },
+  )
+  .post(
+    "/:workspaceId/sync",
+    describeRoute({
+      operationId: "triggerNookPoolSync",
+      tags: ["Nook Pool"],
+      description: "Sync all existing projects and tasks to the Pool",
+      responses: {
+        200: {
+          description: "Sync result",
+          content: {
+            "application/json": {
+              schema: resolver(
+                v.object({
+                  success: v.boolean(),
+                  projects_synced: v.optional(v.number()),
+                  tasks_synced: v.optional(v.number()),
+                  error: v.optional(v.string()),
+                }),
+              ),
+            },
+          },
+        },
+      },
+    }),
+    validator("param", v.object({ workspaceId: v.string() })),
+    workspaceAccess.fromParam("workspaceId"),
+    async (c) => {
+      const workspaceId = c.get("workspaceId");
+      try {
+        const result = await performInitialSync(workspaceId);
+        return c.json({ success: true, ...result });
+      } catch (err) {
+        return c.json({
+          success: false,
+          error: err instanceof Error ? err.message : "Sync failed",
         });
       }
     },

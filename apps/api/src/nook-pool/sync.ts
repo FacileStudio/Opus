@@ -1,6 +1,6 @@
 import { PoolClient } from "@facile/pool";
 import { createId } from "@paralleldrive/cuid2";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import db from "../database";
 import {
   columnTable,
@@ -374,4 +374,101 @@ export function emitTaskEvent(
     timestamp: Date.now(),
     idempotency_key: createId(),
   });
+}
+
+export async function performInitialSync(
+  workspaceId: string,
+): Promise<{ projects_synced: number; tasks_synced: number }> {
+  const client = activeClients.get(workspaceId);
+  if (!client?.isConnected) {
+    throw new Error("Pool is not connected for this workspace");
+  }
+
+  const unflaggedProjects = await db
+    .select({ id: projectTable.id })
+    .from(projectTable)
+    .where(
+      and(
+        eq(projectTable.workspaceId, workspaceId),
+        isNull(projectTable.facileId),
+      ),
+    );
+
+  for (const p of unflaggedProjects) {
+    await db
+      .update(projectTable)
+      .set({ facileId: createId() })
+      .where(eq(projectTable.id, p.id));
+  }
+
+  const allProjects = await db
+    .select({
+      id: projectTable.id,
+      name: projectTable.name,
+      description: projectTable.description,
+      facileId: projectTable.facileId,
+    })
+    .from(projectTable)
+    .where(eq(projectTable.workspaceId, workspaceId));
+
+  for (let i = 0; i < allProjects.length; i++) {
+    const p = allProjects[i];
+    if (!p.facileId) continue;
+    emitProjectEvent(workspaceId, "created", p);
+    if ((i + 1) % 50 === 0 && i < allProjects.length - 1) {
+      await new Promise((r) => setTimeout(r, 100));
+    }
+  }
+
+  const unflaggedTasks = await db
+    .select({ id: taskTable.id })
+    .from(taskTable)
+    .innerJoin(projectTable, eq(taskTable.projectId, projectTable.id))
+    .where(
+      and(
+        eq(projectTable.workspaceId, workspaceId),
+        isNull(taskTable.facileId),
+      ),
+    );
+
+  for (const t of unflaggedTasks) {
+    await db
+      .update(taskTable)
+      .set({ facileId: createId() })
+      .where(eq(taskTable.id, t.id));
+  }
+
+  const allTasks = await db
+    .select({
+      id: taskTable.id,
+      title: taskTable.title,
+      status: taskTable.status,
+      projectId: taskTable.projectId,
+      facileId: taskTable.facileId,
+      projectFacileId: projectTable.facileId,
+    })
+    .from(taskTable)
+    .innerJoin(projectTable, eq(taskTable.projectId, projectTable.id))
+    .where(eq(projectTable.workspaceId, workspaceId));
+
+  for (let i = 0; i < allTasks.length; i++) {
+    const t = allTasks[i];
+    if (!t.facileId) continue;
+    emitTaskEvent(
+      workspaceId,
+      "created",
+      {
+        facileId: t.facileId,
+        title: t.title,
+        status: t.status,
+        projectId: t.projectId,
+      },
+      t.projectFacileId,
+    );
+    if ((i + 1) % 50 === 0 && i < allTasks.length - 1) {
+      await new Promise((r) => setTimeout(r, 100));
+    }
+  }
+
+  return { projects_synced: allProjects.length, tasks_synced: allTasks.length };
 }
