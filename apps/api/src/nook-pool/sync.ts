@@ -338,7 +338,7 @@ export function emitProjectEvent(
       name: project.name,
       description: project.description || "",
     },
-    timestamp: Date.now(),
+    timestamp: new Date().toISOString(),
     idempotency_key: createId(),
   });
 }
@@ -371,7 +371,7 @@ export function emitTaskEvent(
       name: task.title,
       status: task.status,
     },
-    timestamp: Date.now(),
+    timestamp: new Date().toISOString(),
     idempotency_key: createId(),
   });
 }
