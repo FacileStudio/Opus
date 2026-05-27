@@ -216,6 +216,7 @@ export const projectTable = pgTable(
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
     isPublic: boolean("is_public").default(false),
     archivedAt: timestamp("archived_at", { mode: "date" }),
+    facileId: text("facile_id").unique(),
   },
   (table) => [
     unique("project_workspace_id_id_unique").on(table.workspaceId, table.id),
@@ -347,6 +348,7 @@ export const taskTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
+    facileId: text("facile_id").unique(),
   },
   (table) => [
     index("task_projectId_idx").on(table.projectId),
@@ -912,6 +914,24 @@ export const workspaceWebhookTable = pgTable(
   },
   (table) => [index("workspace_webhook_workspaceId_idx").on(table.workspaceId)],
 );
+
+export const nookPoolConfigTable = pgTable("nook_pool_config", {
+  id: text("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaceTable.id, { onDelete: "cascade" })
+    .unique(),
+  instanceUrl: text("instance_url").notNull(),
+  secret: text("secret").notNull(),
+  enabled: boolean("enabled").default(false).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
 
 // Auth-schema compatible aliases in schema.ts
 export const user = userTable;

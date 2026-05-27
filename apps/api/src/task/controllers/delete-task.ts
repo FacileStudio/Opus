@@ -1,8 +1,13 @@
 import { eq, or } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import db from "../../database";
-import { taskRelationTable, taskTable } from "../../database/schema";
+import {
+  projectTable,
+  taskRelationTable,
+  taskTable,
+} from "../../database/schema";
 import { publishEvent } from "../../events";
+import { emitTaskEvent } from "../../nook-pool/sync";
 import getTask from "./get-task";
 
 async function deleteTask(taskId: string, currentUserId: string) {
@@ -36,6 +41,24 @@ async function deleteTask(taskId: string, currentUserId: string) {
     projectId: task.projectId,
     userId: currentUserId,
   });
+
+  const [project] = await db
+    .select({
+      facileId: projectTable.facileId,
+      workspaceId: projectTable.workspaceId,
+    })
+    .from(projectTable)
+    .where(eq(projectTable.id, task.projectId))
+    .limit(1);
+
+  if (project && deletedTask) {
+    emitTaskEvent(
+      project.workspaceId,
+      "deleted",
+      deletedTask,
+      project.facileId,
+    );
+  }
 
   for (const relation of relations) {
     await publishEvent("task-relation.deleted", {

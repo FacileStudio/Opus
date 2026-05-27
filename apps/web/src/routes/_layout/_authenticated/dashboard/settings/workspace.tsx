@@ -1,4 +1,4 @@
-import { BellBing, Settings } from "@solar-icons/react";
+import { BellBing, Refresh, Settings } from "@solar-icons/react";
 import {
   createFileRoute,
   Link,
@@ -38,6 +38,11 @@ function RouteComponent() {
       title: t("settings:workspaceNotifications.title"),
       url: "/dashboard/settings/workspace/notifications",
       icon: BellBing,
+    },
+    {
+      title: "Sync",
+      url: "/dashboard/settings/workspace/sync",
+      icon: Refresh,
     },
   ];
   const isActivePath = (path: string) => location.pathname === path;

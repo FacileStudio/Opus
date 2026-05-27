@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import db from "../../database";
 import { projectTable } from "../../database/schema";
+import { emitProjectEvent } from "../../nook-pool/sync";
 
 async function updateProject(
   id: string,
@@ -28,7 +29,7 @@ async function updateProject(
     });
   }
 
-  const [updatedWorkspace] = await db
+  const [updatedProject] = await db
     .update(projectTable)
     .set({
       name,
@@ -40,7 +41,11 @@ async function updateProject(
     .where(eq(projectTable.id, id))
     .returning();
 
-  return updatedWorkspace;
+  if (updatedProject) {
+    emitProjectEvent(updatedProject.workspaceId, "updated", updatedProject);
+  }
+
+  return updatedProject;
 }
 
 export default updateProject;

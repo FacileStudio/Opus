@@ -1,0 +1,18 @@
+app: opus
+instance: http://localhost:3400
+secret: dev-pool-secret
+events:
+  emit:
+    - project.created
+    - project.updated
+    - project.deleted
+    - task.created
+    - task.updated
+    - task.deleted
+  listen:
+    - project.created
+    - project.updated
+    - project.deleted
+    - task.created
+    - task.updated
+    - task.deleted
