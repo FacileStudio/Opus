@@ -253,16 +253,25 @@ async function handleIncomingTask(
     const projectFacileId = data.payload.project_facile_id;
     if (!projectFacileId) return;
 
-    const [project] = await db
-      .select({ id: projectTable.id })
-      .from(projectTable)
-      .where(
-        and(
-          eq(projectTable.facileId, projectFacileId),
-          eq(projectTable.workspaceId, workspaceId),
-        ),
-      )
-      .limit(1);
+    let project: { id: string } | undefined;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const [found] = await db
+        .select({ id: projectTable.id })
+        .from(projectTable)
+        .where(
+          and(
+            eq(projectTable.facileId, projectFacileId),
+            eq(projectTable.workspaceId, workspaceId),
+          ),
+        )
+        .limit(1);
+
+      if (found) {
+        project = found;
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 1000));
+    }
 
     if (!project) return;
 
@@ -423,6 +432,10 @@ export async function performInitialSync(
     if ((i + 1) % 50 === 0 && i < allProjects.length - 1) {
       await new Promise((r) => setTimeout(r, 100));
     }
+  }
+
+  if (allProjects.length > 0) {
+    await new Promise((r) => setTimeout(r, 2000));
   }
 
   const unflaggedTasks = await db
