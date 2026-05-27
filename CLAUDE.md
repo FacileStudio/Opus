@@ -1,296 +1,149 @@
-# CLAUDE.md
+# Opus
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Self-hosted project management platform. Simplicity and performance first -- features solve real problems, nothing more. Do not add features, refactoring, or improvements beyond what was asked.
 
-## Project Overview
+## Tech Stack
 
-Opus is a self-hosted project management platform built with simplicity and performance as core principles. The codebase is organized as a **pnpm monorepo** with TurboRepo.
+| Layer | Tech |
+|-------|------|
+| Monorepo | pnpm 10.32 + TurboRepo |
+| Backend | Hono, Node/tsx, PostgreSQL, Drizzle ORM, Better Auth, Valibot, OpenAPI |
+| Frontend | React 19, Vite, TanStack Router (file-based) + Query, Tailwind CSS v4, Zustand, Radix UI, Tiptap editor |
+| Docs | Fumadocs (Next.js) at `apps/docs/` |
+| Marketing site | Next.js at `apps/site/` |
+| MCP server | `packages/mcp/` |
+| Email | `packages/email/` |
+| Shared libs | `packages/libs/` |
+| Linting | Biome (spaces for JS/TS, tabs elsewhere, double quotes, semicolons required) |
+| Commits | Conventional Commits enforced by commitlint + Husky |
+| Deploy | Docker (single-image), Helm chart (`charts/`), optional Redis for HA WebSocket pub/sub |
+| i18n | JSON translation files in `i18n/`, scripts in `scripts/i18n/` |
 
-**Key Philosophy**: Features exist to solve real problems, not to impress. Avoid over-engineering - keep solutions simple and focused. Don't add features, refactoring, or improvements beyond what was asked.
+## Commands
 
-## Development Commands
-
-### Getting Started
 ```bash
-# Install dependencies (uses pnpm)
-pnpm install
+pnpm install                          # install deps
+pnpm dev                              # start all dev servers (API :1337, web :5173)
+pnpm build                            # build everything via Turbo
+pnpm lint                             # biome check --write across the monorepo
+pnpm test                             # unit tests (Vitest) across packages
+pnpm test:integration                 # API integration tests (needs PostgreSQL)
 
-# Start all development servers (API + web)
-pnpm dev
+# API-specific
+pnpm --filter @opus/api dev           # API dev server only
+pnpm --filter @opus/api db:generate   # generate Drizzle migration after schema change
+pnpm --filter @opus/api db:migrate    # run migrations (also auto-runs on startup)
+pnpm --filter @opus/api db:studio     # Drizzle Studio GUI
 
-# Lint and auto-fix code (Biome)
-pnpm lint
+# Web-specific
+pnpm --filter @opus/web dev           # web dev server only
+pnpm --filter @opus/web build         # production build
+pnpm --filter @opus/web typecheck     # tsc --noEmit
 
-# Build all packages
-pnpm build
+# i18n
+pnpm i18n:check                       # validate translation files
+pnpm i18n:check:fix                   # auto-fix translation issues
 ```
 
-### API-Specific Commands
-```bash
-# Run API in development mode
-pnpm --filter @opus/api dev
+## Project Structure
 
-# Build API
-pnpm --filter @opus/api build
-
-# Generate database migrations (after schema changes)
-pnpm --filter @opus/api db:generate
-
-# Run database migrations (auto-runs on API startup)
-pnpm --filter @opus/api db:migrate
-
-# Open Drizzle Studio (database GUI)
-pnpm --filter @opus/api db:studio
-
-# Lint API code
-pnpm --filter @opus/api lint
-```
-
-### Web-Specific Commands
-```bash
-# Run web app in development mode
-pnpm --filter @opus/web dev
-
-# Build web app for production
-pnpm --filter @opus/web build
-
-# Preview production build
-pnpm --filter @opus/web preview
-
-# Lint web code
-pnpm --filter @opus/web lint
-```
-
-## Architecture Overview
-
-### Monorepo Structure
 ```
 opus/
-├── apps/
-│   ├── api/          # Backend API (Hono/Node.js/PostgreSQL)
-│   ├── web/          # Frontend app (React/Vite/TanStack)
-│   └── docs/         # Documentation site (Next.js)
-├── packages/
-│   ├── email/        # Email utilities
-│   ├── libs/         # Shared libraries
-│   └── typescript-config/  # TypeScript configurations
-└── charts/           # Kubernetes Helm charts
+  apps/
+    api/              # Hono backend (@opus/api)
+      src/            #   feature dirs: {feature}/controllers/, index.ts
+      drizzle/        #   SQL migrations
+    web/              # React frontend (@opus/web)
+      src/
+        routes/       #   file-based TanStack Router pages
+        components/   #   UI components
+        hooks/        #   queries/, mutations/
+        fetchers/     #   API client functions by feature
+    docs/             # Fumadocs documentation site
+    site/             # Marketing/landing site (Next.js)
+  packages/
+    email/            # Email utilities
+    libs/             # Shared libraries (@opus/libs)
+    mcp/              # MCP server
+    typescript-config/ # Shared tsconfig
+  charts/             # Kubernetes Helm charts
+  i18n/               # Translation JSON files
+  tests/
+    api/              # API unit tests
+    api-integration/  # API integration tests
+  deploy/             # Entrypoint script for Docker
 ```
 
-### Technology Stack
+## Architecture Patterns
 
-**Backend (API)**
-- Framework: Hono (lightweight web framework)
-- Database: PostgreSQL with Drizzle ORM
-- Authentication: Better Auth
-- Validation: Valibot (Zod is also present, used by Better Auth and some schemas)
-- API Documentation: OpenAPI (hono-openapi)
-- IDs: CUID2 (via @paralleldrive/cuid2)
+### Backend (API)
 
-**Frontend (Web)**
-- Framework: React 19+
-- Routing: TanStack Router (file-based)
-- Data Fetching: TanStack Query (React Query)
-- Build Tool: Vite
-- Styling: Tailwind CSS v4
-- State Management: Zustand
-- UI Components: Radix UI primitives
-
-### Key Architectural Patterns
-
-**Backend API Structure**
-- Routes organized by feature in `apps/api/src/{feature}/`
-- Controller pattern: business logic extracted to `{feature}/controllers/`
-- All routes use OpenAPI decorators (`describeRoute`)
-- All inputs validated with Valibot schemas
+- Routes organized by feature: `apps/api/src/{feature}/index.ts`
+- Business logic in controllers: `apps/api/src/{feature}/controllers/`
+- All routes use `describeRoute` (OpenAPI) and `validator` with Valibot schemas
+- Database schema: `apps/api/src/database/schema.ts`, relations in `relations.ts`
+- All tables use CUID2 primary keys, `createdAt`/`updatedAt` timestamps, explicit cascade on FKs
 - Migrations auto-run on API startup
+- Auth context: `c.get("userId")`, `c.get("user")`, `c.get("session")`
+- Events: `publishEvent()` from `apps/api/src/events/` for activity tracking
+- Errors: throw `HTTPException`
 
-**Frontend Structure**
+### Frontend (Web)
+
 - File-based routing in `apps/web/src/routes/`
-- Query hooks in `apps/web/src/hooks/queries/`
-- Mutation hooks in `apps/web/src/hooks/mutations/`
-- API fetchers in `apps/web/src/fetchers/{feature}/`
-- Components in `apps/web/src/components/`
-
-**Database Schema Conventions**
-- All tables use CUID2 for primary keys (`createId()`)
-- Every table has `createdAt` and `updatedAt` timestamps
-- Foreign keys always specify cascade behavior (`onDelete`, `onUpdate`)
-- Indexes on frequently queried columns (especially foreign keys)
-- Schema defined in `apps/api/src/database/schema.ts`
-- Relations defined in `apps/api/src/database/relations.ts`
-
-**Authentication Flow**
-- Better Auth handles authentication
-- User context available in Hono via `c.get("userId")`, `c.get("user")`, `c.get("session")`
-- API keys supported via Bearer token
-- Frontend uses Better Auth client from `@/lib/auth-client`
-
-**Event System**
-- Events published for activity tracking
-- Use `publishEvent()` from `apps/api/src/events/`
-- Events tracked for features like status changes, assignments, etc.
+- Fetchers in `apps/web/src/fetchers/{feature}/`
+- Query hooks in `apps/web/src/hooks/queries/`, mutation hooks in `hooks/mutations/`
+- TanStack Query for server state, Zustand for client state
+- Auth client: `@/lib/auth-client`
+- User feedback: sonner toasts
+- Rich text: Tiptap
 
 ## Code Style
 
-### Formatting (Biome)
-- **Indentation**: Spaces for JavaScript/TypeScript/TSX (tabs for other file types)
-- **Quotes**: Double quotes
-- **Semicolons**: Required
-- **Ignored files**: CSS and `package.json` files are excluded from Biome linting/formatting
-- Run `pnpm lint` to auto-fix
-
-### TypeScript Conventions
-- Prefer `type` over `interface` (only use interface when extending/merging)
+- Biome handles formatting and linting; run `pnpm lint` to auto-fix
+- CSS and `package.json` files are excluded from Biome
+- Prefer `type` over `interface`
 - Prefer type inference when obvious
-- File naming: PascalCase for components, kebab-case for utilities/hooks
-- Hooks use `use` prefix: `use-task.ts`
+- File naming: PascalCase for components, kebab-case for utilities/hooks (prefix hooks with `use`)
+- Import order: externals, then `@/` aliases, then relative (Biome auto-sorts)
+- No inline comments in code
 
-### Import Organization
-1. External packages
-2. Internal packages (`@/` aliases)
-3. Relative imports
-Biome auto-organizes imports.
+## Pre-commit Hooks
 
-### Git Commits
-Use Conventional Commits:
-- `feat:` - New features
-- `fix:` - Bug fixes
-- `docs:` - Documentation
-- `refactor:` - Code refactoring
-- `chore:` - Maintenance tasks
+The Husky pre-commit hook runs:
+1. `biome ci .` -- lint/format check
+2. `pnpm run build` -- full monorepo build
 
-Husky enforces commit message format via commitlint.
+Commits are slow because of the build step. Make sure code compiles before committing.
+Commit messages are validated by commitlint (Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, etc.).
 
-### Pre-commit Hooks
-The pre-commit hook (`.husky/pre-commit`) runs two checks:
-1. `biome ci .` — linting and formatting validation
-2. `pnpm run build` — full monorepo build
+## Environment
 
-Commits will be slow due to the build step. Ensure code compiles before committing.
+Single `.env` in project root (shared by all apps). See `.env.sample` for all variables.
 
-## Environment Configuration
+Required:
+- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` (or `DATABASE_URL` directly)
+- `AUTH_SECRET` -- min 32 chars, generate with `openssl rand -hex 32`
 
-**Single `.env` file** in project root shared by all apps.
+Important optional:
+- `OPUS_CLIENT_URL` (default http://localhost:5173)
+- `OPUS_API_URL` (default derived from client URL)
+- `REDIS_URL` -- enables multi-instance WebSocket pub/sub (falls back to in-memory)
+- SSO: GitHub, Google, Discord, custom OIDC
+- SMTP for transactional email
 
-Required variables:
-- `OPUS_CLIENT_URL` - Web app URL (e.g., http://localhost:5173)
-- `OPUS_API_URL` - API URL (e.g., http://localhost:1337)
-- `AUTH_SECRET` - JWT secret (min 32 chars)
-- `DATABASE_URL` - PostgreSQL connection string
-- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`
+## Testing
 
-Optional:
-- `CORS_ORIGINS` - Comma-separated allowed origins (empty = allow all in dev)
-- `VITE_API_URL` - API URL for web dev (defaults to http://localhost:1337)
-- `REDIS_URL` - Redis connection string for multi-instance WebSocket broadcasts via Pub/Sub (omit for single-instance in-memory mode)
-- SSO providers (GitHub, Google, Discord, Custom OAuth/OIDC)
-- SMTP configuration
+- Unit tests: `pnpm test` (Vitest, runs across all packages via Turbo)
+- API integration tests: `pnpm test:integration` (requires running PostgreSQL)
+- Vitest configs: `apps/api/vitest.config.ts`, `apps/api/vitest.integration.config.ts`, `apps/web/vitest.config.ts`
+- Integration test setup: `tests/api-integration/setup.ts`
 
-See `ENVIRONMENT_SETUP.md` for detailed configuration and troubleshooting.
+## Gotchas
 
-## Development Workflow
-
-### When Making Changes
-
-1. **Read before modifying**: Never propose changes to code you haven't read
-2. **Use existing patterns**: Follow the established controller/fetcher/hook patterns
-3. **Avoid over-engineering**: Don't add features beyond what's requested
-4. **Type safety**: Let TypeScript guide you - all APIs are fully typed
-5. **Validate inputs**: Always use Valibot schemas for API inputs
-6. **Error handling**: Backend uses HTTPException, frontend uses toast notifications
-
-### Database Changes
-
-1. Modify schema in `apps/api/src/database/schema.ts`
-2. Generate migration: `pnpm --filter @opus/api db:generate`
-3. Migration auto-runs on next API startup
-4. Always use CUID2 for IDs, include timestamps, specify cascade behavior
-
-### Adding API Endpoints
-
-1. Create controller in `apps/api/src/{feature}/controllers/`
-2. Add route in `apps/api/src/{feature}/index.ts`
-3. Use `describeRoute` for OpenAPI docs
-4. Use `validator` with Valibot schema
-5. Keep route handler thin - business logic in controller
-
-### Adding Frontend Features
-
-1. Create fetcher in `apps/web/src/fetchers/{feature}/`
-2. Create query/mutation hook in `apps/web/src/hooks/`
-3. Use TanStack Query for caching
-4. Handle loading/error states properly
-5. Use toast notifications (sonner) for user feedback
-
-## Important Notes
-
-- **Package Manager**: This project uses **pnpm** (pinned to `10.32.1` via `packageManager` field), not npm or yarn. Requires Node `>=18`
-- **Migrations**: Auto-run on API startup, stored in `apps/api/drizzle/`
-- **Development Ports**: API runs on 1337, web runs on 5173
-- **Hot Reload**: Both API and web have watch mode via `pnpm dev`
-- **CORS**: Configured in API index.ts, controlled by `CORS_ORIGINS` env var
-- **Testing**: Run `pnpm test` at the repo root (Turbo runs `test` in packages that define it: API unit tests, web unit/component tests, shared packages). API integration tests: `pnpm test:integration` (requires PostgreSQL; env is set in `tests/api-integration/setup.ts`; CI uses `.github/workflows/ci.yml`). Vitest configs: `apps/api/vitest.config.ts` (unit), `apps/api/vitest.integration.config.ts` (integration), `apps/web/vitest.config.ts` (web). Integration tests live under `tests/api-integration/`; API unit tests under `tests/api/`.
-- **Security**: Never commit secrets, always validate inputs, sanitize outputs
-
-## Common Patterns
-
-### Backend Route Example
-```typescript
-// apps/api/src/{feature}/index.ts
-import { Hono } from "hono";
-import { describeRoute, validator } from "hono-openapi";
-import * as v from "valibot";
-import getItem from "./controllers/get-item";
-
-const feature = new Hono<{ Variables: { userId: string } }>()
-  .get("/:id",
-    describeRoute({
-      operationId: "getItem",
-      tags: ["Feature"],
-      description: "Get item by ID"
-    }),
-    validator("param", v.object({ id: v.string() })),
-    async (c) => {
-      const { id } = c.req.valid("param");
-      const item = await getItem(id);
-      return c.json(item);
-    }
-  );
-```
-
-### Frontend Query Hook Example
-```typescript
-// apps/web/src/hooks/queries/{feature}/use-item.ts
-import { useQuery } from "@tanstack/react-query";
-import { getItem } from "@/fetchers/{feature}/get-item";
-
-export function useItem(itemId: string) {
-  return useQuery({
-    queryKey: ["item", itemId],
-    queryFn: () => getItem(itemId),
-  });
-}
-```
-
-### Database Schema Example
-```typescript
-// apps/api/src/database/schema.ts
-export const exampleTable = pgTable("example", {
-  id: text("id").$defaultFn(() => createId()).primaryKey(),
-  projectId: text("project_id")
-    .notNull()
-    .references(() => projectTable.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  title: text("title").notNull(),
-  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "date" })
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-}, (table) => [
-  index("example_projectId_idx").on(table.projectId),
-]);
-```
+- Package manager is **pnpm** -- not npm, not yarn, not bun. Node >= 20.19.0.
+- Migrations auto-run on API startup; no need to manually run them in dev after generating.
+- The pre-commit build step means every commit triggers a full build. Budget time accordingly.
+- `CORS_ORIGINS` empty = allow all in dev. Set explicitly in production.
+- Biome excludes CSS files; Tailwind handles CSS linting/formatting.
+- `routeTree.gen.ts` is auto-generated by TanStack Router plugin; do not edit manually.

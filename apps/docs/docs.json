@@ -33,7 +33,7 @@
 			"format": "woff2"
 		}
 	},
-	"favicon": "/favicon.svg",
+	"favicon": "/favicon.ico",
 	"logo": {
 		"light": "/logo/dark.svg",
 		"dark": "/logo/light.svg"
