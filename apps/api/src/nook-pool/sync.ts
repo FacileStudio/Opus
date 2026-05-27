@@ -153,13 +153,14 @@ function createSyncQueue() {
   async function drain() {
     if (processing) return;
     processing = true;
-    while (queue.length > 0) {
-      const fn = queue.shift()!;
+    let fn = queue.shift();
+    while (fn) {
       try {
         await fn();
       } catch (error) {
         console.error("Pool sync queue error:", error);
       }
+      fn = queue.shift();
     }
     processing = false;
   }
