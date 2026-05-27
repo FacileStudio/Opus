@@ -27,7 +27,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { getApiUrl } from "@/fetchers/get-api-url";
 import {
   deleteWorkspaceLogo,
@@ -262,247 +261,214 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title={t("settings:workspaceGeneral.pageTitle")} />
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">
+      <div className="max-w-xl space-y-8">
+        <div>
+          <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+            {t("navigation:page.settingsWorkspaceTab")}
+          </p>
+          <h1 className="text-lg font-semibold">
             {t("settings:workspaceGeneral.title")}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             {t("settings:workspaceGeneral.subtitle")}
           </p>
         </div>
 
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-md font-medium">
+        <section className="space-y-5">
+          <div>
+            <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
               {t("settings:workspaceGeneral.workspaceInfoTitle")}
-            </h2>
-            <p className="text-xs text-muted-foreground">
+            </p>
+            <h2 className="font-semibold">
               {t("settings:workspaceGeneral.workspaceInfoSubtitle")}
-            </p>
-          </div>
-
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
-            <Form {...workspaceForm}>
-              <form className="space-y-4">
-                <FormField
-                  control={workspaceForm.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-sm font-medium">
-                            {t("settings:workspaceGeneral.nameLabel")}
-                          </FormLabel>
-                          <p className="text-xs text-muted-foreground">
-                            {t("settings:workspaceGeneral.nameHint")}
-                          </p>
-                        </div>
-                        <FormControl>
-                          <Input
-                            className="w-64"
-                            placeholder={t(
-                              "settings:workspaceGeneral.namePlaceholder",
-                            )}
-                            {...field}
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Separator />
-
-                <FormField
-                  control={workspaceForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-sm font-medium">
-                            {t("settings:workspaceGeneral.descriptionLabel")}
-                          </FormLabel>
-                          <p className="text-xs text-muted-foreground">
-                            {t("settings:workspaceGeneral.descriptionHint")}
-                          </p>
-                        </div>
-                        <FormControl>
-                          <Input
-                            className="w-64"
-                            placeholder={t(
-                              "settings:workspaceGeneral.descriptionPlaceholder",
-                            )}
-                            {...field}
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </form>
-            </Form>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-md font-medium">
-              {t("settings:workspaceGeneral.logoTitle")}
             </h2>
-            <p className="text-xs text-muted-foreground">
-              {t("settings:workspaceGeneral.logoSubtitle")}
-            </p>
           </div>
 
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Avatar className="size-14 rounded-lg">
-                  {workspace?.logo ? (
-                    <AvatarImage
-                      src={getApiUrl(
-                        `/workspace/${workspace.id}/logo?v=${logoVersion}`,
-                      )}
-                      alt={workspace.name}
-                    />
-                  ) : null}
-                  <AvatarFallback className="rounded-lg bg-muted text-lg">
-                    {workspace?.name?.charAt(0)?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="space-y-0.5">
-                  <p className="text-sm font-medium">
-                    {t("settings:workspaceGeneral.logoLabel")}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("settings:workspaceGeneral.logoHint")}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {workspace?.logo && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground"
-                    disabled={isUploadingLogo}
-                    onClick={async () => {
-                      if (!workspace?.id) return;
-                      try {
-                        await deleteWorkspaceLogo(workspace.id);
-                        await updateWorkspace({
-                          workspaceId: workspace.id,
-                          logo: "",
-                        });
-                        setLogoVersion(Date.now());
-                        await queryClient.invalidateQueries({
-                          queryKey: ["active-organization"],
-                        });
-                        toast.success(
-                          t("settings:workspaceGeneral.logoDeleted"),
-                        );
-                      } catch {
-                        toast.error(
-                          t("settings:workspaceGeneral.logoDeleteError"),
-                        );
-                      }
-                    }}
-                  >
-                    <CloseCircle className="size-4" />
-                    {t("common:actions.remove")}
-                  </Button>
+          <Form {...workspaceForm}>
+            <form className="space-y-4">
+              <FormField
+                control={workspaceForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="grid gap-1.5">
+                    <FormLabel className="text-sm text-muted-foreground">
+                      {t("settings:workspaceGeneral.nameLabel")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t(
+                          "settings:workspaceGeneral.namePlaceholder",
+                        )}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={isUploadingLogo}
-                  onClick={() => logoInputRef.current?.click()}
-                >
-                  <Gallery className="size-4" />
-                  {isUploadingLogo
-                    ? t("settings:workspaceGeneral.logoUploading")
-                    : t("settings:workspaceGeneral.logoUpload")}
-                </Button>
-                <input
-                  ref={logoInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
-                  className="hidden"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file || !workspace?.id) return;
+              />
 
-                    setIsUploadingLogo(true);
+              <FormField
+                control={workspaceForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="grid gap-1.5">
+                    <FormLabel className="text-sm text-muted-foreground">
+                      {t("settings:workspaceGeneral.descriptionLabel")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t(
+                          "settings:workspaceGeneral.descriptionPlaceholder",
+                        )}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </section>
+
+        <section className="space-y-5">
+          <div>
+            <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+              {t("settings:workspaceGeneral.logoTitle")}
+            </p>
+            <h2 className="font-semibold">
+              {t("settings:workspaceGeneral.logoSubtitle")}
+            </h2>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Avatar className="size-14 rounded-lg">
+                {workspace?.logo ? (
+                  <AvatarImage
+                    src={getApiUrl(
+                      `/workspace/${workspace.id}/logo?v=${logoVersion}`,
+                    )}
+                    alt={workspace.name}
+                  />
+                ) : null}
+                <AvatarFallback className="rounded-lg bg-muted text-lg">
+                  {workspace?.name?.charAt(0)?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <p className="text-sm text-muted-foreground">
+                {t("settings:workspaceGeneral.logoHint")}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              {workspace?.logo && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground"
+                  disabled={isUploadingLogo}
+                  onClick={async () => {
+                    if (!workspace?.id) return;
                     try {
-                      const result = await uploadWorkspaceLogo(
-                        workspace.id,
-                        file,
-                      );
+                      await deleteWorkspaceLogo(workspace.id);
                       await updateWorkspace({
                         workspaceId: workspace.id,
-                        logo: result.url,
+                        logo: "",
                       });
                       setLogoVersion(Date.now());
                       await queryClient.invalidateQueries({
                         queryKey: ["active-organization"],
                       });
-                      toast.success(t("settings:workspaceGeneral.logoUpdated"));
-                    } catch (error) {
+                      toast.success(t("settings:workspaceGeneral.logoDeleted"));
+                    } catch {
                       toast.error(
-                        error instanceof Error
-                          ? error.message
-                          : t("settings:workspaceGeneral.logoUploadError"),
+                        t("settings:workspaceGeneral.logoDeleteError"),
                       );
-                    } finally {
-                      setIsUploadingLogo(false);
-                      if (logoInputRef.current) {
-                        logoInputRef.current.value = "";
-                      }
                     }
                   }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-md font-medium">
-              {t("settings:workspaceGeneral.dangerZone")}
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              {t("settings:workspaceGeneral.dangerZoneSubtitle")}
-            </p>
-          </div>
-
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">
-                  {t("settings:workspaceGeneral.deleteWorkspace")}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {t("settings:workspaceGeneral.deleteWorkspaceDescription")}
-                </p>
-              </div>
+                >
+                  <CloseCircle className="size-4" />
+                  {t("common:actions.remove")}
+                </Button>
+              )}
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="text-destructive hover:text-destructive transition-colors"
-                type="button"
-                onClick={() => setIsDeleteModalOpen(true)}
+                disabled={isUploadingLogo}
+                onClick={() => logoInputRef.current?.click()}
               >
-                {t("settings:workspaceGeneral.deleteWorkspace")}
+                <Gallery className="size-4" />
+                {isUploadingLogo
+                  ? t("settings:workspaceGeneral.logoUploading")
+                  : t("settings:workspaceGeneral.logoUpload")}
               </Button>
+              <input
+                ref={logoInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file || !workspace?.id) return;
+
+                  setIsUploadingLogo(true);
+                  try {
+                    const result = await uploadWorkspaceLogo(
+                      workspace.id,
+                      file,
+                    );
+                    await updateWorkspace({
+                      workspaceId: workspace.id,
+                      logo: result.url,
+                    });
+                    setLogoVersion(Date.now());
+                    await queryClient.invalidateQueries({
+                      queryKey: ["active-organization"],
+                    });
+                    toast.success(t("settings:workspaceGeneral.logoUpdated"));
+                  } catch (error) {
+                    toast.error(
+                      error instanceof Error
+                        ? error.message
+                        : t("settings:workspaceGeneral.logoUploadError"),
+                    );
+                  } finally {
+                    setIsUploadingLogo(false);
+                    if (logoInputRef.current) {
+                      logoInputRef.current.value = "";
+                    }
+                  }
+                }}
+              />
             </div>
           </div>
-        </div>
+        </section>
+
+        <section className="space-y-5">
+          <div>
+            <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+              {t("settings:workspaceGeneral.dangerZone")}
+            </p>
+            <h2 className="font-semibold">
+              {t("settings:workspaceGeneral.dangerZoneSubtitle")}
+            </h2>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              {t("settings:workspaceGeneral.deleteWorkspaceDescription")}
+            </p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="shrink-0 ml-4 text-destructive hover:text-destructive transition-colors"
+              type="button"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              {t("settings:workspaceGeneral.deleteWorkspace")}
+            </Button>
+          </div>
+        </section>
 
         <AlertDialog
           open={isDeleteModalOpen}

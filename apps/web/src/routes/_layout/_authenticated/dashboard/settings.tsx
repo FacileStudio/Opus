@@ -8,9 +8,9 @@ import {
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
+import { cn } from "@/lib/cn";
 
 export const Route = createFileRoute(
   "/_layout/_authenticated/dashboard/settings",
@@ -43,67 +43,74 @@ function SettingsLayout() {
 
   const activeTab = getActiveTab();
 
+  const tabs = [
+    {
+      id: "account",
+      label: t("settings:account"),
+      to: "/dashboard/settings/account/information" as const,
+      disabled: false,
+    },
+    {
+      id: "workspace",
+      label: t("navigation:page.settingsWorkspaceTab"),
+      to: "/dashboard/settings/workspace/general" as const,
+      disabled: false,
+    },
+    {
+      id: "project",
+      label: t("navigation:sidebar.projects"),
+      to: "/dashboard/settings/projects" as const,
+      disabled: projects?.length === 0,
+    },
+  ];
+
   return (
     <>
       <PageTitle title={t("navigation:page.settingsTitle")} />
-      <div className="flex flex-col gap-4 p-4 bg-sidebar w-full h-full">
-        <div className="flex flex-col gap-4 bg-card h-full border border-border rounded-md p-4 relative overflow-hidden">
-          <div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                navigate({
-                  to: "/dashboard/workspace/$workspaceId",
-                  params: { workspaceId: workspace?.id ?? "" },
-                })
-              }
-            >
-              <ChevronLeft className=" border border-border rounded-md p-1 size-6" />
-              {t("navigation:page.backToWorkspace")}
-            </Button>
+      <div className="flex flex-col w-full h-full overflow-hidden">
+        <div className="px-4 py-4 md:px-8 md:py-5">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mb-3 -ml-2 text-muted-foreground"
+            onClick={() =>
+              navigate({
+                to: "/dashboard/workspace/$workspaceId",
+                params: { workspaceId: workspace?.id ?? "" },
+              })
+            }
+          >
+            <ChevronLeft className="size-4" />
+            {t("navigation:page.backToWorkspace")}
+          </Button>
 
-            <h1 className="text-2xl font-semibold pl-2 mt-2">
-              {t("navigation:page.settingsTitle")}
-            </h1>
+          <h1 className="text-lg font-semibold">
+            {t("navigation:page.settingsTitle")}
+          </h1>
 
-            <Tabs value={activeTab} className="w-[400px] pt-2">
-              <TabsList className="bg-sidebar gap-2">
-                <TabsTrigger
-                  className="[&[data-state=active]]:border [&[data-state=active]]:border-border [&[data-state=active]]:rounded-md [&[data-state=active]]:bg-card"
-                  value="account"
-                  onClick={() =>
-                    navigate({ to: "/dashboard/settings/account/information" })
-                  }
-                >
-                  {t("settings:account")}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="workspace"
-                  className="[&[data-state=active]]:border [&[data-state=active]]:border-border [&[data-state=active]]:rounded-md [&[data-state=active]]:bg-card"
-                  onClick={() =>
-                    navigate({ to: "/dashboard/settings/workspace/general" })
-                  }
-                >
-                  {t("navigation:page.settingsWorkspaceTab")}
-                </TabsTrigger>
-                <TabsTrigger
-                  disabled={projects?.length === 0}
-                  value="project"
-                  className="[&[data-state=active]]:border [&[data-state=active]]:border-border [&[data-state=active]]:rounded-md [&[data-state=active]]:bg-card"
-                  onClick={() =>
-                    navigate({ to: "/dashboard/settings/projects" })
-                  }
-                >
-                  {t("navigation:sidebar.projects")}
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+          <div className="mt-4 flex items-center gap-1.5 border-b border-border pb-3">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                disabled={tab.disabled}
+                onClick={() => navigate({ to: tab.to })}
+                className={cn(
+                  "inline-flex h-9 items-center rounded-lg px-3.5 text-sm font-medium transition-colors",
+                  activeTab === tab.id
+                    ? "bg-foreground text-background"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  tab.disabled && "opacity-40 pointer-events-none",
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
+        </div>
 
-          <div className="flex-1 overflow-y-auto">
-            <Outlet />
-          </div>
+        <div className="flex-1 overflow-y-auto px-4 py-6 md:px-8">
+          <Outlet />
         </div>
       </div>
     </>

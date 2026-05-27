@@ -3,7 +3,6 @@ import { useCallback, useState } from "react";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import triggerNookPoolSync from "@/fetchers/nook-pool/trigger-sync";
 import useDeleteNookPool from "@/hooks/mutations/workspace/use-delete-nook-pool";
 import useSaveNookPool from "@/hooks/mutations/workspace/use-save-nook-pool";
@@ -105,10 +104,10 @@ function RouteComponent() {
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto py-8">
+      <div className="max-w-xl py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-muted rounded w-48" />
-          <div className="h-4 bg-muted rounded w-96" />
+          <div className="h-6 bg-muted rounded w-32" />
+          <div className="h-4 bg-muted rounded w-80" />
         </div>
       </div>
     );
@@ -117,34 +116,32 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title="Sync" />
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">Nook Pool</h1>
-          <p className="text-muted-foreground">
+      <div className="max-w-xl space-y-8">
+        <div>
+          <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+            Sync
+          </p>
+          <h1 className="text-lg font-semibold">Nook Pool</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Connect this workspace to a Nook Pool instance to sync projects and
             tasks with other apps.
           </p>
         </div>
 
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-md font-medium">Connection</h2>
-            <p className="text-xs text-muted-foreground">
-              Configure the Nook Pool instance for this workspace.
+        <section className="space-y-5">
+          <div>
+            <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+              Connection
             </p>
+            <h2 className="font-semibold">Pool instance</h2>
           </div>
 
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">Status</p>
-                <p className="text-xs text-muted-foreground">
-                  Current connection status
-                </p>
-              </div>
+              <span className="text-sm text-muted-foreground">Status</span>
               <div className="flex items-center gap-2">
                 <span
-                  className={`inline-block size-2.5 rounded-full ${
+                  className={`inline-block size-2 rounded-full ${
                     isConnected ? "bg-green-500" : "bg-muted-foreground/40"
                   }`}
                 />
@@ -154,22 +151,11 @@ function RouteComponent() {
               </div>
             </div>
 
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">Instance URL</p>
-                <p className="text-xs text-muted-foreground">
-                  The URL of your Nook Pool server
-                </p>
-                {isFromEnv && !urlTouched && (
-                  <p className="text-xs text-blue-500">
-                    Pre-filled from environment variable
-                  </p>
-                )}
-              </div>
+            <div className="grid gap-1.5">
+              <span className="text-sm text-muted-foreground">
+                Instance URL
+              </span>
               <Input
-                className="w-64"
                 placeholder="https://nook.example.com"
                 value={displayUrl}
                 onChange={(e) => {
@@ -178,19 +164,16 @@ function RouteComponent() {
                 }}
                 disabled={isConnected}
               />
+              {isFromEnv && !urlTouched && (
+                <p className="text-xs text-blue-500">
+                  Pre-filled from environment variable
+                </p>
+              )}
             </div>
 
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">Secret</p>
-                <p className="text-xs text-muted-foreground">
-                  Shared secret for authenticating with the Pool instance
-                </p>
-              </div>
+            <div className="grid gap-1.5">
+              <span className="text-sm text-muted-foreground">Secret</span>
               <Input
-                className="w-64"
                 type="password"
                 placeholder={isConnected ? "••••••••" : "Enter secret"}
                 value={secret}
@@ -199,9 +182,7 @@ function RouteComponent() {
               />
             </div>
 
-            <Separator />
-
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-1">
               {isConnected ? (
                 <Button
                   variant="outline"
@@ -219,76 +200,75 @@ function RouteComponent() {
               )}
             </div>
           </div>
-        </div>
+        </section>
 
         {isConnected && (
           <>
-            <div className="space-y-6">
-              <div className="space-y-1">
-                <h2 className="text-md font-medium">Synced events</h2>
-                <p className="text-xs text-muted-foreground">
-                  Events that are synced between this workspace and other apps.
+            <section className="space-y-5">
+              <div>
+                <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+                  Events
                 </p>
+                <h2 className="font-semibold">Synced channels</h2>
               </div>
 
-              <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium">Emitting</p>
-                    <ul className="space-y-1 text-xs text-muted-foreground">
-                      <li>project.created</li>
-                      <li>project.updated</li>
-                      <li>project.deleted</li>
-                      <li>task.created</li>
-                      <li>task.updated</li>
-                      <li>task.deleted</li>
-                    </ul>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium">Listening</p>
-                    <ul className="space-y-1 text-xs text-muted-foreground">
-                      <li>project.created</li>
-                      <li>project.updated</li>
-                      <li>project.deleted</li>
-                      <li>task.created</li>
-                      <li>task.updated</li>
-                      <li>task.deleted</li>
-                    </ul>
-                  </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Emitting</p>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    <li>project.created</li>
+                    <li>project.updated</li>
+                    <li>project.deleted</li>
+                    <li>task.created</li>
+                    <li>task.updated</li>
+                    <li>task.deleted</li>
+                  </ul>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Listening</p>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    <li>project.created</li>
+                    <li>project.updated</li>
+                    <li>project.deleted</li>
+                    <li>task.created</li>
+                    <li>task.updated</li>
+                    <li>task.deleted</li>
+                  </ul>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div className="space-y-6">
-              <div className="space-y-1">
-                <h2 className="text-md font-medium">Initial sync</h2>
-                <p className="text-xs text-muted-foreground">
-                  Push all existing projects and tasks to the Pool so other
-                  connected apps can see them.
+            <section className="space-y-5">
+              <div>
+                <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+                  Data
                 </p>
+                <h2 className="font-semibold">Initial sync</h2>
               </div>
 
-              <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-medium">Sync existing data</p>
-                    <p className="text-xs text-muted-foreground">
-                      Safe to run multiple times — duplicates are automatically
-                      skipped.
-                    </p>
-                  </div>
-                  <Button size="sm" onClick={handleSync} disabled={isSyncing}>
+                  <p className="text-sm text-muted-foreground">
+                    Push all existing projects and tasks to the Pool. Safe to
+                    run multiple times.
+                  </p>
+                  <Button
+                    size="sm"
+                    className="shrink-0 ml-4"
+                    onClick={handleSync}
+                    disabled={isSyncing}
+                  >
                     {isSyncing ? "Syncing..." : "Sync all"}
                   </Button>
                 </div>
                 {syncResult && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     Synced {syncResult.projects_synced} projects and{" "}
                     {syncResult.tasks_synced} tasks.
                   </p>
                 )}
               </div>
-            </div>
+            </section>
           </>
         )}
       </div>
