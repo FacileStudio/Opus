@@ -8,6 +8,7 @@ import {
   projectTable,
   taskTable,
 } from "../database/schema";
+import { DEFAULT_PROJECT_COLUMNS } from "../project/controllers/create-project";
 
 const POOL_EVENTS = {
   emit: [
@@ -27,6 +28,39 @@ const POOL_EVENTS = {
     "task.deleted",
   ],
 };
+
+const ICON_TYPO_MAP: Record<string, string> = {
+  Pallete2: "Palette2",
+  Siderbar: "Sidebar",
+  Magnifer: "Magnifier",
+  MagniferBug: "MagnifierBug",
+  MagniferZoomIn: "MagnifierZoomIn",
+  MagniferZoomOut: "MagnifierZoomOut",
+  MinimalisticMagnifer: "MinimalisticMagnifier",
+  MinimalisticMagniferBug: "MinimalisticMagnifierBug",
+  MinimalisticMagniferZoomIn: "MinimalisticMagnifierZoomIn",
+  MinimalisticMagniferZoomOut: "MinimalisticMagnifierZoomOut",
+  RoundedMagnifer: "RoundedMagnifier",
+  RoundedMagniferBug: "RoundedMagnifierBug",
+  RoundedMagniferZoomIn: "RoundedMagnifierZoomIn",
+  RoundedMagniferZoomOut: "RoundedMagnifierZoomOut",
+  Condicioner: "Conditioner",
+  Condicioner2: "Conditioner2",
+  ColourTuneing: "ColourTuning",
+  MaskHapply: "MaskHappy",
+  SpedometerLow: "SpeedometerLow",
+  SpedometerMax: "SpeedometerMax",
+  SpedometerMiddle: "SpeedometerMiddle",
+  CardRecive: "CardReceive",
+  ReciveSquare: "ReceiveSquare",
+  ReciveTwiceSquare: "ReceiveTwiceSquare",
+  PlaaylistMinimalistic: "PlaylistMinimalistic",
+};
+
+function normalizeIcon(icon: string | null | undefined): string {
+  if (!icon) return "Layout";
+  return ICON_TYPO_MAP[icon] ?? icon;
+}
 
 const activeClients = new Map<string, PoolClient>();
 
@@ -112,53 +146,55 @@ export async function shutdownPoolSync(): Promise<void> {
   }
 }
 
+function createSyncQueue() {
+  const queue: Array<() => Promise<void>> = [];
+  let processing = false;
+
+  async function drain() {
+    if (processing) return;
+    processing = true;
+    while (queue.length > 0) {
+      const fn = queue.shift()!;
+      try {
+        await fn();
+      } catch (error) {
+        console.error("Pool sync queue error:", error);
+      }
+    }
+    processing = false;
+  }
+
+  return (fn: () => Promise<void>) => {
+    queue.push(fn);
+    drain();
+  };
+}
+
 function setupListeners(pool: PoolClient, workspaceId: string): void {
-  pool.listen("project.created", async (payload: unknown) => {
-    try {
-      await handleIncomingProject("created", workspaceId, payload);
-    } catch (error) {
-      console.error("Pool: failed to handle project.created", error);
-    }
+  const enqueue = createSyncQueue();
+
+  pool.listen("project.created", (payload: unknown) => {
+    enqueue(() => handleIncomingProject("created", workspaceId, payload));
   });
 
-  pool.listen("project.updated", async (payload: unknown) => {
-    try {
-      await handleIncomingProject("updated", workspaceId, payload);
-    } catch (error) {
-      console.error("Pool: failed to handle project.updated", error);
-    }
+  pool.listen("project.updated", (payload: unknown) => {
+    enqueue(() => handleIncomingProject("updated", workspaceId, payload));
   });
 
-  pool.listen("project.deleted", async (payload: unknown) => {
-    try {
-      await handleIncomingProject("deleted", workspaceId, payload);
-    } catch (error) {
-      console.error("Pool: failed to handle project.deleted", error);
-    }
+  pool.listen("project.deleted", (payload: unknown) => {
+    enqueue(() => handleIncomingProject("deleted", workspaceId, payload));
   });
 
-  pool.listen("task.created", async (payload: unknown) => {
-    try {
-      await handleIncomingTask("created", workspaceId, payload);
-    } catch (error) {
-      console.error("Pool: failed to handle task.created", error);
-    }
+  pool.listen("task.created", (payload: unknown) => {
+    enqueue(() => handleIncomingTask("created", workspaceId, payload));
   });
 
-  pool.listen("task.updated", async (payload: unknown) => {
-    try {
-      await handleIncomingTask("updated", workspaceId, payload);
-    } catch (error) {
-      console.error("Pool: failed to handle task.updated", error);
-    }
+  pool.listen("task.updated", (payload: unknown) => {
+    enqueue(() => handleIncomingTask("updated", workspaceId, payload));
   });
 
-  pool.listen("task.deleted", async (payload: unknown) => {
-    try {
-      await handleIncomingTask("deleted", workspaceId, payload);
-    } catch (error) {
-      console.error("Pool: failed to handle task.deleted", error);
-    }
+  pool.listen("task.deleted", (payload: unknown) => {
+    enqueue(() => handleIncomingTask("deleted", workspaceId, payload));
   });
 }
 
@@ -206,20 +242,38 @@ async function handleIncomingProject(
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "") || "project";
 
-    await db.insert(projectTable).values({
-      workspaceId,
-      name: data.payload.name,
-      description: data.payload.description || null,
-      slug,
-      facileId,
-      icon: data.payload.icon || "Layout",
+    await db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(projectTable)
+        .values({
+          workspaceId,
+          name: data.payload.name,
+          description: data.payload.description || null,
+          slug,
+          facileId,
+          icon: normalizeIcon(data.payload.icon),
+        })
+        .returning({ id: projectTable.id });
+
+      if (created) {
+        for (const col of DEFAULT_PROJECT_COLUMNS) {
+          await tx.insert(columnTable).values({
+            projectId: created.id,
+            name: col.name,
+            slug: col.slug,
+            position: col.position,
+            isFinal: col.isFinal,
+          });
+        }
+      }
     });
   } else if (action === "updated") {
     const updateData: Record<string, unknown> = {};
     if (data.payload.name) updateData.name = data.payload.name;
     if (data.payload.description !== undefined)
       updateData.description = data.payload.description;
-    if (data.payload.icon !== undefined) updateData.icon = data.payload.icon;
+    if (data.payload.icon !== undefined)
+      updateData.icon = normalizeIcon(data.payload.icon);
 
     if (Object.keys(updateData).length > 0) {
       await db
@@ -357,7 +411,7 @@ export function emitProjectEvent(
       facile_id: facileId,
       name: project.name,
       description: project.description || "",
-      icon: project.icon || null,
+      icon: normalizeIcon(project.icon) || null,
     },
     timestamp: new Date().toISOString(),
     idempotency_key: createId(),
