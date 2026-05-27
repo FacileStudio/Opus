@@ -31,8 +31,8 @@ function RouteComponent() {
 
   const handleConnect = useCallback(async () => {
     if (!workspace?.id) return;
-    const url = instanceUrl.trim();
-    const sec = secret.trim();
+    const url = (instanceUrl || config?.instanceUrl || "").trim();
+    const sec = (secret || "").trim();
 
     if (!url || !sec) {
       toast.error("Instance URL and secret are required");
@@ -51,7 +51,7 @@ function RouteComponent() {
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to connect");
     }
-  }, [workspace?.id, instanceUrl, secret, saveConfig]);
+  }, [workspace?.id, instanceUrl, secret, saveConfig, config]);
 
   const handleDisconnect = useCallback(async () => {
     if (!workspace?.id) return;
