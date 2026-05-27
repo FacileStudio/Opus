@@ -1,8 +1,15 @@
+import { createId } from "@paralleldrive/cuid2";
 import { and, eq, max } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import db from "../../database";
-import { columnTable, taskTable, userTable } from "../../database/schema";
+import {
+  columnTable,
+  projectTable,
+  taskTable,
+  userTable,
+} from "../../database/schema";
 import { publishEvent } from "../../events";
+import { emitTaskEvent } from "../../nook-pool/sync";
 import { assertValidTaskStatus } from "../validate-task-fields";
 import getNextTaskNumber from "./get-next-task-number";
 
@@ -60,6 +67,8 @@ async function createTask({
 
   const nextPosition = (maxPositionResult?.maxPosition ?? 0) + 1;
 
+  const facileId = createId();
+
   const [createdTask] = await db
     .insert(taskTable)
     .values({
@@ -74,6 +83,7 @@ async function createTask({
       priority: resolvedPriority,
       number: nextTaskNumber + 1,
       position: nextPosition,
+      facileId,
     })
     .returning();
 
@@ -91,6 +101,24 @@ async function createTask({
     type: "created",
     content: null,
   });
+
+  const [project] = await db
+    .select({
+      facileId: projectTable.facileId,
+      workspaceId: projectTable.workspaceId,
+    })
+    .from(projectTable)
+    .where(eq(projectTable.id, projectId))
+    .limit(1);
+
+  if (project) {
+    emitTaskEvent(
+      project.workspaceId,
+      "created",
+      createdTask,
+      project.facileId,
+    );
+  }
 
   return {
     ...createdTask,

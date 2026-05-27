@@ -34,6 +34,8 @@ import invitation from "./invitation";
 import label from "./label";
 import mcpRoutes, { mcpWellKnownRoutes } from "./mcp";
 import { migrateColumns } from "./migrations/column-migration";
+import nookPool from "./nook-pool";
+import { initPoolSync, shutdownPoolSync } from "./nook-pool/sync";
 import notification from "./notification";
 import notificationPreferences from "./notification-preferences";
 import oauth from "./oauth";
@@ -567,6 +569,7 @@ export function createApp() {
   const workspaceApi = api.route("/workspace", workspace);
   api.route("/workspace", workspaceLogoUpload);
   const workspaceWebhookApi = api.route("/workspace-webhook", workspaceWebhook);
+  const nookPoolApi = api.route("/nook-pool", nookPool);
   const shareLinkApi = api.route("/share-link", shareLink);
 
   app.route(
@@ -662,6 +665,7 @@ export function createApp() {
     workflowRuleApi,
     workspaceApi,
     workspaceWebhookApi,
+    nookPoolApi,
     oauthApi,
   };
 }
@@ -690,6 +694,9 @@ export async function runStartupTasks() {
   initializeWorkspaceWebhookDispatcher();
   initializeScheduler();
   await initializeWebSocketAdapter();
+  initPoolSync().catch((err) =>
+    console.error("Failed to initialize Pool sync:", err),
+  );
 }
 
 export async function startServer(
@@ -725,6 +732,7 @@ export async function startServer(
 
     console.log("🛑 Shutting down gracefully...");
     shutdownScheduler();
+    await shutdownPoolSync();
     await shutdownWebSocketAdapter();
     server.close();
     process.exit(0);
@@ -770,6 +778,7 @@ const {
   workflowRuleApi,
   workspaceApi,
   workspaceWebhookApi,
+  nookPoolApi,
   oauthApi,
 } = createdApp;
 
@@ -805,6 +814,7 @@ export type AppType =
   | typeof invitationApi
   | typeof workspaceApi
   | typeof workspaceWebhookApi
+  | typeof nookPoolApi
   | typeof publicProjectApi
   | typeof sharedProjectApi
   | typeof shareLinkApi

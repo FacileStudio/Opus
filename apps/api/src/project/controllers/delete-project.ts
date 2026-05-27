@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import db from "../../database";
 import { projectTable } from "../../database/schema";
+import { emitProjectEvent } from "../../nook-pool/sync";
 import getProject from "./get-project";
 
 async function deleteProject(id: string, workspaceId: string) {
@@ -17,6 +18,8 @@ async function deleteProject(id: string, workspaceId: string) {
       message: "Failed to delete project",
     });
   }
+
+  emitProjectEvent(deletedProject.workspaceId, "deleted", deletedProject);
 
   return existingProject;
 }

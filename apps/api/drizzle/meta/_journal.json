@@ -225,6 +225,13 @@
 			"when": 1778605861770,
 			"tag": "0031_nappy_mongoose",
 			"breakpoints": true
+		},
+		{
+			"idx": 32,
+			"version": "7",
+			"when": 1779916019735,
+			"tag": "0032_small_iron_fist",
+			"breakpoints": true
 		}
 	]
 }

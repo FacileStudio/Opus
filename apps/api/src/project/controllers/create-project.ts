@@ -1,5 +1,7 @@
+import { createId } from "@paralleldrive/cuid2";
 import db from "../../database";
 import { columnTable, projectTable } from "../../database/schema";
+import { emitProjectEvent } from "../../nook-pool/sync";
 
 export const DEFAULT_PROJECT_COLUMNS = [
   { name: "To Do", slug: "to-do", position: 0, isFinal: false },
@@ -14,7 +16,9 @@ async function createProject(
   icon: string,
   slug: string,
 ) {
-  return db.transaction(async (tx) => {
+  const facileId = createId();
+
+  const project = await db.transaction(async (tx) => {
     const [createdProject] = await tx
       .insert(projectTable)
       .values({
@@ -22,6 +26,7 @@ async function createProject(
         name,
         icon,
         slug,
+        facileId,
       })
       .returning();
 
@@ -39,6 +44,12 @@ async function createProject(
 
     return createdProject;
   });
+
+  if (project) {
+    emitProjectEvent(workspaceId, "created", project);
+  }
+
+  return project;
 }
 
 export default createProject;
