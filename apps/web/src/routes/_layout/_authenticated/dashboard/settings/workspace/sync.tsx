@@ -27,7 +27,7 @@ function RouteComponent() {
   const [secret, setSecret] = useState("");
   const [urlTouched, setUrlTouched] = useState(false);
 
-  const isConnected = !!config?.enabled;
+  const isConnected = !!(config as any)?.connected;
 
   const handleConnect = useCallback(async () => {
     if (!workspace?.id) return;
