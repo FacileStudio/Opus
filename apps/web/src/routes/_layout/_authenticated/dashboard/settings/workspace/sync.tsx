@@ -4,6 +4,7 @@ import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import triggerNookPoolSync from "@/fetchers/nook-pool/trigger-sync";
 import useDeleteNookPool from "@/hooks/mutations/workspace/use-delete-nook-pool";
 import useSaveNookPool from "@/hooks/mutations/workspace/use-save-nook-pool";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
@@ -26,6 +27,11 @@ function RouteComponent() {
   const [instanceUrl, setInstanceUrl] = useState("");
   const [secret, setSecret] = useState("");
   const [urlTouched, setUrlTouched] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<{
+    projects_synced: number;
+    tasks_synced: number;
+  } | null>(null);
 
   const isConnected = !!config?.connected;
   const isFromEnv = !!config?.fromEnv;
@@ -69,6 +75,30 @@ function RouteComponent() {
       );
     }
   }, [workspace?.id, deleteConfig]);
+
+  const handleSync = useCallback(async () => {
+    if (!workspace?.id) return;
+    setIsSyncing(true);
+    setSyncResult(null);
+    try {
+      const result = await triggerNookPoolSync(workspace.id);
+      if (result.success) {
+        setSyncResult({
+          projects_synced: result.projects_synced ?? 0,
+          tasks_synced: result.tasks_synced ?? 0,
+        });
+        toast.success(
+          `Synced ${result.projects_synced} projects and ${result.tasks_synced} tasks`,
+        );
+      } else {
+        toast.error(result.error || "Sync failed");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Sync failed");
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [workspace?.id]);
 
   const displayUrl =
     urlTouched || !config ? instanceUrl : config?.instanceUrl || instanceUrl;
@@ -192,41 +222,74 @@ function RouteComponent() {
         </div>
 
         {isConnected && (
-          <div className="space-y-6">
-            <div className="space-y-1">
-              <h2 className="text-md font-medium">Synced events</h2>
-              <p className="text-xs text-muted-foreground">
-                Events that are synced between this workspace and other apps.
-              </p>
-            </div>
+          <>
+            <div className="space-y-6">
+              <div className="space-y-1">
+                <h2 className="text-md font-medium">Synced events</h2>
+                <p className="text-xs text-muted-foreground">
+                  Events that are synced between this workspace and other apps.
+                </p>
+              </div>
 
-            <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Emitting</p>
-                  <ul className="space-y-1 text-xs text-muted-foreground">
-                    <li>project.created</li>
-                    <li>project.updated</li>
-                    <li>project.deleted</li>
-                    <li>task.created</li>
-                    <li>task.updated</li>
-                    <li>task.deleted</li>
-                  </ul>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Listening</p>
-                  <ul className="space-y-1 text-xs text-muted-foreground">
-                    <li>project.created</li>
-                    <li>project.updated</li>
-                    <li>project.deleted</li>
-                    <li>task.created</li>
-                    <li>task.updated</li>
-                    <li>task.deleted</li>
-                  </ul>
+              <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Emitting</p>
+                    <ul className="space-y-1 text-xs text-muted-foreground">
+                      <li>project.created</li>
+                      <li>project.updated</li>
+                      <li>project.deleted</li>
+                      <li>task.created</li>
+                      <li>task.updated</li>
+                      <li>task.deleted</li>
+                    </ul>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Listening</p>
+                    <ul className="space-y-1 text-xs text-muted-foreground">
+                      <li>project.created</li>
+                      <li>project.updated</li>
+                      <li>project.deleted</li>
+                      <li>task.created</li>
+                      <li>task.updated</li>
+                      <li>task.deleted</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+
+            <div className="space-y-6">
+              <div className="space-y-1">
+                <h2 className="text-md font-medium">Initial sync</h2>
+                <p className="text-xs text-muted-foreground">
+                  Push all existing projects and tasks to the Pool so other
+                  connected apps can see them.
+                </p>
+              </div>
+
+              <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium">Sync existing data</p>
+                    <p className="text-xs text-muted-foreground">
+                      Safe to run multiple times — duplicates are automatically
+                      skipped.
+                    </p>
+                  </div>
+                  <Button size="sm" onClick={handleSync} disabled={isSyncing}>
+                    {isSyncing ? "Syncing..." : "Sync all"}
+                  </Button>
+                </div>
+                {syncResult && (
+                  <p className="text-xs text-muted-foreground">
+                    Synced {syncResult.projects_synced} projects and{" "}
+                    {syncResult.tasks_synced} tasks.
+                  </p>
+                )}
+              </div>
+            </div>
+          </>
         )}
       </div>
     </>
