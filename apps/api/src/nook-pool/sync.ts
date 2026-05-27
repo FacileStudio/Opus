@@ -168,6 +168,7 @@ type IncomingProjectPayload = {
     facile_id: string;
     name: string;
     description?: string;
+    icon?: string | null;
   };
 };
 
@@ -211,12 +212,14 @@ async function handleIncomingProject(
       description: data.payload.description || null,
       slug,
       facileId,
+      icon: data.payload.icon || "Layout",
     });
   } else if (action === "updated") {
     const updateData: Record<string, unknown> = {};
     if (data.payload.name) updateData.name = data.payload.name;
     if (data.payload.description !== undefined)
       updateData.description = data.payload.description;
+    if (data.payload.icon !== undefined) updateData.icon = data.payload.icon;
 
     if (Object.keys(updateData).length > 0) {
       await db
@@ -320,6 +323,7 @@ export function emitProjectEvent(
     facileId: string | null;
     name: string;
     description?: string | null;
+    icon?: string | null;
   },
 ): void {
   const client = activeClients.get(workspaceId);
@@ -337,6 +341,7 @@ export function emitProjectEvent(
       facile_id: facileId,
       name: project.name,
       description: project.description || "",
+      icon: project.icon || null,
     },
     timestamp: new Date().toISOString(),
     idempotency_key: createId(),
