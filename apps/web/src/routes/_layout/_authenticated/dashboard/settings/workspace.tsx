@@ -1,4 +1,4 @@
-import { BellBing, Refresh, Settings } from "@solar-icons/react";
+import { BellBing, Settings } from "@solar-icons/react";
 import {
   createFileRoute,
   Link,
@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { NookIcon } from "@/components/icons/nook-icon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,9 +41,9 @@ function RouteComponent() {
       icon: BellBing,
     },
     {
-      title: "Sync",
+      title: "Nook Pool",
       url: "/dashboard/settings/workspace/sync",
-      icon: Refresh,
+      icon: NookIcon,
     },
   ];
   const isActivePath = (path: string) => location.pathname === path;
