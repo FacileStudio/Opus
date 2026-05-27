@@ -2,6 +2,7 @@ import { dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { serve } from "@hono/node-server";
 import { createNodeWebSocket } from "@hono/node-ws";
+import { apiReference } from "@scalar/hono-api-reference";
 import type { Session, User } from "better-auth/types";
 import { eq } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
@@ -397,6 +398,11 @@ export function createApp() {
       ),
     );
   });
+
+  api.get(
+    "/docs",
+    apiReference({ url: "/api/openapi", pageTitle: "Opus API" }),
+  );
 
   // Better Auth serves GET /auth/device as JSON. Browsers that open the API URL
   // directly expect a page — redirect full document navigations to the web app.

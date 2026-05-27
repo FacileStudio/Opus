@@ -102,6 +102,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
+      '@scalar/hono-api-reference':
+        specifier: ^0.10.19
+        version: 0.10.19(hono@4.12.14)
       '@valibot/to-json-schema':
         specifier: ^1.5.0
         version: 1.5.0(valibot@1.2.0(typescript@5.9.3))
@@ -1583,6 +1586,7 @@ packages:
   '@hono/node-ws@1.3.0':
     resolution: {integrity: sha512-ju25YbbvLuXdqBCmLZLqnNYu1nbHIQjoyUqA8ApZOeL1k4skuiTcw5SW77/5SUYo2Xi2NVBJoVlfQurnKEp03Q==}
     engines: {node: '>=18.14.1'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       '@hono/node-server': 1.19.13
       hono: 4.12.14
@@ -2951,30 +2955,35 @@ packages:
   '@react-email/body@0.3.0':
     resolution: {integrity: sha512-uGo0BOOzjbMUo3lu+BIDWayvn5o6Xyfmnlla5VGf05n8gHMvO1ll7U4FtzWe3hxMLwt53pmc4iE0M+B5slG+Ug==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/button@0.2.1':
     resolution: {integrity: sha512-qXyj7RZLE7POy9BMKSoqQ00tOXThjOZSUnI2Yu9i29IHngPlmrNayIWBoVKtElES7OWwypUcpiajwi1mUWx6/A==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/code-block@0.2.1':
     resolution: {integrity: sha512-M3B7JpVH4ytgn83/ujRR1k1DQHvTeABiDM61OvAbjLRPhC/5KLHU5KkzIbbuGIrjWwxAbL1kSQzU8MhLEtSxyw==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/code-inline@0.0.6':
     resolution: {integrity: sha512-jfhebvv3dVsp3OdPgKXnk8+e2pBiDVZejDOBFzBa/IblrAJ9cQDkN6rBD5IyEg8hTOxwbw3iaI/yZFmDmIguIA==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/column@0.0.14':
     resolution: {integrity: sha512-f+W+Bk2AjNO77zynE33rHuQhyqVICx4RYtGX9NKsGUg0wWjdGP0qAuIkhx9Rnmk4/hFMo1fUrtYNqca9fwJdHg==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
@@ -2988,63 +2997,74 @@ packages:
   '@react-email/container@0.0.16':
     resolution: {integrity: sha512-QWBB56RkkU0AJ9h+qy33gfT5iuZknPC7Un/IjZv9B0QmMIK+WWacc0cH6y2SV5Cv/b99hU94fjEMOOO4enpkbQ==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/font@0.0.10':
     resolution: {integrity: sha512-0urVSgCmQIfx5r7Xc586miBnQUVnGp3OTYUm8m5pwtQRdTRO5XrTtEfNJ3JhYhSOruV0nD8fd+dXtKXobum6tA==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/head@0.0.13':
     resolution: {integrity: sha512-AJg6le/08Gz4tm+6MtKXqtNNyKHzmooOCdmtqmWxD7FxoAdU1eVcizhtQ0gcnVaY6ethEyE/hnEzQxt1zu5Kog==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/heading@0.0.16':
     resolution: {integrity: sha512-jmsKnQm1ykpBzw4hCYHwBkt5pW2jScXffPeEH5ZRF5tZeF5b1pvlFTO9han7C0pCkZYo1kEvWiRtx69yfCIwuw==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/hr@0.0.12':
     resolution: {integrity: sha512-TwmOmBDibavUQpXBxpmZYi2Iks/yeZOzFYh+di9EltMSnEabH8dMZXrl+pxNXzCgZ2XE8HY7VmUL65Lenfu5PA==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/html@0.0.12':
     resolution: {integrity: sha512-KTShZesan+UsreU7PDUV90afrZwU5TLwYlALuCSU0OT+/U8lULNNbAUekg+tGwCnOfIKYtpDPKkAMRdYlqUznw==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/img@0.0.12':
     resolution: {integrity: sha512-sRCpEARNVTf3FQhZOC+JTvu5r6ubiYWkT0ucYXg8ctkyi4G8QG+jgYPiNUqVeTLA2STOfmPM/nrk1nb84y6CPQ==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/link@0.0.13':
     resolution: {integrity: sha512-lkWc/NjOcefRZMkQoSDDbuKBEBDES9aXnFEOuPH845wD3TxPwh+QTf0fStuzjoRLUZWpHnio4z7qGGRYusn/sw==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/markdown@0.0.18':
     resolution: {integrity: sha512-gSuYK5fsMbGk87jDebqQ6fa2fKcWlkf2Dkva8kMONqLgGCq8/0d+ZQYMEJsdidIeBo3kmsnHZPrwdFB4HgjUXg==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/preview-server@5.2.10':
     resolution: {integrity: sha512-cYi21KF+Z/HGXT8RpkQMNFFubBafxyoB9Hn/wrslfDNtdoews2MdsDo6XXKkZvDTRG9SxQN3HGk4v4aoQZc20g==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@react-email/preview@0.0.14':
     resolution: {integrity: sha512-aYK8q0IPkBXyMsbpMXgxazwHxYJxTrXrV95GFuu2HbEiIToMwSyUgb8HDFYwPqqfV03/jbwqlsXmFxsOd+VNaw==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
@@ -3065,12 +3085,14 @@ packages:
   '@react-email/row@0.0.13':
     resolution: {integrity: sha512-bYnOac40vIKCId7IkwuLAAsa3fKfSfqCvv6epJKmPE0JBuu5qI4FHFCl9o9dVpIIS08s/ub+Y/txoMt0dYziGw==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/section@0.0.17':
     resolution: {integrity: sha512-qNl65ye3W0Rd5udhdORzTV9ezjb+GFqQQSae03NDzXtmJq6sqVXNWNiVolAjvJNypim+zGXmv6J9TcV5aNtE/w==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
@@ -3116,6 +3138,7 @@ packages:
   '@react-email/text@0.1.6':
     resolution: {integrity: sha512-TYqkioRS45wTR5il3dYk/SbUjjEdhSwh9BtRNB99qNH1pXAwA45H7rAuxehiu8iJQJH0IyIr+6n62gBz9ezmsw==}
     engines: {node: '>=20.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
@@ -3259,6 +3282,32 @@ packages:
     resolution: {integrity: sha512-2HRCml6OztYXyJXAvdDXPKcawukWY2GpR5/nxKp4iBgiO3wcoEGkAaqctIbZcNB6KlUQBIqt8VYkNSj2397EfA==}
     cpu: [x64]
     os: [win32]
+
+  '@scalar/client-side-rendering@0.1.12':
+    resolution: {integrity: sha512-prwHK4ozTU268BHZ/5OstoKB23JSidDuvddAOp0bVz9c29ZxsyzzxPtPcVgF7X16LiZnS1OzY030FoDCM+iC9Q==}
+    engines: {node: '>=22'}
+
+  '@scalar/helpers@0.8.0':
+    resolution: {integrity: sha512-gmOC6VravNB9VDl6wnt/GOj4K/hn48tj5bpW4AM4MhH8Ubil6uu7g1DSoKHwltu8Ks79KEtR6JmOrROi9R7jaQ==}
+    engines: {node: '>=22'}
+
+  '@scalar/hono-api-reference@0.10.19':
+    resolution: {integrity: sha512-6EfwN/lfPvePzAxe9UE8fr/ZuAAqS6ttUwQu9JTgk2Xl/clicaVVSOc0gyGt+8GLXdysoNinjZ74we8xqNWyCA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      hono: 4.12.14
+
+  '@scalar/schemas@0.3.2':
+    resolution: {integrity: sha512-iadXBgJ02XUU5C5s6/xh/PmGLzUPd7X8upXIvPWBXDcQ4FHACNgkG8PPZ/beYM8UPDDkTUPM3ygEs0G6jKwGjQ==}
+    engines: {node: '>=22'}
+
+  '@scalar/types@0.12.2':
+    resolution: {integrity: sha512-EzLkubCb7xioiTm9eYnmn/032akaq4kkrrdclgV2uezwtniR8ErQICjhMl2AjBWL6nstHiFZ9RnPZm2Z2/KM0Q==}
+    engines: {node: '>=22'}
+
+  '@scalar/validation@0.6.0':
+    resolution: {integrity: sha512-tpmmG+/xRE2Kn9RpflU3AIyZv08v10+E1ZrJCx7z6+/91zHVxy0M73kC1LT4/8PbYNt85ywyC8+n+D99JdMcGA==}
+    engines: {node: '>=20'}
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -4330,6 +4379,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@valibot/to-json-schema@1.5.0':
     resolution: {integrity: sha512-GE7DmSr1C2UCWPiV0upRH6mv0cCPsqYGs819fb6srCS1tWhyXrkGGe+zxUiwzn/L1BOfADH4sNjY/YHCuP8phQ==}
@@ -6380,6 +6430,11 @@ packages:
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
+  nanoid@5.1.11:
+    resolution: {integrity: sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg==}
+    engines: {node: ^18 || >=20}
     hasBin: true
 
   nanostores@1.1.1:
@@ -11689,6 +11744,33 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.59.0':
     optional: true
 
+  '@scalar/client-side-rendering@0.1.12':
+    dependencies:
+      '@scalar/schemas': 0.3.2
+      '@scalar/types': 0.12.2
+      '@scalar/validation': 0.6.0
+
+  '@scalar/helpers@0.8.0': {}
+
+  '@scalar/hono-api-reference@0.10.19(hono@4.12.14)':
+    dependencies:
+      '@scalar/client-side-rendering': 0.1.12
+      hono: 4.12.14
+
+  '@scalar/schemas@0.3.2':
+    dependencies:
+      '@scalar/helpers': 0.8.0
+      '@scalar/validation': 0.6.0
+
+  '@scalar/types@0.12.2':
+    dependencies:
+      '@scalar/helpers': 0.8.0
+      nanoid: 5.1.11
+      type-fest: 5.3.1
+      zod: 4.3.6
+
+  '@scalar/validation@0.6.0': {}
+
   '@sec-ant/readable-stream@0.4.1': {}
 
   '@selderee/plugin-htmlparser2@0.11.0':
@@ -12950,7 +13032,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.0.1(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@25.5.0)(typescript@5.8.3))(vite@7.3.2(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))
+      vitest: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.4.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.0.1(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@25.4.0)(typescript@5.9.3))(vite@7.3.2(@types/node@25.4.0)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))
 
   '@vitest/expect@4.1.2':
     dependencies:
@@ -15100,6 +15182,8 @@ snapshots:
     optional: true
 
   nanoid@3.3.11: {}
+
+  nanoid@5.1.11: {}
 
   nanostores@1.1.1: {}
 
