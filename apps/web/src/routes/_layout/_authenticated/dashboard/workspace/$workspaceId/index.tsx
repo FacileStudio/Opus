@@ -3,8 +3,10 @@ import {
   Forward,
   Widget as LayoutGrid,
   Link as LinkIcon,
+  List,
   Settings,
   TrashBinTrash,
+  Widget3,
 } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -57,6 +59,7 @@ import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { formatDateMedium } from "@/lib/format";
 import { toast } from "@/lib/toast";
+import { useUserPreferencesStore } from "@/store/user-preferences";
 
 function makeVirtualAnchor(x: number, y: number) {
   const rect = {
@@ -89,6 +92,10 @@ function RouteComponent() {
     workspaceId,
   });
   const { mutateAsync: deleteProject } = useDeleteProject();
+  const projectListView = useUserPreferencesStore((s) => s.projectListView);
+  const setProjectListView = useUserPreferencesStore(
+    (s) => s.setProjectListView,
+  );
 
   const [contextMenu, setContextMenu] = useState<{
     projectId: string;
@@ -237,35 +244,45 @@ function RouteComponent() {
       <WorkspaceLayout
         title={t("workspace:projects.pageTitle")}
         headerActions={
-          <Button
-            variant="outline"
-            size="xs"
-            onClick={handleCreateProject}
-            className="gap-1"
-          >
-            <Plus className="w-3 h-3" />
-            {t("workspace:projects.createProject")}
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-1 rounded-lg bg-muted/50 p-0.5">
+              <button
+                type="button"
+                className={`inline-flex h-6 items-center gap-1 rounded-md px-2 text-xs font-medium transition-colors ${
+                  projectListView === "card"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setProjectListView("card")}
+              >
+                <Widget3 size={12} />
+              </button>
+              <button
+                type="button"
+                className={`inline-flex h-6 items-center gap-1 rounded-md px-2 text-xs font-medium transition-colors ${
+                  projectListView === "list"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setProjectListView("list")}
+              >
+                <List size={12} />
+              </button>
+            </div>
+            <Button
+              variant="outline"
+              size="xs"
+              onClick={handleCreateProject}
+              className="gap-1"
+            >
+              <Plus className="w-3 h-3" />
+              {t("workspace:projects.createProject")}
+            </Button>
+          </div>
         }
       >
-        <Table>
-          <TableHeader className="p-4">
-            <TableRow>
-              <TableHead className="text-foreground font-medium">
-                {t("workspace:projects.title")}
-              </TableHead>
-              <TableHead className="text-foreground font-medium">
-                {t("workspace:projects.progress")}
-              </TableHead>
-              <TableHead className="text-foreground font-medium">
-                {t("workspace:projects.dueDate")}
-              </TableHead>
-              <TableHead className="text-foreground font-medium">
-                {t("workspace:projects.status")}
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        {projectListView === "card" ? (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {projects?.map((project) => {
               if (!project || !project.id || !project.statistics) return null;
 
@@ -288,46 +305,128 @@ function RouteComponent() {
               };
 
               return (
-                <TableRow
+                <button
+                  type="button"
                   key={project.id}
-                  className="cursor-pointer"
+                  className="flex cursor-pointer flex-col gap-4 rounded-xl border border-border bg-card py-4 text-left text-sm ring-1 ring-foreground/5 transition-colors hover:bg-muted/40"
                   onClick={() => handleProjectClick(project.id)}
                   onContextMenu={(e) => handleContextMenu(e, project.id)}
                 >
-                  <TableCell className="py-3">
-                    <div className="flex items-center gap-3">
-                      <IconComponent className="w-5 h-5 text-muted-foreground" />
-                      <span className="font-medium">{project.name}</span>
+                  <div className="flex items-start justify-between gap-2 px-4">
+                    <div className="flex min-w-0 flex-1 items-start gap-2.5">
+                      <IconComponent className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+                      <div className="min-w-0">
+                        <p className="truncate text-base font-medium">
+                          {project.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {project.description || "—"}
+                        </p>
+                      </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="py-3">
-                    <div className="flex items-center gap-2">
-                      <Progress
-                        value={project.statistics.completionPercentage}
-                        className="w-16 h-2"
-                      />
-                      <span className="text-sm text-muted-foreground">
-                        {project.statistics.completionPercentage}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-3">
-                    <span className="text-sm text-muted-foreground">
-                      {project.statistics.dueDate
-                        ? formatDateMedium(project.statistics.dueDate)
-                        : t("workspace:projects.noDueDate")}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-3">
-                    <Badge variant={getStatusVariant()}>
+                    <Badge variant={getStatusVariant()} className="shrink-0">
                       {getStatusText()}
                     </Badge>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                  <div className="space-y-2 px-4">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>
+                        {project.statistics.totalTasks}{" "}
+                        {project.statistics.totalTasks === 1 ? "task" : "tasks"}
+                      </span>
+                      <span>{project.statistics.completionPercentage}%</span>
+                    </div>
+                    <Progress
+                      value={project.statistics.completionPercentage}
+                      className="h-1.5"
+                    />
+                  </div>
+                </button>
               );
             })}
-          </TableBody>
-        </Table>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader className="p-4">
+              <TableRow>
+                <TableHead className="text-foreground font-medium">
+                  {t("workspace:projects.title")}
+                </TableHead>
+                <TableHead className="text-foreground font-medium">
+                  {t("workspace:projects.progress")}
+                </TableHead>
+                <TableHead className="text-foreground font-medium">
+                  {t("workspace:projects.dueDate")}
+                </TableHead>
+                <TableHead className="text-foreground font-medium">
+                  {t("workspace:projects.status")}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {projects?.map((project) => {
+                if (!project || !project.id || !project.statistics) return null;
+
+                const IconComponent =
+                  icons[project.icon as keyof typeof icons] || icons.Layout;
+
+                const getStatusText = () => {
+                  if (project.statistics.totalTasks === 0)
+                    return t("workspace:projects.projectStatus.notStarted");
+                  if (project.statistics.completionPercentage === 100)
+                    return t("workspace:projects.projectStatus.complete");
+                  return t("workspace:projects.projectStatus.inProgress");
+                };
+
+                const getStatusVariant = () => {
+                  if (project.statistics.totalTasks === 0) return "secondary";
+                  if (project.statistics.completionPercentage === 100)
+                    return "default";
+                  return "outline";
+                };
+
+                return (
+                  <TableRow
+                    key={project.id}
+                    className="cursor-pointer"
+                    onClick={() => handleProjectClick(project.id)}
+                    onContextMenu={(e) => handleContextMenu(e, project.id)}
+                  >
+                    <TableCell className="py-3">
+                      <div className="flex items-center gap-3">
+                        <IconComponent className="w-5 h-5 text-muted-foreground" />
+                        <span className="font-medium">{project.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-3">
+                      <div className="flex items-center gap-2">
+                        <Progress
+                          value={project.statistics.completionPercentage}
+                          className="w-16 h-2"
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          {project.statistics.completionPercentage}%
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-3">
+                      <span className="text-sm text-muted-foreground">
+                        {project.statistics.dueDate
+                          ? formatDateMedium(project.statistics.dueDate)
+                          : t("workspace:projects.noDueDate")}
+                      </span>
+                    </TableCell>
+                    <TableCell className="py-3">
+                      <Badge variant={getStatusVariant()}>
+                        {getStatusText()}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
 
         <DropdownMenu
           open={contextMenu !== null}
