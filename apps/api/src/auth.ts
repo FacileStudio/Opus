@@ -161,6 +161,11 @@ export const auth = betterAuth({
         input: true,
         required: false,
       },
+      color: {
+        type: "string",
+        input: true,
+        required: false,
+      },
     },
   },
   emailAndPassword: {

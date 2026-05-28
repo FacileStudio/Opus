@@ -1,7 +1,7 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -17,8 +17,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import type { UserColor } from "@/constants/user-colors";
+import {
+  normalizeUserColor,
+  USER_COLOR_LABELS,
+  USER_COLORS,
+} from "@/constants/user-colors";
 import useUpdateUserProfile from "@/hooks/mutations/use-update-user-profile";
+import { cn } from "@/lib/cn";
 import { toast } from "@/lib/toast";
 
 export const Route = createFileRoute(
@@ -64,6 +70,37 @@ function RouteComponent() {
       .string()
       .email(t("settings:informationPage.validation.invalidEmail")),
   });
+
+  const [selectedColor, setSelectedColor] = useState<UserColor>(() =>
+    normalizeUserColor(
+      (user as Record<string, unknown> | undefined)?.color as
+        | string
+        | undefined,
+    ),
+  );
+
+  useEffect(() => {
+    if (user) {
+      setSelectedColor(
+        normalizeUserColor(
+          (user as Record<string, unknown>)?.color as string | undefined,
+        ),
+      );
+    }
+  }, [user]);
+
+  const handleColorChange = useCallback(
+    async (color: UserColor) => {
+      setSelectedColor(color);
+      try {
+        await updateProfile({ color: color.replace("#", "") });
+        await queryClient.invalidateQueries({ queryKey: ["session"] });
+      } catch {
+        toast.error("Failed to update color");
+      }
+    },
+    [updateProfile, queryClient],
+  );
 
   const profileForm = useForm<ProfileFormValues>({
     resolver: standardSchemaResolver(profileSchema),
@@ -167,104 +204,125 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title={t("settings:informationPage.pageTitle")} />
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">
+      <div className="max-w-xl space-y-8">
+        <div>
+          <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+            {t("settings:account")}
+          </p>
+          <h1 className="text-lg font-semibold">
             {t("settings:informationPage.title")}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             {t("settings:informationPage.subtitle")}
           </p>
         </div>
 
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-md font-medium">
+        <section className="space-y-5">
+          <div>
+            <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
               {t("settings:informationPage.sectionTitle")}
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              {t("settings:informationPage.sectionSubtitle")}
             </p>
+            <h2 className="font-semibold">
+              {t("settings:informationPage.sectionSubtitle")}
+            </h2>
           </div>
 
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">
-                  {t("settings:informationPage.profilePicture")}
-                </p>
-              </div>
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={user?.image ?? ""} alt={user?.name || ""} />
-                <AvatarFallback className="text-xs font-medium border border-border/30">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+          <div className="flex items-center gap-4">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={user?.image ?? ""} alt={user?.name || ""} />
+              <AvatarFallback
+                className="text-sm font-semibold text-white"
+                style={{ backgroundColor: selectedColor }}
+              >
+                {user?.name?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">{user?.name}</p>
+              <p className="text-xs text-muted-foreground">{user?.email}</p>
             </div>
-
-            <Separator />
-
-            <Form {...profileForm}>
-              <form className="space-y-4">
-                <FormField
-                  control={profileForm.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-sm font-medium">
-                            {t("settings:informationPage.fullName")}
-                          </FormLabel>
-                        </div>
-                        <FormControl>
-                          <Input
-                            className="w-48"
-                            placeholder={t(
-                              "settings:informationPage.fullNamePlaceholder",
-                            )}
-                            {...field}
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Separator />
-
-                <FormField
-                  control={profileForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-sm font-medium">
-                            {t("settings:informationPage.email")}
-                          </FormLabel>
-                        </div>
-                        <FormControl>
-                          <Input
-                            className="w-48"
-                            placeholder={t(
-                              "settings:informationPage.emailPlaceholder",
-                            )}
-                            {...field}
-                            disabled
-                            value={user?.email || ""}
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </form>
-            </Form>
           </div>
-        </div>
+
+          <Form {...profileForm}>
+            <form className="space-y-4">
+              <FormField
+                control={profileForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="grid gap-1.5">
+                    <FormLabel className="text-sm text-muted-foreground">
+                      {t("settings:informationPage.fullName")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t(
+                          "settings:informationPage.fullNamePlaceholder",
+                        )}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={profileForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="grid gap-1.5">
+                    <FormLabel className="text-sm text-muted-foreground">
+                      {t("settings:informationPage.email")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t(
+                          "settings:informationPage.emailPlaceholder",
+                        )}
+                        {...field}
+                        disabled
+                        value={user?.email || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </section>
+
+        <section className="space-y-5">
+          <div>
+            <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+              Personalization
+            </p>
+            <h2 className="font-semibold">Color</h2>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {USER_COLORS.map((color) => (
+              <button
+                key={color}
+                type="button"
+                onClick={() => handleColorChange(color)}
+                className={cn(
+                  "flex items-center gap-2 rounded-full border px-3 py-2 text-sm transition-colors",
+                  selectedColor === color
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-border bg-background hover:border-foreground/30 hover:bg-muted/40",
+                )}
+                aria-pressed={selectedColor === color}
+              >
+                <span
+                  className="inline-block h-3 w-3 shrink-0 rounded-full border border-black/5"
+                  style={{ backgroundColor: color }}
+                />
+                {USER_COLOR_LABELS[color]}
+              </button>
+            ))}
+          </div>
+        </section>
       </div>
     </>
   );
