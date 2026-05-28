@@ -1,8 +1,9 @@
 import { and, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import db from "../../database";
-import { columnTable, taskTable } from "../../database/schema";
+import { columnTable, projectTable, taskTable } from "../../database/schema";
 import { publishEvent } from "../../events";
+import { emitTaskEvent } from "../../nook-pool/sync";
 import { assertValidTaskStatus } from "../validate-task-fields";
 
 async function updateTaskStatus({
@@ -60,6 +61,24 @@ async function updateTaskStatus({
     projectId: updatedTask.projectId,
     userId: currentUserId,
   });
+
+  const [project] = await db
+    .select({
+      facileId: projectTable.facileId,
+      workspaceId: projectTable.workspaceId,
+    })
+    .from(projectTable)
+    .where(eq(projectTable.id, updatedTask.projectId))
+    .limit(1);
+
+  if (project) {
+    emitTaskEvent(
+      project.workspaceId,
+      "updated",
+      updatedTask,
+      project.facileId,
+    );
+  }
 
   return updatedTask;
 }
