@@ -1,4 +1,4 @@
-app: opus
+app: Opus
 events:
   emit:
     - project.created

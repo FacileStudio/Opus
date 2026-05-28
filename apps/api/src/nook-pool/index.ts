@@ -247,7 +247,7 @@ const nookPool = new Hono<{
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            app: "opus",
+            app: "Opus",
             secret,
             events: { emit: [], listen: [] },
           }),
