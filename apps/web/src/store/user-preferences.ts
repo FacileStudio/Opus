@@ -31,6 +31,9 @@ type UserPreferencesStore = {
   togglePriority: () => void;
   resetDisplayPreferences: () => void;
 
+  projectListView: "card" | "list";
+  setProjectListView: (view: "card" | "list") => void;
+
   sidebarDefaultOpen: boolean;
   setSidebarDefaultOpen: (open: boolean) => void;
 
@@ -102,6 +105,9 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
           showTaskNumbers: true,
           showPriority: true,
         }),
+
+      projectListView: "card",
+      setProjectListView: (view) => set({ projectListView: view }),
 
       sidebarDefaultOpen: true,
       setSidebarDefaultOpen: (open) => set({ sidebarDefaultOpen: open }),
