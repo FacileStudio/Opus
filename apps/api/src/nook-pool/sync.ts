@@ -73,7 +73,7 @@ export async function connectPoolForWorkspace(
 
   const pool = new PoolClient({
     config: {
-      app: "opus",
+      app: "Opus",
       instance: instanceUrl,
       secret,
       events: POOL_EVENTS,
@@ -404,7 +404,7 @@ export function emitProjectEvent(
   if (!facileId) return;
 
   client.emit(`project.${action}`, {
-    app: "opus",
+    app: "Opus",
     object: "project",
     action,
     facile_id: facileId,
@@ -437,7 +437,7 @@ export function emitTaskEvent(
   if (!facileId) return;
 
   client.emit(`task.${action}`, {
-    app: "opus",
+    app: "Opus",
     object: "task",
     action,
     facile_id: facileId,
