@@ -1,5 +1,5 @@
 services:
-  opus-db:
+  postgres:
     container_name: opus-db
     image: postgres:16-alpine
     env_file:
@@ -13,7 +13,7 @@ services:
       timeout: 5s
       retries: 5
 
-  opus-app:
+  opus:
     container_name: opus-app
     build:
       context: .
@@ -25,7 +25,7 @@ services:
     volumes:
       - opus-uploads:/app/apps/api/data/uploads
     depends_on:
-      opus-db:
+      postgres:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
@@ -36,7 +36,7 @@ services:
       retries: 3
 
 #  Optional for HA Setup
-#  opus-redis:
+#  redis:
 #    container_name: opus-redis
 #    image: valkey/valkey
 #    ports:
