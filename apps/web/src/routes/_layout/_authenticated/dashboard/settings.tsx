@@ -1,10 +1,16 @@
-import { AltArrowLeft as ChevronLeft } from "@solar-icons/react";
+import {
+  AltArrowLeft as ChevronLeft,
+  Folder2,
+  Settings,
+  User,
+} from "@solar-icons/react";
 import {
   createFileRoute,
   Outlet,
   useLocation,
   useNavigate,
 } from "@tanstack/react-router";
+import type { ComponentType, SVGProps } from "react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
@@ -43,23 +49,32 @@ function SettingsLayout() {
 
   const activeTab = getActiveTab();
 
-  const tabs = [
+  const tabs: Array<{
+    id: string;
+    label: string;
+    icon: ComponentType<SVGProps<SVGSVGElement>>;
+    to: string;
+    disabled: boolean;
+  }> = [
     {
       id: "account",
       label: t("settings:account"),
-      to: "/dashboard/settings/account/information" as const,
+      icon: User,
+      to: "/dashboard/settings/account/information",
       disabled: false,
     },
     {
       id: "workspace",
       label: t("navigation:page.settingsWorkspaceTab"),
-      to: "/dashboard/settings/workspace/general" as const,
+      icon: Settings,
+      to: "/dashboard/settings/workspace/general",
       disabled: false,
     },
     {
       id: "project",
       label: t("navigation:sidebar.projects"),
-      to: "/dashboard/settings/projects" as const,
+      icon: Folder2,
+      to: "/dashboard/settings/projects",
       disabled: projects?.length === 0,
     },
   ];
@@ -96,13 +111,14 @@ function SettingsLayout() {
                 disabled={tab.disabled}
                 onClick={() => navigate({ to: tab.to })}
                 className={cn(
-                  "inline-flex h-9 items-center rounded-lg px-3.5 text-sm font-medium transition-colors",
+                  "inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-medium transition-colors",
                   activeTab === tab.id
                     ? "bg-foreground text-background"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   tab.disabled && "opacity-40 pointer-events-none",
                 )}
               >
+                <tab.icon className="size-4" />
                 {tab.label}
               </button>
             ))}

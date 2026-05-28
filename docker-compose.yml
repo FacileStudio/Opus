@@ -1,10 +1,11 @@
 services:
-  postgres:
+  opus-db:
+    container_name: opus-db
     image: postgres:16-alpine
     env_file:
       - .env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - opus-db-data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U opus -d opus"]
@@ -12,7 +13,8 @@ services:
       timeout: 5s
       retries: 5
 
-  opus:
+  opus-app:
+    container_name: opus-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,9 +23,9 @@ services:
     env_file:
       - .env
     volumes:
-      - opus_uploads:/app/apps/api/data/uploads
+      - opus-uploads:/app/apps/api/data/uploads
     depends_on:
-      postgres:
+      opus-db:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
@@ -34,11 +36,14 @@ services:
       retries: 3
 
 #  Optional for HA Setup
-#  redis:
+#  opus-redis:
+#    container_name: opus-redis
 #    image: valkey/valkey
 #    ports:
 #      - "6379:6379"
 
 volumes:
-  postgres_data:
-  opus_uploads:
+  opus-db-data:
+    name: opus-db-data
+  opus-uploads:
+    name: opus-uploads
