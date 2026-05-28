@@ -282,7 +282,7 @@ function RouteComponent() {
         }
       >
         {projectListView === "card" ? (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
             {projects?.map((project) => {
               if (!project || !project.id || !project.statistics) return null;
 
