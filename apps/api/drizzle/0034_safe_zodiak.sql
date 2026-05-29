@@ -1,0 +1,1 @@
+ALTER TABLE "nook_pool_config" ADD COLUMN "pool_events" text DEFAULT '';
