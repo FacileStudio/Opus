@@ -927,6 +927,7 @@ export const nookPoolConfigTable = pgTable("nook_pool_config", {
   instanceUrl: text("instance_url").notNull(),
   secret: text("secret").notNull(),
   enabled: boolean("enabled").default(false).notNull(),
+  poolEvents: text("pool_events").default(""),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "date" })
     .defaultNow()

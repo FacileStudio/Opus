@@ -6,6 +6,7 @@ import * as v from "valibot";
 import db, { schema } from "../database";
 import { workspaceAccess } from "../utils/workspace-access-middleware";
 import {
+  ALL_POOL_EVENTS,
   connectPoolForWorkspace,
   disconnectPoolForWorkspace,
   getPoolClient,
@@ -308,6 +309,103 @@ const nookPool = new Hono<{
           error: err instanceof Error ? err.message : "Sync failed",
         });
       }
+    },
+  )
+  .get(
+    "/:workspaceId/events",
+    describeRoute({
+      operationId: "getNookPoolEvents",
+      tags: ["Nook Pool"],
+      description: "Get pool event toggles for a workspace",
+      responses: {
+        200: {
+          description: "Pool event toggles",
+          content: {
+            "application/json": {
+              schema: resolver(
+                v.array(v.object({ event: v.string(), enabled: v.boolean() })),
+              ),
+            },
+          },
+        },
+      },
+    }),
+    validator("param", v.object({ workspaceId: v.string() })),
+    workspaceAccess.fromParam("workspaceId"),
+    async (c) => {
+      const workspaceId = c.get("workspaceId");
+      const [config] = await db
+        .select({ poolEvents: schema.nookPoolConfigTable.poolEvents })
+        .from(schema.nookPoolConfigTable)
+        .where(eq(schema.nookPoolConfigTable.workspaceId, workspaceId))
+        .limit(1);
+
+      let toggles: Record<string, boolean> = {};
+      if (config?.poolEvents) {
+        try {
+          toggles = JSON.parse(config.poolEvents);
+        } catch {}
+      }
+
+      const events = ALL_POOL_EVENTS.map((event) => ({
+        event,
+        enabled: toggles[event] !== false,
+      }));
+
+      return c.json(events);
+    },
+  )
+  .put(
+    "/:workspaceId/events",
+    describeRoute({
+      operationId: "updateNookPoolEvents",
+      tags: ["Nook Pool"],
+      description: "Update pool event toggles for a workspace",
+      responses: {
+        200: {
+          description: "Updated pool event toggles",
+          content: {
+            "application/json": {
+              schema: resolver(
+                v.array(v.object({ event: v.string(), enabled: v.boolean() })),
+              ),
+            },
+          },
+        },
+      },
+    }),
+    validator("param", v.object({ workspaceId: v.string() })),
+    validator(
+      "json",
+      v.array(v.object({ event: v.string(), enabled: v.boolean() })),
+    ),
+    workspaceAccess.fromParam("workspaceId"),
+    async (c) => {
+      const workspaceId = c.get("workspaceId");
+      const body = c.req.valid("json");
+
+      const toggles: Record<string, boolean> = {};
+      for (const item of body) {
+        if (
+          ALL_POOL_EVENTS.includes(
+            item.event as (typeof ALL_POOL_EVENTS)[number],
+          )
+        ) {
+          toggles[item.event] = item.enabled;
+        }
+      }
+
+      await db
+        .update(schema.nookPoolConfigTable)
+        .set({ poolEvents: JSON.stringify(toggles) })
+        .where(eq(schema.nookPoolConfigTable.workspaceId, workspaceId));
+
+      const events = ALL_POOL_EVENTS.map((event) => ({
+        event,
+        enabled: toggles[event] !== false,
+      }));
+
+      return c.json(events);
     },
   );
 

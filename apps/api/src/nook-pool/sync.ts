@@ -18,6 +18,9 @@ const POOL_EVENTS = {
     "task.created",
     "task.updated",
     "task.deleted",
+    "task.status_changed",
+    "task.assignee_changed",
+    "task.priority_changed",
   ],
   listen: [
     "project.created",
@@ -28,6 +31,43 @@ const POOL_EVENTS = {
     "task.deleted",
   ],
 };
+
+export const ALL_POOL_EVENTS = [
+  "task.created",
+  "task.updated",
+  "task.deleted",
+  "task.status_changed",
+  "task.assignee_changed",
+  "task.priority_changed",
+  "project.created",
+  "project.updated",
+  "project.deleted",
+] as const;
+
+export type PoolEventToggle = {
+  event: string;
+  enabled: boolean;
+};
+
+export async function isPoolEventEnabled(
+  workspaceId: string,
+  event: string,
+): Promise<boolean> {
+  const [config] = await db
+    .select({ poolEvents: nookPoolConfigTable.poolEvents })
+    .from(nookPoolConfigTable)
+    .where(eq(nookPoolConfigTable.workspaceId, workspaceId))
+    .limit(1);
+
+  if (!config || !config.poolEvents) return true;
+
+  try {
+    const toggles = JSON.parse(config.poolEvents) as Record<string, boolean>;
+    return toggles[event] !== false;
+  } catch {
+    return true;
+  }
+}
 
 const ICON_TYPO_MAP: Record<string, string> = {
   Pallete2: "Palette2",
@@ -387,7 +427,7 @@ async function handleIncomingTask(
   }
 }
 
-export function emitProjectEvent(
+export async function emitProjectEvent(
   workspaceId: string,
   action: "created" | "updated" | "deleted",
   project: {
@@ -396,14 +436,17 @@ export function emitProjectEvent(
     description?: string | null;
     icon?: string | null;
   },
-): void {
+): Promise<void> {
   const client = activeClients.get(workspaceId);
   if (!client?.isConnected) return;
 
   const facileId = project.facileId;
   if (!facileId) return;
 
-  client.emit(`project.${action}`, {
+  const eventName = `project.${action}`;
+  if (!(await isPoolEventEnabled(workspaceId, eventName))) return;
+
+  client.emit(eventName, {
     app: "Opus",
     object: "project",
     action,
@@ -419,7 +462,7 @@ export function emitProjectEvent(
   });
 }
 
-export function emitTaskEvent(
+export async function emitTaskEvent(
   workspaceId: string,
   action: "created" | "updated" | "deleted",
   task: {
@@ -429,14 +472,17 @@ export function emitTaskEvent(
     projectId: string;
   },
   projectFacileId: string | null,
-): void {
+): Promise<void> {
   const client = activeClients.get(workspaceId);
   if (!client?.isConnected) return;
 
   const facileId = task.facileId;
   if (!facileId) return;
 
-  client.emit(`task.${action}`, {
+  const eventName = `task.${action}`;
+  if (!(await isPoolEventEnabled(workspaceId, eventName))) return;
+
+  client.emit(eventName, {
     app: "Opus",
     object: "task",
     action,
@@ -447,6 +493,24 @@ export function emitTaskEvent(
       name: task.title,
       status: task.status,
     },
+    timestamp: new Date().toISOString(),
+    idempotency_key: createId(),
+  });
+}
+
+export async function emitPoolEvent(
+  workspaceId: string,
+  eventName: string,
+  data: Record<string, unknown>,
+): Promise<void> {
+  const client = activeClients.get(workspaceId);
+  if (!client?.isConnected) return;
+  if (!(await isPoolEventEnabled(workspaceId, eventName))) return;
+
+  client.emit(eventName, {
+    app: "Opus",
+    event: eventName,
+    ...data,
     timestamp: new Date().toISOString(),
     idempotency_key: createId(),
   });
