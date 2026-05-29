@@ -8,6 +8,7 @@ import {
   projectTable,
   taskTable,
 } from "../database/schema";
+import { publishEvent } from "../events";
 import { DEFAULT_PROJECT_COLUMNS } from "../project/controllers/create-project";
 
 const POOL_EVENTS = {
@@ -361,6 +362,12 @@ async function handleIncomingTask(
           .update(taskTable)
           .set(updateData)
           .where(eq(taskTable.facileId, facileId));
+
+        await publishEvent("task.updated", {
+          taskId: existing.id,
+          projectId: existing.projectId,
+          userId: "",
+        });
       }
       return;
     }
@@ -405,35 +412,46 @@ async function handleIncomingTask(
       .where(eq(taskTable.projectId, project.id));
     const nextNumber = (maxResult?.maxNumber ?? 0) + 1;
 
-    await db.insert(taskTable).values({
-      projectId: project.id,
-      title: data.payload.name,
-      status,
-      columnId: column?.id ?? null,
-      facileId,
-      number: nextNumber,
-    });
+    const [created] = await db
+      .insert(taskTable)
+      .values({
+        projectId: project.id,
+        title: data.payload.name,
+        status,
+        columnId: column?.id ?? null,
+        facileId,
+        number: nextNumber,
+      })
+      .returning({ id: taskTable.id });
+
+    if (created) {
+      await publishEvent("task.created", {
+        taskId: created.id,
+        projectId: project.id,
+        userId: "",
+      });
+    }
   } else if (action === "updated") {
+    const [task] = await db
+      .select({ id: taskTable.id, projectId: taskTable.projectId })
+      .from(taskTable)
+      .where(eq(taskTable.facileId, facileId))
+      .limit(1);
+
+    if (!task) return;
+
     const updateData: Record<string, unknown> = {};
     if (data.payload.name) updateData.title = data.payload.name;
     if (data.payload.status) {
       updateData.status = data.payload.status;
 
-      const [task] = await db
-        .select({ projectId: taskTable.projectId })
-        .from(taskTable)
-        .where(eq(taskTable.facileId, facileId))
-        .limit(1);
-
-      if (task) {
-        const column = await db.query.columnTable.findFirst({
-          where: and(
-            eq(columnTable.projectId, task.projectId),
-            eq(columnTable.slug, data.payload.status),
-          ),
-        });
-        if (column) updateData.columnId = column.id;
-      }
+      const column = await db.query.columnTable.findFirst({
+        where: and(
+          eq(columnTable.projectId, task.projectId),
+          eq(columnTable.slug, data.payload.status),
+        ),
+      });
+      if (column) updateData.columnId = column.id;
     }
 
     if (Object.keys(updateData).length > 0) {
@@ -441,6 +459,12 @@ async function handleIncomingTask(
         .update(taskTable)
         .set(updateData)
         .where(eq(taskTable.facileId, facileId));
+
+      await publishEvent("task.updated", {
+        taskId: task.id,
+        projectId: task.projectId,
+        userId: "",
+      });
     }
   } else if (action === "deleted") {
     await db.delete(taskTable).where(eq(taskTable.facileId, facileId));
