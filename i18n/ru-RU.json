@@ -317,6 +317,7 @@
 			"emailPlaceholder": "Введите вашу почту",
 			"updateSuccess": "Профиль успешно обновлён",
 			"updateError": "Не удалось обновить профиль",
+			"syncedFromSSO": "Synced from SSO",
 			"validation": {
 				"nameRequired": "Имя обязательно",
 				"nameShort": "Имя должно содержать не менее 2 символов",

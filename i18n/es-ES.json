@@ -316,6 +316,7 @@
 			"emailPlaceholder": "Introduce tu correo electrónico",
 			"updateSuccess": "Perfil actualizado correctamente",
 			"updateError": "Error al actualizar tu perfil",
+			"syncedFromSSO": "Sincronizado desde SSO",
 			"validation": {
 				"nameRequired": "El nombre es obligatorio",
 				"nameShort": "Tu nombre debe tener al menos 2 caracteres",

@@ -1250,6 +1250,9 @@
 						"updateError": {
 							"type": "string"
 						},
+						"syncedFromSSO": {
+							"type": "string"
+						},
 						"validation": {
 							"type": "object",
 							"additionalProperties": false,
@@ -1280,6 +1283,7 @@
 						"emailPlaceholder",
 						"updateSuccess",
 						"updateError",
+						"syncedFromSSO",
 						"validation"
 					]
 				},

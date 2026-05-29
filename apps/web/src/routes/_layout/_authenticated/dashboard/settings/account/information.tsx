@@ -240,6 +240,11 @@ function RouteComponent() {
             <div>
               <p className="text-sm font-medium">{user?.name}</p>
               <p className="text-xs text-muted-foreground">{user?.email}</p>
+              {user?.image && (
+                <p className="text-xs text-muted-foreground">
+                  {t("settings:informationPage.syncedFromSSO")}
+                </p>
+              )}
             </div>
           </div>
 
