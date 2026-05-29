@@ -317,6 +317,7 @@
 			"emailPlaceholder": "Enter your email",
 			"updateSuccess": "Profile updated successfully",
 			"updateError": "Failed to update profile",
+			"syncedFromSSO": "Synced from SSO",
 			"validation": {
 				"nameRequired": "Name is required",
 				"nameShort": "Name must be at least 2 characters",
