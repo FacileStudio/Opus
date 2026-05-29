@@ -239,6 +239,13 @@
 			"when": 1779927820470,
 			"tag": "0033_absurd_dust",
 			"breakpoints": true
+		},
+		{
+			"idx": 34,
+			"version": "7",
+			"when": 1780059169809,
+			"tag": "0034_safe_zodiak",
+			"breakpoints": true
 		}
 	]
 }
