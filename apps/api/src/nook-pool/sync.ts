@@ -338,12 +338,32 @@ async function handleIncomingTask(
 
   if (action === "created") {
     const [existing] = await db
-      .select({ id: taskTable.id })
+      .select({ id: taskTable.id, projectId: taskTable.projectId })
       .from(taskTable)
       .where(eq(taskTable.facileId, facileId))
       .limit(1);
 
-    if (existing) return;
+    if (existing) {
+      const updateData: Record<string, unknown> = {};
+      if (data.payload.name) updateData.title = data.payload.name;
+      if (data.payload.status) {
+        updateData.status = data.payload.status;
+        const column = await db.query.columnTable.findFirst({
+          where: and(
+            eq(columnTable.projectId, existing.projectId),
+            eq(columnTable.slug, data.payload.status),
+          ),
+        });
+        if (column) updateData.columnId = column.id;
+      }
+      if (Object.keys(updateData).length > 0) {
+        await db
+          .update(taskTable)
+          .set(updateData)
+          .where(eq(taskTable.facileId, facileId));
+      }
+      return;
+    }
 
     const projectFacileId = data.payload.project_facile_id;
     if (!projectFacileId) return;
