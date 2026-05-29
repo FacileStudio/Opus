@@ -443,8 +443,8 @@
 			"displayOptionsDescription": "Choose which information to show in task views",
 			"taskNumbers": "Task Numbers",
 			"taskNumbersDescription": "Show task IDs and numbers",
-			"assignees": "Assignees",
-			"assigneesDescription": "Show who is assigned to tasks",
+			"actors": "Actors",
+			"actorsDescription": "Show who is assigned to tasks",
 			"dueDates": "Due Dates",
 			"dueDatesDescription": "Display task deadlines",
 			"labels": "Labels",
@@ -1213,7 +1213,7 @@
 				"title": "Task status changed",
 				"content": "Task \"{{taskTitle}}\" status changed from \"{{oldStatus}}\" to \"{{newStatus}}\""
 			},
-			"task_assignee_changed": {
+			"task_actor_changed": {
 				"title": "Task assigned to you",
 				"content": "You have been assigned to task: {{taskTitle}}"
 			},
@@ -1508,9 +1508,9 @@
 			"error": "Failed to move task"
 		},
 		"popover": {
-			"assignee": {
+			"actor": {
 				"unassigned": "Unassigned",
-				"updateError": "Failed to update task assignee"
+				"updateError": "Failed to update task actor"
 			},
 			"status": {
 				"updateError": "Failed to update task status"
@@ -1569,7 +1569,7 @@
 			"noTasksInSection": "No {{section}} tasks",
 			"filters": {
 				"priority": "Priority: {{name}}",
-				"assignee": "Assignee: {{name}}",
+				"actor": "Actor: {{name}}",
 				"due": "Due: {{date}}",
 				"label": "Label: {{name}}",
 				"dueThisWeek": "Due this week",
@@ -1596,14 +1596,14 @@
 			"filterBy": "Filter By",
 			"allStatuses": "All statuses",
 			"allPriorities": "All priorities",
-			"allAssignees": "All assignees",
+			"allActors": "All actors",
 			"allDueDates": "All due dates",
 			"allLabels": "All labels",
 			"selectedCount": "{{count}} selected",
 			"subjects": {
 				"status": "Status",
 				"priority": "Priority",
-				"assignee": "Assignee",
+				"actor": "Actor",
 				"dueDate": "Due date",
 				"labels": "Labels"
 			},
@@ -1654,8 +1654,8 @@
 			"count_one": "{{count}} PR",
 			"count_other": "{{count}} PRs"
 		},
-		"assignee": {
-			"label": "Assignee",
+		"actor": {
+			"label": "Actor",
 			"unassigned": "Unassigned"
 		},
 		"dueDate": {

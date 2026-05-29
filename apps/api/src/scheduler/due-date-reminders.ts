@@ -46,7 +46,7 @@ async function getTasksNeedingReminder(
     .select({
       id: taskTable.id,
       title: taskTable.title,
-      userId: taskTable.userId,
+      userId: taskTable.actorId,
       dueDate: taskTable.dueDate,
       projectId: taskTable.projectId,
     })
@@ -61,7 +61,7 @@ async function getTasksNeedingReminder(
     )
     .where(
       and(
-        isNotNull(taskTable.userId),
+        isNotNull(taskTable.actorId),
         isNotNull(taskTable.dueDate),
         between(taskTable.dueDate, windowStart, windowEnd),
         isNull(taskReminderSentTable.id),

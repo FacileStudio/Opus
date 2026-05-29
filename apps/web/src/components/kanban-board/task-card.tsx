@@ -62,7 +62,7 @@ function TaskCard({ task }: TaskCardProps) {
   const { mutateAsync: deleteTask } = useDeleteTask();
   const navigate = useNavigate();
   const {
-    showAssignees,
+    showActors,
     showPriority,
     showDueDates,
     showLabels,
@@ -123,7 +123,7 @@ function TaskCard({ task }: TaskCardProps) {
     workspace?.id ?? "",
   );
 
-  const assignee = useMemo(() => {
+  const actor = useMemo(() => {
     return workspaceUsers?.members?.find(
       (member) => member.userId === task.userId,
     );
@@ -206,22 +206,22 @@ function TaskCard({ task }: TaskCardProps) {
               </div>
             )}
 
-            {showAssignees && (
+            {showActors && (
               <div className="absolute top-3 right-3">
                 {task.userId ? (
                   <Avatar className="h-5 w-5">
                     <AvatarImage
-                      src={assignee?.user?.image ?? ""}
-                      alt={assignee?.user?.name || ""}
+                      src={actor?.user?.image ?? ""}
+                      alt={actor?.user?.name || ""}
                     />
                     <AvatarFallback className="text-xs font-medium border border-border/30">
-                      {assignee?.user?.name?.charAt(0).toUpperCase()}
+                      {actor?.user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 ) : (
                   <div
                     className="flex h-5 w-5 items-center justify-center rounded-full border border-border bg-muted"
-                    title={t("tasks:assignee.unassigned")}
+                    title={t("tasks:actor.unassigned")}
                   >
                     <span className="text-[10px] font-medium text-muted-foreground">
                       ?

@@ -3,7 +3,7 @@ import { client } from "@opus/libs";
 type BulkOperationType =
   | "updateStatus"
   | "updatePriority"
-  | "updateAssignee"
+  | "updateActor"
   | "delete"
   | "addLabel"
   | "removeLabel"

@@ -94,9 +94,9 @@ function normalizeTask(
     dueDate: task.dueDate ?? null,
     position: task.position ?? 0,
     userId: task.userId ?? null,
-    assigneeId: task.assigneeId ?? task.userId ?? null,
-    assigneeName: task.assigneeName ?? null,
-    assigneeImage: task.assigneeImage ?? null,
+    actorId: task.actorId ?? task.userId ?? null,
+    actorName: task.actorName ?? null,
+    actorImage: task.actorImage ?? null,
     labels: task.labels ?? [],
     externalLinks: task.externalLinks ?? [],
   };
@@ -178,7 +178,7 @@ function CreateTaskModal({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<Priority>("no-priority");
-  const [assigneeId, setAssigneeId] = useState("");
+  const [actorId, setActorId] = useState("");
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [createMore, setCreateMore] = useState(false);
@@ -231,7 +231,7 @@ function CreateTaskModal({
     setTitle("");
     setDescription("");
     setPriority("no-priority");
-    setAssigneeId("");
+    setActorId("");
     setStartDate(undefined);
     setDueDate(undefined);
     setCreateMore(false);
@@ -285,18 +285,18 @@ function CreateTaskModal({
         targetColumn.tasks.push({
           ...existingTask,
           ...task,
-          assigneeId: task.userId,
-          assigneeName:
+          actorId: task.userId,
+          actorName:
             workspaceUsers?.members?.find(
               (member) => member.userId === task.userId,
             )?.user?.name ??
-            existingTask?.assigneeName ??
+            existingTask?.actorName ??
             null,
-          assigneeImage:
+          actorImage:
             workspaceUsers?.members?.find(
               (member) => member.userId === task.userId,
             )?.user?.image ??
-            existingTask?.assigneeImage ??
+            existingTask?.actorImage ??
             null,
           position: task.position ?? 0,
         });
@@ -326,7 +326,7 @@ function CreateTaskModal({
     const draftPromise = createTask({
       title: title.trim() || t("common:modals.createTask.untitledTask"),
       description: description.trim() || "",
-      userId: assigneeId,
+      userId: actorId,
       priority,
       projectId: resolvedProjectId,
       startDate: startDate ? startDate.toISOString() : undefined,
@@ -351,7 +351,7 @@ function CreateTaskModal({
       draftCreationPromiseRef.current = null;
     }
   }, [
-    assigneeId,
+    actorId,
     createTask,
     description,
     draftTask,
@@ -377,7 +377,7 @@ function CreateTaskModal({
               ...draftTask,
               title: title.trim(),
               description: description.trim() || "",
-              userId: assigneeId || null,
+              userId: actorId || null,
               status: taskStatus,
               priority,
               startDate: startDate ? startDate.toISOString() : null,
@@ -389,7 +389,7 @@ function CreateTaskModal({
             await createTask({
               title: title.trim(),
               description: description.trim() || "",
-              userId: assigneeId,
+              userId: actorId,
               priority,
               projectId: resolvedProjectId,
               startDate: startDate ? startDate.toISOString() : undefined,
@@ -423,7 +423,7 @@ function CreateTaskModal({
         setTitle("");
         setDescription("");
         setPriority("no-priority");
-        setAssigneeId("");
+        setActorId("");
         setStartDate(undefined);
         setDueDate(undefined);
         setLabels([]);
@@ -467,7 +467,7 @@ function CreateTaskModal({
     return t("tasks:status.in-progress");
   }, [status, t]);
   const selectedUser = workspaceUsers?.members?.find(
-    (u) => u.userId === assigneeId,
+    (u) => u.userId === actorId,
   );
 
   useEffect(() => {
@@ -779,7 +779,7 @@ function CreateTaskModal({
                     <button
                       type="button"
                       className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-accent/50 text-left transition-colors h-8"
-                      onClick={() => setAssigneeId("")}
+                      onClick={() => setActorId("")}
                     >
                       <div
                         className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center"
@@ -794,14 +794,14 @@ function CreateTaskModal({
                       <span className="text-sm">
                         {t("common:modals.createTask.assignUnassigned")}
                       </span>
-                      {!assigneeId && <Check className="ml-auto h-4 w-4" />}
+                      {!actorId && <Check className="ml-auto h-4 w-4" />}
                     </button>
                     {workspaceUsers?.members?.map((member) => (
                       <button
                         key={member.userId}
                         type="button"
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-accent/50 text-left transition-colors h-8"
-                        onClick={() => setAssigneeId(member.userId || "")}
+                        onClick={() => setActorId(member.userId || "")}
                       >
                         <Avatar className="h-6 w-6">
                           <AvatarImage
@@ -813,7 +813,7 @@ function CreateTaskModal({
                           </AvatarFallback>
                         </Avatar>
                         <span className="text-sm">{member?.user?.name}</span>
-                        {assigneeId === member.userId && (
+                        {actorId === member.userId && (
                           <Check className="ml-auto h-4 w-4" />
                         )}
                       </button>

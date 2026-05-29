@@ -132,12 +132,9 @@ function buildEventData(eventType: string, data: EventData): EventData {
     if (data.oldDescription) filtered.oldDescription = data.oldDescription;
     if (data.newDescription) filtered.newDescription = data.newDescription;
   }
-  if (
-    eventType === "task.assignee_changed" ||
-    eventType === "task.unassigned"
-  ) {
-    if (data.oldAssignee) filtered.oldAssignee = data.oldAssignee;
-    if (data.newAssignee) filtered.newAssignee = data.newAssignee;
+  if (eventType === "task.actor_changed" || eventType === "task.unassigned") {
+    if (data.oldActor) filtered.oldActor = data.oldActor;
+    if (data.newActor) filtered.newActor = data.newActor;
   }
   if (eventType === "task.due_date_changed") {
     if (data.oldDueDate) filtered.oldDueDate = data.oldDueDate;
@@ -214,7 +211,7 @@ async function deliverToWorkspaceWebhooks(eventType: string, data: EventData) {
 
 const POOL_BRIDGED_EVENTS = [
   "task.status_changed",
-  "task.assignee_changed",
+  "task.actor_changed",
   "task.priority_changed",
 ] as const;
 
@@ -248,7 +245,7 @@ const TRACKED_EVENTS = [
   "task.updated",
   "task.deleted",
   "task.status_changed",
-  "task.assignee_changed",
+  "task.actor_changed",
   "task.priority_changed",
   "task.title_changed",
   "task.description_changed",

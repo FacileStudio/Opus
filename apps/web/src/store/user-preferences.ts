@@ -17,9 +17,9 @@ type UserPreferencesStore = {
   showTaskNumbers: boolean;
   setShowTaskNumbers: (show: boolean) => void;
   toggleTaskNumbers: () => void;
-  showAssignees: boolean;
-  setShowAssignees: (show: boolean) => void;
-  toggleAssignees: () => void;
+  showActors: boolean;
+  setShowActors: (show: boolean) => void;
+  toggleActors: () => void;
   showDueDates: boolean;
   setShowDueDates: (show: boolean) => void;
   toggleDueDates: () => void;
@@ -82,10 +82,9 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
       setShowTaskNumbers: (show) => set({ showTaskNumbers: show }),
       toggleTaskNumbers: () =>
         set((state) => ({ showTaskNumbers: !state.showTaskNumbers })),
-      showAssignees: true,
-      setShowAssignees: (show) => set({ showAssignees: show }),
-      toggleAssignees: () =>
-        set((state) => ({ showAssignees: !state.showAssignees })),
+      showActors: true,
+      setShowActors: (show) => set({ showActors: show }),
+      toggleActors: () => set((state) => ({ showActors: !state.showActors })),
       showDueDates: true,
       setShowDueDates: (show) => set({ showDueDates: show }),
       toggleDueDates: () =>
@@ -99,7 +98,7 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
         set((state) => ({ showPriority: !state.showPriority })),
       resetDisplayPreferences: () =>
         set({
-          showAssignees: true,
+          showActors: true,
           showDueDates: true,
           showLabels: true,
           showTaskNumbers: true,

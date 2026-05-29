@@ -115,7 +115,7 @@ export async function handleGiteaIssueReopened(payload: IssueReopenedPayload) {
           oldStatus: statusResult.before.status,
           newStatus: statusResult.after.status,
           title: statusResult.after.title,
-          assigneeId: statusResult.after.userId,
+          actorId: statusResult.after.actorId,
           type: "status_changed",
         });
       }

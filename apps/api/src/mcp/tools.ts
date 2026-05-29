@@ -319,7 +319,7 @@ export function registerMcpTools(
         projectId: nonEmptyString,
         status: optionalNonEmptyString,
         priority: prioritySchema.optional(),
-        assigneeId: optionalNonEmptyString,
+        actorId: optionalNonEmptyString,
         page: z.number().int().positive().optional(),
         limit: z.number().int().positive().optional(),
         sortBy: z

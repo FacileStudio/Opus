@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import updateTaskAssignee from "@/fetchers/task/update-task-assignee";
+import updateTaskActor from "@/fetchers/task/update-task-actor";
 import type Task from "@/types/task";
 
-export function useUpdateTaskAssignee() {
+export function useUpdateTaskActor() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (task: Task) => updateTaskAssignee(task.id, task),
+    mutationFn: (task: Task) => updateTaskActor(task.id, task),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["task", variables.id],

@@ -254,7 +254,7 @@ async function importSingleIssue(
 
     const taskValues: typeof taskTable.$inferInsert = {
       projectId,
-      userId: null,
+      actorId: null,
       title: issue.title,
       description: formatTaskDescriptionFromIssue(issue.body),
       status: status || "to-do",
@@ -292,7 +292,7 @@ async function importSingleIssue(
   await publishEvent("task.created", {
     ...createdTask,
     taskId: createdTask.id,
-    userId: createdTask.userId ?? "",
+    userId: createdTask.actorId ?? "",
     type: "task",
     content: null,
     source: "gitea-import",

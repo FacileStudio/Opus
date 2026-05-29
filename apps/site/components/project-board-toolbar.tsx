@@ -134,7 +134,7 @@ export default function BoardToolbar({
 }: BoardToolbarProps) {
   const selectedStatusIds = filters.status ?? [];
   const selectedPriorityIds = filters.priority ?? [];
-  const selectedAssigneeIds = filters.assignee ?? [];
+  const selectedActorIds = filters.actor ?? [];
   const selectedDueDateFilters = filters.dueDate ?? [];
 
   const getStatusDisplayName = (statusId: string) => {
@@ -153,11 +153,11 @@ export default function BoardToolbar({
   const getPriorityDisplayName = (priority: string) =>
     priority.charAt(0).toUpperCase() + priority.slice(1);
 
-  const getAssigneeDisplayName = (userId: string) => {
+  const getActorDisplayName = (userId: string) => {
     const member = users?.members?.find((m) => m.userId === userId);
     return member?.user?.name || "Unknown";
   };
-  const getAssigneeAvatar = (userId: string) => {
+  const getActorAvatar = (userId: string) => {
     const member = users?.members?.find((m) => m.userId === userId);
     return (
       <Avatar className="h-4 w-4">
@@ -205,12 +205,12 @@ export default function BoardToolbar({
     updateFilter("priority", next.length > 0 ? next : null);
   };
 
-  const toggleAssigneeFilter = (userId: string) => {
-    const exists = selectedAssigneeIds.includes(userId);
+  const toggleActorFilter = (userId: string) => {
+    const exists = selectedActorIds.includes(userId);
     const next = exists
-      ? selectedAssigneeIds.filter((id) => id !== userId)
-      : [...selectedAssigneeIds, userId];
-    updateFilter("assignee", next.length > 0 ? next : null);
+      ? selectedActorIds.filter((id) => id !== userId)
+      : [...selectedActorIds, userId];
+    updateFilter("actor", next.length > 0 ? next : null);
   };
 
   const toggleDueDateFilter = (dueDate: string) => {
@@ -361,37 +361,35 @@ export default function BoardToolbar({
 
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="h-8 rounded-md text-sm">
-                    Assignee
+                    Actor
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent className="w-64">
                     <div className="grid grid-cols-1 gap-1 p-1">
                       <button
                         className={`inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-left text-xs ${
-                          selectedAssigneeIds.length === 0
+                          selectedActorIds.length === 0
                             ? "bg-accent text-accent-foreground"
                             : "text-foreground/90 hover:bg-accent/60 hover:text-foreground"
                         }`}
-                        onClick={() => updateFilter("assignee", null)}
+                        onClick={() => updateFilter("actor", null)}
                         type="button"
                       >
-                        <CheckSlot checked={selectedAssigneeIds.length === 0} />
-                        All assignees
+                        <CheckSlot checked={selectedActorIds.length === 0} />
+                        All actors
                       </button>
                       {users?.members?.map((member) => (
                         <button
                           key={member.userId}
                           className={`inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-left text-xs ${
-                            selectedAssigneeIds.includes(member.userId)
+                            selectedActorIds.includes(member.userId)
                               ? "bg-accent text-accent-foreground"
                               : "text-foreground/90 hover:bg-accent/60 hover:text-foreground"
                           }`}
-                          onClick={() => toggleAssigneeFilter(member.userId)}
+                          onClick={() => toggleActorFilter(member.userId)}
                           type="button"
                         >
                           <CheckSlot
-                            checked={selectedAssigneeIds.includes(
-                              member.userId,
-                            )}
+                            checked={selectedActorIds.includes(member.userId)}
                           />
                           <span className="inline-flex items-center gap-2">
                             <Avatar className="h-5 w-5">
@@ -562,26 +560,26 @@ export default function BoardToolbar({
               />
             )}
 
-            {selectedAssigneeIds.length > 0 && (
+            {selectedActorIds.length > 0 && (
               <ActiveFilterChip
-                subject="Assignee"
+                subject="Actor"
                 operator="is any of"
                 value={
                   <span className="inline-flex items-center gap-1.5">
                     <StackedIcons
-                      items={selectedAssigneeIds.map((userId) => ({
+                      items={selectedActorIds.map((userId) => ({
                         id: userId,
-                        node: getAssigneeAvatar(userId),
+                        node: getActorAvatar(userId),
                       }))}
                     />
                     <span>
-                      {selectedAssigneeIds.length === 1
-                        ? getAssigneeDisplayName(selectedAssigneeIds[0])
-                        : `${selectedAssigneeIds.length} selected`}
+                      {selectedActorIds.length === 1
+                        ? getActorDisplayName(selectedActorIds[0])
+                        : `${selectedActorIds.length} selected`}
                     </span>
                   </span>
                 }
-                onClear={() => updateFilter("assignee", null)}
+                onClear={() => updateFilter("actor", null)}
               />
             )}
 

@@ -50,7 +50,7 @@ async function updateTask(
       description,
       priority,
       position,
-      userId: userId || null,
+      actorId: userId || null,
     })
     .where(eq(taskTable.id, id))
     .returning();
@@ -69,7 +69,7 @@ async function updateTask(
       oldStatus: existingTask.status,
       newStatus: status,
       title: updatedTask.title,
-      assigneeId: updatedTask.userId,
+      actorId: updatedTask.actorId,
       type: "status_changed",
     });
 

@@ -40,7 +40,7 @@ async function createTimeEntry({
   }
 
   const [task] = await db
-    .select({ userId: taskTable.userId, title: taskTable.title })
+    .select({ userId: taskTable.actorId, title: taskTable.title })
     .from(taskTable)
     .where(eq(taskTable.id, taskId));
 

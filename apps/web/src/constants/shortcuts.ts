@@ -40,7 +40,7 @@ export const shortcuts = {
   taskDetails: {
     status: "s",
     priority: "p",
-    assignee: "a",
+    actor: "a",
     labels: "l",
     dueDate: "d",
   },

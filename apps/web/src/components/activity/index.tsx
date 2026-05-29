@@ -60,7 +60,7 @@ function getActivityTypeIcon(type: string) {
       return <DangerCircle size={16} />;
     case "due_date_changed":
       return <Calendar size={16} />;
-    case "assignee_changed":
+    case "actor_changed":
     case "unassigned":
       return <UserRounded size={16} />;
     default:
@@ -295,7 +295,7 @@ function renderActivityContent({
     );
   }
 
-  if (activity.type === "assignee_changed") {
+  if (activity.type === "actor_changed") {
     if (eventData) {
       if (eventData.isSelfAssigned) {
         return (
@@ -305,8 +305,8 @@ function renderActivityContent({
         );
       }
 
-      const targetId = String(eventData.newAssigneeId ?? "");
-      const targetName = String(eventData.newAssignee ?? "");
+      const targetId = String(eventData.newActorId ?? "");
+      const targetName = String(eventData.newActor ?? "");
       const targetUser =
         workspaceUsers?.find((member) => member.user?.id === targetId) || null;
 

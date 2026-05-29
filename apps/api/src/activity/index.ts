@@ -216,7 +216,7 @@ subscribeToEvent<{
   oldStatus: string;
   newStatus: string;
   title: string;
-  assigneeId?: string;
+  actorId?: string;
   type: string;
 }>("task.status_changed", async (data) => {
   await createActivity(data.taskId, data.type, data.userId, null, {
@@ -251,16 +251,16 @@ subscribeToEvent<{
 subscribeToEvent<{
   taskId: string;
   userId: string;
-  oldAssignee: string | null;
-  newAssignee: string;
-  newAssigneeId: string;
+  oldActor: string | null;
+  newActor: string;
+  newActorId: string;
   title: string;
   type: string;
-}>("task.assignee_changed", async (data) => {
+}>("task.actor_changed", async (data) => {
   await createActivity(data.taskId, data.type, data.userId, null, {
-    newAssigneeId: data.newAssigneeId,
-    newAssignee: data.newAssignee,
-    isSelfAssigned: data.userId === data.newAssigneeId,
+    newActorId: data.newActorId,
+    newActor: data.newActor,
+    isSelfAssigned: data.userId === data.newActorId,
   });
 });
 

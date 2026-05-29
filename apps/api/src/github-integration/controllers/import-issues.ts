@@ -240,7 +240,7 @@ async function importSingleIssue(
 
   const taskValues: typeof taskTable.$inferInsert = {
     projectId,
-    userId: null,
+    actorId: null,
     title: issue.title,
     description: formatTaskDescriptionFromIssue(issue.body),
     status: status || "to-do",

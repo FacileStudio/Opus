@@ -246,6 +246,13 @@
 			"when": 1780059169809,
 			"tag": "0034_safe_zodiak",
 			"breakpoints": true
+		},
+		{
+			"idx": 35,
+			"version": "7",
+			"when": 1780300800000,
+			"tag": "0035_rename_assignee_to_actor",
+			"breakpoints": true
 		}
 	]
 }

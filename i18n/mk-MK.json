@@ -443,8 +443,8 @@
 			"displayOptionsDescription": "Избери кои информации да се прикажуваат во приказите на задачи",
 			"taskNumbers": "Броеви на задачи",
 			"taskNumbersDescription": "Прикажи ID и броеви на задачи",
-			"assignees": "Доделени",
-			"assigneesDescription": "Прикажи кој е доделен на задачите",
+			"actors": "Доделени",
+			"actorsDescription": "Прикажи кој е доделен на задачите",
 			"dueDates": "Крајни рокови",
 			"dueDatesDescription": "Прикажи рокови на задачите",
 			"labels": "Етикети",
@@ -1203,7 +1203,7 @@
 				"title": "Статусот на задачата е променет",
 				"content": "Статусот на задачата \"{{taskTitle}}\" е променет од \"{{oldStatus}}\" во \"{{newStatus}}\""
 			},
-			"task_assignee_changed": {
+			"task_actor_changed": {
 				"title": "Задачата ти е доделена",
 				"content": "Ти е доделена задачата: {{taskTitle}}"
 			},
@@ -1498,7 +1498,7 @@
 			"error": "Неуспешно преместување на задача"
 		},
 		"popover": {
-			"assignee": {
+			"actor": {
 				"unassigned": "Недоделен",
 				"updateError": "Неуспешно ажурирање на доделеност на задача"
 			},
@@ -1559,7 +1559,7 @@
 			"noTasksInSection": "Нема {{section}} задачи",
 			"filters": {
 				"priority": "Приоритет: {{name}}",
-				"assignee": "Доделен: {{name}}",
+				"actor": "Доделен: {{name}}",
 				"due": "Рок: {{date}}",
 				"label": "Етикета: {{name}}",
 				"dueThisWeek": "Рок оваа недела",
@@ -1586,14 +1586,14 @@
 			"filterBy": "Филтрирај по",
 			"allStatuses": "Сите статуси",
 			"allPriorities": "Сите приоритети",
-			"allAssignees": "Сите доделени",
+			"allActors": "Сите доделени",
 			"allDueDates": "Сите крајни рокови",
 			"allLabels": "Сите етикети",
 			"selectedCount": "{{count}} избрани",
 			"subjects": {
 				"status": "Статус",
 				"priority": "Приоритет",
-				"assignee": "Доделен",
+				"actor": "Доделен",
 				"dueDate": "Краен рок",
 				"labels": "Етикети"
 			},
@@ -1644,7 +1644,7 @@
 			"count_one": "{{count}} PR",
 			"count_other": "{{count}} PR-а"
 		},
-		"assignee": {
+		"actor": {
 			"label": "Доделен",
 			"unassigned": "Недоделен"
 		},

@@ -5,8 +5,8 @@ type Task = {
   status: string;
   priority: string | null;
   dueDate: string | null;
-  assigneeName?: string | null;
-  assigneeImage?: string | null;
+  actorName?: string | null;
+  actorImage?: string | null;
   description: string | null;
   columnId?: string | null;
   projectId: string;

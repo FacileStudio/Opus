@@ -17,7 +17,7 @@ import {
 type BulkOperation =
   | "updateStatus"
   | "updatePriority"
-  | "updateAssignee"
+  | "updateActor"
   | "delete"
   | "addLabel"
   | "removeLabel"
@@ -157,22 +157,22 @@ async function bulkUpdateTasks({
       break;
     }
 
-    case "updateAssignee": {
+    case "updateActor": {
       const result = await db
         .update(taskTable)
-        .set({ userId: value || null })
+        .set({ actorId: value || null })
         .where(inArray(taskTable.id, foundIds));
 
       updatedCount = result.rowCount ?? foundIds.length;
 
       for (const task of tasks) {
-        const eventType = value ? "task.assignee_changed" : "task.unassigned";
+        const eventType = value ? "task.actor_changed" : "task.unassigned";
         await publishEvent(eventType, {
           taskId: task.id,
           projectId: task.projectId,
           userId,
-          newAssigneeId: value || null,
-          type: value ? "assignee_changed" : "unassigned",
+          newActorId: value || null,
+          type: value ? "actor_changed" : "unassigned",
         });
       }
       break;

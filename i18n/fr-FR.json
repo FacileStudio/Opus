@@ -443,8 +443,8 @@
 			"displayOptionsDescription": "Choisissez les informations à afficher dans les vues de tâches",
 			"taskNumbers": "Numéros de tâches",
 			"taskNumbersDescription": "Afficher les ID et numéros de tâches",
-			"assignees": "Assignés",
-			"assigneesDescription": "Afficher les personnes assignées aux tâches",
+			"actors": "Assignés",
+			"actorsDescription": "Afficher les personnes assignées aux tâches",
 			"dueDates": "Dates d'échéance",
 			"dueDatesDescription": "Afficher les dates d'échéance des tâches",
 			"labels": "Labels",
@@ -1203,7 +1203,7 @@
 				"title": "Statut de la tâche modifié",
 				"content": "Le statut de la tâche \"{{taskTitle}}\" est passé de \"{{oldStatus}}\" à \"{{newStatus}}\""
 			},
-			"task_assignee_changed": {
+			"task_actor_changed": {
 				"title": "Tâche assignée à vous",
 				"content": "Vous avez été assigné à la tâche : {{taskTitle}}"
 			},
@@ -1498,7 +1498,7 @@
 			"error": "Échec du déplacement de la tâche"
 		},
 		"popover": {
-			"assignee": {
+			"actor": {
 				"unassigned": "Non assigné",
 				"updateError": "Échec de la mise à jour de l'assigné de la tâche"
 			},
@@ -1559,7 +1559,7 @@
 			"noTasksInSection": "Aucune tâche {{section}}",
 			"filters": {
 				"priority": "Priorité: {{name}}",
-				"assignee": "Assigné: {{name}}",
+				"actor": "Assigné: {{name}}",
 				"due": "Échéance: {{date}}",
 				"label": "Label: {{name}}",
 				"dueThisWeek": "Échéance cette semaine",
@@ -1586,14 +1586,14 @@
 			"filterBy": "Filtrer par",
 			"allStatuses": "Tous les statuts",
 			"allPriorities": "Toutes les priorités",
-			"allAssignees": "Tous les assignés",
+			"allActors": "Tous les assignés",
 			"allDueDates": "Toutes les dates d'échéance",
 			"allLabels": "Tous les labels",
 			"selectedCount": "{{count}} sélectionné",
 			"subjects": {
 				"status": "Statut",
 				"priority": "Priorité",
-				"assignee": "Assigné",
+				"actor": "Assigné",
 				"dueDate": "Date d'échéance",
 				"labels": "Labels"
 			},
@@ -1644,7 +1644,7 @@
 			"count_one": "{{count}} PR",
 			"count_other": "{{count}} PRs"
 		},
-		"assignee": {
+		"actor": {
 			"label": "Assigné",
 			"unassigned": "Non assigné"
 		},

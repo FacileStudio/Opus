@@ -39,7 +39,7 @@ async function createTask({
 
   await assertValidTaskStatus(resolvedStatus, projectId);
 
-  const [assignee] = await db
+  const [actor] = await db
     .select({ name: userTable.name })
     .from(userTable)
     .where(eq(userTable.id, userId ?? ""));
@@ -73,7 +73,7 @@ async function createTask({
     .insert(taskTable)
     .values({
       projectId,
-      userId: userId || null,
+      actorId: userId || null,
       title: title || "",
       status: resolvedStatus,
       columnId: column?.id ?? null,
@@ -96,7 +96,7 @@ async function createTask({
   await publishEvent("task.created", {
     ...createdTask,
     taskId: createdTask.id,
-    userId: createdTask.userId ?? "",
+    userId: createdTask.actorId ?? "",
     currentUserId: currentUserId,
     type: "created",
     content: null,
@@ -122,7 +122,7 @@ async function createTask({
 
   return {
     ...createdTask,
-    assigneeName: assignee?.name,
+    actorName: actor?.name,
   };
 }
 

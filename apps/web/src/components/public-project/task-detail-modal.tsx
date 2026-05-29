@@ -142,18 +142,18 @@ export function PublicTaskDetailModal({
                   </div>
                 )}
 
-                {task.assigneeName && (
+                {task.actorName && (
                   <div className="flex items-center gap-2 px-2.5 py-1 text-xs bg-muted text-muted-foreground rounded-md">
                     <Avatar className="h-4 w-4">
                       <AvatarImage
-                        src={task.assigneeImage ?? ""}
-                        alt={task.assigneeName ?? ""}
+                        src={task.actorImage ?? ""}
+                        alt={task.actorName ?? ""}
                       />
                       <AvatarFallback className="text-[10px]">
-                        {task.assigneeName.charAt(0).toUpperCase()}
+                        {task.actorName.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span>{task.assigneeName}</span>
+                    <span>{task.actorName}</span>
                   </div>
                 )}
               </div>

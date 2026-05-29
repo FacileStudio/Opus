@@ -163,7 +163,7 @@ export async function handleGiteaIssueLabeled(payload: IssueLabeledPayload) {
             oldStatus: statusResult.before.status,
             newStatus: statusResult.after.status,
             title: statusResult.after.title,
-            assigneeId: statusResult.after.userId,
+            actorId: statusResult.after.actorId,
             type: "status_changed",
           });
         }

@@ -1,13 +1,10 @@
 import { client } from "@opus/libs";
 import type Task from "@/types/task";
 
-type UpdateTaskAssigneePayload = Pick<Task, "userId">;
+type UpdateTaskActorPayload = Pick<Task, "userId">;
 
-async function updateTaskAssignee(
-  taskId: string,
-  task: UpdateTaskAssigneePayload,
-) {
-  const response = await client.task.assignee[":id"].$put({
+async function updateTaskActor(taskId: string, task: UpdateTaskActorPayload) {
+  const response = await client.task.actor[":id"].$put({
     param: { id: taskId },
     json: {
       userId: task.userId || "",
@@ -24,4 +21,4 @@ async function updateTaskAssignee(
   return data;
 }
 
-export default updateTaskAssignee;
+export default updateTaskActor;

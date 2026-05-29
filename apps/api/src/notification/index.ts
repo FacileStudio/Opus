@@ -200,11 +200,11 @@ subscribeToEvent<{
   oldStatus: string;
   newStatus: string;
   title: string;
-  assigneeId?: string;
+  actorId?: string;
 }>("task.status_changed", async (data) => {
-  if (data.assigneeId && data.assigneeId !== data.userId) {
+  if (data.actorId && data.actorId !== data.userId) {
     await createNotification({
-      userId: data.assigneeId,
+      userId: data.actorId,
       type: "task_status_changed",
       eventData: {
         taskTitle: data.title,
@@ -220,15 +220,15 @@ subscribeToEvent<{
 subscribeToEvent<{
   taskId: string;
   userId: string;
-  oldAssignee: string | null;
-  newAssignee: string;
-  newAssigneeId: string;
+  oldActor: string | null;
+  newActor: string;
+  newActorId: string;
   title: string;
-}>("task.assignee_changed", async (data) => {
-  if (data.newAssigneeId) {
+}>("task.actor_changed", async (data) => {
+  if (data.newActorId) {
     await createNotification({
-      userId: data.newAssigneeId,
-      type: "task_assignee_changed",
+      userId: data.newActorId,
+      type: "task_actor_changed",
       eventData: {
         taskTitle: data.title,
       },

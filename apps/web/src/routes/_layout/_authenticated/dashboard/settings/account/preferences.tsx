@@ -62,8 +62,8 @@ function RouteComponent() {
     setViewMode,
     showTaskNumbers,
     setShowTaskNumbers,
-    showAssignees,
-    setShowAssignees,
+    showActors,
+    setShowActors,
     showDueDates,
     setShowDueDates,
     showLabels,
@@ -317,16 +317,13 @@ function RouteComponent() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label className="text-sm font-medium">
-                {t("settings:preferencesPage.assignees")}
+                {t("settings:preferencesPage.actors")}
               </Label>
               <p className="text-xs text-muted-foreground">
-                {t("settings:preferencesPage.assigneesDescription")}
+                {t("settings:preferencesPage.actorsDescription")}
               </p>
             </div>
-            <Switch
-              checked={showAssignees}
-              onCheckedChange={setShowAssignees}
-            />
+            <Switch checked={showActors} onCheckedChange={setShowActors} />
           </div>
 
           <Separator />

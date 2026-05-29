@@ -26,12 +26,12 @@ async function exportTasks(projectId: string) {
       dueDate: taskTable.dueDate,
       position: taskTable.position,
       createdAt: taskTable.createdAt,
-      userId: taskTable.userId,
-      assigneeName: userTable.name,
-      assigneeId: userTable.id,
+      userId: taskTable.actorId,
+      actorName: userTable.name,
+      actorId: userTable.id,
     })
     .from(taskTable)
-    .leftJoin(userTable, eq(taskTable.userId, userTable.id))
+    .leftJoin(userTable, eq(taskTable.actorId, userTable.id))
     .where(eq(taskTable.projectId, projectId))
     .orderBy(taskTable.position);
 

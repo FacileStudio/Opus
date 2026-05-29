@@ -28,9 +28,9 @@ type Task = {
   createdAt: string;
   updatedAt?: string;
   userId: string | null;
-  assigneeId: string | null;
-  assigneeName: string | null;
-  assigneeImage?: string | null;
+  actorId: string | null;
+  actorName: string | null;
+  actorImage?: string | null;
   projectId: string;
   columnId?: string | null;
   labels?: TaskLabel[];

@@ -101,7 +101,7 @@ export async function handleGiteaIssueOpened(payload: IssueOpenedPayload) {
 
     const taskValues: typeof taskTable.$inferInsert = {
       projectId,
-      userId: null,
+      actorId: null,
       title: issue.title,
       description: formatTaskDescriptionFromIssue(issue.body),
       status: resolvedStatus,
@@ -125,7 +125,7 @@ export async function handleGiteaIssueOpened(payload: IssueOpenedPayload) {
     await publishEvent("task.created", {
       ...createdTask,
       taskId: createdTask.id,
-      userId: createdTask.userId ?? "",
+      userId: createdTask.actorId ?? "",
       type: "task",
       content: null,
       source: "gitea",
