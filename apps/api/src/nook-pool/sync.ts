@@ -7,6 +7,7 @@ import {
   nookPoolConfigTable,
   projectTable,
   taskTable,
+  userTable,
 } from "../database/schema";
 import { publishEvent } from "../events";
 import { DEFAULT_PROJECT_COLUMNS } from "../project/controllers/create-project";
@@ -257,6 +258,7 @@ type IncomingTaskPayload = {
     project_facile_id: string;
     name: string;
     status?: string;
+    actor_email?: string;
   };
 };
 
@@ -328,6 +330,18 @@ async function handleIncomingProject(
   }
 }
 
+async function resolveActorByEmail(
+  email: string | undefined,
+): Promise<string | null> {
+  if (!email) return null;
+  const [actor] = await db
+    .select({ id: userTable.id })
+    .from(userTable)
+    .where(eq(userTable.email, email))
+    .limit(1);
+  return actor?.id ?? null;
+}
+
 async function handleIncomingTask(
   action: string,
   workspaceId: string,
@@ -357,6 +371,8 @@ async function handleIncomingTask(
         });
         if (column) updateData.columnId = column.id;
       }
+      const actorId = await resolveActorByEmail(data.payload.actor_email);
+      if (actorId) updateData.actorId = actorId;
       if (Object.keys(updateData).length > 0) {
         await db
           .update(taskTable)
@@ -412,6 +428,8 @@ async function handleIncomingTask(
       .where(eq(taskTable.projectId, project.id));
     const nextNumber = (maxResult?.maxNumber ?? 0) + 1;
 
+    const actorId = await resolveActorByEmail(data.payload.actor_email);
+
     const [created] = await db
       .insert(taskTable)
       .values({
@@ -421,6 +439,7 @@ async function handleIncomingTask(
         columnId: column?.id ?? null,
         facileId,
         number: nextNumber,
+        actorId,
       })
       .returning({ id: taskTable.id });
 
@@ -453,6 +472,8 @@ async function handleIncomingTask(
       });
       if (column) updateData.columnId = column.id;
     }
+    const actorId = await resolveActorByEmail(data.payload.actor_email);
+    if (actorId) updateData.actorId = actorId;
 
     if (Object.keys(updateData).length > 0) {
       await db
