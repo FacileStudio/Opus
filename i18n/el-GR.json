@@ -443,8 +443,8 @@
 			"displayOptionsDescription": "Επιλέξτε ποιες πληροφορίες θα εμφανίζονται στις προβολές εργασιών",
 			"taskNumbers": "Αριθμοί εργασιών",
 			"taskNumbersDescription": "Εμφάνιση IDs και αριθμών εργασιών",
-			"assignees": "Ανατεθειμένοι",
-			"assigneesDescription": "Εμφάνιση του ποιος έχει ανατεθεί στις εργασίες",
+			"actors": "Ανατεθειμένοι",
+			"actorsDescription": "Εμφάνιση του ποιος έχει ανατεθεί στις εργασίες",
 			"dueDates": "Ημερομηνίες λήξης",
 			"dueDatesDescription": "Εμφάνιση προθεσμιών εργασιών",
 			"labels": "Ετικέτες",
@@ -1203,7 +1203,7 @@
 				"title": "Η κατάσταση της εργασίας άλλαξε",
 				"content": "Η κατάσταση της εργασίας \"{{taskTitle}}\" άλλαξε από \"{{oldStatus}}\" σε \"{{newStatus}}\""
 			},
-			"task_assignee_changed": {
+			"task_actor_changed": {
 				"title": "Σας ανατέθηκε εργασία",
 				"content": "Σας ανατέθηκε η εργασία: {{taskTitle}}"
 			},
@@ -1498,7 +1498,7 @@
 			"error": "Αποτυχία μετακίνησης εργασίας"
 		},
 		"popover": {
-			"assignee": {
+			"actor": {
 				"unassigned": "Χωρίς ανάθεση",
 				"updateError": "Αποτυχία ενημέρωσης ανάθεσης εργασίας"
 			},
@@ -1559,7 +1559,7 @@
 			"noTasksInSection": "Δεν υπάρχουν {{section}} εργασίες",
 			"filters": {
 				"priority": "Προτεραιότητα: {{name}}",
-				"assignee": "Ανατεθειμένος: {{name}}",
+				"actor": "Ανατεθειμένος: {{name}}",
 				"due": "Λήξη: {{date}}",
 				"label": "Ετικέτα: {{name}}",
 				"dueThisWeek": "Λήγει αυτή την εβδομάδα",
@@ -1586,14 +1586,14 @@
 			"filterBy": "Φιλτράρισμα κατά",
 			"allStatuses": "Όλες οι καταστάσεις",
 			"allPriorities": "Όλες οι προτεραιότητες",
-			"allAssignees": "Όλοι οι ανατεθειμένοι",
+			"allActors": "Όλοι οι ανατεθειμένοι",
 			"allDueDates": "Όλες οι ημερομηνίες λήξης",
 			"allLabels": "Όλες οι ετικέτες",
 			"selectedCount": "{{count}} επιλεγμένα",
 			"subjects": {
 				"status": "Κατάσταση",
 				"priority": "Προτεραιότητα",
-				"assignee": "Ανατεθειμένος",
+				"actor": "Ανατεθειμένος",
 				"dueDate": "Ημερομηνία λήξης",
 				"labels": "Ετικέτες"
 			},
@@ -1644,7 +1644,7 @@
 			"count_one": "{{count}} PR",
 			"count_other": "{{count}} PRs"
 		},
-		"assignee": {
+		"actor": {
 			"label": "Ανατεθειμένος",
 			"unassigned": "Χωρίς ανάθεση"
 		},

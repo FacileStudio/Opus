@@ -51,7 +51,7 @@ export default function BacklogTaskRow({ task }: BacklogTaskRowProps) {
   const { project } = useProjectStore();
   const { data: workspace } = useActiveWorkspace();
   const {
-    showAssignees,
+    showActors,
     showPriority,
     showDueDates,
     showLabels,
@@ -68,7 +68,7 @@ export default function BacklogTaskRow({ task }: BacklogTaskRowProps) {
     workspace?.id ?? "",
   );
 
-  const assignee = useMemo(() => {
+  const actor = useMemo(() => {
     return workspaceUsers?.members?.find(
       (member) => member.userId === task.userId,
     );
@@ -195,22 +195,22 @@ export default function BacklogTaskRow({ task }: BacklogTaskRowProps) {
               </div>
             )}
 
-            {showAssignees && (
+            {showActors && (
               <div className="flex-shrink-0">
                 {task.userId ? (
                   <Avatar className="h-6 w-6">
                     <AvatarImage
-                      src={assignee?.user?.image ?? ""}
-                      alt={assignee?.user?.name || ""}
+                      src={actor?.user?.image ?? ""}
+                      alt={actor?.user?.name || ""}
                     />
                     <AvatarFallback className="text-xs font-medium border border-border/30">
-                      {assignee?.user?.name?.charAt(0).toUpperCase()}
+                      {actor?.user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 ) : (
                   <div
                     className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center"
-                    title={t("tasks:assignee.unassigned")}
+                    title={t("tasks:actor.unassigned")}
                   >
                     <span className="text-[10px] font-medium text-muted-foreground">
                       ?

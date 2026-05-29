@@ -21,7 +21,7 @@ import {
 } from "../../database/schema";
 
 type GetTasksOptions = {
-  assigneeId?: string;
+  actorId?: string;
   dueAfter?: string;
   dueBefore?: string;
   limit?: number;
@@ -89,8 +89,8 @@ async function getTasks(projectId: string, options: GetTasksOptions = {}) {
     conditions.push(eq(taskTable.priority, options.priority));
   }
 
-  if (options.assigneeId) {
-    conditions.push(eq(taskTable.userId, options.assigneeId));
+  if (options.actorId) {
+    conditions.push(eq(taskTable.actorId, options.actorId));
   }
 
   if (options.dueBefore) {
@@ -131,17 +131,17 @@ async function getTasks(projectId: string, options: GetTasksOptions = {}) {
     dueDate: taskTable.dueDate,
     position: taskTable.position,
     createdAt: taskTable.createdAt,
-    userId: taskTable.userId,
-    assigneeName: userTable.name,
-    assigneeId: userTable.id,
-    assigneeImage: userTable.image,
+    userId: taskTable.actorId,
+    actorName: userTable.name,
+    actorId: userTable.id,
+    actorImage: userTable.image,
     projectId: taskTable.projectId,
   };
 
   const query = db
     .select(taskSelection)
     .from(taskTable)
-    .leftJoin(userTable, eq(taskTable.userId, userTable.id))
+    .leftJoin(userTable, eq(taskTable.actorId, userTable.id))
     .leftJoin(projectTable, eq(taskTable.projectId, projectTable.id))
     .where(whereClause)
     .orderBy(orderByClause);

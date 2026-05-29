@@ -53,7 +53,7 @@ async function updateTaskStatus({
     oldStatus: existingTask.status,
     newStatus: status,
     title: updatedTask.title,
-    assigneeId: updatedTask.userId,
+    actorId: updatedTask.actorId,
     type: "status_changed",
   });
 

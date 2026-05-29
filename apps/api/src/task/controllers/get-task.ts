@@ -16,13 +16,13 @@ async function getTask(taskId: string) {
       dueDate: taskTable.dueDate,
       position: taskTable.position,
       createdAt: taskTable.createdAt,
-      userId: taskTable.userId,
-      assigneeName: userTable.name,
-      assigneeId: userTable.id,
+      userId: taskTable.actorId,
+      actorName: userTable.name,
+      actorId: userTable.id,
       projectId: taskTable.projectId,
     })
     .from(taskTable)
-    .leftJoin(userTable, eq(taskTable.userId, userTable.id))
+    .leftJoin(userTable, eq(taskTable.actorId, userTable.id))
     .where(eq(taskTable.id, taskId))
     .limit(1);
 

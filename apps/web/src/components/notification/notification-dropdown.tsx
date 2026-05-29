@@ -70,8 +70,8 @@ function getNotificationTitle(
           ...eventData,
           defaultValue: notification.title ?? notification.type,
         });
-      case "task_assignee_changed":
-        return t("notifications:events.task_assignee_changed.title", {
+      case "task_actor_changed":
+        return t("notifications:events.task_actor_changed.title", {
           ...eventData,
           defaultValue: notification.title ?? notification.type,
         });
@@ -112,8 +112,8 @@ function getNotificationContent(
           newStatus: getStatusLabel(String(eventData.newStatus ?? "")),
           defaultValue: notification.content ?? "",
         });
-      case "task_assignee_changed":
-        return t("notifications:events.task_assignee_changed.content", {
+      case "task_actor_changed":
+        return t("notifications:events.task_actor_changed.content", {
           ...eventData,
           defaultValue: notification.content ?? "",
         });

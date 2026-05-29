@@ -48,7 +48,7 @@ import { useGetActiveWorkspaceUsers } from "@/hooks/queries/workspace-users/use-
 import { getColumnIcon } from "@/lib/column";
 import { toast } from "@/lib/toast";
 import type Task from "@/types/task";
-import SubtaskAssigneePopover from "./subtask-assignee-popover";
+import SubtaskActorPopover from "./subtask-actor-popover";
 import SubtaskStatusPopover from "./subtask-status-popover";
 
 type TaskRelationsProps = {
@@ -208,7 +208,7 @@ export default function TaskRelations({
     });
   };
 
-  const getAssignee = (userId: string | null) => {
+  const getActor = (userId: string | null) => {
     if (!userId || !workspaceUsers?.members) return null;
     return workspaceUsers.members.find((member) => member.userId === userId);
   };
@@ -228,9 +228,9 @@ export default function TaskRelations({
     createdAt: "",
     updatedAt: "",
     userId: item.task.userId,
-    assigneeId: item.task.userId,
-    assigneeName: item.task.assigneeName,
-    assigneeImage: "",
+    actorId: item.task.userId,
+    actorName: item.task.actorName,
+    actorImage: "",
     projectId: item.task.projectId,
   });
 
@@ -278,7 +278,7 @@ export default function TaskRelations({
               </span>
               <div className="flex flex-col mt-0.5">
                 {items.map((item) => {
-                  const assignee = getAssignee(item.task.userId);
+                  const actor = getActor(item.task.userId);
                   const taskObj = buildTaskObject(item);
 
                   return (
@@ -312,7 +312,7 @@ export default function TaskRelations({
                             </span>
                           </button>
 
-                          <SubtaskAssigneePopover
+                          <SubtaskActorPopover
                             tasks={[taskObj]}
                             workspaceId={workspaceId}
                           >
@@ -320,22 +320,20 @@ export default function TaskRelations({
                               type="button"
                               className="shrink-0 flex items-center justify-center rounded p-0.5 transition-colors outline-none"
                             >
-                              {item.task.userId && assignee ? (
+                              {item.task.userId && actor ? (
                                 <Avatar className="h-5 w-5">
                                   <AvatarImage
-                                    src={assignee?.user?.image ?? ""}
-                                    alt={assignee?.user?.name || ""}
+                                    src={actor?.user?.image ?? ""}
+                                    alt={actor?.user?.name || ""}
                                   />
                                   <AvatarFallback className="text-[9px] font-medium border border-border/30">
-                                    {assignee?.user?.name
-                                      ?.charAt(0)
-                                      .toUpperCase()}
+                                    {actor?.user?.name?.charAt(0).toUpperCase()}
                                   </AvatarFallback>
                                 </Avatar>
                               ) : (
                                 <div
                                   className="flex h-5 w-5 items-center justify-center rounded-full border border-dashed border-border/70"
-                                  title={t("tasks:popover.assignee.unassigned")}
+                                  title={t("tasks:popover.actor.unassigned")}
                                 >
                                   <span className="text-[9px] font-medium text-muted-foreground">
                                     ?
@@ -343,7 +341,7 @@ export default function TaskRelations({
                                 </div>
                               )}
                             </button>
-                          </SubtaskAssigneePopover>
+                          </SubtaskActorPopover>
                         </div>
                       </ContextMenuTrigger>
 

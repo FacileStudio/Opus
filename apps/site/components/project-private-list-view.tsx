@@ -128,16 +128,16 @@ export function PrivateListView({
                           )}
                         </div>
 
-                        {/* Assignee */}
-                        {task.assigneeName && (
+                        {/* Actor */}
+                        {task.actorName && (
                           <div className="shrink-0 flex items-center gap-1.5">
                             <Avatar className="h-5 w-5">
                               <AvatarImage
-                                src={task.assigneeImage ?? ""}
-                                alt={task.assigneeName ?? ""}
+                                src={task.actorImage ?? ""}
+                                alt={task.actorName ?? ""}
                               />
                               <AvatarFallback className="text-[10px] font-medium border border-border/30">
-                                {task.assigneeName.charAt(0).toUpperCase()}
+                                {task.actorName.charAt(0).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
                           </div>

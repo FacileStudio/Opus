@@ -74,19 +74,19 @@ export function PublicTaskCard({
         {projectSlug}-{task.number}
       </div>
 
-      {task.assigneeName && (
+      {task.actorName && (
         <div className="flex items-center gap-1.5 mb-2">
           <Avatar className="h-5 w-5">
             <AvatarImage
-              src={task.assigneeImage ?? ""}
-              alt={task.assigneeName ?? ""}
+              src={task.actorImage ?? ""}
+              alt={task.actorName ?? ""}
             />
             <AvatarFallback className="text-[10px] font-medium border border-border/30">
-              {task.assigneeName.charAt(0).toUpperCase()}
+              {task.actorName.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <span className="text-[10px] text-muted-foreground font-medium truncate">
-            {task.assigneeName}
+            {task.actorName}
           </span>
         </div>
       )}

@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ShortcutNumber } from "@/components/ui/shortcut-number";
-import { useUpdateTaskAssignee } from "@/hooks/mutations/task/use-update-task-assignee";
+import { useUpdateTaskActor } from "@/hooks/mutations/task/use-update-task-actor";
 import { useGetActiveWorkspaceUsers } from "@/hooks/queries/workspace-users/use-get-active-workspace-users";
 import { useNumberedShortcuts } from "@/hooks/use-numbered-shortcuts";
 import { toast } from "@/lib/toast";
@@ -18,23 +18,23 @@ import type Task from "@/types/task";
 const INITIAL_VISIBLE_USERS = 40;
 const VISIBLE_USERS_STEP = 40;
 
-type SubtaskAssigneePopoverProps = {
-  tasks: Task[];
+type TaskActorPopoverProps = {
+  task: Task;
   workspaceId: string;
   children: React.ReactNode;
 };
 
-export default function SubtaskAssigneePopover({
-  tasks,
+export default function TaskActorPopover({
+  task,
   workspaceId,
   children,
-}: SubtaskAssigneePopoverProps) {
+}: TaskActorPopoverProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [visibleUsersCount, setVisibleUsersCount] = useState(
     INITIAL_VISIBLE_USERS,
   );
-  const { mutateAsync: updateTaskAssignee } = useUpdateTaskAssignee();
+  const { mutateAsync: updateTaskActor } = useUpdateTaskActor();
   const { data: workspaceUsers } = useGetActiveWorkspaceUsers(workspaceId);
 
   const usersOptions = useMemo(() => {
@@ -46,40 +46,32 @@ export default function SubtaskAssigneePopover({
     }));
   }, [workspaceUsers]);
 
-  const allSameAssignee =
-    tasks.length > 0 && tasks.every((t) => t.userId === tasks[0].userId);
-  const currentAssignee = allSameAssignee ? tasks[0].userId : null;
-
-  const handleAssigneeChange = useCallback(
+  const handleActorChange = useCallback(
     async (newUserId: string) => {
       try {
-        await Promise.all(
-          tasks.map((task) =>
-            updateTaskAssignee({
-              ...task,
-              userId: newUserId,
-            }),
-          ),
-        );
+        await updateTaskActor({
+          ...task,
+          userId: newUserId,
+        });
         setOpen(false);
       } catch (error) {
         toast.error(
           error instanceof Error
             ? error.message
-            : t("tasks:popover.assignee.updateError"),
+            : t("tasks:popover.actor.updateError"),
         );
       }
     },
-    [t, tasks, updateTaskAssignee],
+    [t, task, updateTaskActor],
   );
 
   const shortcutOptions = useMemo(() => {
-    const unassignedOption = { onSelect: () => handleAssigneeChange("") };
+    const unassignedOption = { onSelect: () => handleActorChange("") };
     const userOptions = (usersOptions || []).slice(0, 8).map((user) => ({
-      onSelect: () => handleAssigneeChange(user.value),
+      onSelect: () => handleActorChange(user.value),
     }));
     return [unassignedOption, ...userOptions];
-  }, [usersOptions, handleAssigneeChange]);
+  }, [usersOptions, handleActorChange]);
 
   const visibleUsersOptions = useMemo(() => {
     return usersOptions?.slice(0, visibleUsersCount) ?? [];
@@ -111,7 +103,7 @@ export default function SubtaskAssigneePopover({
   useNumberedShortcuts(open, shortcutOptions);
 
   return (
-    <Popover open={open} onOpenChange={handleOpenChange} modal={false}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent className="w-56 p-0" align="start">
         <div
@@ -122,20 +114,20 @@ export default function SubtaskAssigneePopover({
             variant="ghost"
             size="sm"
             className="w-full justify-start gap-2 h-8 px-2"
-            onClick={() => handleAssigneeChange("")}
+            onClick={() => handleActorChange("")}
           >
             <div
               className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center"
-              title={t("tasks:popover.assignee.unassigned")}
+              title={t("tasks:popover.actor.unassigned")}
             >
               <span className="text-[10px] font-medium text-muted-foreground">
                 ?
               </span>
             </div>
             <span className="text-sm">
-              {t("tasks:popover.assignee.unassigned")}
+              {t("tasks:popover.actor.unassigned")}
             </span>
-            {allSameAssignee && !currentAssignee ? (
+            {!task.userId ? (
               <Check className="ml-auto h-4 w-4" />
             ) : (
               <ShortcutNumber number={1} />
@@ -147,7 +139,7 @@ export default function SubtaskAssigneePopover({
               variant="ghost"
               size="sm"
               className="w-full justify-start gap-2 h-8 px-2"
-              onClick={() => handleAssigneeChange(user.value)}
+              onClick={() => handleActorChange(user.value)}
             >
               <Avatar className="h-6 w-6">
                 <AvatarImage src={user.image ?? ""} alt={user.name || ""} />
@@ -156,7 +148,7 @@ export default function SubtaskAssigneePopover({
                 </AvatarFallback>
               </Avatar>
               <span className="text-sm truncate">{user.label}</span>
-              {currentAssignee === user.value ? (
+              {task.userId === user.value ? (
                 <Check className="ml-auto h-4 w-4 shrink-0" />
               ) : index < 8 ? (
                 <ShortcutNumber number={index + 2} />

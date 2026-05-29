@@ -62,7 +62,7 @@ async function importTasks(
         .insert(taskTable)
         .values({
           projectId,
-          userId: taskData.userId || null,
+          actorId: taskData.userId || null,
           title: taskData.title,
           status,
           columnId: column?.id ?? null,
@@ -78,7 +78,7 @@ async function importTasks(
         await publishEvent("task.created", {
           ...createdTask,
           taskId: createdTask.id,
-          userId: createdTask.userId ?? "",
+          userId: createdTask.actorId ?? "",
           currentUserId: currentUserId ?? "",
           type: "create",
           content: "imported the task",

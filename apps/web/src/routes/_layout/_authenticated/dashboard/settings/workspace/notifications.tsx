@@ -38,7 +38,7 @@ const AVAILABLE_EVENTS = [
   "task.created",
   "task.updated",
   "task.status_changed",
-  "task.assignee_changed",
+  "task.actor_changed",
   "task.deleted",
   "comment.created",
   "member.joined",

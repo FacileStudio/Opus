@@ -443,8 +443,8 @@
 			"displayOptionsDescription": "Выберите, какую информацию показывать в представлениях задач",
 			"taskNumbers": "Номера задач",
 			"taskNumbersDescription": "Показывать идентификаторы и номера задач",
-			"assignees": "Исполнители",
-			"assigneesDescription": "Показывать, кому назначены задачи",
+			"actors": "Исполнители",
+			"actorsDescription": "Показывать, кому назначены задачи",
 			"dueDates": "Сроки выполнения",
 			"dueDatesDescription": "Показывать сроки выполнения задач",
 			"labels": "Метки",
@@ -1213,7 +1213,7 @@
 				"title": "Статус задачи изменён",
 				"content": "Статус задачи «{{taskTitle}}» изменён с «{{oldStatus}}» на «{{newStatus}}»"
 			},
-			"task_assignee_changed": {
+			"task_actor_changed": {
 				"title": "Задача назначена вам",
 				"content": "Вам назначена задача: {{taskTitle}}"
 			},
@@ -1508,7 +1508,7 @@
 			"error": "Не удалось переместить задачу"
 		},
 		"popover": {
-			"assignee": {
+			"actor": {
 				"unassigned": "Не назначено",
 				"updateError": "Не удалось обновить исполнителя задачи"
 			},
@@ -1572,7 +1572,7 @@
 			"noTasksInSection": "Нет задач в разделе «{{section}}»",
 			"filters": {
 				"priority": "Приоритет: {{name}}",
-				"assignee": "Исполнитель: {{name}}",
+				"actor": "Исполнитель: {{name}}",
 				"due": "Срок: {{date}}",
 				"label": "Метка: {{name}}",
 				"dueThisWeek": "Срок на этой неделе",
@@ -1600,7 +1600,7 @@
 			"filterBy": "Фильтровать по",
 			"allStatuses": "Все статусы",
 			"allPriorities": "Все приоритеты",
-			"allAssignees": "Все исполнители",
+			"allActors": "Все исполнители",
 			"allDueDates": "Все сроки",
 			"allLabels": "Все метки",
 			"selectedCount_one": "{{count}} выбран",
@@ -1610,7 +1610,7 @@
 			"subjects": {
 				"status": "Статус",
 				"priority": "Приоритет",
-				"assignee": "Исполнитель",
+				"actor": "Исполнитель",
 				"dueDate": "Срок выполнения",
 				"labels": "Метки"
 			},
@@ -1668,7 +1668,7 @@
 			"count_many": "{{count}} PR",
 			"count_other": "{{count}} PR"
 		},
-		"assignee": {
+		"actor": {
 			"label": "Исполнитель",
 			"unassigned": "Не назначено"
 		},

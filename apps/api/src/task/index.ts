@@ -27,7 +27,7 @@ import getTasks from "./controllers/get-tasks";
 import importTasks from "./controllers/import-tasks";
 import moveTask from "./controllers/move-task";
 import updateTask from "./controllers/update-task";
-import updateTaskAssignee from "./controllers/update-task-assignee";
+import updateTaskActor from "./controllers/update-task-actor";
 import updateTaskDescription from "./controllers/update-task-description";
 import updateTaskDueDate from "./controllers/update-task-due-date";
 import updateTaskPriority from "./controllers/update-task-priority";
@@ -62,7 +62,7 @@ const task = new Hono<{
         v.object({
           status: v.optional(v.string()),
           priority: v.optional(v.string()),
-          assigneeId: v.optional(v.string()),
+          actorId: v.optional(v.string()),
           page: v.optional(v.pipe(v.string(), v.transform(Number))),
           limit: v.optional(v.pipe(v.string(), v.transform(Number))),
           sortBy: v.optional(
@@ -120,7 +120,7 @@ const task = new Hono<{
         operation: v.picklist([
           "updateStatus",
           "updatePriority",
-          "updateAssignee",
+          "updateActor",
           "delete",
           "addLabel",
           "removeLabel",
@@ -499,14 +499,14 @@ const task = new Hono<{
     },
   )
   .put(
-    "/assignee/:id",
+    "/actor/:id",
     describeRoute({
-      operationId: "updateTaskAssignee",
+      operationId: "updateTaskActor",
       tags: ["Tasks"],
       description: "Assign or unassign a task to a user",
       responses: {
         200: {
-          description: "Task assignee updated successfully",
+          description: "Task actor updated successfully",
           content: {
             "application/json": { schema: resolver(taskSchema) },
           },
@@ -521,7 +521,7 @@ const task = new Hono<{
       const { userId } = c.req.valid("json");
       const currentUserId = c.get("userId");
 
-      const task = await updateTaskAssignee({ id, userId, currentUserId });
+      const task = await updateTaskActor({ id, userId, currentUserId });
 
       return c.json(task);
     },

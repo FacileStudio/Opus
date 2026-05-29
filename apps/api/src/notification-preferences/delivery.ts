@@ -106,7 +106,7 @@ function buildDeliveryContent(notification: {
             : "A task status changed in Opus.",
       };
     }
-    case "task_assignee_changed": {
+    case "task_actor_changed": {
       const taskTitle = getStringValue(notification.eventData, "taskTitle");
       return {
         title: "Task assigned to you",

@@ -73,10 +73,10 @@ function getActivitySearchContent(
       return `changed priority from ${toDisplayCase(String(data.oldPriority ?? ""))} to ${toDisplayCase(String(data.newPriority ?? ""))}`;
     case "unassigned":
       return "unassigned the task";
-    case "assignee_changed":
+    case "actor_changed":
       return data.isSelfAssigned
         ? "assigned the task to themselves"
-        : `assigned the task to ${String(data.newAssignee ?? "someone")}`;
+        : `assigned the task to ${String(data.newActor ?? "someone")}`;
     case "due_date_changed":
       if (!data.newDueDate) {
         return "cleared the due date";
@@ -168,7 +168,7 @@ async function globalSearch(params: SearchParams): Promise<{
           projectSlug: projectTable.slug,
           workspaceId: projectTable.workspaceId,
           workspaceName: workspaceTable.name,
-          userId: taskTable.userId,
+          userId: taskTable.actorId,
           userName: userTable.name,
           createdAt: taskTable.createdAt,
           taskNumber: taskTable.number,
@@ -181,7 +181,7 @@ async function globalSearch(params: SearchParams): Promise<{
           workspaceTable,
           eq(projectTable.workspaceId, workspaceTable.id),
         )
-        .leftJoin(userTable, eq(taskTable.userId, userTable.id))
+        .leftJoin(userTable, eq(taskTable.actorId, userTable.id))
         .where(
           and(
             workspaceFilter,
@@ -234,7 +234,7 @@ async function globalSearch(params: SearchParams): Promise<{
         projectSlug: projectTable.slug,
         workspaceId: projectTable.workspaceId,
         workspaceName: workspaceTable.name,
-        userId: taskTable.userId,
+        userId: taskTable.actorId,
         userName: userTable.name,
         createdAt: taskTable.createdAt,
         taskNumber: taskTable.number,
@@ -245,7 +245,7 @@ async function globalSearch(params: SearchParams): Promise<{
       .from(taskTable)
       .leftJoin(projectTable, eq(taskTable.projectId, projectTable.id))
       .leftJoin(workspaceTable, eq(projectTable.workspaceId, workspaceTable.id))
-      .leftJoin(userTable, eq(taskTable.userId, userTable.id))
+      .leftJoin(userTable, eq(taskTable.actorId, userTable.id))
       .where(
         and(
           workspaceFilter,

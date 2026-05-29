@@ -35,7 +35,7 @@ async function getTaskRelations(taskId: string) {
       number: number | null;
       projectId: string;
       userId: string | null;
-      assigneeName: string | null;
+      actorName: string | null;
     }
   >();
 
@@ -48,11 +48,11 @@ async function getTaskRelations(taskId: string) {
         priority: taskTable.priority,
         number: taskTable.number,
         projectId: taskTable.projectId,
-        userId: taskTable.userId,
-        assigneeName: userTable.name,
+        userId: taskTable.actorId,
+        actorName: userTable.name,
       })
       .from(taskTable)
-      .leftJoin(userTable, eq(taskTable.userId, userTable.id))
+      .leftJoin(userTable, eq(taskTable.actorId, userTable.id))
       .where(inArray(taskTable.id, [...taskIds]));
 
     for (const task of taskRows) {

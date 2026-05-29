@@ -117,7 +117,7 @@ function RouteComponent() {
 
   const [filters, setFilters] = useState({
     priority: null as string | null,
-    assignee: null as string | null,
+    actor: null as string | null,
     dueDate: null as string | null,
     labels: [] as string[],
   });
@@ -138,7 +138,7 @@ function RouteComponent() {
   const clearFilters = () => {
     setFilters({
       priority: null,
-      assignee: null,
+      actor: null,
       dueDate: null,
       labels: [],
     });
@@ -154,7 +154,7 @@ function RouteComponent() {
     }
   }, [data, setProject]);
 
-  const getAssigneeDisplayName = (userId: string) => {
+  const getActorDisplayName = (userId: string) => {
     const member = users?.members?.find((m) => m.userId === userId);
     return member?.user?.name || t("common:people.unknown");
   };
@@ -179,7 +179,7 @@ function RouteComponent() {
           return false;
         }
 
-        if (filters.assignee && task.userId !== filters.assignee) {
+        if (filters.actor && task.userId !== filters.actor) {
           return false;
         }
 
@@ -416,7 +416,7 @@ function RouteComponent() {
                   </Button>
                 )}
 
-                {filters.assignee && (
+                {filters.actor && (
                   <Button
                     variant="secondary"
                     size="xs"
@@ -424,8 +424,8 @@ function RouteComponent() {
                   >
                     <User className="h-3 w-3" />
                     <span>
-                      {t("tasks:backlog.filters.assignee", {
-                        name: getAssigneeDisplayName(filters.assignee),
+                      {t("tasks:backlog.filters.actor", {
+                        name: getActorDisplayName(filters.actor),
                       })}
                     </span>
                     <Button
@@ -434,7 +434,7 @@ function RouteComponent() {
                       className="h-4 w-4 p-0 ml-1 hover:bg-destructive hover:text-destructive-foreground"
                       onClick={(e) => {
                         e.stopPropagation();
-                        updateFilter("assignee", null);
+                        updateFilter("actor", null);
                       }}
                     >
                       <X className="h-2.5 w-2.5" />
@@ -582,18 +582,15 @@ function RouteComponent() {
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       <DropdownMenuLabel className="text-[11px] uppercase tracking-wide">
-                        {t("tasks:assignee.label")}
+                        {t("tasks:actor.label")}
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     {users?.members?.map((member) => (
                       <DropdownMenuCheckboxItem
                         key={member.userId}
-                        checked={filters.assignee === member.userId}
+                        checked={filters.actor === member.userId}
                         onCheckedChange={(checked) =>
-                          updateFilter(
-                            "assignee",
-                            checked ? member.userId : null,
-                          )
+                          updateFilter("actor", checked ? member.userId : null)
                         }
                         className="h-8 rounded-md text-sm"
                       >

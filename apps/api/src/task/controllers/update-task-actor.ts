@@ -4,7 +4,7 @@ import db from "../../database";
 import { taskTable, userTable } from "../../database/schema";
 import { publishEvent } from "../../events";
 
-async function updateTaskAssignee({
+async function updateTaskActor({
   id,
   userId,
   currentUserId,
@@ -23,24 +23,24 @@ async function updateTaskAssignee({
     });
   }
 
-  const nextAssigneeId = userId || null;
-  if (existingTask.userId === nextAssigneeId) {
+  const nextActorId = userId || null;
+  if (existingTask.actorId === nextActorId) {
     return existingTask;
   }
 
   const [updatedTask] = await db
     .update(taskTable)
-    .set({ userId: nextAssigneeId || null })
+    .set({ actorId: nextActorId || null })
     .where(eq(taskTable.id, id))
     .returning();
 
   if (!updatedTask) {
     throw new HTTPException(500, {
-      message: "Failed to update task assignee",
+      message: "Failed to update task actor",
     });
   }
 
-  const [newAssigneeName, oldAssigneeName] = await Promise.all([
+  const [newActorName, oldActorName] = await Promise.all([
     userId
       ? db
           .select({ name: userTable.name })
@@ -49,11 +49,11 @@ async function updateTaskAssignee({
           .limit(1)
           .then((rows) => rows[0]?.name)
       : undefined,
-    existingTask.userId
+    existingTask.actorId
       ? db
           .select({ name: userTable.name })
           .from(userTable)
-          .where(eq(userTable.id, existingTask.userId))
+          .where(eq(userTable.id, existingTask.actorId))
           .limit(1)
           .then((rows) => rows[0]?.name)
       : undefined,
@@ -64,7 +64,7 @@ async function updateTaskAssignee({
       taskId: updatedTask.id,
       projectId: updatedTask.projectId,
       userId: currentUserId,
-      oldAssignee: oldAssigneeName,
+      oldActor: oldActorName,
       title: updatedTask.title,
       type: "unassigned",
     });
@@ -72,18 +72,18 @@ async function updateTaskAssignee({
     return updatedTask;
   }
 
-  await publishEvent("task.assignee_changed", {
+  await publishEvent("task.actor_changed", {
     taskId: updatedTask.id,
     projectId: updatedTask.projectId,
     userId: currentUserId,
-    oldAssignee: oldAssigneeName,
-    newAssignee: newAssigneeName,
-    newAssigneeId: userId,
+    oldActor: oldActorName,
+    newActor: newActorName,
+    newActorId: userId,
     title: updatedTask.title,
-    type: "assignee_changed",
+    type: "actor_changed",
   });
 
   return updatedTask;
 }
 
-export default updateTaskAssignee;
+export default updateTaskActor;

@@ -361,9 +361,7 @@ function RouteComponent() {
                               <p className="w-full truncate text-[11px] leading-tight text-muted-foreground">
                                 {format(task.scheduleStart, "MMM d")} -{" "}
                                 {format(task.scheduleEnd, "MMM d")}
-                                {task.assigneeName
-                                  ? ` • ${task.assigneeName}`
-                                  : ""}
+                                {task.actorName ? ` • ${task.actorName}` : ""}
                               </p>
                             </button>
                           </div>

@@ -69,7 +69,7 @@ function OpusIssueLinkView({ node }: NodeViewProps) {
   const priority = task?.priority
     ? t(`tasks:priority.${task.priority}`)
     : t("tasks:priority.no-priority");
-  const assignee = task?.assigneeName || t("tasks:assignee.unassigned");
+  const actor = task?.actorName || t("tasks:actor.unassigned");
   const href =
     taskRoute?.workspaceId && taskRoute?.projectId && task?.id
       ? `/dashboard/workspace/${taskRoute.workspaceId}/project/${taskRoute.projectId}/task/${task.id}`
@@ -102,7 +102,7 @@ function OpusIssueLinkView({ node }: NodeViewProps) {
             <span className="opus-issue-link-preview-key">
               {resolvedIssueKey || t("tasks:entity.task")}
             </span>
-            <span className="opus-issue-link-preview-assignee">{assignee}</span>
+            <span className="opus-issue-link-preview-actor">{actor}</span>
           </div>
           <p className="opus-issue-link-preview-title">{title}</p>
           <div className="opus-issue-link-preview-meta">

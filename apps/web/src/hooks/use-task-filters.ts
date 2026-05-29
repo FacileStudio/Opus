@@ -7,7 +7,7 @@ import type Task from "@/types/task";
 export type BoardFilters = {
   status: string[] | null;
   priority: string[] | null;
-  assignee: string[] | null;
+  actor: string[] | null;
   dueDate: string[] | null;
   labels: string[] | null;
 };
@@ -21,7 +21,7 @@ export const DUE_DATE_FILTER_VALUES = {
 const DEFAULT_FILTERS: BoardFilters = {
   status: null,
   priority: null,
-  assignee: null,
+  actor: null,
   dueDate: null,
   labels: null,
 };
@@ -29,7 +29,7 @@ const DEFAULT_FILTERS: BoardFilters = {
 const FILTER_KEYS: Array<keyof BoardFilters> = [
   "status",
   "priority",
-  "assignee",
+  "actor",
   "dueDate",
   "labels",
 ];
@@ -102,9 +102,9 @@ export function useTaskFilters(
       }
 
       if (
-        filters.assignee &&
-        filters.assignee.length > 0 &&
-        !filters.assignee.includes(task.userId ?? "")
+        filters.actor &&
+        filters.actor.length > 0 &&
+        !filters.actor.includes(task.userId ?? "")
       ) {
         return false;
       }

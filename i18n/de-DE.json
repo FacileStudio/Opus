@@ -443,8 +443,8 @@
 			"displayOptionsDescription": "Wähle, welche Informationen in Aufgabenansichten sichtbar sind",
 			"taskNumbers": "Aufgabennummern",
 			"taskNumbersDescription": "Aufgaben-IDs und -Nummern anzeigen",
-			"assignees": "Zugewiesene",
-			"assigneesDescription": "Anzeigen, wem Aufgaben zugewiesen sind",
+			"actors": "Zugewiesene",
+			"actorsDescription": "Anzeigen, wem Aufgaben zugewiesen sind",
 			"dueDates": "Fälligkeitsdaten",
 			"dueDatesDescription": "Aufgabenfristen anzeigen",
 			"labels": "Labels",
@@ -1203,7 +1203,7 @@
 				"title": "Aufgabenstatus geändert",
 				"content": "Der Status der Aufgabe \"{{taskTitle}}\" wurde von \"{{oldStatus}}\" zu \"{{newStatus}}\" geändert"
 			},
-			"task_assignee_changed": {
+			"task_actor_changed": {
 				"title": "Aufgabe wurde dir zugewiesen",
 				"content": "Dir wurde die Aufgabe \"{{taskTitle}}\" zugewiesen"
 			},
@@ -1498,7 +1498,7 @@
 			"error": "Aufgabe konnte nicht verschoben werden"
 		},
 		"popover": {
-			"assignee": {
+			"actor": {
 				"unassigned": "Nicht zugewiesen",
 				"updateError": "Aufgabenzuweisung konnte nicht aktualisiert werden"
 			},
@@ -1559,7 +1559,7 @@
 			"noTasksInSection": "Keine {{section}}-Aufgaben",
 			"filters": {
 				"priority": "Priorität: {{name}}",
-				"assignee": "Zugewiesen: {{name}}",
+				"actor": "Zugewiesen: {{name}}",
 				"due": "Fällig: {{date}}",
 				"label": "Label: {{name}}",
 				"dueThisWeek": "Diese Woche fällig",
@@ -1586,14 +1586,14 @@
 			"filterBy": "Filtern nach",
 			"allStatuses": "Alle Status",
 			"allPriorities": "Alle Prioritäten",
-			"allAssignees": "Alle Zugewiesenen",
+			"allActors": "Alle Zugewiesenen",
 			"allDueDates": "Alle Fälligkeitsdaten",
 			"allLabels": "Alle Labels",
 			"selectedCount": "{{count}} ausgewählt",
 			"subjects": {
 				"status": "Status",
 				"priority": "Priorität",
-				"assignee": "Zugewiesen",
+				"actor": "Zugewiesen",
 				"dueDate": "Fälligkeitsdatum",
 				"labels": "Labels"
 			},
@@ -1644,7 +1644,7 @@
 			"count_one": "{{count}} PR",
 			"count_other": "{{count}} PRs"
 		},
-		"assignee": {
+		"actor": {
 			"label": "Zugewiesen an",
 			"unassigned": "Nicht zugewiesen"
 		},

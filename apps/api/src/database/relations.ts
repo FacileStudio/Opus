@@ -142,8 +142,8 @@ export const taskTableRelations = relations(taskTable, ({ one, many }) => ({
     fields: [taskTable.projectId],
     references: [projectTable.id],
   }),
-  assignee: one(userTable, {
-    fields: [taskTable.userId],
+  actor: one(userTable, {
+    fields: [taskTable.actorId],
     references: [userTable.id],
   }),
   column: one(columnTable, {

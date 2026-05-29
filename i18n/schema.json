@@ -1733,10 +1733,10 @@
 						"taskNumbersDescription": {
 							"type": "string"
 						},
-						"assignees": {
+						"actors": {
 							"type": "string"
 						},
-						"assigneesDescription": {
+						"actorsDescription": {
 							"type": "string"
 						},
 						"dueDates": {
@@ -1789,8 +1789,8 @@
 						"displayOptionsDescription",
 						"taskNumbers",
 						"taskNumbersDescription",
-						"assignees",
-						"assigneesDescription",
+						"actors",
+						"actorsDescription",
 						"dueDates",
 						"dueDatesDescription",
 						"labels",
@@ -4822,7 +4822,7 @@
 							},
 							"required": ["title", "content"]
 						},
-						"task_assignee_changed": {
+						"task_actor_changed": {
 							"type": "object",
 							"additionalProperties": false,
 							"properties": {
@@ -4856,7 +4856,7 @@
 						"task_created",
 						"workspace_created",
 						"task_status_changed",
-						"task_assignee_changed",
+						"task_actor_changed",
 						"time_entry_created"
 					]
 				}
@@ -5998,7 +5998,7 @@
 					"type": "object",
 					"additionalProperties": false,
 					"properties": {
-						"assignee": {
+						"actor": {
 							"type": "object",
 							"additionalProperties": false,
 							"properties": {
@@ -6154,7 +6154,7 @@
 						}
 					},
 					"required": [
-						"assignee",
+						"actor",
 						"status",
 						"priority",
 						"dueDate",
@@ -6219,7 +6219,7 @@
 								"priority": {
 									"type": "string"
 								},
-								"assignee": {
+								"actor": {
 									"type": "string"
 								},
 								"due": {
@@ -6240,7 +6240,7 @@
 							},
 							"required": [
 								"priority",
-								"assignee",
+								"actor",
 								"due",
 								"label",
 								"dueThisWeek",
@@ -6339,7 +6339,7 @@
 						"allPriorities": {
 							"type": "string"
 						},
-						"allAssignees": {
+						"allActors": {
 							"type": "string"
 						},
 						"allDueDates": {
@@ -6361,7 +6361,7 @@
 								"priority": {
 									"type": "string"
 								},
-								"assignee": {
+								"actor": {
 									"type": "string"
 								},
 								"dueDate": {
@@ -6371,13 +6371,7 @@
 									"type": "string"
 								}
 							},
-							"required": [
-								"status",
-								"priority",
-								"assignee",
-								"dueDate",
-								"labels"
-							]
+							"required": ["status", "priority", "actor", "dueDate", "labels"]
 						},
 						"operators": {
 							"type": "object",
@@ -6397,7 +6391,7 @@
 						"filterBy",
 						"allStatuses",
 						"allPriorities",
-						"allAssignees",
+						"allActors",
 						"allDueDates",
 						"allLabels",
 						"selectedCount",
@@ -6559,7 +6553,7 @@
 						"count_other"
 					]
 				},
-				"assignee": {
+				"actor": {
 					"type": "object",
 					"additionalProperties": false,
 					"properties": {
@@ -6810,7 +6804,7 @@
 				"listView",
 				"kanban",
 				"pr",
-				"assignee",
+				"actor",
 				"dueDate",
 				"labels",
 				"update",

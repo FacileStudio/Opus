@@ -55,7 +55,7 @@ export function useBulkOperations() {
     }) => {
       await bulkOperation({
         taskIds,
-        operation: "updateAssignee",
+        operation: "updateActor",
         value: userId,
       });
     },

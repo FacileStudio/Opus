@@ -41,7 +41,7 @@ describe("API integration: task creation", () => {
     await expect(response.text()).resolves.toBe("Unauthorized");
   });
 
-  it("creates a task with the matching column, assignee, and next number", async () => {
+  it("creates a task with the matching column, actor, and next number", async () => {
     const member = await createWorkspaceMember();
     const { project, columns } = await createProjectFixture({
       workspaceId: member.workspace.id,
@@ -89,7 +89,7 @@ describe("API integration: task creation", () => {
       userId: string | null;
       number: number | null;
       position: number | null;
-      assigneeName?: string;
+      actorName?: string;
     };
 
     expect(payload).toMatchObject({
@@ -101,7 +101,7 @@ describe("API integration: task creation", () => {
       userId: member.user.id,
       number: 2,
       position: 2,
-      assigneeName: member.user.name,
+      actorName: member.user.name,
     });
 
     const persistedTask = await db.query.taskTable.findFirst({
@@ -200,7 +200,7 @@ describe("API integration: task creation", () => {
       columnId: string | null;
       startDate: string | null;
       dueDate: string | null;
-      assigneeName?: string;
+      actorName?: string;
     };
 
     expect(payload).toMatchObject({
@@ -209,7 +209,7 @@ describe("API integration: task creation", () => {
       startDate: "2026-04-01T09:00:00.000Z",
       dueDate: "2026-04-05T17:00:00.000Z",
     });
-    expect(payload.assigneeName).toBeUndefined();
+    expect(payload.actorName).toBeUndefined();
 
     const persistedTask = await db.query.taskTable.findFirst({
       where: eq(schema.taskTable.id, payload.id),

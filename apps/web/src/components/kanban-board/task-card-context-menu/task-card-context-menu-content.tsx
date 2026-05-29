@@ -13,7 +13,7 @@ import {
   ContextMenuSubTrigger,
 } from "@/components/ui/context-menu";
 import { useUpdateTask } from "@/hooks/mutations/task/use-update-task";
-import { useUpdateTaskAssignee } from "@/hooks/mutations/task/use-update-task-assignee";
+import { useUpdateTaskActor } from "@/hooks/mutations/task/use-update-task-actor";
 import { useUpdateTaskDescription } from "@/hooks/mutations/task/use-update-task-description";
 import { useUpdateTaskDueDate } from "@/hooks/mutations/task/use-update-task-due-date";
 import { useUpdateTaskStatus } from "@/hooks/mutations/task/use-update-task-status";
@@ -66,7 +66,7 @@ export default function TaskCardContextMenuContent({
   const { mutateAsync: updateTask } = useUpdateTask();
   const { mutateAsync: updateTaskPriority } = useUpdateTaskPriority();
   const { mutateAsync: updateTaskStatus } = useUpdateTaskStatus();
-  const { mutateAsync: updateTaskAssignee } = useUpdateTaskAssignee();
+  const { mutateAsync: updateTaskActor } = useUpdateTaskActor();
   const { mutateAsync: updateTaskTitle } = useUpdateTaskTitle();
   const { mutateAsync: updateTaskDescription } = useUpdateTaskDescription();
   const { mutateAsync: updateTaskDueDate } = useUpdateTaskDueDate();
@@ -98,7 +98,7 @@ export default function TaskCardContextMenuContent({
           await updateTaskStatus({ ...task, status: value as string });
           break;
         case "userId":
-          await updateTaskAssignee({ ...task, userId: value as string });
+          await updateTaskActor({ ...task, userId: value as string });
           break;
         case "title":
           await updateTaskTitle({ ...task, title: value as string });
@@ -241,7 +241,7 @@ export default function TaskCardContextMenuContent({
       {usersOptions && (
         <ContextMenuSub>
           <ContextMenuSubTrigger>
-            <span>{t("tasks:assignee.label")}</span>
+            <span>{t("tasks:actor.label")}</span>
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
             <ContextMenuCheckboxItem
@@ -251,13 +251,13 @@ export default function TaskCardContextMenuContent({
             >
               <div
                 className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center"
-                title={t("tasks:assignee.unassigned")}
+                title={t("tasks:actor.unassigned")}
               >
                 <span className="text-[10px] font-medium text-muted-foreground">
                   ?
                 </span>{" "}
               </div>
-              {t("tasks:assignee.unassigned")}
+              {t("tasks:actor.unassigned")}
             </ContextMenuCheckboxItem>
             {usersOptions.map((user) => (
               <ContextMenuCheckboxItem

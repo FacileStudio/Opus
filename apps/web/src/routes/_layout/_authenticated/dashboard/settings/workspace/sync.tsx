@@ -19,7 +19,7 @@ const EVENT_LABELS: Record<string, string> = {
   "task.updated": "Task updated",
   "task.deleted": "Task deleted",
   "task.status_changed": "Task status changed",
-  "task.assignee_changed": "Task assignee changed",
+  "task.actor_changed": "Task actor changed",
   "task.priority_changed": "Task priority changed",
   "project.created": "Project created",
   "project.updated": "Project updated",

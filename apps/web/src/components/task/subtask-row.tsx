@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { getColumnIcon } from "@/lib/column";
 import type Task from "@/types/task";
-import SubtaskAssigneePopover from "./subtask-assignee-popover";
+import SubtaskActorPopover from "./subtask-actor-popover";
 import SubtaskStatusPopover from "./subtask-status-popover";
 
 type SubtaskRowProps = {
@@ -17,7 +17,7 @@ type SubtaskRowProps = {
   isSelected: boolean;
   isFocused: boolean;
   selectionRadius: string;
-  assignee: {
+  actor: {
     user?: { image?: string | null; name?: string | null } | null;
   } | null;
   onToggleSelection: () => void;
@@ -33,7 +33,7 @@ export default function SubtaskRow({
   isSelected,
   isFocused,
   selectionRadius,
-  assignee,
+  actor,
   onToggleSelection,
   onNavigate,
   onDeleteClick,
@@ -79,25 +79,25 @@ export default function SubtaskRow({
               </span>
             </button>
 
-            <SubtaskAssigneePopover tasks={tasks} workspaceId={workspaceId}>
+            <SubtaskActorPopover tasks={tasks} workspaceId={workspaceId}>
               <button
                 type="button"
                 className="shrink-0 flex items-center justify-center rounded p-0.5 transition-colors outline-none"
               >
-                {task.userId && assignee ? (
+                {task.userId && actor ? (
                   <Avatar className="h-5 w-5">
                     <AvatarImage
-                      src={assignee?.user?.image ?? ""}
-                      alt={assignee?.user?.name || ""}
+                      src={actor?.user?.image ?? ""}
+                      alt={actor?.user?.name || ""}
                     />
                     <AvatarFallback className="text-[9px] font-medium border border-border/30">
-                      {assignee?.user?.name?.charAt(0).toUpperCase()}
+                      {actor?.user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 ) : (
                   <div
                     className="flex h-5 w-5 items-center justify-center rounded-full border border-dashed border-border/70"
-                    title={t("tasks:popover.assignee.unassigned")}
+                    title={t("tasks:popover.actor.unassigned")}
                   >
                     <span className="text-[9px] font-medium text-muted-foreground">
                       ?
@@ -105,7 +105,7 @@ export default function SubtaskRow({
                   </div>
                 )}
               </button>
-            </SubtaskAssigneePopover>
+            </SubtaskActorPopover>
           </div>
         </ContextMenuTrigger>
 

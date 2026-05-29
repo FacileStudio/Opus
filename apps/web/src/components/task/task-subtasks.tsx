@@ -110,8 +110,8 @@ export default function TaskSubtasks({
     position: null,
     createdAt: "",
     userId: subtask.task.userId,
-    assigneeId: subtask.task.userId,
-    assigneeName: subtask.task.assigneeName,
+    actorId: subtask.task.userId,
+    actorName: subtask.task.actorName,
     projectId: subtask.task.projectId,
   });
 
@@ -124,7 +124,7 @@ export default function TaskSubtasks({
     return [currentTask];
   };
 
-  const getAssignee = (userId: string | null) => {
+  const getActor = (userId: string | null) => {
     if (!userId || !workspaceUsers?.members) return null;
     return (
       workspaceUsers.members.find((member) => member.userId === userId) ?? null
@@ -338,7 +338,7 @@ export default function TaskSubtasks({
                     isSelected={isSelected}
                     isFocused={focusedIndex === index}
                     selectionRadius={getSelectionRadius(index, isSelected)}
-                    assignee={getAssignee(subtask.task.userId)}
+                    actor={getActor(subtask.task.userId)}
                     onToggleSelection={() => toggleSelection(subtask.task.id)}
                     onNavigate={() =>
                       navigate({

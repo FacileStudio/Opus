@@ -19,7 +19,7 @@ const POOL_EVENTS = {
     "task.updated",
     "task.deleted",
     "task.status_changed",
-    "task.assignee_changed",
+    "task.actor_changed",
     "task.priority_changed",
   ],
   listen: [
@@ -37,7 +37,7 @@ export const ALL_POOL_EVENTS = [
   "task.updated",
   "task.deleted",
   "task.status_changed",
-  "task.assignee_changed",
+  "task.actor_changed",
   "task.priority_changed",
   "project.created",
   "project.updated",
