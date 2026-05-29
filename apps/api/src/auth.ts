@@ -325,10 +325,17 @@ export const auth = betterAuth({
           userInfoUrl: process.env.CUSTOM_OAUTH_USER_INFO_URL || "",
           scopes: process.env.CUSTOM_OAUTH_SCOPES?.split(",")
             .map((s) => s.trim())
-            .filter(Boolean) || ["profile", "email"],
+            .filter(Boolean) || ["openid", "profile", "email"],
           responseType: process.env.CUSTOM_OAUTH_RESPONSE_TYPE || "code",
           discoveryUrl: process.env.CUSTOM_OAUTH_DISCOVERY_URL || "",
           pkce: process.env.CUSTOM_AUTH_PKCE !== "false",
+          mapProfileToUser: (profile: Record<string, unknown>) => ({
+            image:
+              (profile.picture as string) ||
+              (profile.image as string) ||
+              undefined,
+          }),
+          overrideUserInfo: true,
         },
       ],
     }),
