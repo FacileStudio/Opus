@@ -1,14 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import getPoolEvents, {
+  type PoolEventToggle,
+} from "@/fetchers/nook-pool/get-pool-events";
 import triggerNookPoolSync from "@/fetchers/nook-pool/trigger-sync";
+import updatePoolEvents from "@/fetchers/nook-pool/update-pool-events";
 import useDeleteNookPool from "@/hooks/mutations/workspace/use-delete-nook-pool";
 import useSaveNookPool from "@/hooks/mutations/workspace/use-save-nook-pool";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import useNookPoolConfig from "@/hooks/queries/workspace/use-nook-pool-config";
 import { toast } from "@/lib/toast";
+
+const EVENT_LABELS: Record<string, string> = {
+  "task.created": "Task created",
+  "task.updated": "Task updated",
+  "task.deleted": "Task deleted",
+  "task.status_changed": "Task status changed",
+  "task.assignee_changed": "Task assignee changed",
+  "task.priority_changed": "Task priority changed",
+  "project.created": "Project created",
+  "project.updated": "Project updated",
+  "project.deleted": "Project deleted",
+};
 
 export const Route = createFileRoute(
   "/_layout/_authenticated/dashboard/settings/workspace/sync",
@@ -31,9 +47,38 @@ function RouteComponent() {
     projects_synced: number;
     tasks_synced: number;
   } | null>(null);
+  const [poolEventToggles, setPoolEventToggles] = useState<PoolEventToggle[]>(
+    [],
+  );
 
   const isConnected = !!config?.connected;
   const isFromEnv = !!config?.fromEnv;
+
+  useEffect(() => {
+    if (!workspace?.id || !isConnected) return;
+    getPoolEvents(workspace.id)
+      .then(setPoolEventToggles)
+      .catch(() => {});
+  }, [workspace?.id, isConnected]);
+
+  const handleToggleEvent = useCallback(
+    async (event: string, enabled: boolean) => {
+      if (!workspace?.id) return;
+      const prev = poolEventToggles;
+      const next = poolEventToggles.map((e) =>
+        e.event === event ? { ...e, enabled } : e,
+      );
+      setPoolEventToggles(next);
+      try {
+        const result = await updatePoolEvents(workspace.id, next);
+        setPoolEventToggles(result);
+      } catch {
+        setPoolEventToggles(prev);
+        toast.error("Failed to update event toggle");
+      }
+    },
+    [workspace?.id, poolEventToggles],
+  );
 
   const handleConnect = useCallback(async () => {
     if (!workspace?.id) return;
@@ -209,32 +254,41 @@ function RouteComponent() {
                 <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
                   Events
                 </p>
-                <h2 className="font-semibold">Synced channels</h2>
+                <h2 className="font-semibold">Pool events</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Choose which events are sent to Nook. Nook handles routing
+                  from there.
+                </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Emitting</p>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>project.created</li>
-                    <li>project.updated</li>
-                    <li>project.deleted</li>
-                    <li>task.created</li>
-                    <li>task.updated</li>
-                    <li>task.deleted</li>
-                  </ul>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Listening</p>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>project.created</li>
-                    <li>project.updated</li>
-                    <li>project.deleted</li>
-                    <li>task.created</li>
-                    <li>task.updated</li>
-                    <li>task.deleted</li>
-                  </ul>
-                </div>
+              <div className="divide-y divide-border">
+                {poolEventToggles.map((evt) => (
+                  <div
+                    key={evt.event}
+                    className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
+                  >
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-sm font-medium">
+                        {EVENT_LABELS[evt.event] ?? evt.event}
+                      </span>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {evt.event}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={evt.enabled}
+                      aria-label={`Toggle ${evt.event}`}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${evt.enabled ? "bg-primary" : "bg-muted"}`}
+                      onClick={() => handleToggleEvent(evt.event, !evt.enabled)}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform ${evt.enabled ? "translate-x-5" : "translate-x-0"}`}
+                      />
+                    </button>
+                  </div>
+                ))}
               </div>
             </section>
 

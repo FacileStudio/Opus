@@ -8,6 +8,11 @@ import {
   workspaceWebhookTable,
 } from "../database/schema";
 import { subscribeToEvent } from "../events";
+import {
+  emitPoolEvent,
+  getPoolClient,
+  isPoolEventEnabled,
+} from "../nook-pool/sync";
 
 const OUTBOUND_TIMEOUT_MS = 10_000;
 
@@ -207,6 +212,37 @@ async function deliverToWorkspaceWebhooks(eventType: string, data: EventData) {
   await Promise.allSettled(deliveries);
 }
 
+const POOL_BRIDGED_EVENTS = [
+  "task.status_changed",
+  "task.assignee_changed",
+  "task.priority_changed",
+] as const;
+
+async function bridgeToPool(eventType: string, data: EventData) {
+  if (
+    !POOL_BRIDGED_EVENTS.includes(
+      eventType as (typeof POOL_BRIDGED_EVENTS)[number],
+    )
+  )
+    return;
+
+  const context = await resolveContext(data);
+  if (!context) return;
+
+  const client = getPoolClient(context.workspaceId);
+  if (!client?.isConnected) return;
+
+  if (!(await isPoolEventEnabled(context.workspaceId, eventType))) return;
+
+  await emitPoolEvent(context.workspaceId, eventType, {
+    event: eventType,
+    project: context.project,
+    task: context.task,
+    actor: context.actor,
+    data: buildEventData(eventType, data),
+  });
+}
+
 const TRACKED_EVENTS = [
   "task.created",
   "task.updated",
@@ -233,6 +269,7 @@ export function initializeWorkspaceWebhookDispatcher() {
     subscribeToEvent(eventType, async (data) => {
       try {
         await deliverToWorkspaceWebhooks(eventType, data as EventData);
+        await bridgeToPool(eventType, data as EventData);
       } catch (err) {
         console.error(
           `Workspace webhook dispatcher error for ${eventType}:`,
