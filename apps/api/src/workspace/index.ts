@@ -10,6 +10,7 @@ import {
   validateLogoUpload,
 } from "../storage/local";
 import { workspaceAccess } from "../utils/workspace-access-middleware";
+import getUserWorkspacesCtrl from "./controllers/get-user-workspaces";
 import getWorkspaceMembersCtrl from "./controllers/get-workspace-members";
 
 const workspace = new Hono<{
@@ -17,41 +18,76 @@ const workspace = new Hono<{
     userId: string;
     workspaceId: string;
   };
-}>().get(
-  "/:workspaceId/members",
-  describeRoute({
-    operationId: "getWorkspaceMembers",
-    tags: ["Workspaces"],
-    description: "Get all members of a workspace",
-    responses: {
-      200: {
-        description: "List of workspace members",
-        content: {
-          "application/json": {
-            schema: resolver(
-              v.array(
-                v.object({
-                  id: v.string(),
-                  name: v.string(),
-                  email: v.string(),
-                  image: v.nullable(v.string()),
-                  role: v.string(),
-                }),
+}>()
+  .get(
+    "/",
+    describeRoute({
+      operationId: "getUserWorkspaces",
+      tags: ["Workspaces"],
+      description: "Get all workspaces the authenticated user belongs to",
+      responses: {
+        200: {
+          description: "List of workspaces",
+          content: {
+            "application/json": {
+              schema: resolver(
+                v.array(
+                  v.object({
+                    id: v.string(),
+                    name: v.string(),
+                    slug: v.string(),
+                    logo: v.nullable(v.string()),
+                    description: v.nullable(v.string()),
+                    createdAt: v.string(),
+                  }),
+                ),
               ),
-            ),
+            },
           },
         },
       },
+    }),
+    async (c) => {
+      const userId = c.get("userId");
+      const workspaces = await getUserWorkspacesCtrl(userId);
+      return c.json(workspaces);
     },
-  }),
-  validator("param", v.object({ workspaceId: v.string() })),
-  workspaceAccess.fromParam("workspaceId"),
-  async (c) => {
-    const workspaceId = c.get("workspaceId");
-    const members = await getWorkspaceMembersCtrl(workspaceId);
-    return c.json(members);
-  },
-);
+  )
+  .get(
+    "/:workspaceId/members",
+    describeRoute({
+      operationId: "getWorkspaceMembers",
+      tags: ["Workspaces"],
+      description: "Get all members of a workspace",
+      responses: {
+        200: {
+          description: "List of workspace members",
+          content: {
+            "application/json": {
+              schema: resolver(
+                v.array(
+                  v.object({
+                    id: v.string(),
+                    name: v.string(),
+                    email: v.string(),
+                    image: v.nullable(v.string()),
+                    role: v.string(),
+                  }),
+                ),
+              ),
+            },
+          },
+        },
+      },
+    }),
+    validator("param", v.object({ workspaceId: v.string() })),
+    workspaceAccess.fromParam("workspaceId"),
+    async (c) => {
+      const workspaceId = c.get("workspaceId");
+      const members = await getWorkspaceMembersCtrl(workspaceId);
+      return c.json(members);
+    },
+  );
 
 const workspaceLogoUpload = new Hono<{
   Variables: {
