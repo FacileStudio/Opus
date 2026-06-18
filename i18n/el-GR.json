@@ -62,8 +62,8 @@
 			"createProject": {
 				"title": "Δημιουργία νέου έργου",
 				"breadcrumbNew": "Δημιουργία νέου έργου",
-				"workspaceFallback": "ΧΩΡΟΣ ΕΡΓΑΣΙΑΣ",
-				"description": "Δημιουργήστε ένα νέο έργο στον χώρο εργασίας σας, ορίζοντας όνομα, κλειδί και επιλέγοντας ένα εικονίδιο.",
+				"workspaceFallback": "SPACE",
+				"description": "Δημιουργήστε ένα νέο έργο στον space σας, ορίζοντας όνομα, κλειδί και επιλέγοντας ένα εικονίδιο.",
 				"pickIcon": "Επιλογή εικονιδίου",
 				"searchIcons": "Αναζήτηση εικονιδίων...",
 				"projectName": "Όνομα έργου",
@@ -76,11 +76,11 @@
 			"createWorkspace": {
 				"breadcrumbOpus": "OPUS",
 				"title": "Δημιουργία νέου χώρου εργασίας",
-				"description": "Δημιουργήστε έναν νέο χώρο εργασίας ορίζοντας ένα όνομα.",
+				"description": "Δημιουργήστε έναν νέο space ορίζοντας ένα όνομα.",
 				"namePlaceholder": "Όνομα χώρου εργασίας",
 				"descriptionPlaceholder": "Προσθήκη περιγραφής...",
 				"createButton": "Δημιουργία χώρου εργασίας",
-				"successToast": "Ο χώρος εργασίας δημιουργήθηκε με επιτυχία",
+				"successToast": "Ο space δημιουργήθηκε με επιτυχία",
 				"errorToast": "Αποτυχία δημιουργίας χώρου εργασίας"
 			},
 			"createTask": {
@@ -131,9 +131,9 @@
 		"signIn": {
 			"pageTitle": "Σύνδεση",
 			"title": "Καλώς ήρθατε ξανά",
-			"subtitle": "Εισάγετε τα στοιχεία σας για να αποκτήσετε πρόσβαση στον χώρο εργασίας σας",
+			"subtitle": "Εισάγετε τα στοιχεία σας για να αποκτήσετε πρόσβαση στον space σας",
 			"invitationSubtitle": "Συνδεθείτε για να αποδεχτείτε την πρόσκλησή σας",
-			"invitationAlert": "Μετά τη σύνδεση, θα μπορείτε να αποδεχτείτε την πρόσκληση για τον χώρο εργασίας σας.",
+			"invitationAlert": "Μετά τη σύνδεση, θα μπορείτε να αποδεχτείτε την πρόσκληση για τον space σας.",
 			"signingIn": "Γίνεται σύνδεση...",
 			"continueWithGoogle": "Συνέχεια με Google",
 			"continueWithGithub": "Συνέχεια με GitHub",
@@ -178,8 +178,8 @@
 			"subtitleInvitation": "Δημιουργήστε λογαριασμό για να αποδεχτείτε την πρόσκλησή σας",
 			"subtitleRegistrationDisabled": "Η εγγραφή απαιτεί πρόσκληση",
 			"subtitlePasswordDisabled": "Χρησιμοποιήστε social ή OIDC σύνδεση για να δημιουργήσετε λογαριασμό",
-			"subtitleDefault": "Ξεκινήστε με τον χώρο εργασίας σας",
-			"invitationAlert": "Μετά τη δημιουργία του λογαριασμού σας, θα μπορείτε να αποδεχτείτε την πρόσκληση για τον χώρο εργασίας σας.",
+			"subtitleDefault": "Ξεκινήστε με τον space σας",
+			"invitationAlert": "Μετά τη δημιουργία του λογαριασμού σας, θα μπορείτε να αποδεχτείτε την πρόσκληση για τον space σας.",
 			"registrationDisabledAlert": "Η εγγραφή είναι προσωρινά απενεργοποιημένη. Αν έχετε προσκληθεί, εισάγετε τη διεύθυνση email που έλαβε την πρόσκληση για να δημιουργήσετε λογαριασμό.",
 			"passwordDisabledAlert": "Η δημιουργία λογαριασμού με κωδικό είναι απενεργοποιημένη. Χρησιμοποιήστε μια διαθέσιμη μέθοδο social ή OIDC από τη σελίδα σύνδεσης.",
 			"signingIn": "Γίνεται σύνδεση...",
@@ -239,10 +239,10 @@
 			"invitationExpired": "Η πρόσκληση έληξε",
 			"errorLoadDescription": "Αποτυχία φόρτωσης των στοιχείων της πρόσκλησης. Η πρόσκληση ενδέχεται να είναι μη έγκυρη ή να έχει λήξει.",
 			"goToSignIn": "Μετάβαση στη σύνδεση",
-			"workspaceLabel": "Χώρος εργασίας: {{workspaceName}}",
+			"workspaceLabel": "Space: {{workspaceName}}",
 			"joinWorkspace": "Συμμετοχή στο {{workspaceName}}",
-			"inviteBodySignedIn": "Ο/Η <inviter>{{inviterName}}</inviter> σας προσκάλεσε να συμμετάσχετε στον χώρο εργασίας του/της.",
-			"inviteBodySignedOut": "Ο/Η <inviter>{{inviterName}}</inviter> σας προσκάλεσε να συμμετάσχετε στον χώρο εργασίας του/της στο Opus.",
+			"inviteBodySignedIn": "Ο/Η <inviter>{{inviterName}}</inviter> σας προσκάλεσε να συμμετάσχετε στον space του/της.",
+			"inviteBodySignedOut": "Ο/Η <inviter>{{inviterName}}</inviter> σας προσκάλεσε να συμμετάσχετε στον space του/της στο Opus.",
 			"signInToAccept": "Συνδεθείτε για να αποδεχτείτε αυτήν την πρόσκληση.",
 			"accepting": "Γίνεται αποδοχή...",
 			"acceptInvitation": "Αποδοχή πρόσκλησης",
@@ -260,17 +260,17 @@
 			"pageTitle": "Καλώς ήρθατε στο Opus",
 			"workspacePageTitle": "Δημιουργία χώρου εργασίας",
 			"createWorkspaceTitle": "Δημιουργία χώρου εργασίας",
-			"createWorkspaceSubtitle": "Ρυθμίστε τον χώρο εργασίας σας για να ξεκινήσετε τη διαχείριση έργων",
+			"createWorkspaceSubtitle": "Ρυθμίστε τον space σας για να ξεκινήσετε τη διαχείριση έργων",
 			"workspaceName": "Όνομα χώρου εργασίας",
 			"workspaceNamePlaceholder": "π.χ. Acme Inc, My Team",
 			"descriptionOptional": "Περιγραφή (προαιρετικό)",
 			"descriptionPlaceholder": "Με τι ασχολείται η ομάδα σας;",
 			"creating": "Γίνεται δημιουργία...",
 			"createWorkspace": "Δημιουργία χώρου εργασίας",
-			"workspaceCreatedTitle": "Ο χώρος εργασίας δημιουργήθηκε",
+			"workspaceCreatedTitle": "Ο space δημιουργήθηκε",
 			"redirectingToWorkspace": "Μεταφορά στο <name>{{name}}</name>...",
 			"toast": {
-				"workspaceCreated": "Ο χώρος εργασίας δημιουργήθηκε με επιτυχία",
+				"workspaceCreated": "Ο space δημιουργήθηκε με επιτυχία",
 				"createFailed": "Αποτυχία δημιουργίας χώρου εργασίας"
 			},
 			"validation": {
@@ -537,11 +537,11 @@
 			"deleteWorkspace": "Διαγραφή χώρου εργασίας",
 			"deleteWorkspaceDescription": "Προγραμματισμός οριστικής διαγραφής του χώρου εργασίας",
 			"deleteModalTitle": "Διαγραφή χώρου εργασίας;",
-			"deleteModalDescription": "Αυτό θα διαγράψει οριστικά τον χώρο εργασίας \"{{name}}\" και όλα τα δεδομένα του. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+			"deleteModalDescription": "Αυτό θα διαγράψει οριστικά τον space \"{{name}}\" και όλα τα δεδομένα του. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
 			"deleteModalConfirm": "Διαγραφή χώρου εργασίας",
-			"toastUpdated": "Ο χώρος εργασίας ενημερώθηκε με επιτυχία",
+			"toastUpdated": "Ο space ενημερώθηκε με επιτυχία",
 			"toastUpdateError": "Αποτυχία ενημέρωσης χώρου εργασίας",
-			"toastDeleted": "Ο χώρος εργασίας διαγράφηκε με επιτυχία",
+			"toastDeleted": "Ο space διαγράφηκε με επιτυχία",
 			"toastDeleteError": "Αποτυχία διαγραφής χώρου εργασίας",
 			"validation": {
 				"nameRequired": "Το όνομα χώρου εργασίας είναι υποχρεωτικό",
@@ -1136,13 +1136,13 @@
 			"workspaces": "Χώροι εργασίας",
 			"switching": "Γίνεται εναλλαγή...",
 			"addWorkspace": "Προσθήκη χώρου εργασίας",
-			"selectWorkspace": "Επιλέξτε χώρο εργασίας"
+			"selectWorkspace": "Επιλέξτε space"
 		},
 		"page": {
 			"projectsTitle": "Έργα",
 			"settingsTitle": "Ρυθμίσεις",
-			"backToWorkspace": "Επιστροφή στον χώρο εργασίας",
-			"settingsWorkspaceTab": "Χώρος εργασίας"
+			"backToWorkspace": "Επιστροφή στον space",
+			"settingsWorkspaceTab": "Space"
 		},
 		"projectSettings": {
 			"projectLabel": "Έργο"
@@ -1196,8 +1196,8 @@
 				"content": "Η εργασία \"{{taskTitle}}\" δημιουργήθηκε"
 			},
 			"workspace_created": {
-				"title": "Ο χώρος εργασίας δημιουργήθηκε",
-				"content": "Ο χώρος εργασίας σας \"{{workspaceName}}\" δημιουργήθηκε με επιτυχία"
+				"title": "Ο space δημιουργήθηκε",
+				"content": "Ο space σας \"{{workspaceName}}\" δημιουργήθηκε με επιτυχία"
 			},
 			"task_status_changed": {
 				"title": "Η κατάσταση της εργασίας άλλαξε",
@@ -1709,13 +1709,13 @@
 	"invitations": {
 		"pageTitle": "Προσκλήσεις",
 		"pendingInvitations": "Εκκρεμείς προσκλήσεις",
-		"acceptSubtitle": "Αποδεχτείτε προσκλήσεις για να συμμετάσχετε σε χώρους εργασίας",
+		"acceptSubtitle": "Αποδεχτείτε προσκλήσεις για να συμμετάσχετε σε spaces",
 		"noPendingTitle": "Δεν υπάρχουν εκκρεμείς προσκλήσεις",
-		"noPendingDescription": "Δεν έχετε καμία εκκρεμή πρόσκληση για χώρο εργασίας αυτή τη στιγμή.",
+		"noPendingDescription": "Δεν έχετε καμία εκκρεμή πρόσκληση για space αυτή τη στιγμή.",
 		"continueToSetup": "Συνέχεια στη ρύθμιση",
 		"skipForNow": "Παράλειψη για τώρα",
 		"table": {
-			"workspace": "Χώρος εργασίας",
+			"workspace": "Space",
 			"invitedBy": "Προσκλήθηκε από",
 			"expires": "Λήγει"
 		},
@@ -1770,11 +1770,11 @@
 			"nameLabel": "Όνομα χώρου εργασίας",
 			"namePlaceholder": "Εισαγάγετε όνομα χώρου εργασίας",
 			"descriptionLabel": "Περιγραφή (προαιρετικό)",
-			"descriptionPlaceholder": "Προσθέστε μια περιγραφή για τον χώρο εργασίας σας",
+			"descriptionPlaceholder": "Προσθέστε μια περιγραφή για τον space σας",
 			"required": "Υποχρεωτικό",
 			"creating": "Γίνεται δημιουργία...",
 			"submit": "Δημιουργία χώρου εργασίας",
-			"success": "Ο χώρος εργασίας δημιουργήθηκε με επιτυχία",
+			"success": "Ο space δημιουργήθηκε με επιτυχία",
 			"error": "Αποτυχία δημιουργίας χώρου εργασίας"
 		}
 	},
@@ -1812,7 +1812,7 @@
 			"linkCopied": "Ο σύνδεσμος πρόσκλησης αντιγράφηκε στο πρόχειρο",
 			"ariaRemoveMember": "Αφαίρεση μέλους",
 			"removeDialogTitle": "Αφαίρεση μέλους ομάδας;",
-			"removeDialogDescription": "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε τον/την {{name}} από τον χώρο εργασίας; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+			"removeDialogDescription": "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε τον/την {{name}} από τον space; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
 			"cancelDialogTitle": "Ακύρωση πρόσκλησης;",
 			"cancelDialogDescription": "Είστε βέβαιοι ότι θέλετε να ακυρώσετε την πρόσκληση για το {{email}}; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
 			"removeMember": "Αφαίρεση μέλους",

@@ -62,8 +62,8 @@
 			"createProject": {
 				"title": "Een nieuw project aanmaken",
 				"breadcrumbNew": "Een nieuw project aanmaken",
-				"workspaceFallback": "WERKRUIMTE",
-				"description": "Maak een nieuw project aan in uw werkruimte door een naam en sleutel op te geven en een pictogram te kiezen.",
+				"workspaceFallback": "SPACE",
+				"description": "Maak een nieuw project aan in uw space door een naam en sleutel op te geven en een pictogram te kiezen.",
 				"pickIcon": "Pictogram kiezen",
 				"searchIcons": "Pictogrammen zoeken...",
 				"projectName": "Projectnaam",
@@ -75,13 +75,13 @@
 			},
 			"createWorkspace": {
 				"breadcrumbOpus": "OPUS",
-				"title": "Een nieuwe werkruimte aanmaken",
-				"description": "Maak een nieuwe werkruimte aan door een naam op te geven.",
-				"namePlaceholder": "Naam werkruimte",
+				"title": "Een nieuwe space aanmaken",
+				"description": "Maak een nieuwe space aan door een naam op te geven.",
+				"namePlaceholder": "Naam space",
 				"descriptionPlaceholder": "Beschrijving toevoegen...",
-				"createButton": "Werkruimte aanmaken",
-				"successToast": "Werkruimte succesvol aangemaakt",
-				"errorToast": "Aanmaken van werkruimte mislukt"
+				"createButton": "Space aanmaken",
+				"successToast": "Space succesvol aangemaakt",
+				"errorToast": "Aanmaken van space mislukt"
 			},
 			"createTask": {
 				"breadcrumbTask": "TAAK",
@@ -131,9 +131,9 @@
 		"signIn": {
 			"pageTitle": "Inloggen",
 			"title": "Welkom terug",
-			"subtitle": "Voer je gegevens in om toegang te krijgen tot je werkruimte",
+			"subtitle": "Voer je gegevens in om toegang te krijgen tot je space",
 			"invitationSubtitle": "Log in om je uitnodiging te accepteren",
-			"invitationAlert": "Na het inloggen kun je de uitnodiging voor de werkruimte accepteren.",
+			"invitationAlert": "Na het inloggen kun je de uitnodiging voor de space accepteren.",
 			"signingIn": "Inloggen...",
 			"continueWithGoogle": "Doorgaan met Google",
 			"continueWithGithub": "Doorgaan met GitHub",
@@ -178,7 +178,7 @@
 			"subtitleInvitation": "Maak een account aan om je uitnodiging te accepteren",
 			"subtitleRegistrationDisabled": "Registratie vereist een uitnodiging",
 			"subtitlePasswordDisabled": "Gebruik sociale media of OIDC om een account aan te maken",
-			"subtitleDefault": "Aan de slag met je werkruimte",
+			"subtitleDefault": "Aan de slag met je space",
 			"invitationAlert": "Na het aanmaken van je account kun je de uitnodiging accepteren.",
 			"registrationDisabledAlert": "Registratie is momenteel uitgeschakeld. Als je bent uitgenodigd, voer dan het e-mailadres in waarop je de uitnodiging hebt ontvangen.",
 			"passwordDisabledAlert": "Account aanmaken met wachtwoord is uitgeschakeld. Gebruik een sociale of OIDC-methode.",
@@ -239,10 +239,10 @@
 			"invitationExpired": "Uitnodiging verlopen",
 			"errorLoadDescription": "Laden van uitnodigingsgegevens mislukt. De uitnodiging is mogelijk ongeldig of verlopen.",
 			"goToSignIn": "Ga naar inloggen",
-			"workspaceLabel": "Werkruimte: {{workspaceName}}",
+			"workspaceLabel": "Space: {{workspaceName}}",
 			"joinWorkspace": "Deelnemen aan {{workspaceName}}",
-			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> heeft je uitgenodigd voor hun werkruimte.",
-			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> heeft je uitgenodigd om deel te nemen aan hun werkruimte op Opus.",
+			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> heeft je uitgenodigd voor hun space.",
+			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> heeft je uitgenodigd om deel te nemen aan hun space op Opus.",
 			"signInToAccept": "Log in om deze uitnodiging te accepteren.",
 			"accepting": "Accepteren...",
 			"acceptInvitation": "Uitnodiging accepteren",
@@ -258,23 +258,23 @@
 		},
 		"onboarding": {
 			"pageTitle": "Welkom bij Opus",
-			"workspacePageTitle": "Werkruimte maken",
-			"createWorkspaceTitle": "Werkruimte maken",
-			"createWorkspaceSubtitle": "Stel je werkruimte in om projecten te beheren",
-			"workspaceName": "Werkruimtenaam",
+			"workspacePageTitle": "Space maken",
+			"createWorkspaceTitle": "Space maken",
+			"createWorkspaceSubtitle": "Stel je space in om projecten te beheren",
+			"workspaceName": "Spacenaam",
 			"workspaceNamePlaceholder": "bijv. Acme Inc, Mijn Team",
 			"descriptionOptional": "Beschrijving (optioneel)",
 			"descriptionPlaceholder": "Waar werkt je team aan?",
 			"creating": "Aanmaken...",
-			"createWorkspace": "Werkruimte maken",
-			"workspaceCreatedTitle": "Werkruimte aangemaakt",
+			"createWorkspace": "Space maken",
+			"workspaceCreatedTitle": "Space aangemaakt",
 			"redirectingToWorkspace": "Je wordt doorverbonden naar <name>{{name}}</name>...",
 			"toast": {
-				"workspaceCreated": "Werkruimte succesvol aangemaakt",
-				"createFailed": "Aanmaken werkruimte mislukt"
+				"workspaceCreated": "Space succesvol aangemaakt",
+				"createFailed": "Aanmaken space mislukt"
 			},
 			"validation": {
-				"workspaceNameRequired": "Werkruimtenaam is verplicht"
+				"workspaceNameRequired": "Spacenaam is verplicht"
 			}
 		},
 		"profileSetup": {
@@ -434,29 +434,29 @@
 		"workspaceGeneral": {
 			"pageTitle": "Algemene instellingen",
 			"title": "Algemene instellingen",
-			"subtitle": "Beheer de naam en beschrijving van je werkruimte.",
-			"workspaceInfoTitle": "Werkruimte-informatie",
-			"workspaceInfoSubtitle": "Configureer de details en voorkeuren van je werkruimte.",
-			"nameLabel": "Werkruimtenaam",
-			"nameHint": "De naam van je werkruimte",
-			"namePlaceholder": "Voer werkruimtenaam in",
+			"subtitle": "Beheer de naam en beschrijving van je space.",
+			"workspaceInfoTitle": "Space-informatie",
+			"workspaceInfoSubtitle": "Configureer de details en voorkeuren van je space.",
+			"nameLabel": "Spacenaam",
+			"nameHint": "De naam van je space",
+			"namePlaceholder": "Voer spacenaam in",
 			"descriptionLabel": "Beschrijving",
-			"descriptionHint": "Een korte beschrijving van je werkruimte",
+			"descriptionHint": "Een korte beschrijving van je space",
 			"descriptionPlaceholder": "Voer beschrijving in",
 			"dangerZone": "Gevarenzone",
 			"dangerZoneSubtitle": "Onomkeerbare en destructieve acties.",
-			"deleteWorkspace": "Werkruimte verwijderen",
-			"deleteWorkspaceDescription": "Plan de werkruimte in om permanent te worden verwijderd",
-			"deleteModalTitle": "Werkruimte verwijderen?",
-			"deleteModalDescription": "Dit zal de werkruimte \"{{name}}\" en alle bijbehorende data permanent verwijderen. Dit kan niet ongedaan worden gemaakt.",
-			"deleteModalConfirm": "Werkruimte verwijderen",
-			"toastUpdated": "Werkruimte succesvol bijgewerkt",
-			"toastUpdateError": "Bijwerken werkruimte mislukt",
-			"toastDeleted": "Werkruimte verwijderd",
-			"toastDeleteError": "Verwijderen werkruimte mislukt",
+			"deleteWorkspace": "Space verwijderen",
+			"deleteWorkspaceDescription": "Plan de space in om permanent te worden verwijderd",
+			"deleteModalTitle": "Space verwijderen?",
+			"deleteModalDescription": "Dit zal de space \"{{name}}\" en alle bijbehorende data permanent verwijderen. Dit kan niet ongedaan worden gemaakt.",
+			"deleteModalConfirm": "Space verwijderen",
+			"toastUpdated": "Space succesvol bijgewerkt",
+			"toastUpdateError": "Bijwerken space mislukt",
+			"toastDeleted": "Space verwijderd",
+			"toastDeleteError": "Verwijderen space mislukt",
 			"validation": {
-				"nameRequired": "Werkruimtenaam is verplicht",
-				"nameShort": "Werkruimtenaam moet minimaal 2 tekens bevatten"
+				"nameRequired": "Spacenaam is verplicht",
+				"nameShort": "Spacenaam moet minimaal 2 tekens bevatten"
 			}
 		},
 		"projectGeneral": {
@@ -1072,7 +1072,7 @@
 			"members": "Leden",
 			"createTask": "Taak aanmaken",
 			"createProject": "Project aanmaken",
-			"createWorkspace": "Werkruimte aanmaken",
+			"createWorkspace": "Space aanmaken",
 			"lightTheme": "Licht thema",
 			"darkTheme": "Donker thema",
 			"systemTheme": "Systeemthema",
@@ -1114,7 +1114,7 @@
 			"groups": {
 				"task": "Taken",
 				"project": "Projecten",
-				"workspace": "Werkruimtes",
+				"workspace": "Spaces",
 				"comment": "Reacties",
 				"activity": "Activiteiten",
 				"fallback": "Resultaten"
@@ -1133,16 +1133,16 @@
 			"logOut": "Uitloggen"
 		},
 		"workspaceSwitcher": {
-			"workspaces": "Werkruimtes",
+			"workspaces": "Spaces",
 			"switching": "Wisselen...",
-			"addWorkspace": "Werkruimte toevoegen",
-			"selectWorkspace": "Werkruimte selecteren"
+			"addWorkspace": "Space toevoegen",
+			"selectWorkspace": "Space selecteren"
 		},
 		"page": {
 			"projectsTitle": "Projecten",
 			"settingsTitle": "Instellingen",
-			"backToWorkspace": "Terug naar werkruimte",
-			"settingsWorkspaceTab": "Werkruimte"
+			"backToWorkspace": "Terug naar space",
+			"settingsWorkspaceTab": "Space"
 		},
 		"projectSettings": {
 			"projectLabel": "Project"
@@ -1167,7 +1167,7 @@
 				"closeModal": "Venster/popover sluiten",
 				"createTask": "Taak aanmaken",
 				"createProject": "Project aanmaken",
-				"createWorkspace": "Werkruimte aanmaken",
+				"createWorkspace": "Space aanmaken",
 				"boardView": "Wissel naar bordweergave",
 				"listView": "Wissel naar lijstweergave",
 				"backlogView": "Wissel naar backlog-weergave",
@@ -1196,8 +1196,8 @@
 				"content": "Taak \"{{taskTitle}}\" is aangemaakt"
 			},
 			"workspace_created": {
-				"title": "Werkruimte aangemaakt",
-				"content": "Je werkruimte \"{{workspaceName}}\" is succesvol aangemaakt"
+				"title": "Space aangemaakt",
+				"content": "Je space \"{{workspaceName}}\" is succesvol aangemaakt"
 			},
 			"task_status_changed": {
 				"title": "Taakstatus gewijzigd",
@@ -1709,13 +1709,13 @@
 	"invitations": {
 		"pageTitle": "Uitnodigingen",
 		"pendingInvitations": "Openstaande uitnodigingen",
-		"acceptSubtitle": "Accepteer uitnodigingen voor werkruimtes",
+		"acceptSubtitle": "Accepteer uitnodigingen voor spaces",
 		"noPendingTitle": "Geen openstaande uitnodigingen",
-		"noPendingDescription": "Je hebt momenteel geen uitnodigingen voor werkruimtes.",
+		"noPendingDescription": "Je hebt momenteel geen uitnodigingen voor spaces.",
 		"continueToSetup": "Doorgaan naar configuratie",
 		"skipForNow": "Nu overslaan",
 		"table": {
-			"workspace": "Werkruimte",
+			"workspace": "Space",
 			"invitedBy": "Uitgenodigd door",
 			"expires": "Verloopt op"
 		},
@@ -1748,7 +1748,7 @@
 			"pageTitle": "Zoeken",
 			"backToDashboard": "Terug naar dashboard",
 			"placeholder": "Zoek taken op titel of ID (bijv. DEP-23)...",
-			"hint": "Zoek in alle projecten van deze werkruimte. Gebruik ID's zoals DEP-23 voor specifieke taken.",
+			"hint": "Zoek in alle projecten van deze space. Gebruik ID's zoals DEP-23 voor specifieke taken.",
 			"searching": "Zoeken...",
 			"resultsFound_one": "{{count}} resultaat gevonden",
 			"resultsFound_other": "{{count}} resultaten gevonden",
@@ -1764,18 +1764,18 @@
 			"suggestionCompleted": "Voltooid"
 		},
 		"create": {
-			"pageTitle": "Werkruimte maken",
-			"heading": "Maak een nieuwe werkruimte",
-			"subtitle": "Werkruimtes zijn gedeelde omgevingen waar teams samenwerken aan projecten en taken.",
-			"nameLabel": "Werkruimtenaam",
+			"pageTitle": "Space maken",
+			"heading": "Maak een nieuwe space",
+			"subtitle": "Spaces zijn gedeelde omgevingen waar teams samenwerken aan projecten en taken.",
+			"nameLabel": "Spacenaam",
 			"namePlaceholder": "Voer naam in",
 			"descriptionLabel": "Beschrijving (optioneel)",
 			"descriptionPlaceholder": "Voeg een beschrijving toe",
 			"required": "Verplicht",
 			"creating": "Aanmaken...",
-			"submit": "Werkruimte maken",
-			"success": "Werkruimte succesvol aangemaakt",
-			"error": "Aanmaken werkruimte mislukt"
+			"submit": "Space maken",
+			"success": "Space succesvol aangemaakt",
+			"error": "Aanmaken space mislukt"
 		}
 	},
 	"team": {
@@ -1812,7 +1812,7 @@
 			"linkCopied": "Uitnodigingslink gekopieerd naar klembord",
 			"ariaRemoveMember": "Lid verwijderen",
 			"removeDialogTitle": "Teamlid verwijderen?",
-			"removeDialogDescription": "Weet je zeker dat je {{name}} wilt verwijderen uit de werkruimte? Dit kan niet ongedaan worden gemaakt.",
+			"removeDialogDescription": "Weet je zeker dat je {{name}} wilt verwijderen uit de space? Dit kan niet ongedaan worden gemaakt.",
 			"cancelDialogTitle": "Uitnodiging annuleren?",
 			"cancelDialogDescription": "Weet je zeker dat je de uitnodiging voor {{email}} wilt annuleren?",
 			"removeMember": "Lid verwijderen",
