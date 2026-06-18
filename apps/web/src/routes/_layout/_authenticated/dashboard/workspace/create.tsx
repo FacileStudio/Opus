@@ -90,7 +90,7 @@ function RouteComponent() {
                       htmlFor="workspace-name"
                       className="block text-sm font-medium text-foreground mb-2"
                     >
-                      Space Name
+                      {t("workspace:create.nameLabel")}
                     </label>
                     <Input
                       ref={inputRef}
