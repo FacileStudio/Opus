@@ -18,7 +18,7 @@ const inviteWorkspaceMember = async ({
   });
 
   if (error) {
-    throw new Error(error.message || "Failed to invite workspace member");
+    throw new Error(error.message || "Failed to invite space member");
   }
 
   return data;

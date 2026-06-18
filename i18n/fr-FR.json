@@ -62,8 +62,8 @@
 			"createProject": {
 				"title": "Créer un nouveau projet",
 				"breadcrumbNew": "Créer un nouveau projet",
-				"workspaceFallback": "ESPACE DE TRAVAIL",
-				"description": "Créez un nouveau projet dans votre espace de travail en fournissant un nom, une clé et en sélectionnant une icône.",
+				"workspaceFallback": "ESPACE",
+				"description": "Créez un nouveau projet dans votre espace en fournissant un nom, une clé et en sélectionnant une icône.",
 				"pickIcon": "Choisir une icône",
 				"searchIcons": "Rechercher des icônes...",
 				"projectName": "Nom du projet",
@@ -75,13 +75,13 @@
 			},
 			"createWorkspace": {
 				"breadcrumbOpus": "OPUS",
-				"title": "Créer un nouvel espace de travail",
-				"description": "Créez un nouvel espace de travail en lui donnant un nom.",
-				"namePlaceholder": "Nom de l'espace de travail",
+				"title": "Créer un nouvel espace",
+				"description": "Créez un nouvel espace en lui donnant un nom.",
+				"namePlaceholder": "Nom de l'espace",
 				"descriptionPlaceholder": "Ajouter une description...",
-				"createButton": "Créer l'espace de travail",
-				"successToast": "Espace de travail créé avec succès",
-				"errorToast": "Échec de la création de l'espace de travail"
+				"createButton": "Créer l'espace",
+				"successToast": "Espace créé avec succès",
+				"errorToast": "Échec de la création de l'espace"
 			},
 			"createTask": {
 				"breadcrumbTask": "TÂCHE",
@@ -131,9 +131,9 @@
 		"signIn": {
 			"pageTitle": "Connexion",
 			"title": "Content de te revoir",
-			"subtitle": "Entrez vos identifiants pour accéder à votre espace de travail",
+			"subtitle": "Entrez vos identifiants pour accéder à votre espace",
 			"invitationSubtitle": "Connectez-vous pour accepter votre invitation",
-			"invitationAlert": "Après vous être connecté, vous pourrez accepter votre invitation à l'espace de travail.",
+			"invitationAlert": "Après vous être connecté, vous pourrez accepter votre invitation à l'espace.",
 			"signingIn": "Connexion...",
 			"continueWithGoogle": "Continuer avec Google",
 			"continueWithGithub": "Continuer avec GitHub",
@@ -178,8 +178,8 @@
 			"subtitleInvitation": "Créer un compte pour accepter votre invitation",
 			"subtitleRegistrationDisabled": "L'inscription nécessite une invitation",
 			"subtitlePasswordDisabled": "Utilisez la connexion sociale ou OIDC pour créer un compte",
-			"subtitleDefault": "Commencez avec votre espace de travail",
-			"invitationAlert": "Après avoir créé votre compte, vous pourrez accepter votre invitation à l'espace de travail.",
+			"subtitleDefault": "Commencez avec votre espace",
+			"invitationAlert": "Après avoir créé votre compte, vous pourrez accepter votre invitation à l'espace.",
 			"registrationDisabledAlert": "L'inscription est actuellement désactivée. Si vous avez été invité, entrez l'adresse e-mail qui a reçu l'invitation pour créer votre compte.",
 			"passwordDisabledAlert": "La création de compte par mot de passe est désactivée. Utilisez une méthode de connexion sociale ou OIDC configurée depuis la page de connexion.",
 			"signingIn": "Connexion...",
@@ -239,10 +239,10 @@
 			"invitationExpired": "Invitation expirée",
 			"errorLoadDescription": "Échec du chargement des détails de l'invitation. L'invitation peut être invalide ou expirée.",
 			"goToSignIn": "Aller à la connexion",
-			"workspaceLabel": "Espace de travail: {{workspaceName}}",
+			"workspaceLabel": "Espace: {{workspaceName}}",
 			"joinWorkspace": "Rejoindre {{workspaceName}}",
-			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> vous a invité à rejoindre son espace de travail.",
-			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> vous a invité à rejoindre son espace de travail sur Opus.",
+			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> vous a invité à rejoindre son espace.",
+			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> vous a invité à rejoindre son espace sur Opus.",
 			"signInToAccept": "Connectez-vous pour accepter cette invitation.",
 			"accepting": "Acceptation...",
 			"acceptInvitation": "Accepter l'invitation",
@@ -258,23 +258,23 @@
 		},
 		"onboarding": {
 			"pageTitle": "Bienvenue sur Opus",
-			"workspacePageTitle": "Créer un espace de travail",
-			"createWorkspaceTitle": "Créer un espace de travail",
-			"createWorkspaceSubtitle": "Configurez votre espace de travail pour commencer à gérer des projets",
-			"workspaceName": "Nom de l'espace de travail",
+			"workspacePageTitle": "Créer un espace",
+			"createWorkspaceTitle": "Créer un espace",
+			"createWorkspaceSubtitle": "Configurez votre espace pour commencer à gérer des projets",
+			"workspaceName": "Nom de l'espace",
 			"workspaceNamePlaceholder": "ex: Acme Inc, Mon équipe",
 			"descriptionOptional": "Description (optionnelle)",
 			"descriptionPlaceholder": "Sur quoi travaille votre équipe?",
 			"creating": "Création...",
-			"createWorkspace": "Créer un espace de travail",
-			"workspaceCreatedTitle": "Espace de travail créé",
+			"createWorkspace": "Créer un espace",
+			"workspaceCreatedTitle": "Espace créé",
 			"redirectingToWorkspace": "Redirection vers <name>{{name}}</name>...",
 			"toast": {
-				"workspaceCreated": "Espace de travail créé avec succès",
-				"createFailed": "Échec de la création de l'espace de travail"
+				"workspaceCreated": "Espace créé avec succès",
+				"createFailed": "Échec de la création de l'espace"
 			},
 			"validation": {
-				"workspaceNameRequired": "Le nom de l'espace de travail est requis"
+				"workspaceNameRequired": "Le nom de l'espace est requis"
 			}
 		},
 		"profileSetup": {
@@ -365,28 +365,28 @@
 			"webhookSecretHintConfigured": "A signing secret is already configured ({{masked}}). Enter a new one to replace it.",
 			"webhookSecretHintOptional": "Optional. Opus signs the request body when a secret is set.",
 			"connectWebhook": "Connect webhook",
-			"workspaceRulesTitle": "Workspace delivery rules",
-			"workspaceRulesDescription": "Reuse your global channels, then decide which workspaces and projects are allowed to send account notifications.",
-			"workspaceCardHint": "Choose which channels this workspace can use for account notifications.",
+			"workspaceRulesTitle": "Space delivery rules",
+			"workspaceRulesDescription": "Reuse your global channels, then decide which spaces and projects are allowed to send account notifications.",
+			"workspaceCardHint": "Choose which channels this space can use for account notifications.",
 			"workspaceCardLabelEmail": "Email",
 			"workspaceCardLabelNtfy": "ntfy",
 			"workspaceCardLabelGotify": "Gotify",
 			"workspaceCardLabelWebhook": "Custom webhook",
-			"emailChannelHintEnabled": "Send matching workspace notifications by email.",
+			"emailChannelHintEnabled": "Send matching space notifications by email.",
 			"emailChannelHintDisabled": "Configure and enable email globally first.",
-			"ntfyChannelHintEnabled": "Send matching workspace notifications to ntfy.",
+			"ntfyChannelHintEnabled": "Send matching space notifications to ntfy.",
 			"ntfyChannelHintDisabled": "Configure and enable ntfy globally first.",
-			"gotifyChannelHintEnabled": "Send matching workspace notifications to Gotify.",
+			"gotifyChannelHintEnabled": "Send matching space notifications to Gotify.",
 			"gotifyChannelHintDisabled": "Configure and enable Gotify globally first.",
-			"webhookChannelHintEnabled": "Send matching workspace notifications to your webhook.",
+			"webhookChannelHintEnabled": "Send matching space notifications to your webhook.",
 			"webhookChannelHintDisabled": "Configure and enable the webhook globally first.",
 			"projectScope": "Project scope",
-			"projectScopeDescription": "All projects are included by default. Narrow it down if this workspace should only send notifications from selected projects.",
+			"projectScopeDescription": "All projects are included by default. Narrow it down if this space should only send notifications from selected projects.",
 			"allProjects": "All projects",
-			"allProjectsDescription": "Deliver notifications from every project in this workspace.",
+			"allProjectsDescription": "Deliver notifications from every project in this space.",
 			"selectedProjects": "Selected projects",
 			"selectedProjectsDescription": "Only deliver notifications from chosen projects.",
-			"noProjectsInWorkspace": "No projects available for this workspace yet.",
+			"noProjectsInWorkspace": "No projects available for this space yet.",
 			"createRule": "Create rule",
 			"removeRule": "Remove rule",
 			"toastEmailSaved": "Email notification settings saved",
@@ -404,13 +404,13 @@
 			"toastWebhookDisconnected": "Webhook disconnected",
 			"toastWebhookDisconnectFailed": "Failed to disconnect webhook",
 			"toastRuleSaved": "Saved notification rule for {{workspaceName}}",
-			"toastRuleSaveFailed": "Failed to save workspace notification rule",
+			"toastRuleSaveFailed": "Failed to save space notification rule",
 			"toastRuleRemoved": "Removed notification rule for {{workspaceName}}",
-			"toastRuleRemoveFailed": "Failed to remove workspace notification rule",
+			"toastRuleRemoveFailed": "Failed to remove space notification rule",
 			"toastPreferencesSaved": "Notification preferences saved",
 			"toastPreferencesSaveFailed": "Failed to save notification preferences",
-			"toastRuleSavedGeneric": "Workspace notification rule saved",
-			"toastRuleRemovedGeneric": "Workspace notification rule removed"
+			"toastRuleSavedGeneric": "Space notification rule saved",
+			"toastRuleRemovedGeneric": "Space notification rule removed"
 		},
 		"preferencesPage": {
 			"title": "Préférences",
@@ -523,29 +523,29 @@
 		"workspaceGeneral": {
 			"pageTitle": "Paramètres Généraux",
 			"title": "Paramètres Généraux",
-			"subtitle": "Gérez le nom et la description de votre espace de travail.",
-			"workspaceInfoTitle": "Informations sur l'espace de travail",
-			"workspaceInfoSubtitle": "Configurez les détails et les préférences de votre espace de travail.",
-			"nameLabel": "Nom de l'espace de travail",
-			"nameHint": "Le nom de votre espace de travail",
-			"namePlaceholder": "Entrez le nom de l'espace de travail",
+			"subtitle": "Gérez le nom et la description de votre espace.",
+			"workspaceInfoTitle": "Informations sur l'espace",
+			"workspaceInfoSubtitle": "Configurez les détails et les préférences de votre espace.",
+			"nameLabel": "Nom de l'espace",
+			"nameHint": "Le nom de votre espace",
+			"namePlaceholder": "Entrez le nom de l'espace",
 			"descriptionLabel": "Description",
-			"descriptionHint": "Une brève description de votre espace de travail",
-			"descriptionPlaceholder": "Entrez la description de l'espace de travail",
+			"descriptionHint": "Une brève description de votre espace",
+			"descriptionPlaceholder": "Entrez la description de l'espace",
 			"dangerZone": "Zone dangereuse",
 			"dangerZoneSubtitle": "Actions irréversibles et destructrices.",
-			"deleteWorkspace": "Supprimer l'espace de travail",
-			"deleteWorkspaceDescription": "Planifier la suppression définitive de l'espace de travail",
-			"deleteModalTitle": "Supprimer l'espace de travail?",
-			"deleteModalDescription": "Cela supprimera définitivement l'espace de travail \"{{name}}\" et toutes ses données. Cette action ne peut pas être annulée.",
-			"deleteModalConfirm": "Supprimer l'espace de travail",
-			"toastUpdated": "Espace de travail mis à jour avec succès",
-			"toastUpdateError": "Échec de la mise à jour de l'espace de travail",
-			"toastDeleted": "Espace de travail supprimé avec succès",
-			"toastDeleteError": "Échec de la suppression de l'espace de travail",
+			"deleteWorkspace": "Supprimer l'espace",
+			"deleteWorkspaceDescription": "Planifier la suppression définitive de l'espace",
+			"deleteModalTitle": "Supprimer l'espace?",
+			"deleteModalDescription": "Cela supprimera définitivement l'espace \"{{name}}\" et toutes ses données. Cette action ne peut pas être annulée.",
+			"deleteModalConfirm": "Supprimer l'espace",
+			"toastUpdated": "Espace mis à jour avec succès",
+			"toastUpdateError": "Échec de la mise à jour de l'espace",
+			"toastDeleted": "Espace supprimé avec succès",
+			"toastDeleteError": "Échec de la suppression de l'espace",
 			"validation": {
-				"nameRequired": "Le nom de l'espace de travail est requis",
-				"nameShort": "Le nom de l'espace de travail doit contenir au moins 2 caractères"
+				"nameRequired": "Le nom de l'espace est requis",
+				"nameShort": "Le nom de l'espace doit contenir au moins 2 caractères"
 			}
 		},
 		"projectGeneral": {
@@ -1047,10 +1047,10 @@
 			"eventsLabel": "Events",
 			"nameLabel": "Name",
 			"namePlaceholder": "e.g. Slack notifications",
-			"pageTitle": "Workspace Notifications",
+			"pageTitle": "Space Notifications",
 			"secretLabel": "Signing Secret",
 			"secretPlaceholder": "Optional HMAC secret for signature verification",
-			"subtitle": "Configure webhook endpoints to receive real-time notifications about workspace events.",
+			"subtitle": "Configure webhook endpoints to receive real-time notifications about space events.",
 			"test": "Test",
 			"testFailed": "Webhook test failed",
 			"testSuccess": "Webhook test successful (status {{statusCode}})",
@@ -1072,7 +1072,7 @@
 			"members": "Membres",
 			"createTask": "Créer une tâche",
 			"createProject": "Créer un projet",
-			"createWorkspace": "Créer un espace de travail",
+			"createWorkspace": "Créer un espace",
 			"lightTheme": "Thème clair",
 			"darkTheme": "Thème sombre",
 			"systemTheme": "Thème système",
@@ -1114,7 +1114,7 @@
 			"groups": {
 				"task": "Tâches",
 				"project": "Projets",
-				"workspace": "Espaces de travail",
+				"workspace": "Espaces",
 				"comment": "Commentaires",
 				"activity": "Activités",
 				"fallback": "Résultats"
@@ -1133,16 +1133,16 @@
 			"logOut": "Déconnexion"
 		},
 		"workspaceSwitcher": {
-			"workspaces": "Espaces de travail",
+			"workspaces": "Espaces",
 			"switching": "Changement...",
-			"addWorkspace": "Ajouter un espace de travail",
-			"selectWorkspace": "Sélectionner un espace de travail"
+			"addWorkspace": "Ajouter un espace",
+			"selectWorkspace": "Sélectionner un espace"
 		},
 		"page": {
 			"projectsTitle": "Projets",
 			"settingsTitle": "Paramètres",
-			"backToWorkspace": "Retour à l'espace de travail",
-			"settingsWorkspaceTab": "Espace de travail"
+			"backToWorkspace": "Retour à l'espace",
+			"settingsWorkspaceTab": "Espace"
 		},
 		"projectSettings": {
 			"projectLabel": "Projet"
@@ -1167,7 +1167,7 @@
 				"closeModal": "Fermer la modale/popover",
 				"createTask": "Créer une tâche",
 				"createProject": "Créer un projet",
-				"createWorkspace": "Créer un espace de travail",
+				"createWorkspace": "Créer un espace",
 				"boardView": "Passer à la vue tableau",
 				"listView": "Passer à la vue de liste",
 				"backlogView": "Passer à la vue backlog",
@@ -1196,8 +1196,8 @@
 				"content": "La tâche \"{{taskTitle}}\" a été créée"
 			},
 			"workspace_created": {
-				"title": "Espace de travail créé",
-				"content": "Votre espace de travail \"{{workspaceName}}\" a été créé avec succès"
+				"title": "Espace créé",
+				"content": "Votre espace \"{{workspaceName}}\" a été créé avec succès"
 			},
 			"task_status_changed": {
 				"title": "Statut de la tâche modifié",
@@ -1709,13 +1709,13 @@
 	"invitations": {
 		"pageTitle": "Invitations",
 		"pendingInvitations": "Invitations en attente",
-		"acceptSubtitle": "Acceptez les invitations pour rejoindre les workspaces",
+		"acceptSubtitle": "Acceptez les invitations pour rejoindre les spaces",
 		"noPendingTitle": "Aucune invitation en attente",
-		"noPendingDescription": "Vous n'avez aucune invitation de workspace en attente pour le moment.",
+		"noPendingDescription": "Vous n'avez aucune invitation de space en attente pour le moment.",
 		"continueToSetup": "Continuer vers la configuration",
 		"skipForNow": "Ignorer pour l'instant",
 		"table": {
-			"workspace": "Workspace",
+			"workspace": "Space",
 			"invitedBy": "Invité par",
 			"expires": "Expire"
 		},
@@ -1748,7 +1748,7 @@
 			"pageTitle": "Rechercher",
 			"backToDashboard": "Retour au tableau de bord",
 			"placeholder": "Rechercher des tâches par titre ou ID court (ex: DEP-23)...",
-			"hint": "Rechercher dans tous les projets de ce workspace. Utilisez des ID courts comme DEP-23 pour trouver des tâches spécifiques.",
+			"hint": "Rechercher dans tous les projets de ce space. Utilisez des ID courts comme DEP-23 pour trouver des tâches spécifiques.",
 			"searching": "Recherche...",
 			"resultsFound_one": "{{count}} résultat trouvé",
 			"resultsFound_other": "{{count}} résultats trouvés",
@@ -1764,18 +1764,18 @@
 			"suggestionCompleted": "Terminé"
 		},
 		"create": {
-			"pageTitle": "Créer un workspace",
-			"heading": "Créer un nouveau workspace",
-			"subtitle": "Les workspaces sont des environnements partagés où les équipes peuvent travailler sur des projets, des cycles et des problèmes.",
-			"nameLabel": "Nom du workspace",
-			"namePlaceholder": "Entrez le nom du workspace",
+			"pageTitle": "Créer un space",
+			"heading": "Créer un nouveau space",
+			"subtitle": "Les spaces sont des environnements partagés où les équipes peuvent travailler sur des projets, des cycles et des problèmes.",
+			"nameLabel": "Nom du space",
+			"namePlaceholder": "Entrez le nom du space",
 			"descriptionLabel": "Description (optionnel)",
-			"descriptionPlaceholder": "Ajoutez une description pour votre workspace",
+			"descriptionPlaceholder": "Ajoutez une description pour votre space",
 			"required": "Obligatoire",
 			"creating": "Création...",
-			"submit": "Créer un workspace",
-			"success": "Workspace créé avec succès",
-			"error": "Échec de la création du workspace"
+			"submit": "Créer un space",
+			"success": "Space créé avec succès",
+			"error": "Échec de la création du space"
 		}
 	},
 	"team": {

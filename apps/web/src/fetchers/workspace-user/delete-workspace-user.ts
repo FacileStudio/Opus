@@ -15,7 +15,7 @@ async function deleteWorkspaceUser({
   });
 
   if (error) {
-    throw new Error(error.message || "Failed to remove workspace member");
+    throw new Error(error.message || "Failed to remove space member");
   }
 
   return data;
