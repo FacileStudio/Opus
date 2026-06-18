@@ -62,8 +62,8 @@
 			"createProject": {
 				"title": "Креирај нов проект",
 				"breadcrumbNew": "Креирај нов проект",
-				"workspaceFallback": "РАБОТЕН ПРОСТОР",
-				"description": "Креирај нов проект во твојот работен простор со име, клуч и избор на икона.",
+				"workspaceFallback": "SPACE",
+				"description": "Креирај нов проект во твојот space со име, клуч и избор на икона.",
 				"pickIcon": "Избери икона",
 				"searchIcons": "Пребарај икони...",
 				"projectName": "Име на проект",
@@ -75,13 +75,13 @@
 			},
 			"createWorkspace": {
 				"breadcrumbOpus": "OPUS",
-				"title": "Креирај нов работен простор",
-				"description": "Креирај нов работен простор со внесување на име.",
-				"namePlaceholder": "Име на работен простор",
+				"title": "Креирај нов space",
+				"description": "Креирај нов space со внесување на име.",
+				"namePlaceholder": "Име на space",
 				"descriptionPlaceholder": "Додади опис...",
-				"createButton": "Креирај работен простор",
-				"successToast": "Работниот простор е успешно креиран",
-				"errorToast": "Неуспешно креирање на работен простор"
+				"createButton": "Креирај space",
+				"successToast": "Space е успешно креиран",
+				"errorToast": "Неуспешно креирање на space"
 			},
 			"createTask": {
 				"breadcrumbTask": "ЗАДАЧА",
@@ -131,9 +131,9 @@
 		"signIn": {
 			"pageTitle": "Најава",
 			"title": "Добредојде назад",
-			"subtitle": "Внеси ги твоите податоци за да пристапиш до работниот простор",
+			"subtitle": "Внеси ги твоите податоци за да пристапиш до space",
 			"invitationSubtitle": "Најави се за да ја прифатиш поканата",
-			"invitationAlert": "По најавувањето, ќе можеш да ја прифатиш поканата за работниот простор.",
+			"invitationAlert": "По најавувањето, ќе можеш да ја прифатиш поканата за space.",
 			"signingIn": "Се најавува...",
 			"continueWithGoogle": "Продолжи со Google",
 			"continueWithGithub": "Продолжи со GitHub",
@@ -178,8 +178,8 @@
 			"subtitleInvitation": "Креирај сметка за да ја прифатиш поканата",
 			"subtitleRegistrationDisabled": "Регистрацијата бара покана",
 			"subtitlePasswordDisabled": "Користи социјална или OIDC најава за да креираш сметка",
-			"subtitleDefault": "Започни со твојот работен простор",
-			"invitationAlert": "По креирањето на сметката, ќе можеш да ја прифатиш поканата за работниот простор.",
+			"subtitleDefault": "Започни со твојот space",
+			"invitationAlert": "По креирањето на сметката, ќе можеш да ја прифатиш поканата за space.",
 			"registrationDisabledAlert": "Регистрацијата е моментално оневозможена. Ако си поканет, внеси ја е-поштата на која ја доби поканата за да ја креираш сметката.",
 			"passwordDisabledAlert": "Креирањето сметка со лозинка е оневозможено. Користи социјална или OIDC метода за најава од страницата за најава.",
 			"signingIn": "Се најавува...",
@@ -239,10 +239,10 @@
 			"invitationExpired": "Поканата истече",
 			"errorLoadDescription": "Неуспешно вчитување на деталите за поканата. Поканата може да е невалидна или истечена.",
 			"goToSignIn": "Оди на најава",
-			"workspaceLabel": "Работен простор: {{workspaceName}}",
+			"workspaceLabel": "Space: {{workspaceName}}",
 			"joinWorkspace": "Приклучи се на {{workspaceName}}",
-			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> те покани да се приклучиш на нивниот работен простор.",
-			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> те покани да се приклучиш на нивниот работен простор на Opus.",
+			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> те покани да се приклучиш на нивниот space.",
+			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> те покани да се приклучиш на нивниот space на Opus.",
 			"signInToAccept": "Најави се за да ја прифатиш поканата.",
 			"accepting": "Се прифаќа...",
 			"acceptInvitation": "Прифати покана",
@@ -258,23 +258,23 @@
 		},
 		"onboarding": {
 			"pageTitle": "Добредојде на Opus",
-			"workspacePageTitle": "Креирај работен простор",
-			"createWorkspaceTitle": "Креирај работен простор",
-			"createWorkspaceSubtitle": "Постави го твојот работен простор за да почнеш со управување на проекти",
-			"workspaceName": "Име на работен простор",
+			"workspacePageTitle": "Креирај space",
+			"createWorkspaceTitle": "Креирај space",
+			"createWorkspaceSubtitle": "Постави го твојот space за да почнеш со управување на проекти",
+			"workspaceName": "Име на space",
 			"workspaceNamePlaceholder": "пр. Acme Inc, Мојот тим",
 			"descriptionOptional": "Опис (опционално)",
 			"descriptionPlaceholder": "На што работи твојот тим?",
 			"creating": "Се креира...",
-			"createWorkspace": "Креирај работен простор",
-			"workspaceCreatedTitle": "Работниот простор е креиран",
+			"createWorkspace": "Креирај space",
+			"workspaceCreatedTitle": "Space е креиран",
 			"redirectingToWorkspace": "Те носиме на <name>{{name}}</name>...",
 			"toast": {
-				"workspaceCreated": "Работниот простор е успешно креиран",
-				"createFailed": "Неуспешно креирање на работен простор"
+				"workspaceCreated": "Space е успешно креиран",
+				"createFailed": "Неуспешно креирање на space"
 			},
 			"validation": {
-				"workspaceNameRequired": "Името на работниот простор е задолжително"
+				"workspaceNameRequired": "Името на space е задолжително"
 			}
 		},
 		"profileSetup": {
@@ -523,29 +523,29 @@
 		"workspaceGeneral": {
 			"pageTitle": "Општи поставки",
 			"title": "Општи поставки",
-			"subtitle": "Управувај со името и описот на работниот простор.",
-			"workspaceInfoTitle": "Информации за работниот простор",
-			"workspaceInfoSubtitle": "Конфигурирај ги деталите и преференциите на работниот простор.",
-			"nameLabel": "Име на работен простор",
-			"nameHint": "Името на твојот работен простор",
-			"namePlaceholder": "Внеси име на работен простор",
+			"subtitle": "Управувај со името и описот на space.",
+			"workspaceInfoTitle": "Информации за space",
+			"workspaceInfoSubtitle": "Конфигурирај ги деталите и преференциите на space.",
+			"nameLabel": "Име на space",
+			"nameHint": "Името на твојот space",
+			"namePlaceholder": "Внеси име на space",
 			"descriptionLabel": "Опис",
-			"descriptionHint": "Краток опис на твојот работен простор",
-			"descriptionPlaceholder": "Внеси опис на работен простор",
+			"descriptionHint": "Краток опис на твојот space",
+			"descriptionPlaceholder": "Внеси опис на space",
 			"dangerZone": "Опасна зона",
 			"dangerZoneSubtitle": "Неповратни и деструктивни акции.",
-			"deleteWorkspace": "Избриши работен простор",
-			"deleteWorkspaceDescription": "Закажи трајно бришење на работниот простор",
-			"deleteModalTitle": "Избриши работен простор?",
-			"deleteModalDescription": "Ова трајно ќе го избрише работниот простор \"{{name}}\" и сите негови податоци. Оваа акција не може да се врати.",
-			"deleteModalConfirm": "Избриши работен простор",
-			"toastUpdated": "Работниот простор е успешно ажуриран",
-			"toastUpdateError": "Неуспешно ажурирање на работниот простор",
-			"toastDeleted": "Работниот простор е успешно избришан",
-			"toastDeleteError": "Неуспешно бришење на работниот простор",
+			"deleteWorkspace": "Избриши space",
+			"deleteWorkspaceDescription": "Закажи трајно бришење на space",
+			"deleteModalTitle": "Избриши space?",
+			"deleteModalDescription": "Ова трајно ќе го избрише space \"{{name}}\" и сите негови податоци. Оваа акција не може да се врати.",
+			"deleteModalConfirm": "Избриши space",
+			"toastUpdated": "Space е успешно ажуриран",
+			"toastUpdateError": "Неуспешно ажурирање на space",
+			"toastDeleted": "Space е успешно избришан",
+			"toastDeleteError": "Неуспешно бришење на space",
 			"validation": {
-				"nameRequired": "Името на работниот простор е задолжително",
-				"nameShort": "Името на работниот простор мора да има најмалку 2 знаци"
+				"nameRequired": "Името на space е задолжително",
+				"nameShort": "Името на space мора да има најмалку 2 знаци"
 			}
 		},
 		"projectGeneral": {
@@ -1072,7 +1072,7 @@
 			"members": "Членови",
 			"createTask": "Креирај задача",
 			"createProject": "Креирај проект",
-			"createWorkspace": "Креирај работен простор",
+			"createWorkspace": "Креирај space",
 			"lightTheme": "Светла тема",
 			"darkTheme": "Темна тема",
 			"systemTheme": "Системска тема",
@@ -1135,14 +1135,14 @@
 		"workspaceSwitcher": {
 			"workspaces": "Работни простори",
 			"switching": "Се префрлува...",
-			"addWorkspace": "Додади работен простор",
-			"selectWorkspace": "Избери работен простор"
+			"addWorkspace": "Додади space",
+			"selectWorkspace": "Избери space"
 		},
 		"page": {
 			"projectsTitle": "Проекти",
 			"settingsTitle": "Поставки",
-			"backToWorkspace": "Назад кон работен простор",
-			"settingsWorkspaceTab": "Работен простор"
+			"backToWorkspace": "Назад кон space",
+			"settingsWorkspaceTab": "Space"
 		},
 		"projectSettings": {
 			"projectLabel": "Проект"
@@ -1167,7 +1167,7 @@
 				"closeModal": "Затвори модал/мени",
 				"createTask": "Креирај задача",
 				"createProject": "Креирај проект",
-				"createWorkspace": "Креирај работен простор",
+				"createWorkspace": "Креирај space",
 				"boardView": "Премини на приказ табла",
 				"listView": "Премини на приказ листа",
 				"backlogView": "Премини на приказ заостанати",
@@ -1196,8 +1196,8 @@
 				"content": "Задачата \"{{taskTitle}}\" е креирана"
 			},
 			"workspace_created": {
-				"title": "Работниот простор е креиран",
-				"content": "Твојот работен простор \"{{workspaceName}}\" е успешно креиран"
+				"title": "Space е креиран",
+				"content": "Твојот space \"{{workspaceName}}\" е успешно креиран"
 			},
 			"task_status_changed": {
 				"title": "Статусот на задачата е променет",
@@ -1715,7 +1715,7 @@
 		"continueToSetup": "Продолжи со поставување",
 		"skipForNow": "Прескокни засега",
 		"table": {
-			"workspace": "Работен простор",
+			"workspace": "Space",
 			"invitedBy": "Поканет од",
 			"expires": "Истекува"
 		},
@@ -1748,7 +1748,7 @@
 			"pageTitle": "Пребарување",
 			"backToDashboard": "Назад кон контролна табла",
 			"placeholder": "Пребарај задачи по наслов или краток ID (пр. DEP-23)...",
-			"hint": "Пребарај низ сите проекти во овој работен простор. Користи кратки ID како DEP-23 за да најдеш конкретни задачи.",
+			"hint": "Пребарај низ сите проекти во овој space. Користи кратки ID како DEP-23 за да најдеш конкретни задачи.",
 			"searching": "Се пребарува...",
 			"resultsFound_one": "{{count}} резултат пронајден",
 			"resultsFound_other": "{{count}} резултати пронајдени",
@@ -1764,18 +1764,18 @@
 			"suggestionCompleted": "Завршено"
 		},
 		"create": {
-			"pageTitle": "Креирај работен простор",
-			"heading": "Креирај нов работен простор",
+			"pageTitle": "Креирај space",
+			"heading": "Креирај нов space",
 			"subtitle": "Работните простори се споделени средини каде тимовите можат да работат на проекти, циклуси и задачи.",
-			"nameLabel": "Име на работен простор",
-			"namePlaceholder": "Внеси име на работен простор",
+			"nameLabel": "Име на space",
+			"namePlaceholder": "Внеси име на space",
 			"descriptionLabel": "Опис (опционално)",
-			"descriptionPlaceholder": "Додади опис за твојот работен простор",
+			"descriptionPlaceholder": "Додади опис за твојот space",
 			"required": "Задолжително",
 			"creating": "Се креира...",
-			"submit": "Креирај работен простор",
-			"success": "Работниот простор е успешно креиран",
-			"error": "Неуспешно креирање на работен простор"
+			"submit": "Креирај space",
+			"success": "Space е успешно креиран",
+			"error": "Неуспешно креирање на space"
 		}
 	},
 	"team": {
@@ -1812,7 +1812,7 @@
 			"linkCopied": "Линкот за покана е копиран во клипборд",
 			"ariaRemoveMember": "Отстрани член",
 			"removeDialogTitle": "Отстрани член на тим?",
-			"removeDialogDescription": "Дали си сигурен дека сакаш да го отстраниш {{name}} од работниот простор? Оваа акција не може да се врати.",
+			"removeDialogDescription": "Дали си сигурен дека сакаш да го отстраниш {{name}} од space? Оваа акција не може да се врати.",
 			"cancelDialogTitle": "Откажи покана?",
 			"cancelDialogDescription": "Дали си сигурен дека сакаш да ја откажеш поканата за {{email}}? Оваа акција не може да се врати.",
 			"removeMember": "Отстрани член",

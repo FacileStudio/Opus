@@ -62,8 +62,8 @@
 			"createProject": {
 				"title": "Створити новий проєкт",
 				"breadcrumbNew": "Створити новий проєкт",
-				"workspaceFallback": "РОБОЧИЙ ПРОСТІР",
-				"description": "Створіть новий проєкт у вашому робочому просторі, вказавши назву, ключ та обравши іконку.",
+				"workspaceFallback": "SPACE",
+				"description": "Створіть новий проєкт у вашому space, вказавши назву, ключ та обравши іконку.",
 				"pickIcon": "Обрати іконку",
 				"searchIcons": "Пошук іконок...",
 				"projectName": "Назва проєкту",
@@ -75,13 +75,13 @@
 			},
 			"createWorkspace": {
 				"breadcrumbOpus": "OPUS",
-				"title": "Створити новий робочий простір",
-				"description": "Створіть новий робочий простір, вказавши його назву.",
-				"namePlaceholder": "Назва робочого простору",
+				"title": "Створити новий space",
+				"description": "Створіть новий space, вказавши його назву.",
+				"namePlaceholder": "Назва space",
 				"descriptionPlaceholder": "Додати опис...",
-				"createButton": "Створити робочий простір",
-				"successToast": "Робочий простір успішно створено",
-				"errorToast": "Не вдалося створити робочий простір"
+				"createButton": "Створити space",
+				"successToast": "Space успішно створено",
+				"errorToast": "Не вдалося створити space"
 			},
 			"createTask": {
 				"breadcrumbTask": "ЗАВДАННЯ",
@@ -131,9 +131,9 @@
 		"signIn": {
 			"pageTitle": "Вхід",
 			"title": "З поверненням",
-			"subtitle": "Введіть ваші облікові дані для доступу до робочого простору",
+			"subtitle": "Введіть ваші облікові дані для доступу до space",
 			"invitationSubtitle": "Увійдіть, щоб прийняти запрошення",
-			"invitationAlert": "Після входу ви зможете прийняти запрошення до робочого простору.",
+			"invitationAlert": "Після входу ви зможете прийняти запрошення до space.",
 			"signingIn": "Вхід...",
 			"continueWithGoogle": "Продовжити з Google",
 			"continueWithGithub": "Продовжити з GitHub",
@@ -179,7 +179,7 @@
 			"subtitleRegistrationDisabled": "Для реєстрації потрібне запрошення",
 			"subtitlePasswordDisabled": "Використовуйте вхід через соціальну мережу або OIDC для створення облікового запису",
 			"subtitleDefault": "Почніть роботу з вашим робочим простором",
-			"invitationAlert": "Після створення облікового запису ви зможете прийняти запрошення до робочого простору.",
+			"invitationAlert": "Після створення облікового запису ви зможете прийняти запрошення до space.",
 			"registrationDisabledAlert": "Реєстрацію наразі вимкнено. Якщо вас запросили, введіть адресу електронної пошти, на яку було надіслано запрошення.",
 			"passwordDisabledAlert": "Створення облікового запису за допомогою пароля вимкнено. Використовуйте налаштований метод входу через соціальну мережу або OIDC на сторінці входу.",
 			"signingIn": "Вхід...",
@@ -239,10 +239,10 @@
 			"invitationExpired": "Запрошення прострочено",
 			"errorLoadDescription": "Не вдалося завантажити деталі запрошення. Запрошення може бути недійсним або простроченим.",
 			"goToSignIn": "Перейти до входу",
-			"workspaceLabel": "Робочий простір: {{workspaceName}}",
+			"workspaceLabel": "Space: {{workspaceName}}",
 			"joinWorkspace": "Приєднатися до {{workspaceName}}",
-			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> запросив вас приєднатися до свого робочого простору.",
-			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> запросив вас приєднатися до свого робочого простору в Opus.",
+			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> запросив вас приєднатися до свого space.",
+			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> запросив вас приєднатися до свого space в Opus.",
 			"signInToAccept": "Увійдіть, щоб прийняти це запрошення.",
 			"accepting": "Приймається...",
 			"acceptInvitation": "Прийняти запрошення",
@@ -258,23 +258,23 @@
 		},
 		"onboarding": {
 			"pageTitle": "Ласкаво просимо до Opus",
-			"workspacePageTitle": "Створення робочого простору",
-			"createWorkspaceTitle": "Створити робочий простір",
-			"createWorkspaceSubtitle": "Налаштуйте робочий простір, щоб почати керувати проєктами",
-			"workspaceName": "Назва робочого простору",
+			"workspacePageTitle": "Створення space",
+			"createWorkspaceTitle": "Створити space",
+			"createWorkspaceSubtitle": "Налаштуйте space, щоб почати керувати проєктами",
+			"workspaceName": "Назва space",
 			"workspaceNamePlaceholder": "напр. Acme Inc, Моя команда",
 			"descriptionOptional": "Опис (необов'язково)",
 			"descriptionPlaceholder": "Над чим працює ваша команда?",
 			"creating": "Створення...",
-			"createWorkspace": "Створити робочий простір",
-			"workspaceCreatedTitle": "Робочий простір створено",
+			"createWorkspace": "Створити space",
+			"workspaceCreatedTitle": "Space створено",
 			"redirectingToWorkspace": "Переходимо до <name>{{name}}</name>...",
 			"toast": {
-				"workspaceCreated": "Робочий простір успішно створено",
-				"createFailed": "Не вдалося створити робочий простір"
+				"workspaceCreated": "Space успішно створено",
+				"createFailed": "Не вдалося створити space"
 			},
 			"validation": {
-				"workspaceNameRequired": "Назва робочого простору є обов'язковою"
+				"workspaceNameRequired": "Назва space є обов'язковою"
 			}
 		},
 		"profileSetup": {
@@ -367,26 +367,26 @@
 			"connectWebhook": "Підключити вебхук",
 			"workspaceRulesTitle": "Правила доставки по робочих просторах",
 			"workspaceRulesDescription": "Використовуйте ваші глобальні канали, а потім визначте, які робочі простори та проєкти можуть надсилати сповіщення облікового запису.",
-			"workspaceCardHint": "Оберіть, які канали цей робочий простір може використовувати для сповіщень облікового запису.",
+			"workspaceCardHint": "Оберіть, які канали цей space може використовувати для сповіщень облікового запису.",
 			"workspaceCardLabelEmail": "Пошта",
 			"workspaceCardLabelNtfy": "ntfy",
 			"workspaceCardLabelGotify": "Gotify",
 			"workspaceCardLabelWebhook": "Власний вебхук",
-			"emailChannelHintEnabled": "Надсилати відповідні сповіщення робочого простору електронною поштою.",
+			"emailChannelHintEnabled": "Надсилати відповідні сповіщення space електронною поштою.",
 			"emailChannelHintDisabled": "Спочатку налаштуйте та увімкніть пошту глобально.",
-			"ntfyChannelHintEnabled": "Надсилати відповідні сповіщення робочого простору в ntfy.",
+			"ntfyChannelHintEnabled": "Надсилати відповідні сповіщення space в ntfy.",
 			"ntfyChannelHintDisabled": "Спочатку налаштуйте та увімкніть ntfy глобально.",
-			"gotifyChannelHintEnabled": "Надсилати відповідні сповіщення робочого простору в Gotify.",
+			"gotifyChannelHintEnabled": "Надсилати відповідні сповіщення space в Gotify.",
 			"gotifyChannelHintDisabled": "Спочатку налаштуйте та увімкніть Gotify глобально.",
-			"webhookChannelHintEnabled": "Надсилати відповідні сповіщення робочого простору на ваш вебхук.",
+			"webhookChannelHintEnabled": "Надсилати відповідні сповіщення space на ваш вебхук.",
 			"webhookChannelHintDisabled": "Спочатку налаштуйте та увімкніть вебхук глобально.",
 			"projectScope": "Область проєктів",
-			"projectScopeDescription": "Усі проєкти включені за замовчуванням. Звузьте вибір, якщо цей робочий простір має надсилати сповіщення лише з обраних проєктів.",
+			"projectScopeDescription": "Усі проєкти включені за замовчуванням. Звузьте вибір, якщо цей space має надсилати сповіщення лише з обраних проєктів.",
 			"allProjects": "Усі проєкти",
-			"allProjectsDescription": "Доставляти сповіщення з кожного проєкту в цьому робочому просторі.",
+			"allProjectsDescription": "Доставляти сповіщення з кожного проєкту в цьому space.",
 			"selectedProjects": "Обрані проєкти",
 			"selectedProjectsDescription": "Доставляти сповіщення лише з обраних проєктів.",
-			"noProjectsInWorkspace": "У цьому робочому просторі ще немає доступних проєктів.",
+			"noProjectsInWorkspace": "У цьому space ще немає доступних проєктів.",
 			"createRule": "Створити правило",
 			"removeRule": "Видалити правило",
 			"toastEmailSaved": "Налаштування сповіщень електронною поштою збережено",
@@ -404,13 +404,13 @@
 			"toastWebhookDisconnected": "Вебхук від'єднано",
 			"toastWebhookDisconnectFailed": "Не вдалося від'єднати вебхук",
 			"toastRuleSaved": "Правило сповіщень для {{workspaceName}} збережено",
-			"toastRuleSaveFailed": "Не вдалося зберегти правило сповіщень робочого простору",
+			"toastRuleSaveFailed": "Не вдалося зберегти правило сповіщень space",
 			"toastRuleRemoved": "Правило сповіщень для {{workspaceName}} видалено",
-			"toastRuleRemoveFailed": "Не вдалося видалити правило сповіщень робочого простору",
+			"toastRuleRemoveFailed": "Не вдалося видалити правило сповіщень space",
 			"toastPreferencesSaved": "Налаштування сповіщень збережено",
 			"toastPreferencesSaveFailed": "Не вдалося зберегти налаштування сповіщень",
-			"toastRuleSavedGeneric": "Правило сповіщень робочого простору збережено",
-			"toastRuleRemovedGeneric": "Правило сповіщень робочого простору видалено"
+			"toastRuleSavedGeneric": "Правило сповіщень space збережено",
+			"toastRuleRemovedGeneric": "Правило сповіщень space видалено"
 		},
 		"preferencesPage": {
 			"title": "Налаштування",
@@ -523,29 +523,29 @@
 		"workspaceGeneral": {
 			"pageTitle": "Загальні налаштування",
 			"title": "Загальні налаштування",
-			"subtitle": "Керуйте назвою та описом вашого робочого простору.",
-			"workspaceInfoTitle": "Інформація про робочий простір",
-			"workspaceInfoSubtitle": "Налаштуйте деталі та параметри вашого робочого простору.",
-			"nameLabel": "Назва робочого простору",
-			"nameHint": "Назва вашого робочого простору",
-			"namePlaceholder": "Введіть назву робочого простору",
+			"subtitle": "Керуйте назвою та описом вашого space.",
+			"workspaceInfoTitle": "Інформація про space",
+			"workspaceInfoSubtitle": "Налаштуйте деталі та параметри вашого space.",
+			"nameLabel": "Назва space",
+			"nameHint": "Назва вашого space",
+			"namePlaceholder": "Введіть назву space",
 			"descriptionLabel": "Опис",
-			"descriptionHint": "Короткий опис вашого робочого простору",
-			"descriptionPlaceholder": "Введіть опис робочого простору",
+			"descriptionHint": "Короткий опис вашого space",
+			"descriptionPlaceholder": "Введіть опис space",
 			"dangerZone": "Небезпечна зона",
 			"dangerZoneSubtitle": "Незворотні та руйнівні дії.",
-			"deleteWorkspace": "Видалити робочий простір",
-			"deleteWorkspaceDescription": "Запланувати остаточне видалення робочого простору",
-			"deleteModalTitle": "Видалити робочий простір?",
-			"deleteModalDescription": "Це назавжди видалить робочий простір «{{name}}» та всі його дані. Цю дію неможливо скасувати.",
-			"deleteModalConfirm": "Видалити робочий простір",
-			"toastUpdated": "Робочий простір успішно оновлено",
-			"toastUpdateError": "Не вдалося оновити робочий простір",
-			"toastDeleted": "Робочий простір успішно видалено",
-			"toastDeleteError": "Не вдалося видалити робочий простір",
+			"deleteWorkspace": "Видалити space",
+			"deleteWorkspaceDescription": "Запланувати остаточне видалення space",
+			"deleteModalTitle": "Видалити space?",
+			"deleteModalDescription": "Це назавжди видалить space «{{name}}» та всі його дані. Цю дію неможливо скасувати.",
+			"deleteModalConfirm": "Видалити space",
+			"toastUpdated": "Space успішно оновлено",
+			"toastUpdateError": "Не вдалося оновити space",
+			"toastDeleted": "Space успішно видалено",
+			"toastDeleteError": "Не вдалося видалити space",
 			"validation": {
-				"nameRequired": "Назва робочого простору є обов'язковою",
-				"nameShort": "Назва робочого простору має містити щонайменше 2 символи"
+				"nameRequired": "Назва space є обов'язковою",
+				"nameShort": "Назва space має містити щонайменше 2 символи"
 			}
 		},
 		"projectGeneral": {
@@ -1072,7 +1072,7 @@
 			"members": "Учасники",
 			"createTask": "Створити завдання",
 			"createProject": "Створити проєкт",
-			"createWorkspace": "Створити робочий простір",
+			"createWorkspace": "Створити space",
 			"lightTheme": "Світла тема",
 			"darkTheme": "Темна тема",
 			"systemTheme": "Системна тема",
@@ -1135,14 +1135,14 @@
 		"workspaceSwitcher": {
 			"workspaces": "Робочі простори",
 			"switching": "Перемикання...",
-			"addWorkspace": "Додати робочий простір",
-			"selectWorkspace": "Обрати робочий простір"
+			"addWorkspace": "Додати space",
+			"selectWorkspace": "Обрати space"
 		},
 		"page": {
 			"projectsTitle": "Проєкти",
 			"settingsTitle": "Налаштування",
-			"backToWorkspace": "Повернутися до робочого простору",
-			"settingsWorkspaceTab": "Робочий простір"
+			"backToWorkspace": "Повернутися до space",
+			"settingsWorkspaceTab": "Space"
 		},
 		"projectSettings": {
 			"projectLabel": "Проєкт"
@@ -1167,7 +1167,7 @@
 				"closeModal": "Закрити модальне/спливаюче вікно",
 				"createTask": "Створити завдання",
 				"createProject": "Створити проєкт",
-				"createWorkspace": "Створити робочий простір",
+				"createWorkspace": "Створити space",
 				"boardView": "Перемкнути на вигляд дошки",
 				"listView": "Перемкнути на вигляд списку",
 				"backlogView": "Перемкнути на вигляд беклогу",
@@ -1198,8 +1198,8 @@
 				"content": "Завдання «{{taskTitle}}» створено"
 			},
 			"workspace_created": {
-				"title": "Робочий простір створено",
-				"content": "Ваш робочий простір «{{workspaceName}}» успішно створено"
+				"title": "Space створено",
+				"content": "Ваш space «{{workspaceName}}» успішно створено"
 			},
 			"task_status_changed": {
 				"title": "Статус завдання змінено",
@@ -1713,13 +1713,13 @@
 	"invitations": {
 		"pageTitle": "Запрошення",
 		"pendingInvitations": "Очікуючі запрошення",
-		"acceptSubtitle": "Прийміть запрошення, щоб приєднатися до робочих просторів",
+		"acceptSubtitle": "Прийміть запрошення, щоб приєднатися до spaces",
 		"noPendingTitle": "Немає очікуючих запрошень",
-		"noPendingDescription": "Наразі у вас немає жодних очікуючих запрошень до робочих просторів.",
+		"noPendingDescription": "Наразі у вас немає жодних очікуючих запрошень до spaces.",
 		"continueToSetup": "Продовжити налаштування",
 		"skipForNow": "Пропустити поки що",
 		"table": {
-			"workspace": "Робочий простір",
+			"workspace": "Space",
 			"invitedBy": "Запросив",
 			"expires": "Закінчується"
 		},
@@ -1752,7 +1752,7 @@
 			"pageTitle": "Пошук",
 			"backToDashboard": "Повернутися до панелі керування",
 			"placeholder": "Пошук завдань за назвою або коротким ID (напр. DEP-23)...",
-			"hint": "Пошук по всіх проєктах у цьому робочому просторі. Використовуйте короткі ID, як DEP-23, щоб знайти конкретні завдання.",
+			"hint": "Пошук по всіх проєктах у цьому space. Використовуйте короткі ID, як DEP-23, щоб знайти конкретні завдання.",
 			"searching": "Пошук...",
 			"resultsFound_one": "{{count}} результат знайдено",
 			"resultsFound_few": "{{count}} результати знайдено",
@@ -1770,18 +1770,18 @@
 			"suggestionCompleted": "Завершено"
 		},
 		"create": {
-			"pageTitle": "Створення робочого простору",
-			"heading": "Створити новий робочий простір",
+			"pageTitle": "Створення space",
+			"heading": "Створити новий space",
 			"subtitle": "Робочі простори — це спільні середовища, де команди можуть працювати над проєктами, циклами та завданнями.",
-			"nameLabel": "Назва робочого простору",
-			"namePlaceholder": "Введіть назву робочого простору",
+			"nameLabel": "Назва space",
+			"namePlaceholder": "Введіть назву space",
 			"descriptionLabel": "Опис (необов'язково)",
-			"descriptionPlaceholder": "Додайте опис для вашого робочого простору",
+			"descriptionPlaceholder": "Додайте опис для вашого space",
 			"required": "Обов'язково",
 			"creating": "Створення...",
-			"submit": "Створити робочий простір",
-			"success": "Робочий простір успішно створено",
-			"error": "Не вдалося створити робочий простір"
+			"submit": "Створити space",
+			"success": "Space успішно створено",
+			"error": "Не вдалося створити space"
 		}
 	},
 	"team": {
@@ -1818,7 +1818,7 @@
 			"linkCopied": "Посилання-запрошення скопійовано до буфера обміну",
 			"ariaRemoveMember": "Видалити учасника",
 			"removeDialogTitle": "Видалити учасника команди?",
-			"removeDialogDescription": "Ви впевнені, що хочете видалити {{name}} з робочого простору? Цю дію неможливо скасувати.",
+			"removeDialogDescription": "Ви впевнені, що хочете видалити {{name}} з space? Цю дію неможливо скасувати.",
 			"cancelDialogTitle": "Скасувати запрошення?",
 			"cancelDialogDescription": "Ви впевнені, що хочете скасувати запрошення для {{email}}? Цю дію неможливо скасувати.",
 			"removeMember": "Видалити учасника",
