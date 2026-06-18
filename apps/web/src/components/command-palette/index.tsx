@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import SearchCommandMenu from "@/components/search-command-menu";
+import CreateSpaceModal from "@/components/shared/modals/create-space-modal";
 import CreateTaskModal from "@/components/shared/modals/create-task-modal";
-import CreateWorkspaceModal from "@/components/shared/modals/create-workspace-modal";
 import {
   Command,
   CommandCollection,
@@ -322,7 +322,7 @@ function CommandPalette() {
         projectId={projectIdFromRoute}
         onClose={() => setIsCreateTaskOpen(false)}
       />
-      <CreateWorkspaceModal
+      <CreateSpaceModal
         open={isCreateWorkspaceOpen}
         onClose={() => setIsCreateWorkspaceOpen(false)}
       />

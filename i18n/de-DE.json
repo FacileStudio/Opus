@@ -62,8 +62,8 @@
 			"createProject": {
 				"title": "Neues Projekt erstellen",
 				"breadcrumbNew": "Neues Projekt erstellen",
-				"workspaceFallback": "WORKSPACE",
-				"description": "Erstelle ein neues Projekt in deinem Workspace, indem du einen Namen, einen Schlüssel und ein Symbol auswählst.",
+				"workspaceFallback": "SPACE",
+				"description": "Erstelle ein neues Projekt in deinem Space, indem du einen Namen, einen Schlüssel und ein Symbol auswählst.",
 				"pickIcon": "Symbol auswählen",
 				"searchIcons": "Symbole suchen...",
 				"projectName": "Projektname",
@@ -75,13 +75,13 @@
 			},
 			"createWorkspace": {
 				"breadcrumbOpus": "OPUS",
-				"title": "Neuen Workspace erstellen",
-				"description": "Erstelle einen neuen Workspace, indem du einen Namen dafür angibst.",
-				"namePlaceholder": "Workspace-Name",
+				"title": "Neuen Space erstellen",
+				"description": "Erstelle einen neuen Space, indem du einen Namen dafür angibst.",
+				"namePlaceholder": "Space-Name",
 				"descriptionPlaceholder": "Beschreibung hinzufügen...",
-				"createButton": "Workspace erstellen",
-				"successToast": "Workspace erfolgreich erstellt",
-				"errorToast": "Workspace konnte nicht erstellt werden"
+				"createButton": "Space erstellen",
+				"successToast": "Space erfolgreich erstellt",
+				"errorToast": "Space konnte nicht erstellt werden"
 			},
 			"createTask": {
 				"breadcrumbTask": "AUFGABE",
@@ -131,9 +131,9 @@
 		"signIn": {
 			"pageTitle": "Anmelden",
 			"title": "Willkommen zurück",
-			"subtitle": "Gib deine Zugangsdaten ein, um auf deinen Workspace zuzugreifen",
+			"subtitle": "Gib deine Zugangsdaten ein, um auf deinen Space zuzugreifen",
 			"invitationSubtitle": "Melde dich an, um deine Einladung anzunehmen",
-			"invitationAlert": "Nach der Anmeldung kannst du deine Workspace-Einladung annehmen.",
+			"invitationAlert": "Nach der Anmeldung kannst du deine Space-Einladung annehmen.",
 			"signingIn": "Wird angemeldet...",
 			"continueWithGoogle": "Mit Google fortfahren",
 			"continueWithGithub": "Mit GitHub fortfahren",
@@ -178,8 +178,8 @@
 			"subtitleInvitation": "Erstelle ein Konto, um deine Einladung anzunehmen",
 			"subtitleRegistrationDisabled": "Für die Registrierung ist eine Einladung erforderlich",
 			"subtitlePasswordDisabled": "Nutze Social- oder OIDC-Anmeldung, um ein Konto zu erstellen",
-			"subtitleDefault": "Lege mit deinem Workspace los",
-			"invitationAlert": "Nach dem Erstellen deines Kontos kannst du deine Workspace-Einladung annehmen.",
+			"subtitleDefault": "Lege mit deinem Space los",
+			"invitationAlert": "Nach dem Erstellen deines Kontos kannst du deine Space-Einladung annehmen.",
 			"registrationDisabledAlert": "Die Registrierung ist derzeit deaktiviert. Wenn du eingeladen wurdest, gib die E-Mail-Adresse ein, die die Einladung erhalten hat, um dein Konto zu erstellen.",
 			"passwordDisabledAlert": "Die kontoerstellung per Passwort ist deaktiviert. Nutze eine konfigurierte Social- oder OIDC-Anmeldemethode auf der Anmeldeseite.",
 			"signingIn": "Anmeldung läuft...",
@@ -239,10 +239,10 @@
 			"invitationExpired": "Einladung abgelaufen",
 			"errorLoadDescription": "Die Einladungsdetails konnten nicht geladen werden. Die Einladung ist möglicherweise ungültig oder abgelaufen.",
 			"goToSignIn": "Zur Anmeldung",
-			"workspaceLabel": "Workspace: {{workspaceName}}",
+			"workspaceLabel": "Space: {{workspaceName}}",
 			"joinWorkspace": "{{workspaceName}} beitreten",
-			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> hat dich eingeladen, ihrem Workspace beizutreten.",
-			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> hat dich eingeladen, ihrem Workspace auf Opus beizutreten.",
+			"inviteBodySignedIn": "<inviter>{{inviterName}}</inviter> hat dich eingeladen, ihrem Space beizutreten.",
+			"inviteBodySignedOut": "<inviter>{{inviterName}}</inviter> hat dich eingeladen, ihrem Space auf Opus beizutreten.",
 			"signInToAccept": "Melde dich an, um die Einladung anzunehmen.",
 			"accepting": "Wird angenommen...",
 			"acceptInvitation": "Einladung annehmen",
@@ -258,23 +258,23 @@
 		},
 		"onboarding": {
 			"pageTitle": "Willkommen bei Opus",
-			"workspacePageTitle": "Workspace erstellen",
-			"createWorkspaceTitle": "Workspace erstellen",
-			"createWorkspaceSubtitle": "Richte deinen Workspace ein, um mit der Verwaltung von Projekten zu beginnen",
-			"workspaceName": "Workspace-Name",
+			"workspacePageTitle": "Space erstellen",
+			"createWorkspaceTitle": "Space erstellen",
+			"createWorkspaceSubtitle": "Richte deinen Space ein, um mit der Verwaltung von Projekten zu beginnen",
+			"workspaceName": "Space-Name",
 			"workspaceNamePlaceholder": "z. B. Acme Inc, Mein Team",
 			"descriptionOptional": "Beschreibung (optional)",
 			"descriptionPlaceholder": "Woran arbeitet dein Team?",
 			"creating": "Wird erstellt...",
-			"createWorkspace": "Workspace erstellen",
-			"workspaceCreatedTitle": "Workspace erstellt",
+			"createWorkspace": "Space erstellen",
+			"workspaceCreatedTitle": "Space erstellt",
 			"redirectingToWorkspace": "Du wirst zu <name>{{name}}</name> weitergeleitet...",
 			"toast": {
-				"workspaceCreated": "Workspace erfolgreich erstellt",
-				"createFailed": "Workspace konnte nicht erstellt werden"
+				"workspaceCreated": "Space erfolgreich erstellt",
+				"createFailed": "Space konnte nicht erstellt werden"
 			},
 			"validation": {
-				"workspaceNameRequired": "Workspace-Name ist erforderlich"
+				"workspaceNameRequired": "Space-Name ist erforderlich"
 			}
 		},
 		"profileSetup": {
@@ -365,28 +365,28 @@
 			"webhookSecretHintConfigured": "Ein Signatur-Geheimnis ist bereits konfiguriert ({{masked}}). Gib ein neues ein, um es zu ersetzen.",
 			"webhookSecretHintOptional": "Optional. Opus signiert den Anfragetext, wenn ein Geheimnis gesetzt ist.",
 			"connectWebhook": "Webhook verbinden",
-			"workspaceRulesTitle": "Zustellregeln für Arbeitsbereiche",
-			"workspaceRulesDescription": "Nutze deine globalen Kanäle erneut und lege fest, welche Arbeitsbereiche und Projekte Kontobenachrichtigungen senden dürfen.",
-			"workspaceCardHint": "Wähle, welche Kanäle dieser Arbeitsbereich für Kontobenachrichtigungen nutzen darf.",
+			"workspaceRulesTitle": "Zustellregeln für Spaces",
+			"workspaceRulesDescription": "Nutze deine globalen Kanäle erneut und lege fest, welche Spaces und Projekte Kontobenachrichtigungen senden dürfen.",
+			"workspaceCardHint": "Wähle, welche Kanäle dieser Space für Kontobenachrichtigungen nutzen darf.",
 			"workspaceCardLabelEmail": "E-Mail",
 			"workspaceCardLabelNtfy": "ntfy",
 			"workspaceCardLabelGotify": "Gotify",
 			"workspaceCardLabelWebhook": "Benutzerdefinierter Webhook",
-			"emailChannelHintEnabled": "Passende Arbeitsbereichs-Benachrichtigungen per E-Mail senden.",
+			"emailChannelHintEnabled": "Passende Spaces-Benachrichtigungen per E-Mail senden.",
 			"emailChannelHintDisabled": "E-Mail zuerst global konfigurieren und aktivieren.",
-			"ntfyChannelHintEnabled": "Passende Arbeitsbereichs-Benachrichtigungen an ntfy senden.",
+			"ntfyChannelHintEnabled": "Passende Spaces-Benachrichtigungen an ntfy senden.",
 			"ntfyChannelHintDisabled": "ntfy zuerst global konfigurieren und aktivieren.",
-			"gotifyChannelHintEnabled": "Passende Arbeitsbereichs-Benachrichtigungen an Gotify senden.",
+			"gotifyChannelHintEnabled": "Passende Spaces-Benachrichtigungen an Gotify senden.",
 			"gotifyChannelHintDisabled": "Gotify zuerst global konfigurieren und aktivieren.",
-			"webhookChannelHintEnabled": "Passende Arbeitsbereichs-Benachrichtigungen an deinen Webhook senden.",
+			"webhookChannelHintEnabled": "Passende Spaces-Benachrichtigungen an deinen Webhook senden.",
 			"webhookChannelHintDisabled": "Webhook zuerst global konfigurieren und aktivieren.",
 			"projectScope": "Projektbereich",
-			"projectScopeDescription": "Standardmäßig sind alle Projekte enthalten. Schränke ein, wenn dieser Arbeitsbereich nur ausgewählte Projekte benachrichtigen soll.",
+			"projectScopeDescription": "Standardmäßig sind alle Projekte enthalten. Schränke ein, wenn dieser Space nur ausgewählte Projekte benachrichtigen soll.",
 			"allProjects": "Alle Projekte",
-			"allProjectsDescription": "Benachrichtigungen aus jedem Projekt in diesem Arbeitsbereich zustellen.",
+			"allProjectsDescription": "Benachrichtigungen aus jedem Projekt in diesem Space zustellen.",
 			"selectedProjects": "Ausgewählte Projekte",
 			"selectedProjectsDescription": "Nur Benachrichtigungen aus gewählten Projekten zustellen.",
-			"noProjectsInWorkspace": "Für diesen Arbeitsbereich sind noch keine Projekte vorhanden.",
+			"noProjectsInWorkspace": "Für diesen Space sind noch keine Projekte vorhanden.",
 			"createRule": "Regel erstellen",
 			"removeRule": "Regel entfernen",
 			"toastEmailSaved": "E-Mail-Benachrichtigungseinstellungen gespeichert",
@@ -404,13 +404,13 @@
 			"toastWebhookDisconnected": "Webhook getrennt",
 			"toastWebhookDisconnectFailed": "Webhook konnte nicht getrennt werden",
 			"toastRuleSaved": "Benachrichtigungsregel für {{workspaceName}} gespeichert",
-			"toastRuleSaveFailed": "Arbeitsbereichs-Benachrichtigungsregel konnte nicht gespeichert werden",
+			"toastRuleSaveFailed": "Spaces-Benachrichtigungsregel konnte nicht gespeichert werden",
 			"toastRuleRemoved": "Benachrichtigungsregel für {{workspaceName}} entfernt",
-			"toastRuleRemoveFailed": "Arbeitsbereichs-Benachrichtigungsregel konnte nicht entfernt werden",
+			"toastRuleRemoveFailed": "Spaces-Benachrichtigungsregel konnte nicht entfernt werden",
 			"toastPreferencesSaved": "Benachrichtigungseinstellungen gespeichert",
 			"toastPreferencesSaveFailed": "Benachrichtigungseinstellungen konnten nicht gespeichert werden",
-			"toastRuleSavedGeneric": "Arbeitsbereichs-Benachrichtigungsregel gespeichert",
-			"toastRuleRemovedGeneric": "Arbeitsbereichs-Benachrichtigungsregel entfernt"
+			"toastRuleSavedGeneric": "Spaces-Benachrichtigungsregel gespeichert",
+			"toastRuleRemovedGeneric": "Spaces-Benachrichtigungsregel entfernt"
 		},
 		"preferencesPage": {
 			"title": "Einstellungen",
@@ -523,29 +523,29 @@
 		"workspaceGeneral": {
 			"pageTitle": "Allgemeine Einstellungen",
 			"title": "Allgemeine Einstellungen",
-			"subtitle": "Verwalte den Namen und die Beschreibung deines Workspaces.",
-			"workspaceInfoTitle": "Workspace-Informationen",
-			"workspaceInfoSubtitle": "Konfiguriere Details und Einstellungen deines Workspaces.",
-			"nameLabel": "Workspace-Name",
-			"nameHint": "Der Name deines Workspaces",
-			"namePlaceholder": "Workspace-Name eingeben",
+			"subtitle": "Verwalte den Namen und die Beschreibung deines Spaces.",
+			"workspaceInfoTitle": "Space-Informationen",
+			"workspaceInfoSubtitle": "Konfiguriere Details und Einstellungen deines Spaces.",
+			"nameLabel": "Space-Name",
+			"nameHint": "Der Name deines Spaces",
+			"namePlaceholder": "Space-Name eingeben",
 			"descriptionLabel": "Beschreibung",
-			"descriptionHint": "Eine kurze Beschreibung deines Workspaces",
-			"descriptionPlaceholder": "Workspace-Beschreibung eingeben",
+			"descriptionHint": "Eine kurze Beschreibung deines Spaces",
+			"descriptionPlaceholder": "Space-Beschreibung eingeben",
 			"dangerZone": "Gefahrenbereich",
 			"dangerZoneSubtitle": "Unumkehrbare und destruktive Aktionen.",
-			"deleteWorkspace": "Workspace löschen",
-			"deleteWorkspaceDescription": "Plane die dauerhafte Löschung des Workspaces",
-			"deleteModalTitle": "Workspace löschen?",
-			"deleteModalDescription": "Dadurch wird der Workspace \"{{name}}\" und alle zugehörigen Daten dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
-			"deleteModalConfirm": "Workspace löschen",
-			"toastUpdated": "Workspace erfolgreich aktualisiert",
-			"toastUpdateError": "Workspace konnte nicht aktualisiert werden",
-			"toastDeleted": "Workspace erfolgreich gelöscht",
-			"toastDeleteError": "Workspace konnte nicht gelöscht werden",
+			"deleteWorkspace": "Space löschen",
+			"deleteWorkspaceDescription": "Plane die dauerhafte Löschung des Spaces",
+			"deleteModalTitle": "Space löschen?",
+			"deleteModalDescription": "Dadurch wird der Space \"{{name}}\" und alle zugehörigen Daten dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+			"deleteModalConfirm": "Space löschen",
+			"toastUpdated": "Space erfolgreich aktualisiert",
+			"toastUpdateError": "Space konnte nicht aktualisiert werden",
+			"toastDeleted": "Space erfolgreich gelöscht",
+			"toastDeleteError": "Space konnte nicht gelöscht werden",
 			"validation": {
-				"nameRequired": "Workspace-Name ist erforderlich",
-				"nameShort": "Der Workspace-Name muss mindestens 2 Zeichen lang sein"
+				"nameRequired": "Space-Name ist erforderlich",
+				"nameShort": "Der Space-Name muss mindestens 2 Zeichen lang sein"
 			}
 		},
 		"projectGeneral": {
@@ -1047,10 +1047,10 @@
 			"eventsLabel": "Events",
 			"nameLabel": "Name",
 			"namePlaceholder": "e.g. Slack notifications",
-			"pageTitle": "Workspace Notifications",
+			"pageTitle": "Space Notifications",
 			"secretLabel": "Signing Secret",
 			"secretPlaceholder": "Optional HMAC secret for signature verification",
-			"subtitle": "Configure webhook endpoints to receive real-time notifications about workspace events.",
+			"subtitle": "Configure webhook endpoints to receive real-time notifications about space events.",
 			"test": "Test",
 			"testFailed": "Webhook test failed",
 			"testSuccess": "Webhook test successful (status {{statusCode}})",
@@ -1072,7 +1072,7 @@
 			"members": "Mitglieder",
 			"createTask": "Aufgabe erstellen",
 			"createProject": "Projekt erstellen",
-			"createWorkspace": "Workspace erstellen",
+			"createWorkspace": "Space erstellen",
 			"lightTheme": "Helles Design",
 			"darkTheme": "Dunkles Design",
 			"systemTheme": "Systemdesign",
@@ -1114,7 +1114,7 @@
 			"groups": {
 				"task": "Aufgaben",
 				"project": "Projekte",
-				"workspace": "Workspaces",
+				"workspace": "Spaces",
 				"comment": "Kommentare",
 				"activity": "Aktivitäten",
 				"fallback": "Ergebnisse"
@@ -1133,16 +1133,16 @@
 			"logOut": "Abmelden"
 		},
 		"workspaceSwitcher": {
-			"workspaces": "Workspaces",
+			"workspaces": "Spaces",
 			"switching": "Wechseln...",
-			"addWorkspace": "Workspace hinzufügen",
-			"selectWorkspace": "Workspace auswählen"
+			"addWorkspace": "Space hinzufügen",
+			"selectWorkspace": "Space auswählen"
 		},
 		"page": {
 			"projectsTitle": "Projekte",
 			"settingsTitle": "Einstellungen",
-			"backToWorkspace": "Zurück zum Workspace",
-			"settingsWorkspaceTab": "Workspace"
+			"backToWorkspace": "Zurück zum Space",
+			"settingsWorkspaceTab": "Space"
 		},
 		"projectSettings": {
 			"projectLabel": "Projekt"
@@ -1167,7 +1167,7 @@
 				"closeModal": "Modal/Popover schließen",
 				"createTask": "Aufgabe erstellen",
 				"createProject": "Projekt erstellen",
-				"createWorkspace": "Workspace erstellen",
+				"createWorkspace": "Space erstellen",
 				"boardView": "Zur Board-Ansicht wechseln",
 				"listView": "Zur Listenansicht wechseln",
 				"backlogView": "Zur Backlog-Ansicht wechseln",
@@ -1196,8 +1196,8 @@
 				"content": "Die Aufgabe \"{{taskTitle}}\" wurde erstellt"
 			},
 			"workspace_created": {
-				"title": "Workspace erstellt",
-				"content": "Dein Workspace \"{{workspaceName}}\" wurde erfolgreich erstellt"
+				"title": "Space erstellt",
+				"content": "Dein Space \"{{workspaceName}}\" wurde erfolgreich erstellt"
 			},
 			"task_status_changed": {
 				"title": "Aufgabenstatus geändert",
@@ -1709,13 +1709,13 @@
 	"invitations": {
 		"pageTitle": "Einladungen",
 		"pendingInvitations": "Ausstehende Einladungen",
-		"acceptSubtitle": "Nimm Einladungen an, um Workspaces beizutreten",
+		"acceptSubtitle": "Nimm Einladungen an, um Spaces beizutreten",
 		"noPendingTitle": "Keine ausstehenden Einladungen",
-		"noPendingDescription": "Du hast derzeit keine ausstehenden Workspace-Einladungen.",
+		"noPendingDescription": "Du hast derzeit keine ausstehenden Space-Einladungen.",
 		"continueToSetup": "Weiter zum Setup",
 		"skipForNow": "Vorerst überspringen",
 		"table": {
-			"workspace": "Workspace",
+			"workspace": "Space",
 			"invitedBy": "Eingeladen von",
 			"expires": "Läuft ab"
 		},
@@ -1748,7 +1748,7 @@
 			"pageTitle": "Suche",
 			"backToDashboard": "Zurück zum Dashboard",
 			"placeholder": "Suche nach Aufgaben nach Titel oder Kurz-ID (z. B. DEP-23)...",
-			"hint": "Suche über alle Projekte in diesem Workspace. Nutze Kurz-IDs wie DEP-23, um bestimmte Aufgaben zu finden.",
+			"hint": "Suche über alle Projekte in diesem Space. Nutze Kurz-IDs wie DEP-23, um bestimmte Aufgaben zu finden.",
 			"searching": "Suche läuft...",
 			"resultsFound_one": "{{count}} Ergebnis gefunden",
 			"resultsFound_other": "{{count}} Ergebnisse gefunden",
@@ -1764,18 +1764,18 @@
 			"suggestionCompleted": "Abgeschlossen"
 		},
 		"create": {
-			"pageTitle": "Workspace erstellen",
-			"heading": "Neuen Workspace erstellen",
-			"subtitle": "Workspaces sind gemeinsame Umgebungen, in denen Teams an Projekten, Zyklen und Issues arbeiten können.",
-			"nameLabel": "Workspace-Name",
-			"namePlaceholder": "Workspace-Namen eingeben",
+			"pageTitle": "Space erstellen",
+			"heading": "Neuen Space erstellen",
+			"subtitle": "Spaces sind gemeinsame Umgebungen, in denen Teams an Projekten, Zyklen und Issues arbeiten können.",
+			"nameLabel": "Space-Name",
+			"namePlaceholder": "Space-Namen eingeben",
 			"descriptionLabel": "Beschreibung (optional)",
-			"descriptionPlaceholder": "Füge eine Beschreibung für deinen Workspace hinzu",
+			"descriptionPlaceholder": "Füge eine Beschreibung für deinen Space hinzu",
 			"required": "Erforderlich",
 			"creating": "Wird erstellt...",
-			"submit": "Workspace erstellen",
-			"success": "Workspace erfolgreich erstellt",
-			"error": "Workspace konnte nicht erstellt werden"
+			"submit": "Space erstellen",
+			"success": "Space erfolgreich erstellt",
+			"error": "Space konnte nicht erstellt werden"
 		}
 	},
 	"team": {
@@ -1812,7 +1812,7 @@
 			"linkCopied": "Einladungslink in die Zwischenablage kopiert",
 			"ariaRemoveMember": "Mitglied entfernen",
 			"removeDialogTitle": "Teammitglied entfernen?",
-			"removeDialogDescription": "Bist du sicher, dass du {{name}} aus dem Workspace entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
+			"removeDialogDescription": "Bist du sicher, dass du {{name}} aus dem Space entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
 			"cancelDialogTitle": "Einladung abbrechen?",
 			"cancelDialogDescription": "Bist du sicher, dass du die Einladung für {{email}} abbrechen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
 			"removeMember": "Mitglied entfernen",

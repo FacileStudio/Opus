@@ -2,6 +2,7 @@ import type * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
+import { SpaceSwitcher } from "@/components/space-switcher";
 import { ThemeToggleDropdown } from "@/components/theme-toggle-dropdown";
 import {
   Sidebar,
@@ -11,7 +12,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { VersionDisplay } from "@/components/version-display";
-import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { shortcuts } from "@/constants/shortcuts";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import Search from "./search";
@@ -35,7 +35,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {...props}
     >
       <SidebarHeader className="pt-1 pb-1.5">
-        <WorkspaceSwitcher />
+        <SpaceSwitcher />
       </SidebarHeader>
       <SidebarContent className="overflow-hidden gap-1 py-1">
         <Search />

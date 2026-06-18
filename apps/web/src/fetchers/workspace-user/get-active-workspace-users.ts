@@ -14,7 +14,7 @@ async function getActiveWorkspaceUsers({
   });
 
   if (error) {
-    throw new Error(error.message || "Failed to fetch workspace users");
+    throw new Error(error.message || "Failed to fetch space users");
   }
 
   return data || [];

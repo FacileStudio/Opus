@@ -30,15 +30,15 @@ import {
 } from "@/hooks/use-keyboard-shortcuts";
 import { authClient } from "@/lib/auth-client";
 import type { Workspace } from "@/types/workspace";
-import CreateWorkspaceModal from "./shared/modals/create-workspace-modal";
+import CreateSpaceModal from "./shared/modals/create-space-modal";
 
-export function WorkspaceSwitcher() {
+export function SpaceSwitcher() {
   const { t } = useTranslation();
   const { data: workspace } = useActiveWorkspace();
   const { data: workspaces } = useGetWorkspaces();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = React.useState(false);
-  const [isCreateWorkspaceModalOpen, setIsCreateWorkspaceModalOpen] =
+  const [isCreateSpaceModalOpen, setIsCreateSpaceModalOpen] =
     React.useState(false);
   const [isSwitching, setIsSwitching] = React.useState(false);
 
@@ -98,7 +98,7 @@ export function WorkspaceSwitcher() {
           setIsOpen(true);
         },
         [shortcuts.workspace.create]: () => {
-          setIsCreateWorkspaceModalOpen(true);
+          setIsCreateSpaceModalOpen(true);
         },
       },
     },
@@ -187,7 +187,7 @@ export function WorkspaceSwitcher() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => {
-                    setIsCreateWorkspaceModalOpen(true);
+                    setIsCreateSpaceModalOpen(true);
                     setIsOpen(false);
                   }}
                   className="h-7 text-sm data-highlighted:bg-sidebar-accent data-highlighted:text-sidebar-accent-foreground"
@@ -204,9 +204,9 @@ export function WorkspaceSwitcher() {
         </div>
       </div>
 
-      <CreateWorkspaceModal
-        open={isCreateWorkspaceModalOpen}
-        onClose={() => setIsCreateWorkspaceModalOpen(false)}
+      <CreateSpaceModal
+        open={isCreateSpaceModalOpen}
+        onClose={() => setIsCreateSpaceModalOpen(false)}
       />
     </>
   );
