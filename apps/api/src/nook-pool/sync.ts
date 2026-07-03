@@ -244,7 +244,7 @@ async function drainOutbox(): Promise<void> {
       const last = lastConnectAttempt.get(config.workspaceId) ?? 0;
       const url = config.instanceUrl || process.env.NOOK_POOL_URL;
       const secret = config.secret || process.env.NOOK_POOL_SECRET;
-      if (!client && url && secret && Date.now() - last > CONNECT_RETRY_MS) {
+      if (url && secret && Date.now() - last > CONNECT_RETRY_MS) {
         lastConnectAttempt.set(config.workspaceId, Date.now());
         try {
           await connectPoolForWorkspace(config.workspaceId, url, secret);
@@ -255,6 +255,7 @@ async function drainOutbox(): Promise<void> {
       }
       if (!client?.isConnected) continue;
     }
+    lastConnectAttempt.set(config.workspaceId, Date.now());
 
     const rows = await db
       .select()
@@ -265,7 +266,9 @@ async function drainOutbox(): Promise<void> {
 
     for (const row of rows) {
       try {
-        client.emit(row.channel, JSON.parse(row.payload));
+        if (!client.emitNow(row.channel, JSON.parse(row.payload))) {
+          break;
+        }
         await db
           .delete(nookPoolOutboxTable)
           .where(eq(nookPoolOutboxTable.id, row.id));
