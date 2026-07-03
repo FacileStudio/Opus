@@ -1,3 +1,5 @@
+# Documents the pool events Opus uses. The API builds its pool config
+# inline (apps/api/src/nook-pool/sync.ts) — keep this file in sync with it.
 app: Opus
 events:
   emit:
@@ -7,6 +9,9 @@ events:
     - task.created
     - task.updated
     - task.deleted
+    - task.status_changed
+    - task.actor_changed
+    - task.priority_changed
   listen:
     - project.created
     - project.updated

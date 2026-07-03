@@ -213,6 +213,8 @@ function createSyncQueue() {
   };
 }
 
+type Enqueue = (fn: () => Promise<void>) => void;
+
 function setupListeners(pool: PoolClient, workspaceId: string): void {
   const enqueue = createSyncQueue();
 
@@ -229,15 +231,15 @@ function setupListeners(pool: PoolClient, workspaceId: string): void {
   });
 
   pool.listen("task.created", (payload: unknown) => {
-    enqueue(() => handleIncomingTask("created", workspaceId, payload));
+    enqueue(() => handleIncomingTask("created", workspaceId, payload, enqueue));
   });
 
   pool.listen("task.updated", (payload: unknown) => {
-    enqueue(() => handleIncomingTask("updated", workspaceId, payload));
+    enqueue(() => handleIncomingTask("updated", workspaceId, payload, enqueue));
   });
 
   pool.listen("task.deleted", (payload: unknown) => {
-    enqueue(() => handleIncomingTask("deleted", workspaceId, payload));
+    enqueue(() => handleIncomingTask("deleted", workspaceId, payload, enqueue));
   });
 }
 
@@ -312,6 +314,17 @@ async function handleIncomingProject(
       }
     });
   } else if (action === "updated") {
+    const [existing] = await db
+      .select({ id: projectTable.id })
+      .from(projectTable)
+      .where(eq(projectTable.facileId, facileId))
+      .limit(1);
+
+    if (!existing) {
+      await handleIncomingProject("created", workspaceId, raw);
+      return;
+    }
+
     const updateData: Record<string, unknown> = {};
     if (data.payload.name) updateData.name = data.payload.name;
     if (data.payload.description !== undefined)
@@ -342,10 +355,14 @@ async function resolveActorByEmail(
   return actor?.id ?? null;
 }
 
+const MAX_TASK_PARENT_RETRIES = 5;
+
 async function handleIncomingTask(
   action: string,
   workspaceId: string,
   raw: unknown,
+  enqueue: Enqueue,
+  attempt = 0,
 ): Promise<void> {
   const data = raw as IncomingTaskPayload;
   const facileId = data.facile_id || data.payload?.facile_id;
@@ -391,27 +408,27 @@ async function handleIncomingTask(
     const projectFacileId = data.payload.project_facile_id;
     if (!projectFacileId) return;
 
-    let project: { id: string } | undefined;
-    for (let attempt = 0; attempt < 5; attempt++) {
-      const [found] = await db
-        .select({ id: projectTable.id })
-        .from(projectTable)
-        .where(
-          and(
-            eq(projectTable.facileId, projectFacileId),
-            eq(projectTable.workspaceId, workspaceId),
-          ),
-        )
-        .limit(1);
+    const [project] = await db
+      .select({ id: projectTable.id })
+      .from(projectTable)
+      .where(
+        and(
+          eq(projectTable.facileId, projectFacileId),
+          eq(projectTable.workspaceId, workspaceId),
+        ),
+      )
+      .limit(1);
 
-      if (found) {
-        project = found;
-        break;
+    if (!project) {
+      if (attempt < MAX_TASK_PARENT_RETRIES) {
+        setTimeout(() => {
+          enqueue(() =>
+            handleIncomingTask(action, workspaceId, raw, enqueue, attempt + 1),
+          );
+        }, 1000);
       }
-      await new Promise((r) => setTimeout(r, 1000));
+      return;
     }
-
-    if (!project) return;
 
     const status = data.payload.status || "to-do";
 
@@ -457,7 +474,10 @@ async function handleIncomingTask(
       .where(eq(taskTable.facileId, facileId))
       .limit(1);
 
-    if (!task) return;
+    if (!task) {
+      await handleIncomingTask("created", workspaceId, raw, enqueue, attempt);
+      return;
+    }
 
     const updateData: Record<string, unknown> = {};
     if (data.payload.name) updateData.title = data.payload.name;
@@ -535,6 +555,7 @@ export async function emitTaskEvent(
     title: string;
     status: string;
     projectId: string;
+    actorId?: string | null;
   },
   projectFacileId: string | null,
 ): Promise<void> {
@@ -547,6 +568,16 @@ export async function emitTaskEvent(
   const eventName = `task.${action}`;
   if (!(await isPoolEventEnabled(workspaceId, eventName))) return;
 
+  let actorEmail = "";
+  if (task.actorId) {
+    const [actor] = await db
+      .select({ email: userTable.email })
+      .from(userTable)
+      .where(eq(userTable.id, task.actorId))
+      .limit(1);
+    actorEmail = actor?.email ?? "";
+  }
+
   client.emit(eventName, {
     app: "Opus",
     object: "task",
@@ -557,6 +588,7 @@ export async function emitTaskEvent(
       project_facile_id: projectFacileId || "",
       name: task.title,
       status: task.status,
+      actor_email: actorEmail,
     },
     timestamp: new Date().toISOString(),
     idempotency_key: createId(),
