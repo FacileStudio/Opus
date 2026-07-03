@@ -1,4 +1,4 @@
-import { Buildings2 as Building2 } from "@solar-icons/react";
+import { ShareCircle } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
@@ -71,7 +71,7 @@ function RouteComponent() {
               <div className="text-center mb-8">
                 <div className="flex justify-center mb-4">
                   <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                    <Building2 className="h-6 w-6 text-muted-foreground" />
+                    <ShareCircle className="h-6 w-6 text-muted-foreground" />
                   </div>
                 </div>
 
