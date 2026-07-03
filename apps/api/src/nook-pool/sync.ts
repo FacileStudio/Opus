@@ -1,16 +1,20 @@
 import { PoolClient } from "@facile/pool";
 import { createId } from "@paralleldrive/cuid2";
-import { and, eq, isNull, max } from "drizzle-orm";
+import { and, asc, eq, isNull, lt, max } from "drizzle-orm";
 import db from "../database";
 import {
   columnTable,
   nookPoolConfigTable,
+  nookPoolOutboxTable,
+  nookPoolProcessedEventTable,
   projectTable,
   taskTable,
   userTable,
 } from "../database/schema";
 import { publishEvent } from "../events";
 import { DEFAULT_PROJECT_COLUMNS } from "../project/controllers/create-project";
+
+const POOL_EVENT_VERSION = 1;
 
 const POOL_EVENTS = {
   emit: [
@@ -20,9 +24,6 @@ const POOL_EVENTS = {
     "task.created",
     "task.updated",
     "task.deleted",
-    "task.status_changed",
-    "task.actor_changed",
-    "task.priority_changed",
   ],
   listen: [
     "project.created",
@@ -38,9 +39,6 @@ export const ALL_POOL_EVENTS = [
   "task.created",
   "task.updated",
   "task.deleted",
-  "task.status_changed",
-  "task.actor_changed",
-  "task.priority_changed",
   "project.created",
   "project.updated",
   "project.deleted",
@@ -118,6 +116,7 @@ export async function connectPoolForWorkspace(
       app: "Opus",
       instance: instanceUrl,
       secret,
+      instance_id: workspaceId,
       events: POOL_EVENTS,
     },
     onConnect: () => {
@@ -150,6 +149,9 @@ export function getPoolClient(workspaceId: string): PoolClient | undefined {
   return activeClients.get(workspaceId);
 }
 
+let outboxTimer: ReturnType<typeof setInterval> | null = null;
+const lastConnectAttempt = new Map<string, number>();
+
 export async function initPoolSync(): Promise<void> {
   const envUrl = process.env.NOOK_POOL_URL;
   const envSecret = process.env.NOOK_POOL_SECRET;
@@ -180,12 +182,144 @@ export async function initPoolSync(): Promise<void> {
       );
     }
   }
+
+  await db
+    .delete(nookPoolProcessedEventTable)
+    .where(
+      lt(
+        nookPoolProcessedEventTable.processedAt,
+        new Date(Date.now() - 35 * 24 * 60 * 60 * 1000),
+      ),
+    )
+    .catch((err) => console.error("Pool: ledger prune failed:", err));
+
+  if (!outboxTimer) {
+    outboxTimer = setInterval(() => {
+      drainOutbox().catch((err) =>
+        console.error("Pool: outbox drain failed:", err),
+      );
+    }, 2000);
+  }
 }
 
 export async function shutdownPoolSync(): Promise<void> {
+  if (outboxTimer) {
+    clearInterval(outboxTimer);
+    outboxTimer = null;
+  }
   for (const [workspaceId] of activeClients) {
     disconnectPoolForWorkspace(workspaceId);
   }
+}
+
+async function enqueueOutbox(
+  workspaceId: string,
+  channel: string,
+  envelope: Record<string, unknown>,
+): Promise<void> {
+  await db.insert(nookPoolOutboxTable).values({
+    workspaceId,
+    channel,
+    payload: JSON.stringify(envelope),
+  });
+}
+
+const OUTBOX_BATCH = 100;
+const CONNECT_RETRY_MS = 30_000;
+
+async function drainOutbox(): Promise<void> {
+  const configs = await db
+    .select({
+      workspaceId: nookPoolConfigTable.workspaceId,
+      instanceUrl: nookPoolConfigTable.instanceUrl,
+      secret: nookPoolConfigTable.secret,
+    })
+    .from(nookPoolConfigTable)
+    .where(eq(nookPoolConfigTable.enabled, true));
+
+  for (const config of configs) {
+    let client = activeClients.get(config.workspaceId);
+
+    if (!client?.isConnected) {
+      const last = lastConnectAttempt.get(config.workspaceId) ?? 0;
+      const url = config.instanceUrl || process.env.NOOK_POOL_URL;
+      const secret = config.secret || process.env.NOOK_POOL_SECRET;
+      if (!client && url && secret && Date.now() - last > CONNECT_RETRY_MS) {
+        lastConnectAttempt.set(config.workspaceId, Date.now());
+        try {
+          await connectPoolForWorkspace(config.workspaceId, url, secret);
+          client = activeClients.get(config.workspaceId);
+        } catch {
+          continue;
+        }
+      }
+      if (!client?.isConnected) continue;
+    }
+
+    const rows = await db
+      .select()
+      .from(nookPoolOutboxTable)
+      .where(eq(nookPoolOutboxTable.workspaceId, config.workspaceId))
+      .orderBy(asc(nookPoolOutboxTable.seq))
+      .limit(OUTBOX_BATCH);
+
+    for (const row of rows) {
+      try {
+        client.emit(row.channel, JSON.parse(row.payload));
+        await db
+          .delete(nookPoolOutboxTable)
+          .where(eq(nookPoolOutboxTable.id, row.id));
+      } catch (error) {
+        await db
+          .update(nookPoolOutboxTable)
+          .set({
+            attempts: row.attempts + 1,
+            lastError: error instanceof Error ? error.message : String(error),
+          })
+          .where(eq(nookPoolOutboxTable.id, row.id));
+        break;
+      }
+    }
+  }
+}
+
+async function isPoolEnabled(workspaceId: string): Promise<boolean> {
+  if (activeClients.has(workspaceId)) return true;
+  const [config] = await db
+    .select({ enabled: nookPoolConfigTable.enabled })
+    .from(nookPoolConfigTable)
+    .where(eq(nookPoolConfigTable.workspaceId, workspaceId))
+    .limit(1);
+  return config?.enabled ?? false;
+}
+
+async function alreadyProcessed(
+  workspaceId: string,
+  key: string | undefined,
+): Promise<boolean> {
+  if (!key) return false;
+  const [row] = await db
+    .select({ key: nookPoolProcessedEventTable.idempotencyKey })
+    .from(nookPoolProcessedEventTable)
+    .where(
+      and(
+        eq(nookPoolProcessedEventTable.workspaceId, workspaceId),
+        eq(nookPoolProcessedEventTable.idempotencyKey, key),
+      ),
+    )
+    .limit(1);
+  return !!row;
+}
+
+async function markProcessed(
+  workspaceId: string,
+  key: string | undefined,
+): Promise<void> {
+  if (!key) return;
+  await db
+    .insert(nookPoolProcessedEventTable)
+    .values({ workspaceId, idempotencyKey: key })
+    .onConflictDoNothing();
 }
 
 function createSyncQueue() {
@@ -245,6 +379,7 @@ function setupListeners(pool: PoolClient, workspaceId: string): void {
 
 type IncomingProjectPayload = {
   facile_id: string;
+  idempotency_key?: string;
   payload: {
     facile_id: string;
     name: string;
@@ -255,6 +390,7 @@ type IncomingProjectPayload = {
 
 type IncomingTaskPayload = {
   facile_id: string;
+  idempotency_key?: string;
   payload: {
     facile_id: string;
     project_facile_id: string;
@@ -272,15 +408,24 @@ async function handleIncomingProject(
   const data = raw as IncomingProjectPayload;
   const facileId = data.facile_id || data.payload?.facile_id;
   if (!facileId) return;
+  if (await alreadyProcessed(workspaceId, data.idempotency_key)) return;
 
   if (action === "created") {
     const [existing] = await db
       .select({ id: projectTable.id })
       .from(projectTable)
-      .where(eq(projectTable.facileId, facileId))
+      .where(
+        and(
+          eq(projectTable.facileId, facileId),
+          eq(projectTable.workspaceId, workspaceId),
+        ),
+      )
       .limit(1);
 
-    if (existing) return;
+    if (existing) {
+      await markProcessed(workspaceId, data.idempotency_key);
+      return;
+    }
 
     const slug =
       data.payload.name
@@ -313,11 +458,17 @@ async function handleIncomingProject(
         }
       }
     });
+    await markProcessed(workspaceId, data.idempotency_key);
   } else if (action === "updated") {
     const [existing] = await db
       .select({ id: projectTable.id })
       .from(projectTable)
-      .where(eq(projectTable.facileId, facileId))
+      .where(
+        and(
+          eq(projectTable.facileId, facileId),
+          eq(projectTable.workspaceId, workspaceId),
+        ),
+      )
       .limit(1);
 
     if (!existing) {
@@ -336,10 +487,19 @@ async function handleIncomingProject(
       await db
         .update(projectTable)
         .set(updateData)
-        .where(eq(projectTable.facileId, facileId));
+        .where(eq(projectTable.id, existing.id));
     }
+    await markProcessed(workspaceId, data.idempotency_key);
   } else if (action === "deleted") {
-    await db.delete(projectTable).where(eq(projectTable.facileId, facileId));
+    await db
+      .delete(projectTable)
+      .where(
+        and(
+          eq(projectTable.facileId, facileId),
+          eq(projectTable.workspaceId, workspaceId),
+        ),
+      );
+    await markProcessed(workspaceId, data.idempotency_key);
   }
 }
 
@@ -367,12 +527,19 @@ async function handleIncomingTask(
   const data = raw as IncomingTaskPayload;
   const facileId = data.facile_id || data.payload?.facile_id;
   if (!facileId) return;
+  if (await alreadyProcessed(workspaceId, data.idempotency_key)) return;
 
   if (action === "created") {
     const [existing] = await db
       .select({ id: taskTable.id, projectId: taskTable.projectId })
       .from(taskTable)
-      .where(eq(taskTable.facileId, facileId))
+      .innerJoin(projectTable, eq(taskTable.projectId, projectTable.id))
+      .where(
+        and(
+          eq(taskTable.facileId, facileId),
+          eq(projectTable.workspaceId, workspaceId),
+        ),
+      )
       .limit(1);
 
     if (existing) {
@@ -394,7 +561,7 @@ async function handleIncomingTask(
         await db
           .update(taskTable)
           .set(updateData)
-          .where(eq(taskTable.facileId, facileId));
+          .where(eq(taskTable.id, existing.id));
 
         await publishEvent("task.updated", {
           taskId: existing.id,
@@ -402,6 +569,7 @@ async function handleIncomingTask(
           userId: "",
         });
       }
+      await markProcessed(workspaceId, data.idempotency_key);
       return;
     }
 
@@ -467,11 +635,18 @@ async function handleIncomingTask(
         userId: "",
       });
     }
+    await markProcessed(workspaceId, data.idempotency_key);
   } else if (action === "updated") {
     const [task] = await db
       .select({ id: taskTable.id, projectId: taskTable.projectId })
       .from(taskTable)
-      .where(eq(taskTable.facileId, facileId))
+      .innerJoin(projectTable, eq(taskTable.projectId, projectTable.id))
+      .where(
+        and(
+          eq(taskTable.facileId, facileId),
+          eq(projectTable.workspaceId, workspaceId),
+        ),
+      )
       .limit(1);
 
     if (!task) {
@@ -499,7 +674,7 @@ async function handleIncomingTask(
       await db
         .update(taskTable)
         .set(updateData)
-        .where(eq(taskTable.facileId, facileId));
+        .where(eq(taskTable.id, task.id));
 
       await publishEvent("task.updated", {
         taskId: task.id,
@@ -507,8 +682,24 @@ async function handleIncomingTask(
         userId: "",
       });
     }
+    await markProcessed(workspaceId, data.idempotency_key);
   } else if (action === "deleted") {
-    await db.delete(taskTable).where(eq(taskTable.facileId, facileId));
+    const [task] = await db
+      .select({ id: taskTable.id })
+      .from(taskTable)
+      .innerJoin(projectTable, eq(taskTable.projectId, projectTable.id))
+      .where(
+        and(
+          eq(taskTable.facileId, facileId),
+          eq(projectTable.workspaceId, workspaceId),
+        ),
+      )
+      .limit(1);
+
+    if (task) {
+      await db.delete(taskTable).where(eq(taskTable.id, task.id));
+    }
+    await markProcessed(workspaceId, data.idempotency_key);
   }
 }
 
@@ -522,8 +713,7 @@ export async function emitProjectEvent(
     icon?: string | null;
   },
 ): Promise<void> {
-  const client = activeClients.get(workspaceId);
-  if (!client?.isConnected) return;
+  if (!(await isPoolEnabled(workspaceId))) return;
 
   const facileId = project.facileId;
   if (!facileId) return;
@@ -531,7 +721,8 @@ export async function emitProjectEvent(
   const eventName = `project.${action}`;
   if (!(await isPoolEventEnabled(workspaceId, eventName))) return;
 
-  client.emit(eventName, {
+  await enqueueOutbox(workspaceId, eventName, {
+    version: POOL_EVENT_VERSION,
     app: "Opus",
     object: "project",
     action,
@@ -559,8 +750,7 @@ export async function emitTaskEvent(
   },
   projectFacileId: string | null,
 ): Promise<void> {
-  const client = activeClients.get(workspaceId);
-  if (!client?.isConnected) return;
+  if (!(await isPoolEnabled(workspaceId))) return;
 
   const facileId = task.facileId;
   if (!facileId) return;
@@ -578,7 +768,8 @@ export async function emitTaskEvent(
     actorEmail = actor?.email ?? "";
   }
 
-  client.emit(eventName, {
+  await enqueueOutbox(workspaceId, eventName, {
+    version: POOL_EVENT_VERSION,
     app: "Opus",
     object: "task",
     action,
@@ -590,24 +781,6 @@ export async function emitTaskEvent(
       status: task.status,
       actor_email: actorEmail,
     },
-    timestamp: new Date().toISOString(),
-    idempotency_key: createId(),
-  });
-}
-
-export async function emitPoolEvent(
-  workspaceId: string,
-  eventName: string,
-  data: Record<string, unknown>,
-): Promise<void> {
-  const client = activeClients.get(workspaceId);
-  if (!client?.isConnected) return;
-  if (!(await isPoolEventEnabled(workspaceId, eventName))) return;
-
-  client.emit(eventName, {
-    app: "Opus",
-    event: eventName,
-    ...data,
     timestamp: new Date().toISOString(),
     idempotency_key: createId(),
   });

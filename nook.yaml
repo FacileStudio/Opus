@@ -9,9 +9,6 @@ events:
     - task.created
     - task.updated
     - task.deleted
-    - task.status_changed
-    - task.actor_changed
-    - task.priority_changed
   listen:
     - project.created
     - project.updated
