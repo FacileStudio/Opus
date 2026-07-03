@@ -1,12 +1,14 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations, sql } from "drizzle-orm";
 import {
+  bigserial,
   boolean,
   foreignKey,
   index,
   integer,
   jsonb,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   unique,
@@ -217,10 +219,14 @@ export const projectTable = pgTable(
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
     isPublic: boolean("is_public").default(false),
     archivedAt: timestamp("archived_at", { mode: "date" }),
-    facileId: text("facile_id").unique(),
+    facileId: text("facile_id"),
   },
   (table) => [
     unique("project_workspace_id_id_unique").on(table.workspaceId, table.id),
+    unique("project_workspace_facile_id_unique").on(
+      table.workspaceId,
+      table.facileId,
+    ),
   ],
 );
 
@@ -349,12 +355,13 @@ export const taskTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
-    facileId: text("facile_id").unique(),
+    facileId: text("facile_id"),
   },
   (table) => [
     index("task_projectId_idx").on(table.projectId),
     index("task_dueDate_idx").on(table.dueDate),
     unique("task_project_number_unique").on(table.projectId, table.number),
+    unique("task_project_facile_id_unique").on(table.projectId, table.facileId),
   ],
 );
 
@@ -914,6 +921,41 @@ export const workspaceWebhookTable = pgTable(
       .notNull(),
   },
   (table) => [index("workspace_webhook_workspaceId_idx").on(table.workspaceId)],
+);
+
+export const nookPoolOutboxTable = pgTable(
+  "nook_pool_outbox",
+  {
+    id: text("id")
+      .$defaultFn(() => createId())
+      .primaryKey(),
+    seq: bigserial("seq", { mode: "number" }).notNull(),
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => workspaceTable.id, { onDelete: "cascade" }),
+    channel: text("channel").notNull(),
+    payload: text("payload").notNull(),
+    attempts: integer("attempts").default(0).notNull(),
+    lastError: text("last_error"),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [index("nook_pool_outbox_workspace_idx").on(table.workspaceId)],
+);
+
+export const nookPoolProcessedEventTable = pgTable(
+  "nook_pool_processed_event",
+  {
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => workspaceTable.id, { onDelete: "cascade" }),
+    idempotencyKey: text("idempotency_key").notNull(),
+    processedAt: timestamp("processed_at", { mode: "date" })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.workspaceId, table.idempotencyKey] }),
+  ],
 );
 
 export const nookPoolConfigTable = pgTable("nook_pool_config", {
