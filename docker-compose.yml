@@ -18,7 +18,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      network: host
     image: ghcr.io/facilestudio/opus:latest
     env_file:
       - .env
