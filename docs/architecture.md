@@ -1,0 +1,169 @@
+# Opus — Architecture
+
+How a request travels through Opus, what the database looks like, how authentication works, and
+how the app exchanges events with the rest of the suite.
+
+## Runtime topology
+
+Opus ships as a single container. nginx serves the built React bundle and reverse-proxies
+`/api/` to the Hono API running in the same container.
+
+```
+Internet ──▶ Traefik ──▶ nginx (:80) ──┬──▶ /api/*        proxy_pass 127.0.0.1:1337  Hono API
+                                        ├──▶ /.well-known/oauth-*  proxy_pass 127.0.0.1:1337
+                                        └──▶ everything    /usr/share/nginx/html  SPA fallback
+                                                                    │
+                                                    ┌───────────────┼───────────────┐
+                                                    │               │               │
+                                              Postgres 16      Redis (opt)    S3 (opt)
+                                                    │
+                                             Nook pool (WebSocket, opt)
+```
+
+`deploy/opus-entrypoint.sh` is the container command. It derives `OPUS_API_URL` and
+`DATABASE_URL` when they are not set, generates an `AUTH_SECRET` if missing, runs
+`apps/web/env.sh` to substitute build-time placeholders in the served JavaScript, starts the API,
+waits for `GET /api/health` to answer, then starts nginx. If either process exits, the entrypoint
+tears the other one down and exits with the first non-zero status.
+
+## Components
+
+| Component | Path | Role |
+|---|---|---|
+| API | `apps/api` | Hono app, one directory per feature, controllers under `<feature>/controllers/` |
+| Web client | `apps/web` | React 19 SPA, TanStack Router file-based routes, TanStack Query for server state |
+| Marketing site | `apps/site` | Next.js, deployed separately |
+| Product docs site | `apps/docs` | Standalone documentation site, deployed separately |
+| Email | `packages/email` | Templates and SMTP transport for magic links, OTPs and invitations |
+| Shared libs | `packages/libs` | Types and helpers imported by both `api` and `web` |
+| MCP server | `packages/mcp` | Model Context Protocol server that authenticates through the device flow |
+
+## Request lifecycle
+
+1. nginx matches the path. Anything under `/api/` is proxied to `127.0.0.1:1337`; everything else
+   falls back to `index.html`.
+2. The Hono root app applies CORS. Allowed origins come from `CORS_ORIGINS`, falling back to
+   `OPUS_CLIENT_URL`. When neither is set, the request origin is echoed back.
+3. The `/api` sub-app serves its public routes first: `/health`, `/public-project/:id`,
+   `/shared-project/:token`, `/invitation/public/:id`, `/asset/:id`, `/workspace/:id/logo`, the
+   integration webhook receivers, `/openapi`, `/docs`, and the whole `/auth/*` surface handled by
+   `better-auth`.
+4. A catch-all middleware then runs `authenticateApiRequest` on every remaining route, skipping
+   `/api/mcp` and `/api/.well-known/`. It resolves either a `better-auth` session cookie, a bearer
+   token, or an `x-api-key` API key, and sets `userId`, `user`, `session` and `userEmail` on the
+   context.
+5. The same middleware opens an `eventContext` async-local scope carrying an `initiatorId` built
+   from the user id and the optional `X-Opus-Window-Id` header. That is how WebSocket broadcasts
+   avoid echoing a change back to the browser tab that caused it.
+6. Feature routers handle the request. Routes that operate on a workspace go through
+   `workspaceAccess` middleware, which validates membership and puts `workspaceId` on the context.
+7. Controllers call Drizzle, then `publishEvent` to record activity and fan out over WebSockets.
+
+Errors are thrown as `HTTPException` and rendered by Hono.
+
+## Data model
+
+PostgreSQL, 34 tables, all with CUID2 primary keys and explicit cascade rules on foreign keys.
+The schema lives in `apps/api/src/database/schema.ts` and the relations in `relations.ts`.
+
+**Identity and tenancy** — `user`, `session`, `account`, `verification`, `apikey` and `device_code`
+are the `better-auth` tables. `workspace` is the `better-auth` organization, remapped: members live
+in `workspace_member` (with `organizationId` renamed to `workspaceId`), plus `team`, `team_member`
+and `invitation`.
+
+**Work** — `project` belongs to a workspace and owns `column`, `workflow_rule` and `share_link`.
+`task` belongs to a project and a column, and carries `comment`, `activity`, `time_entry`,
+`task_relation`, `external_link`, `asset` and `task_reminder_sent`. `label` is workspace-scoped and
+attached to tasks.
+
+**Notifications** — `notification` holds delivered items; `user_notification_preference`,
+`user_notification_workspace_rule` and `user_notification_workspace_project` hold the three levels
+of per-user routing. Provider secrets in those rows are encrypted with
+`NOTIFICATION_SECRET_ENCRYPTION_KEY`.
+
+**Integrations** — `github_integration` and the generic `integration` table store per-project
+integration config; `workspace_webhook` stores outbound webhooks.
+
+**Nook pool** — `nook_pool_config` (one row per workspace: instance URL, secret, enabled flag,
+per-event toggles), `nook_pool_outbox` (durable outbound queue) and `nook_pool_processed_event`
+(idempotency ledger).
+
+Migrations are plain SQL under `apps/api/drizzle/`, generated by `drizzle-kit`. `runStartupTasks`
+in `apps/api/src/index.ts` runs them on every boot, along with a handful of hand-written
+reconciliation steps that must run before or after the Drizzle migrator.
+
+## Authentication
+
+Opus uses `better-auth`, mounted at `/api/auth`. **This is a deliberate deviation from the rest of
+the suite**, which federates to Authentik with `go-oidc` or `jose` and hand-rolled OIDC client
+code. Opus reaches the same identity provider through the `genericOAuth` plugin instead, so the
+Authentik application is configured through the `CUSTOM_OAUTH_*` variables rather than
+`OIDC_ISSUER` / `OIDC_CLIENT_ID`. Do not assume the suite's OIDC conventions apply here.
+
+Enabled plugins: `organization` (workspaces, teams, invitations), `magicLink`, `emailOTP`,
+`genericOAuth`, `bearer`, `apiKey`, `deviceAuthorization`, `anonymous` (guest access, disabled by
+`DISABLE_GUEST_ACCESS`), `lastLoginMethod` and `openAPI`. Social providers are GitHub, Google and
+Discord. Passwords are hashed with bcrypt.
+
+Three gates run in the `before` hook:
+
+- `SSO_ONLY=true` rejects `/sign-in/email`, `/sign-up/email`, both magic-link paths, both OTP
+  paths and `/sign-in/anonymous`.
+- `DISABLE_PASSWORD_REGISTRATION=true` rejects `/sign-up/email` only.
+- `DISABLE_REGISTRATION=true` rejects sign-ups that carry neither a known email nor a valid
+  invitation id.
+
+Cookie attributes adapt to the deployment: when the API and client hostnames differ and the API is
+HTTPS, cookies are issued `SameSite=None; Secure; Partitioned`, otherwise `SameSite=Lax`.
+`COOKIE_DOMAIN` overrides the domain explicitly.
+
+The device authorization flow backs `opus-cli` and `opus-mcp` (override the accepted client ids
+with `DEVICE_AUTH_CLIENT_IDS`). `GET /api/auth/device` redirects real browser navigations to
+`<OPUS_CLIENT_URL>/device` and returns JSON to everything else.
+
+## Real-time
+
+`GET /api/ws/:projectId` upgrades to a WebSocket after authenticating the request and validating
+workspace access. Connections are grouped per project. The broadcast adapter is selected at
+startup: Redis pub/sub when `REDIS_URL`, `REDIS_SENTINELS` or `REDIS_CLUSTER_NODES` is set,
+in-memory otherwise. In-memory is correct for a single container and wrong for more than one.
+
+A `croner` job runs every five minutes to send due-date reminders.
+
+## Nook pool integration
+
+Opus is one of the apps genuinely wired to the suite event bus. It imports `PoolClient` from
+`@facile/pool`, resolved as `github:FacileStudio/pool#ts` — the only real cross-repo dependency in
+the suite.
+
+```
+Opus API ──▶ nook_pool_outbox (Postgres) ──▶ PoolClient ──▶ Nook pool (WebSocket)
+    ▲                                                             │
+    └──── nook_pool_processed_event (idempotency) ◀── pool.listen ─┘
+```
+
+- Connections are **per workspace**, not per process. `nook_pool_config` holds the instance URL and
+  secret for each workspace; `NOOK_POOL_URL` and `NOOK_POOL_SECRET` act as defaults when a row
+  leaves them blank. The pool `instance_id` is the workspace id.
+- Emission is never done inline. Events are appended to `nook_pool_outbox` inside the same
+  transaction as the change, and a 2-second timer drains up to 100 rows per workspace. A failed
+  send increments `attempts`, records `lastError` and stops the batch so ordering is preserved.
+  A disconnected client is retried at most every 30 seconds.
+- Inbound events are serialized through a per-workspace queue and deduplicated against
+  `nook_pool_processed_event`, whose rows are pruned after 35 days on startup.
+- Six event types are emitted and listened to, in both directions: `project.created`,
+  `project.updated`, `project.deleted`, `task.created`, `task.updated`, `task.deleted`. The list is
+  duplicated in `nook.yaml` at the repo root for documentation; the authoritative copy is
+  `apps/api/src/nook-pool/sync.ts`.
+- Cross-app entity identity is carried as `facile_id` in the payload.
+
+Per-event toggles are stored as JSON in `nook_pool_config.poolEvents` and default to enabled.
+
+## Object storage
+
+Task image uploads go to S3-compatible storage through presigned URLs
+(`PUT /api/task/image-upload/:id` then `POST /api/task/image-upload/:id/finalize`). Downloads are
+proxied by `GET /api/asset/:id`, which authorizes the caller against the asset's workspace, or
+against an active share link when the project is not public. Workspace logos are the exception:
+they are written to the local disk under `UPLOAD_DIR`, which the compose file backs with the
+`opus-uploads` volume.

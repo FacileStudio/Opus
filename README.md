@@ -1,170 +1,102 @@
-<p align="center">
-  <a href="https://opus.app">
-    <img src="https://assets.opus.app/logo-text.png" alt="Opus's logo" width="450" />
-  </a>
-</p>
+# Opus
 
-<div align="center">
+Self-hosted project management for small teams — projects, kanban boards, tasks, comments and
+time tracking behind one login.
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/FacileStudio/opus/ci.yml?branch=main)](https://github.com/FacileStudio/opus/actions)
-[![Discord](https://img.shields.io/discord/1326250681530843178?color=7389D8&label=&logo=discord&logoColor=ffffff)](https://discord.gg/rU4tSyhXXU)
-[![Sponsors](https://img.shields.io/github/sponsors/andrejsshell)](https://github.com/sponsors/andrejsshell)
+Opus is the stack outlier of the suite: `pnpm` instead of `bun`, Hono with OpenAPI instead of
+tRPC, Drizzle instead of Prisma, and React instead of SvelteKit. It is also the only repo that
+consumes another suite repo directly, pulling `@facile/pool` from `github:FacileStudio/pool#ts`
+to sync projects and tasks over the Nook event bus.
 
-</div>
+Live at [opus.facile.studio](https://opus.facile.studio).
 
-<div align="center">
-  <h3>
-    <a href="https://opus.app/docs/core">Quick Start</a>
-    <span> | </span>
-    <a href="https://opus.app">Website</a>
-    <span> | </span>
-    <a href="https://cloud.opus.app">Cloud</a>
-    <span> | </span>
-    <a href="https://discord.gg/rU4tSyhXXU">Discord</a>
-  </h3>
-</div>
+## What it does
 
+- Workspaces with members, teams and invitations, backed by `better-auth` organizations
+- Projects with kanban columns, task priorities, due dates, labels and task relations
+- Rich task descriptions, threaded comments, activity history and full-text search
+- Per-task time entries and per-project time reporting
+- Email/password, magic link, email OTP, GitHub, Google, Discord and generic OIDC sign-in,
+  with `SSO_ONLY` to disable local passwords
+- Live collaboration over WebSockets, optionally fanned out across replicas through Redis
+- Outbound integrations for GitHub, Gitea, Discord, Slack, Telegram and generic webhooks
+- Two-way project and task sync with other suite apps through the Nook pool
+- An MCP server and a device authorization flow so CLIs and agents can act on a workspace
 
-<p align="center">
-  <img src="https://assets.opus.app/readme.png" alt="Opus Dashboard" />
-</p>
+## Stack
 
-## Why Opus?
+| Layer | Tech |
+|---|---|
+| API | Hono 4, `hono-openapi` 1, Drizzle ORM 0.45, PostgreSQL 16, `better-auth` 1.6, Valibot 1 |
+| Client | React 19, Vite 7, TanStack Router and Query, Tailwind CSS 4, Radix UI, Tiptap 3 |
+| Runtime | Node 20.19+ with `tsx` in development, Bun 1 in the container; pnpm 10.32 workspaces and Turborepo |
+| Storage | PostgreSQL for data, S3-compatible object storage for task images, local disk for workspace logos |
+| Deploy | Docker Compose, one container running nginx on `:80` in front of the API on `:1337`, Helm chart in `charts/opus` |
 
-After years of using bloated, overcomplicated project management platforms that distracted from actual work, we built Opus to be different.
+## Quick start
 
-The problem with most tools isn't that they lack features—it's that they have **too many**. Every notification, every unnecessary button, every complex workflow pulls your team away from what matters: **building great products**.
-
-We believe the best tools are **invisible**. They should amplify your team's natural workflow, not force you to adapt to theirs. Opus is built on the principle that **less is more**—every feature exists because it solves a real problem, not because it looks impressive in a demo.
-
-**What makes it different:**
-- **Clean interface** that focuses on your work, not the tool
-- **Self-hosted** so your data stays yours
-- **Actually fast** because we care about performance
-- **Open source** with a permissive MIT license
-
-Learn more about Opus's features and capabilities in our [documentation](https://opus.app/docs/core).
-
-## Sponsors
-
-Opus is open source. If you find it useful, consider [sponsoring the project](https://github.com/sponsors/andrejsshell) to help support ongoing development.
-
-## Getting Started
-
-### One-Click Deployment with drim
-
-For straightforward deployments, use [drim](https://github.com/FacileStudio/drim) - a CLI tool that handles everything for you:
-
-```bash
-curl -fsSL https://assets.opus.app/install.sh | sh
-drim setup
+```sh
+cp .env.sample .env
+docker compose up -d
 ```
 
-That's it. Your Opus instance will be running with automatic HTTPS, database setup, and all services configured.
+Set at least `OPUS_CLIENT_URL`, `POSTGRES_PASSWORD` and `AUTH_SECRET` in `.env` before starting.
+The compose file publishes no host ports — the `opus` container listens on `80` internally and is
+meant to sit behind Traefik. Add a `ports:` mapping to reach it directly.
 
-Perfect for quick deployments and production setups where you want things to just work.
+### Local development
 
-### Quick Start with Docker Compose
-
-The fastest way to try Opus is with Docker Compose. This sets up Opus and PostgreSQL with a single Opus container:
-
-```yaml
-services:
-  postgres:
-    image: postgres:16-alpine
-    env_file:
-      - .env
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U opus -d opus"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  opus:
-    image: ghcr.io/facilestudio/opus:latest
-    ports:
-      - "5173:5173"
-    env_file:
-      - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-
-volumes:
-  postgres_data:
-```
-
-Save this as `docker-compose.yml`, create a `.env` file with `OPUS_CLIENT_URL=http://localhost:5173`, `POSTGRES_PASSWORD=<password>`, and `AUTH_SECRET=<output of openssl rand -hex 32>`, run `docker compose up -d`, and open [http://localhost:5173](http://localhost:5173).
-
-> **Important:** See our [full documentation](https://opus.app/docs/core) for detailed setup instructions, environment variable configuration, and troubleshooting guides.
-
-### Development Setup
-
-For development, see our [Environment Setup Guide](ENVIRONMENT_SETUP.md) for detailed instructions on configuring environment variables and troubleshooting common issues like CORS problems.
-
-### Configuration
-
-Opus requires several environment variables to be configured. The Docker Compose setup above handles the database automatically, but you'll need to configure environment variables for the API and web services.
-
-For complete configuration instructions, including all required environment variables, database setup for non-Docker deployments, and advanced settings, see the [documentation](https://opus.app/docs/core). Advanced deployments can still use the separate `ghcr.io/facilestudio/api` and `ghcr.io/facilestudio/web` images.
-
-## Kubernetes Deployment
-
-If you're running Kubernetes, we provide a comprehensive Helm chart. Check out the [Helm chart documentation](./charts/opus/README.md) for detailed installation instructions, production configuration examples, TLS setup, and more.
-
-## Development
-
-Want to hack on Opus? See our [Environment Setup Guide](ENVIRONMENT_SETUP.md) for detailed instructions on configuring environment variables and troubleshooting common issues like CORS problems.
-
-Quick start:
-```bash
-# Clone and install dependencies
-git clone https://github.com/FacileStudio/opus.git
-cd opus
+```sh
 pnpm install
-
-# Create a .env file in the root with required environment variables
-# See ENVIRONMENT_SETUP.md for detailed instructions
-
-# Start development servers
 pnpm dev
 ```
 
-For contributing guidelines, code structure, and development best practices, check out our [contributing guide](CONTRIBUTING.md) and [documentation](https://opus.app/docs/core).
+The API listens on `http://localhost:1337` and the web client on `http://localhost:5173`.
+Migrations run automatically when the API starts.
 
-## Community
+## Configuration
 
-- **[Discord](https://discord.gg/rU4tSyhXXU)** - Chat with users and contributors
-- **[GitHub Issues](https://github.com/FacileStudio/opus/issues)** - Bug reports and feature requests
-- **[Documentation](https://opus.app/docs/core)** - Detailed guides, API docs, and tutorials
+| Variable | What it does |
+|---|---|
+| `OPUS_CLIENT_URL` | Public URL of the web client; drives CORS, cookies and email links |
+| `OPUS_API_URL` | Public URL of the API; derived from `OPUS_CLIENT_URL` inside the container |
+| `DATABASE_URL` | Postgres connection string; derived from the `POSTGRES_*` variables if unset |
+| `POSTGRES_PASSWORD` | Password for the Postgres container, also used to derive `DATABASE_URL` |
+| `AUTH_SECRET` | `better-auth` signing key, 32 characters or more; a random one is generated if unset |
+| `SSO_ONLY` | Set to `true` to reject every local sign-in path and force a configured SSO provider |
+| `NOOK_POOL_URL` | Default Nook pool URL used when a workspace has no explicit one |
 
-## Contributing
+Full reference: [docs/configuration.md](docs/configuration.md).
 
-We're always looking for help, whether that's:
-- Reporting bugs or suggesting features
-- Improving documentation
-- Contributing code
-- Helping other users on Discord
+## Structure
 
-Check out [CONTRIBUTING.md](CONTRIBUTING.md) for the details on how to get involved.
+```
+apps/
+  api/       Hono backend — one directory per feature, drizzle/ holds SQL migrations
+  web/       React 19 client — TanStack Router pages, fetchers, query and mutation hooks
+  site/      Next.js marketing site
+  docs/      Standalone product documentation site
+packages/
+  email/     Transactional email templates and the SMTP transport
+  libs/      Types and helpers shared between api and web
+  mcp/       MCP server exposing Opus to agents
+charts/      Helm chart for Kubernetes deployments
+i18n/        Translation files and the scripts that validate them
+tests/       API unit tests and API integration tests
+docs/        Architecture, configuration, development, deployment, API
+```
 
-## License
+## Documentation
 
-MIT License - see [LICENSE](LICENSE) for details.
+| Doc | What's in it |
+|---|---|
+| [Architecture](docs/architecture.md) | Request flow, data model, auth, the Nook pool integration |
+| [Configuration](docs/configuration.md) | Every environment variable and default |
+| [Development](docs/development.md) | Local setup, tests, linting, database migrations |
+| [Deployment](docs/deployment.md) | Docker Compose, the single container, Helm, Traefik routing |
+| [API](docs/api.md) | HTTP endpoints and payloads |
 
 ---
 
-<div align="center">
-  <img src="https://repobeats.axiom.co/api/embed/3e8367ec2b2350e4fc48662df33c81dac657b833.svg" alt="Repobeats analytics image" />
-</div>
-
-<p align="center">
-  Built with ❤️ by the Opus team and <a href="#contributors">contributors</a>
-</p>
+Part of the [Facile Suite](https://facile.studio) — self-hosted tools for creative studios
+and freelancers. One login, zero cloud dependency.
