@@ -6,7 +6,7 @@ import { apiReference } from "@scalar/hono-api-reference";
 import type { Session, User } from "better-auth/types";
 import { eq } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import {
@@ -349,9 +349,7 @@ export function createApp() {
       },
       servers: [
         {
-          url: normalizeApiServerUrl(
-            process.env.OPUS_API_URL || "https://cloud.opus.app",
-          ),
+          url: normalizeApiServerUrl(process.env.OPUS_API_URL || ""),
           description: "Opus API Server",
         },
       ],
@@ -368,7 +366,7 @@ export function createApp() {
     },
   });
 
-  api.get("/openapi", async (c) => {
+  const buildOpenApiDocument = async (c: Context) => {
     const maybeResponse = await honoOpenApiHandler(c, async () => {});
     const honoSpecResponse = maybeResponse ?? c.res;
     const honoSpec = (await honoSpecResponse.json()) as Record<string, unknown>;
@@ -384,26 +382,30 @@ export function createApp() {
     }
 
     const normalizedAuthSpec = normalizeOrganizationAuthOperations(authSpec);
-    return c.json(
-      ensureOperationSummaries(
-        dedupeOperationIds(
-          markOptionalSchemaFieldsNullable(
-            normalizeNullableSchemasForOpenApi30(
-              normalizeEmptyAndEnumSchemas(
-                normalizeEmptyRequiredArrays(
-                  mergeOpenApiSpecs(honoSpec, normalizedAuthSpec),
-                ),
+    return ensureOperationSummaries(
+      dedupeOperationIds(
+        markOptionalSchemaFieldsNullable(
+          normalizeNullableSchemasForOpenApi30(
+            normalizeEmptyAndEnumSchemas(
+              normalizeEmptyRequiredArrays(
+                mergeOpenApiSpecs(honoSpec, normalizedAuthSpec),
               ),
             ),
           ),
         ),
       ),
     );
-  });
+  };
 
-  api.get(
+  api.get("/openapi", async (c) => c.json(await buildOpenApiDocument(c)));
+
+  app.get("/docs/openapi.json", async (c) =>
+    c.json(await buildOpenApiDocument(c)),
+  );
+
+  app.get(
     "/docs",
-    apiReference({ url: "/api/openapi", pageTitle: "Opus API" }),
+    apiReference({ url: "/docs/openapi.json", pageTitle: "Opus API" }),
   );
 
   // Better Auth serves GET /auth/device as JSON. Browsers that open the API URL
