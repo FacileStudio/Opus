@@ -5,11 +5,13 @@ Every HTTP route the Hono app mounts, grouped by module. Generated from
 
 Opus serves its own machine-readable spec, and that spec is the authority:
 
-- `GET /api/openapi` — merged OpenAPI 3.0.3 document (feature routes plus the `better-auth`
-  surface)
-- `GET /api/docs` — interactive Scalar reference
+- `GET /docs` — interactive Scalar reference, served at the public root
+- `GET /docs/openapi.json` — merged OpenAPI 3.0.3 document (feature routes plus the
+  `better-auth` surface)
+- `GET /api/openapi` — the same document, kept as an alias for the Mintlify docs site
 
-Every path below is relative to `/api`.
+Every path below is relative to `/api`, except `/docs` and `/docs/openapi.json`, which are
+mounted on the root router beside `/api`.
 
 ## Authentication
 
@@ -39,8 +41,7 @@ WebSocket fan-out can skip echoing your own changes back to you.
 | GET | `/invitation/public/:id` | Invitation details before signing in |
 | GET | `/asset/:id` | Download an asset. Authorized by workspace membership, or by `?share_token=` when the project is not public |
 | GET | `/workspace/:workspaceId/logo` | Workspace logo image, cached for a year |
-| GET | `/openapi` | Merged OpenAPI document |
-| GET | `/docs` | Scalar API reference |
+| GET | `/openapi` | Merged OpenAPI document (alias of `/docs/openapi.json`) |
 | POST | `/github-integration/webhook` | GitHub App webhook receiver, verified with `GITHUB_WEBHOOK_SECRET` |
 | POST | `/gitea-integration/webhook/:integrationId` | Gitea webhook receiver |
 

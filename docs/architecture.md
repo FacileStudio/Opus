@@ -46,7 +46,7 @@ tears the other one down and exits with the first non-zero status.
    `OPUS_CLIENT_URL`. When neither is set, the request origin is echoed back.
 3. The `/api` sub-app serves its public routes first: `/health`, `/public-project/:id`,
    `/shared-project/:token`, `/invitation/public/:id`, `/asset/:id`, `/workspace/:id/logo`, the
-   integration webhook receivers, `/openapi`, `/docs`, and the whole `/auth/*` surface handled by
+   integration webhook receivers, `/openapi`, and the whole `/auth/*` surface handled by
    `better-auth`.
 4. A catch-all middleware then runs `authenticateApiRequest` on every remaining route, skipping
    `/api/mcp` and `/api/.well-known/`. It resolves either a `better-auth` session cookie, a bearer

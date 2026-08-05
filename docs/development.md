@@ -48,7 +48,7 @@ pnpm --filter @opus/web dev
 ```
 
 The API prints its resolved public URL on boot. The interactive OpenAPI reference is at
-`http://localhost:1337/api/docs`, and the raw spec at `/api/openapi`.
+`http://localhost:1337/docs`, and the raw spec at `/docs/openapi.json`.
 
 ## Database migrations
 
