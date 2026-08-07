@@ -4,7 +4,6 @@ import {
   sendOtpEmail,
   sendWorkspaceInvitationEmail,
 } from "@opus/email";
-import bcrypt from "bcrypt";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError, createAuthMiddleware } from "better-auth/api";
@@ -23,6 +22,7 @@ import { config } from "dotenv-mono";
 import { eq } from "drizzle-orm";
 import db, { schema } from "./database";
 import { publishEvent } from "./events";
+import { hashPassword, verifyPassword } from "./password";
 import { checkRegistrationAllowed } from "./utils/check-registration-allowed";
 import { generateDemoName } from "./utils/generate-demo-name";
 import { getGithubSsoOAuthCredentials } from "./utils/github-sso-env";
@@ -172,12 +172,8 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: true,
     password: {
-      hash: async (password) => {
-        return await bcrypt.hash(password, 10);
-      },
-      verify: async ({ hash, password }) => {
-        return await bcrypt.compare(password, hash);
-      },
+      hash: hashPassword,
+      verify: ({ hash, password }) => verifyPassword(hash, password),
     },
   },
   socialProviders: {
