@@ -36,8 +36,12 @@ COPY --from=api-builder /app/apps/api/package.json ./apps/api/
 COPY --from=api-builder /app/apps/web/package.json ./apps/web/
 COPY --from=api-builder /app/apps/site/package.json ./apps/site/
 
+# Do not put `--no-optional` back. @node-rs/argon2 ships its compiled binding as an
+# optionalDependency per platform (`@node-rs/argon2-linux-x64-gnu` here), so the flag
+# installs the JS wrapper with nothing to load and the API dies on boot with
+# "Failed to load native binding" — a crash loop the build itself reports as successful.
 RUN sed -i 's/"prepare": "husky"/"prepare": ""/g' package.json && \
-  HUSKY=0 NODE_ENV=production pnpm install --prod --frozen-lockfile --no-optional
+  HUSKY=0 NODE_ENV=production pnpm install --prod --frozen-lockfile
 
 COPY --from=api-builder /app/apps/api/dist ./apps/api/dist
 COPY --from=api-builder /app/apps/api/drizzle ./apps/api/drizzle
