@@ -54,6 +54,20 @@ pnpm dev
 The API listens on `http://localhost:1337` and the web client on `http://localhost:5173`.
 Migrations run automatically when the API starts.
 
+## Command line
+
+[`opus`](https://github.com/FacileStudio/opus-cli) drives Opus from a terminal. It
+installs through [facile](https://github.com/FacileStudio/facile), the suite installer,
+which fetches a prebuilt binary and puts `~/.local/bin` on your PATH:
+
+```sh
+curl -fsSL https://get.facile.studio | bash
+facile install opus
+```
+
+Opus mints a static API key; `facile login opus` opens the page that
+generates it (Settings → Account → Developer).
+
 ## Configuration
 
 | Variable | What it does |
