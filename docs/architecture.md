@@ -130,17 +130,21 @@ in-memory otherwise. In-memory is correct for a single container and wrong for m
 
 A `croner` job runs every five minutes to send due-date reminders.
 
-## Nook pool integration
+## Antenne bus integration
 
-Opus is one of the apps genuinely wired to the suite event bus. It imports `PoolClient` from
-`@facile/pool`, resolved as `github:FacileStudio/pool#ts` — the only real cross-repo dependency in
-the suite.
+Opus is one of the apps genuinely wired to the suite event bus. It imports `AntenneClient` from
+`@facile/antenne`, resolved as `github:FacileStudio/antenne-client#ts` — the only real cross-repo
+dependency in the suite.
 
 ```
-Opus API ──▶ nook_pool_outbox (Postgres) ──▶ PoolClient ──▶ Nook pool (WebSocket)
-    ▲                                                             │
-    └──── nook_pool_processed_event (idempotency) ◀── pool.listen ─┘
+Opus API ──▶ nook_pool_outbox (Postgres) ──▶ AntenneClient ──▶ Antenne (WebSocket)
+    ▲                                                                │
+    └──── nook_pool_processed_event (idempotency) ◀── client.listen ──┘
 ```
+
+The `nook_pool_*` table names are the pre-rename physical names and are deliberately kept: editing
+applied Drizzle migrations would desynchronize the journal and cost the outbox and the idempotency
+ledger.
 
 - Connections are **per workspace**, not per process. `nook_pool_config` holds the instance URL and
   secret for each workspace; `NOOK_POOL_URL` and `NOOK_POOL_SECRET` act as defaults when a row

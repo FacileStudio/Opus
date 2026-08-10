@@ -1,4 +1,4 @@
-import { PoolClient } from "@facile/pool";
+import { AntenneClient } from "@facile/antenne";
 import { createId } from "@paralleldrive/cuid2";
 import { and, asc, eq, isNull, lt, max } from "drizzle-orm";
 import db from "../database";
@@ -102,7 +102,7 @@ function normalizeIcon(icon: string | null | undefined): string {
   return ICON_TYPO_MAP[icon] ?? icon;
 }
 
-const activeClients = new Map<string, PoolClient>();
+const activeClients = new Map<string, AntenneClient>();
 
 export async function connectPoolForWorkspace(
   workspaceId: string,
@@ -111,7 +111,7 @@ export async function connectPoolForWorkspace(
 ): Promise<void> {
   disconnectPoolForWorkspace(workspaceId);
 
-  const pool = new PoolClient({
+  const pool = new AntenneClient({
     config: {
       app: "Opus",
       instance: instanceUrl,
@@ -145,7 +145,7 @@ export function disconnectPoolForWorkspace(workspaceId: string): void {
   }
 }
 
-export function getPoolClient(workspaceId: string): PoolClient | undefined {
+export function getPoolClient(workspaceId: string): AntenneClient | undefined {
   return activeClients.get(workspaceId);
 }
 
@@ -352,7 +352,7 @@ function createSyncQueue() {
 
 type Enqueue = (fn: () => Promise<void>) => void;
 
-function setupListeners(pool: PoolClient, workspaceId: string): void {
+function setupListeners(pool: AntenneClient, workspaceId: string): void {
   const enqueue = createSyncQueue();
 
   pool.listen("project.created", (payload: unknown) => {
