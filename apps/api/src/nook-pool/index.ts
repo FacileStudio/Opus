@@ -243,7 +243,7 @@ const nookPool = new Hono<{
       const { instanceUrl, secret } = c.req.valid("json");
 
       try {
-        const url = `${instanceUrl.replace(/\/+$/, "")}/api/pool/register`;
+        const url = `${instanceUrl.replace(/\/+$/, "")}/api/antenne/register`;
         const res = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

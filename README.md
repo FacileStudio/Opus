@@ -5,8 +5,8 @@ time tracking behind one login.
 
 Opus is the stack outlier of the suite: `pnpm` instead of `bun`, Hono with OpenAPI instead of
 tRPC, Drizzle instead of Prisma, and React instead of SvelteKit. It is also the only repo that
-consumes another suite repo directly, pulling `@facile/pool` from `github:FacileStudio/pool#ts`
-to sync projects and tasks over the Nook event bus.
+consumes another suite repo directly, pulling `@facile/antenne` from
+`github:FacileStudio/antenne-client#ts` to sync projects and tasks over the Antenne event bus.
 
 Live at [opus.facile.studio](https://opus.facile.studio).
 
