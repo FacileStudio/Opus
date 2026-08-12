@@ -138,7 +138,11 @@ func (service *Service) Full(ctx context.Context, userID, workspaceID int64) (*F
 	if err != nil {
 		return nil, err
 	}
-	return &FullWorkspaceResponse{Workspace: workspace, Members: members}, nil
+	invitations, err := service.queryInvitations(ctx, "invitations.workspace_id = ?", workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	return &FullWorkspaceResponse{Workspace: workspace, Members: members, Invitations: invitations}, nil
 }
 
 // MemberMe answers the caller's own membership row in a workspace.

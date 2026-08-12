@@ -68,11 +68,12 @@ type MessageResponse struct {
 }
 
 // FullWorkspaceResponse is what GET /workspace/{id}/full answers: the
-// workspace row plus its members, flattened for the frontend's organization
-// view.
+// workspace row plus its members and its invitations, flattened for the
+// frontend's organization view.
 type FullWorkspaceResponse struct {
-	Workspace *WorkspaceResponse `json:"workspace"`
-	Members   []MemberResponse   `json:"members"`
+	Workspace   *WorkspaceResponse  `json:"workspace"`
+	Members     []MemberResponse    `json:"members"`
+	Invitations []InvitationResponse `json:"invitations"`
 }
 
 // InvitationResponse is one invitation row joined to its workspace and its

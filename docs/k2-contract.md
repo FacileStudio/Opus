@@ -48,7 +48,7 @@ All int64 ids on the wire. `Member` = `{id, name, email, image, role}` with
 | GET | `/api/workspace/{id}/members` | — | `Member[]` |
 | **PATCH** | `/api/workspace/{id}/members/{userId}` | `{role}` | `Member` |
 | **DELETE** | `/api/workspace/{id}/members/{userId}` | — | `{message}` |
-| **GET** | `/api/workspace/{id}/full` | — | `{workspace, members}` |
+| **GET** | `/api/workspace/{id}/full` | — | `{workspace, members, invitations}` |
 | **GET** | `/api/workspace/{id}/members/me` | — | `Member` (current user's row) |
 | **POST** | `/api/workspace/{id}/members` | `{email, role?}` | 201 `Invitation` |
 | **GET** | `/api/workspace/{id}/invitations` | — | `Invitation[]` |

@@ -18,15 +18,31 @@ function AuthProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     let active = true;
-    authClient.getSession().then(({ data: session }) => {
-      if (!active) return;
-      authClient.__setSession(
-        (session?.user as User | null | undefined) ?? null,
-        false,
-      );
-    });
+
+    const refresh = () => {
+      authClient.getSession().then(({ data: session }) => {
+        if (!active) return;
+        authClient.__setSession(
+          (session?.user as User | null | undefined) ?? null,
+          false,
+        );
+      });
+    };
+
+    refresh();
+    // An idle tab can outlive its session cookie: re-verify when the tab
+    // regains focus so a dead session does not keep rendering as logged in.
+    window.addEventListener("focus", refresh);
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") {
+        refresh();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
     return () => {
       active = false;
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 

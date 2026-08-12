@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { roleHas } from "./permissions";
 
 /**
  * Thin fetch client against the Go backend. This is the single auth + workspace
@@ -121,6 +122,13 @@ async function request<T>(
     headers,
     credentials: "include",
   });
+  // porte answers 401 when there is no valid credential and 403 when there is
+  // one but it lacks permission. A 401 therefore means the session is gone:
+  // clear the store so the UI stops holding a ghost user instead of waiting
+  // for a reload. The next getSession on focus confirms or restores it.
+  if (response.status === 401 && path !== "/auth/login" && path !== "/auth/register") {
+    setSessionState({ user: null, isPending: false });
+  }
   if (!response.ok) {
     let message = response.statusText || "Request failed";
     try {
@@ -144,10 +152,16 @@ function toStr(value: number | string | undefined | null): string {
 
 // hasRolePermission is the client-side role gate the UI uses to render
 // controls. The server owns enforcement; this only answers what the member
-// role the browser already holds allows, so the permission surface lives in
-// one place (permissions.ts) and the better-auth access plugin is gone.
-function hasRolePermission(role: WorkspaceMember["role"]): boolean {
-  return role === "owner" || role === "admin";
+// role the browser already holds allows. The role→capability map lives in
+// permissions.ts (imported below), the single source the better-auth access
+// plugin used to be.
+function hasRolePermission(
+  role: WorkspaceMember["role"],
+  permissions: Record<string, string[]> = {},
+): boolean {
+  return Object.entries(permissions).every(([resource, actions]) =>
+    actions.every((action) => roleHas(role, resource, action)),
+  );
 }
 
 function mapMember(member: {
@@ -403,6 +417,17 @@ export const authClient = {
           image?: string | null;
           role: string;
         }>;
+        invitations?: Array<{
+          id: number | string;
+          email: string;
+          role: string;
+          status: string;
+          createdAt?: string;
+          expiresAt?: string | null;
+          workspaceId: number | string;
+          workspaceName?: string;
+          inviterName?: string;
+        }>;
       }>(`/workspace/${organizationId}/full`);
       if (result.error) {
         return { data: null, error: result.error };
@@ -411,18 +436,10 @@ export const authClient = {
         data: {
           organization: mapWorkspace(result.data.workspace),
           members: result.data.members.map(mapMember),
-          invitations: [],
+          invitations: (result.data.invitations ?? []).map(mapInvitation),
         },
         error: null,
       };
-    },
-
-    async getActiveMember(): ApiResult<WorkspaceMember | null> {
-      // The active workspace id lives in the URL; the Go API answers
-      // /workspace/{id}/members/me, which needs the id. The hooks layer reads
-      // the id from the route, so this is a fallback that answers nothing
-      // rather than a wrong member.
-      return { data: null, error: null };
     },
 
     async create(input: {
@@ -649,15 +666,22 @@ export const authClient = {
     // Client-side role checks (no server round-trip). The Go workspace module
     // owns access enforcement; these answer the same question from the member
     // role the UI already holds, for rendering controls.
-    async hasPermission(_input: { permissions?: Record<string, string[]> }) {
-      return { data: true, error: null };
+    async hasPermission(input: {
+      permissions?: Record<string, string[]>;
+      role?: string;
+    }) {
+      const role = input.role as WorkspaceMember["role"];
+      if (!role) {
+        return { data: false, error: null };
+      }
+      return { data: hasRolePermission(role, input.permissions), error: null };
     },
 
     checkRolePermission(input: {
       permissions?: Record<string, string[]>;
       role: string;
     }): boolean {
-      return hasRolePermission(input.role as WorkspaceMember["role"]);
+      return hasRolePermission(input.role as WorkspaceMember["role"], input.permissions);
     },
   },
 

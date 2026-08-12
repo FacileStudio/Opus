@@ -172,6 +172,21 @@ func TestFull(t *testing.T) {
 	if len(full.Members) != 2 {
 		t.Fatalf("Full members = %d rows, want 2", len(full.Members))
 	}
+	if len(full.Invitations) != 0 {
+		t.Fatalf("Full invitations = %d rows, want 0", len(full.Invitations))
+	}
+
+	invitation, err := service.InviteMember(context.Background(), ownerID, workspaceID, InviteMemberRequest{Email: "nora@facile.studio"})
+	if err != nil {
+		t.Fatalf("invite for Full: %v", err)
+	}
+	full, err = service.Full(context.Background(), ownerID, workspaceID)
+	if err != nil {
+		t.Fatalf("Full second: %v", err)
+	}
+	if len(full.Invitations) != 1 || full.Invitations[0].ID != invitation.ID {
+		t.Fatalf("Full invitations = %+v, want the one pending invite", full.Invitations)
+	}
 }
 
 func TestMemberMe(t *testing.T) {
