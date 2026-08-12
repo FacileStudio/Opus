@@ -1,0 +1,39 @@
+[tools]
+go = "1.26"
+
+[env]
+GO_BIN = { value = "{{tools.go.path}}/bin/go", tools = true }
+
+[tasks.deps]
+description = "Download Go module dependencies"
+sources = ["go.mod", "go.sum"]
+run = '"$GO_BIN" mod download'
+
+[tasks.build]
+description = "Build the API binary at ./bin/api"
+depends = [":deps"]
+run = ["mkdir -p bin", '"$GO_BIN" build -o bin/api .']
+
+[tasks.check]
+description = "Vet, test and run the filet gate"
+depends = [":deps", ":test"]
+run = ['"$GO_BIN" vet ./...', "filet check ../../filet.yml ."]
+
+[tasks.test]
+description = "Run Go tests"
+depends = [":deps"]
+run = '"$GO_BIN" test ./...'
+
+[tasks.tidy]
+description = "Sync go.mod and go.sum"
+run = '"$GO_BIN" mod tidy'
+
+[tasks.dev]
+description = "Run the API with local defaults"
+depends = [":deps"]
+run = '''
+PORT="${PORT:-1337}"
+LOG_LEVEL="${LOG_LEVEL:-info}"
+echo "starting api on :$PORT"
+exec env PORT="$PORT" LOG_LEVEL="$LOG_LEVEL" "$GO_BIN" run .
+'''
