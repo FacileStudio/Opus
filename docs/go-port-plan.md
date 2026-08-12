@@ -29,12 +29,40 @@ The frontend changes once — when auth swaps from better-auth to porte (Phase 1
 - **Phase 1 K1 DONE** (commit `d733de31`): the Go auth seam (porte over portepg with a GORM
   UserStore, `/auth/me`, local `/auth/register`+`/auth/login` answering `{token,user}`) and
   the workspace module (list, members, logo upload/delete/serve). `go build`/`vet`/`test`
-  and `filet check .` are green. Later commits `3b7ef8e1` + `d84c112c` dropped the
-  integration phases from the plan (see below).
-- **NEXT ACTION — Phase 1 K2: the frontend auth re-plumb.** The Go auth backend exists;
-  `apps/web` still speaks better-auth. Do steps 7-10 in the K2 section, then verify with the
-  browser transport (cookie + `X-Facile-CSRF`), not a bearer token.
-- **After K2 — Phase 2**: the project/column/task block, the biggest module by LOC.
+  and `filet check .` are green.
+- **Phase 1 K2 DONE** (commits `bcd49d32` Go, `b5101033` workspace/team web,
+  `9f7ad953` auth-surface web, `44032b13` keystone): frontend re-plumbed from better-auth
+  to the porte fetch client. Contract lived in `docs/k2-contract.md` (now a frozen record).
+  Summary: workspace CRUD + membership + full invitation lifecycle Go-native (int64
+  `Invitation` table, `pending→accepted` inserts a membership); `PATCH /auth/me` +
+  `POST /auth/change-password` (porte **bumped v0.2.10 → v0.3.0** for `Kit.ChangePassword`);
+  the legacy proxy authenticates with porte and stamps `X-Opus-User-Id`/`-Email` + an HMAC
+  tag (`AUTH_BRIDGE_SECRET`) that the legacy TS API verifies to short-circuit its
+  better-auth lookup — the strangler bridge. Web: cut `apiKey`/`device`/OTP/anonymous/
+  magic-link/plugin SSO (better-auth-plugin surfaces), porte flow on the auth pages
+  (OIDC redirect + local login, `error` query param rendered outside any `SSO_ONLY` gate),
+  `X-Facile-CSRF` on every `@opus/libs` mutation, session via `/auth/me`.
+- **NEXT ACTION — Phase 2**: the project/column/task block, the biggest module by LOC.
+  Before that, browser-transport verification of K2 (cookie + `X-Facile-CSRF`, not a
+  bearer token) per the exit criteria; the plan's "porte login works in the browser"
+  gate has not been exercised in a live browser yet.
+
+### K2 leftovers / things the next session should know
+- `pnpm install` was needed to re-link `@opus/api` into `apps/web/node_modules` after the
+  Phase 0 move — `tsc` reported `TS2307` until then. Pre-existing baseline typecheck errors
+  (~19 unique) in `apps/api-legacy` (pulled in via `@opus/api` types) and phase-2 test/UI
+  fixtures are NOT K2 regressions (0 errors in any K2-owned path).
+- `docs/k2-contract.md` is a frozen record of the K2 contract (keystone surface, endpoint
+  table, bridge design). Keep for parity checks; it is authoritative for what K2 shipped
+  and the endpoint shapes future phases extend.
+- Route shadow to remember: Go `GET /invitation/{invitationId}` owns `/api/invitation/*`;
+  the legacy `/invitation/pending` and `/invitation/public/:id` are dead/kept — the web
+  pending-invites list was re-pointed to `authClient.organization.listUserInvitations()`
+  (`apps/web/src/fetchers/invitation/get-pending-invitations.ts`), and the public accept
+  page fetcher was rewritten to plain `fetch(getApiUrl("/invitation/public/{id}"))`.
+- Settings UI: the Developer/API-keys tab and its components were deleted with the api-key
+  surface (`components/settings/api-key-*`, `settings/account/developer.tsx`);
+  `routeTree.gen.ts` regenerates on next build.
 
 If this document disagrees with the repo, the repo is the truth and this page is stale—
 lint it and push the correction.
