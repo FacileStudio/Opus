@@ -1,4 +1,4 @@
-import { client } from "@opus/libs";
+import { getApiUrl } from "@/fetchers/get-api-url";
 
 export type InvitationDetails = {
   id: string;
@@ -19,11 +19,12 @@ export type GetInvitationDetailsResponse = {
 export async function getInvitationDetails(
   invitationId: string,
 ): Promise<GetInvitationDetailsResponse> {
-  const response = await client.invitation.public[":id"].$get({
-    param: {
-      id: invitationId,
+  const response = await fetch(
+    getApiUrl(`/invitation/public/${invitationId}`),
+    {
+      credentials: "include",
     },
-  });
+  );
 
   if (!response.ok) {
     const error = await response.text();

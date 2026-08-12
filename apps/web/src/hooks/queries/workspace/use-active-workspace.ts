@@ -1,11 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { authClient } from "@/lib/auth-client";
 
 function useActiveWorkspace() {
-  const { data: activeOrganization, error } =
-    authClient.useActiveOrganization();
-  const { data: organizations, isPending: isOrganizationsPending } =
-    authClient.useListOrganizations();
+  const {
+    data: organizations,
+    error,
+    isPending,
+  } = useQuery({
+    queryKey: ["workspaces"],
+    queryFn: async () => {
+      const { data, error } = await authClient.organization.list();
+      if (error) {
+        throw new Error(error.message || "Failed to fetch workspaces");
+      }
+      return data || [];
+    },
+  });
+
   const { workspaceId } = useParams({
     strict: false,
     select: (params) => ({
@@ -16,13 +28,13 @@ function useActiveWorkspace() {
     }),
   });
 
-  const workspaceFromRoute = workspaceId
-    ? organizations?.find((organization) => organization.id === workspaceId)
+  const activeId =
+    workspaceId ?? localStorage.getItem("opus.active_workspace") ?? undefined;
+  const workspace = activeId
+    ? organizations?.find((organization) => organization.id === activeId)
     : undefined;
-  const workspace = workspaceFromRoute ?? activeOrganization;
   const isLoading =
-    (!!workspaceId && isOrganizationsPending && !workspaceFromRoute) ||
-    (!workspace && !error);
+    (!!activeId && isPending && !workspace) || (!workspace && !error);
 
   return {
     data: workspace,

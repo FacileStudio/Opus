@@ -236,9 +236,7 @@ function MembersTable({
               </TableCell>
 
               <TableCell className="py-3">
-                <span className="text-sm text-muted-foreground">
-                  {member.createdAt && formatDateMedium(member.createdAt)}
-                </span>
+                <span className="text-sm text-muted-foreground">—</span>
               </TableCell>
               <TableCell className="py-3 pr-6 text-right">
                 {currentUser?.id !== member.userId && (

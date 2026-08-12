@@ -46,7 +46,7 @@ function useGetWorkspaceUsers({
         throw new Error(error.message || "Failed to get workspace users");
       }
 
-      return data.members;
+      return data?.members ?? [];
     },
   });
 }

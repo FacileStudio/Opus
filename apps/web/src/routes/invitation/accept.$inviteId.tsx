@@ -49,7 +49,7 @@ function AcceptInvitation() {
   const handleAcceptInvitation = async () => {
     setIsAccepting(true);
     try {
-      const { data, error } = await authClient.organization.acceptInvitation({
+      const { error } = await authClient.organization.acceptInvitation({
         invitationId: inviteId,
       });
 
@@ -58,10 +58,6 @@ function AcceptInvitation() {
         return;
       }
 
-      await authClient.organization.setActive({
-        organizationId: data?.invitation.organizationId,
-      });
-
       toast.success(t("auth:invitation.toast.acceptSuccess"));
 
       if (!session?.user?.name) {
@@ -69,10 +65,23 @@ function AcceptInvitation() {
         return;
       }
 
-      navigate({
-        to: "/dashboard/workspace/$workspaceId",
-        params: { workspaceId: data?.invitation.organizationId || "" },
-      });
+      const { data: workspaces } = await authClient.organization.list();
+      const acceptedWorkspace = workspaces?.find(
+        (workspace) => workspace.name === invitation?.workspaceName,
+      );
+
+      if (acceptedWorkspace) {
+        await authClient.organization.setActive({
+          organizationId: acceptedWorkspace.id,
+        });
+        navigate({
+          to: "/dashboard/workspace/$workspaceId",
+          params: { workspaceId: acceptedWorkspace.id },
+        });
+        return;
+      }
+
+      navigate({ to: "/dashboard" });
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -120,8 +129,12 @@ function AcceptInvitation() {
                 {t("auth:invitation.errorLoadDescription")}
               </AlertDescription>
             </Alert>
-            <Button asChild variant="outline" className="w-full">
-              <Link to="/auth/sign-in">{t("auth:invitation.goToSignIn")}</Link>
+            <Button
+              variant="outline"
+              className="w-full"
+              render={<Link to="/auth/sign-in" />}
+            >
+              {t("auth:invitation.goToSignIn")}
             </Button>
           </div>
         </AuthLayout>
@@ -161,8 +174,12 @@ function AcceptInvitation() {
               )}
             </div>
 
-            <Button asChild variant="outline" className="w-full">
-              <Link to="/auth/sign-in">{t("auth:invitation.goToSignIn")}</Link>
+            <Button
+              variant="outline"
+              className="w-full"
+              render={<Link to="/auth/sign-in" />}
+            >
+              {t("auth:invitation.goToSignIn")}
             </Button>
           </div>
         </AuthLayout>
@@ -231,10 +248,12 @@ function AcceptInvitation() {
                 )}
               </Button>
 
-              <Button asChild variant="outline" className="w-full">
-                <Link to="/dashboard">
-                  {t("auth:invitation.goToDashboard")}
-                </Link>
+              <Button
+                variant="outline"
+                className="w-full"
+                render={<Link to="/dashboard" />}
+              >
+                {t("auth:invitation.goToDashboard")}
               </Button>
             </div>
 

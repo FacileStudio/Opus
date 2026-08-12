@@ -1,14 +1,16 @@
-import { client } from "@opus/libs";
+import { authClient } from "@/lib/auth-client";
 import type { WorkspaceUserInvitation } from "@/types/workspace-user";
 
 export async function getPendingInvitations(): Promise<
   WorkspaceUserInvitation[]
 > {
-  const response = await client.invitation.pending.$get();
+  const { data, error } = await authClient.organization.listUserInvitations();
 
-  if (!response.ok) {
-    throw new Error("Failed to get pending invitations");
+  if (error) {
+    throw new Error(error.message || "Failed to get pending invitations");
   }
 
-  return response.json();
+  return (data || []).filter(
+    (invitation) => invitation.status === "pending",
+  ) as WorkspaceUserInvitation[];
 }
