@@ -8,7 +8,6 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 )
-
 // Controller serves the /auth routes porte does not own.
 type Controller struct {
 	service *Service
@@ -25,6 +24,41 @@ func (controller *Controller) me(ctx context.Context, userID int64) (*UserRespon
 		return nil, err
 	}
 	return toUserResponse(user), nil
+}
+
+// updateProfile writes the caller's own profile fields and answers the same
+// {token, user} shape the rest of the auth surface uses. The token echoes the
+// bearer the request carried; a cookie-authenticated caller gets an empty
+// string, which the frontend ignores.
+func (controller *Controller) updateProfile(w http.ResponseWriter, r *http.Request, userID int64, req *UpdateProfileRequest) (*AuthResponse, error) {
+	user, err := controller.service.UpdateProfile(r.Context(), userID, *req)
+	if err != nil {
+		return nil, err
+	}
+	return &AuthResponse{Token: bearerToken(r), User: toUserResponse(user)}, nil
+}
+
+// changePassword verifies the current password, sets a new one and rotates the
+// session in one porte call.
+func (controller *Controller) changePassword(w http.ResponseWriter, r *http.Request, userID int64, req *ChangePasswordRequest) (*ChangePasswordResponse, error) {
+	if req.CurrentPassword == "" || req.NewPassword == "" {
+		return nil, errors.Invalid("currentPassword and newPassword are required")
+	}
+	if err := controller.service.ChangePassword(r.Context(), w, r, userID, req.CurrentPassword, req.NewPassword); err != nil {
+		return nil, err
+	}
+	return &ChangePasswordResponse{Message: "Password changed successfully"}, nil
+}
+
+// bearerToken extracts the Authorization bearer the current request carried,
+// or an empty string when it authenticated some other way.
+func bearerToken(r *http.Request) string {
+	header := r.Header.Get("Authorization")
+	const prefix = "Bearer "
+	if len(header) > len(prefix) && strings.EqualFold(header[:len(prefix)], prefix) {
+		return strings.TrimSpace(header[len(prefix):])
+	}
+	return ""
 }
 
 // register creates an account through porte/local and signs it in, keeping the

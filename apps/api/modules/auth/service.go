@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strings"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte/local"
@@ -99,4 +100,35 @@ func (service *Service) Login(ctx context.Context, w http.ResponseWriter, r *htt
 		return nil, "", err
 	}
 	return user, token, nil
+}
+
+// UpdateProfile writes the callable profile fields and returns the refreshed
+// row. Only the keys actually present are updated, so a partial patch cannot
+// wipe a field the client did not send.
+func (service *Service) UpdateProfile(ctx context.Context, userID int64, req UpdateProfileRequest) (*schemas.User, error) {
+	updates := map[string]any{}
+	if req.Name != nil {
+		updates["name"] = strings.TrimSpace(*req.Name)
+	}
+	if req.Color != nil {
+		updates["color"] = *req.Color
+	}
+	if req.Locale != nil {
+		updates["locale"] = *req.Locale
+	}
+	if len(updates) > 0 {
+		if err := service.orm.WithContext(ctx).Model(&schemas.User{}).Where("id = ?", userID).Updates(updates).Error; err != nil {
+			return nil, errors.Internal("failed to update the profile", err)
+		}
+	}
+	return service.LoadUser(ctx, userID)
+}
+
+// ChangePassword verifies the caller's current password through porte/local,
+// sets a new one and rotates the session so a stolen token dies with the old
+// password. The error is passed on so the controller can answer the right
+// status instead of a flat unauthorized.
+func (service *Service) ChangePassword(ctx context.Context, w http.ResponseWriter, r *http.Request, userID int64, current, next string) error {
+	_, _, err := service.passwords.ChangePassword(ctx, w, r, userID, current, next)
+	return err
 }

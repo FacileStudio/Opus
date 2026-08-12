@@ -36,6 +36,36 @@ func RegisterRoutes(router chi.Router, service *Service, appEnv env.Config) {
 				}
 				httpjson.WriteJSON(w, http.StatusOK, resp)
 			})
+
+			router.Patch("/me", func(w http.ResponseWriter, request *http.Request) {
+				var req UpdateProfileRequest
+				if err := httpjson.DecodeJSON(w, request, &req); err != nil {
+					httpjson.WriteError(w, err)
+					return
+				}
+				identity, _ := authcontext.IdentityFromContext(request.Context())
+				resp, err := service.controller.updateProfile(w, request, identity.UserID, &req)
+				if err != nil {
+					httpjson.WriteError(w, err)
+					return
+				}
+				httpjson.WriteJSON(w, http.StatusOK, resp)
+			})
+
+			router.Post("/change-password", func(w http.ResponseWriter, request *http.Request) {
+				var req ChangePasswordRequest
+				if err := httpjson.DecodeJSON(w, request, &req); err != nil {
+					httpjson.WriteError(w, err)
+					return
+				}
+				identity, _ := authcontext.IdentityFromContext(request.Context())
+				resp, err := service.controller.changePassword(w, request, identity.UserID, &req)
+				if err != nil {
+					httpjson.WriteError(w, err)
+					return
+				}
+				httpjson.WriteJSON(w, http.StatusOK, resp)
+			})
 		})
 
 		if appEnv.SSOOnly {

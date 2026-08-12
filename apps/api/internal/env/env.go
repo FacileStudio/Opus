@@ -50,6 +50,14 @@ type Config struct {
 	// UploadDir files uploaded assets under, workspace logos today.
 	UploadDir string
 
+	// AuthBridgeSecret is the shared secret the Go proxy and the legacy TS API
+	// both read. The proxy stamps proxied requests with an HMAC derived from it
+	// so the legacy API can trust the injected user headers without exposing
+	// the action to a caller who cannot name the user. Empty disables the
+	// bridge: no identity headers are injected and proxied routes keep their
+	// legacy 401 behaviour.
+	AuthBridgeSecret string
+
 	// OIDC and SSOOnly shape the porte auth kit.
 	OIDC    *OIDCConfig
 	SSOOnly bool
@@ -86,10 +94,11 @@ func Load() (Config, error) {
 	}
 
 	config := Config{
-		Core:      core,
-		LegacyAPI: legacyAPI,
-		UploadDir: troncenv.String("UPLOAD_DIR", "./data/uploads"),
-		SSOOnly:   ssoOnly,
+		Core:             core,
+		LegacyAPI:        legacyAPI,
+		UploadDir:        troncenv.String("UPLOAD_DIR", "./data/uploads"),
+		AuthBridgeSecret: troncenv.String("AUTH_BRIDGE_SECRET", ""),
+		SSOOnly:          ssoOnly,
 	}
 
 	if issuer := troncenv.String("OIDC_ISSUER", ""); issuer != "" {

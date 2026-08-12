@@ -39,3 +39,17 @@ type WorkspaceMember struct {
 	Role        string    `gorm:"column:role;not null;default:member"`
 	JoinedAt    time.Time `gorm:"column:joined_at;not null"`
 }
+
+// Invitation is a pending request to join a workspace, sent by email. It
+// becomes a workspace_member row when accepted; the status column is what
+// makes accept, reject and cancel all single-row updates.
+type Invitation struct {
+	ID          int64      `gorm:"column:id;primaryKey;autoIncrement"`
+	WorkspaceID int64      `gorm:"column:workspace_id;not null;index"`
+	Email       string     `gorm:"column:email;not null;index"`
+	Role        string     `gorm:"column:role;not null;default:member"`
+	Status      string     `gorm:"column:status;not null;default:pending"`
+	InviterID   int64      `gorm:"column:inviter_id;not null;index"`
+	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
+	ExpiresAt   *time.Time `gorm:"column:expires_at"`
+}

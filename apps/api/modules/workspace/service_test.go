@@ -19,7 +19,7 @@ func newTestService(t *testing.T) (*Service, *gorm.DB) {
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)
 	}
-	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}); err != nil {
+	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}, &schemas.Invitation{}); err != nil {
 		t.Fatalf("migrate: %v", err)
 	}
 	service := NewService(db, t.TempDir())

@@ -51,6 +51,7 @@ func referenceConfig() apiref.Config {
 			Modules: []documentation.Module{
 				auth.Documentation,
 				workspace.Documentation,
+				workspace.InvitationsDocumentation,
 			},
 		},
 	}
@@ -127,7 +128,7 @@ func buildRouter(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *sl
 		workspace.RegisterRoutes(api, workspaceService, authService)
 
 		if appEnv.LegacyAPI != nil {
-			legacy.MountProxy(api, appEnv.LegacyAPI)
+			legacy.MountProxy(api, appEnv.LegacyAPI, sessions, authService, appEnv.AuthBridgeSecret)
 		}
 	})
 

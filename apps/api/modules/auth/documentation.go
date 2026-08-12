@@ -53,6 +53,27 @@ var Documentation = documentation.Module{
 			ResponseBody: `{"id":int64,"name":string,"email":string,"emailVerified":bool,"image":string,"color":string,"locale":string,"createdAt":string,"updatedAt":string}`,
 		},
 		{
+			Method:       "PATCH",
+			Path:         "/auth/me",
+			Summary:      "Update the caller's own profile",
+			Description:  "Writes only the keys present in the body. A cookie-authenticated mutation must carry X-Facile-CSRF.",
+			Auth:         "bearer",
+			RequestBody:  `{"name":string?,"color":string?,"locale":string?}`,
+			ResponseBody: `{"token":string,"user":{...}}`,
+		},
+		{
+			Method:      "POST",
+			Path:        "/auth/change-password",
+			Summary:     "Verify the current password and set a new one",
+			Description: "porte verifies the current password, replaces the hash, revokes every other session and rotates the caller's own session. A cookie-authenticated mutation must carry X-Facile-CSRF.",
+			Auth:        "bearer",
+			RequestBody: `{"currentPassword":string,"newPassword":string}`,
+			Errors: []documentation.Error{
+				{Status: 401, Code: "unauthenticated", Description: "The current password is wrong"},
+				{Status: 400, Code: "invalid_argument", Description: "The account has no password, or the new one is too short"},
+			},
+		},
+		{
 			Method:       "POST",
 			Path:         "/auth/register",
 			Summary:      "Create a local account and sign in",

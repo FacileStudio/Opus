@@ -1,7 +1,52 @@
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { auth } from "../auth";
 import { verifyApiKey } from "./verify-api-key";
+
+const BRIDGE_AUTH_HEADER = "X-Opus-Auth";
+const BRIDGE_USER_ID_HEADER = "X-Opus-User-Id";
+const BRIDGE_USER_EMAIL_HEADER = "X-Opus-User-Email";
+
+/**
+ * The Go proxy stamps proxied requests with the porte-verified identity and
+ * an HMAC tag derived from AUTH_BRIDGE_SECRET. When the tag verifies, the
+ * legacy API trusts the headers and skips its own better-auth lookup; the
+ * browser's porte session means nothing to better-auth, so without the bridge
+ * every proxied route would 401. When the tag does not verify the headers are
+ * ignored entirely and the request falls through to the normal auth paths,
+ * which is what makes a misconfigured bridge fail closed.
+ */
+function bridgedIdentity(c: Context): { userId: string; email: string } | null {
+  const tag = c.req.header(BRIDGE_AUTH_HEADER);
+  const userId = c.req.header(BRIDGE_USER_ID_HEADER);
+  const email = c.req.header(BRIDGE_USER_EMAIL_HEADER);
+  const secret = process.env.AUTH_BRIDGE_SECRET;
+  if (!tag || !userId || !secret) {
+    return null;
+  }
+  const expected = createHmac("sha256", secret).update(userId).digest();
+  const actual = Buffer.from(tag, "hex");
+  if (actual.length !== expected.length) {
+    return null;
+  }
+  if (!timingSafeEqual(actual, expected)) {
+    return null;
+  }
+  return { userId, email: email ?? "" };
+}
+
+function applyBridgedIdentity(c: Context): boolean {
+  const bridged = bridgedIdentity(c);
+  if (!bridged) {
+    return false;
+  }
+  c.set("userId", bridged.userId);
+  c.set("userEmail", bridged.email);
+  c.set("user", null);
+  c.set("session", null);
+  return true;
+}
 
 async function getSessionFromBearerOnlyHeaders(c: Context) {
   const headers = new Headers(c.req.raw.headers);
@@ -37,6 +82,10 @@ export async function authenticateApiRequest(c: Context): Promise<void> {
   const { token, malformed } = parseBearerToken(c.req.header("Authorization"));
   if (malformed) {
     throw new HTTPException(401, { message: "Unauthorized" });
+  }
+
+  if (applyBridgedIdentity(c)) {
+    return;
   }
 
   if (token) {
@@ -85,6 +134,11 @@ export async function resolveAssetBearerOrCookie(c: Context): Promise<{
   const { token, malformed } = parseBearerToken(c.req.header("Authorization"));
   if (malformed) {
     throw new HTTPException(401, { message: "Unauthorized" });
+  }
+
+  const bridged = bridgedIdentity(c);
+  if (bridged) {
+    return { userId: bridged.userId };
   }
 
   if (token) {
