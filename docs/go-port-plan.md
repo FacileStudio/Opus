@@ -137,15 +137,16 @@ proxy when parity holds.
   2026-08-07, and the `nook-pool`/`nookPool*` names still in `apps/api-legacy` are the SAME
   bus under the old name, scrubbed by the port. WS broadcast (gorilla + Redis pub/sub),
   scheduler (due-date reminders).
-- **Phase 5 — Integrations**: `generic-webhook` only. github, gitea, slack, discord,
-  telegram, plugins and oauth were **dropped from the port on 2026-08-12** as not Facile
-  style — extra integration surface on a product whose own rules say "features solve real
-  problems, nothing more". They die at cutover with `apps/api-legacy`; the frontend feature
-  code (fetchers/hooks for github-integration, slack-integration, …) is scheduled for
-  removal when the legacy API is deleted in Phase 6. `oauth` is redundant anyway: it was
-  better-auth's `/auth/id-token` getter, and porte's OIDC kit owns identity tokens now.
-  Watch: `external-link` (task external links, the old GitHub/Gitea binding) never had a
-  phase; with the integrations gone, port it only if the UI keeps the generic resource link.
+- **Dropped integrations (2026-08-12)**: github, gitea, slack, discord, telegram,
+  **generic-webhook**, plugins and oauth — none of it gets ported, none of it is Facile
+  style: extra integration surface on a product whose own rules say "features solve real
+  problems, nothing more". There is no Phase 5 anymore. They die at cutover with
+  `apps/api-legacy`; the frontend feature code (fetchers/hooks for github-integration,
+  slack-integration, generic-webhook-integration, …) is scheduled for removal when the
+  legacy API is deleted in Phase 6. `oauth` is redundant anyway: it was better-auth's
+  `/auth/id-token` getter, and porte's OIDC kit owns identity tokens now. Watch:
+  `external-link` (task external links, the old GitHub/Gitea binding) never had a phase;
+  with the integrations gone, port it only if the UI keeps the generic resource link.
 - **Phase 6 — Decommission**: storage (S3/local presigned) native; goose baseline from live
   schema; Drizzle auto-migrate OFF; delete `apps/api-legacy`; single container; Dokploy
   deploy; re-open the fresh-vs-preserve DB question for the prod cutover.
