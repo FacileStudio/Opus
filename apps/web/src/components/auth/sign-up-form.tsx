@@ -59,7 +59,7 @@ export function SignUpForm({ invitationId, defaultEmail }: SignUpFormProps) {
   const onSubmit = async (data: SignUpFormValues) => {
     setIsPending(true);
     try {
-      const result = await authClient.signUp.email({
+      const result = await authClient.signUpEmail({
         email: data.email,
         name: data.name,
         password: data.password,

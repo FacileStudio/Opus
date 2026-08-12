@@ -12,7 +12,7 @@ function useSignUp() {
       password: string;
       name: string;
     }) => {
-      const result = await authClient.signUp.email({ email, password, name });
+      const result = await authClient.signUpEmail({ email, password, name });
       if (result.error) {
         throw new Error(result.error.message);
       }

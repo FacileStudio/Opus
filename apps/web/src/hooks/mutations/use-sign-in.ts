@@ -10,7 +10,7 @@ function useSignIn() {
       email: string;
       password: string;
     }) => {
-      const result = await authClient.signIn.email({ email, password });
+      const result = await authClient.signInEmail({ email, password });
       if (result.error) {
         throw new Error(result.error.message);
       }

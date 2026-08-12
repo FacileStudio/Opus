@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren } from "react";
+import { createContext, type PropsWithChildren, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import type { User } from "@/types/user";
 import { LoadingSkeleton } from "../../ui/loading-skeleton";
@@ -15,6 +15,20 @@ export const AuthContext = createContext<{
 
 function AuthProvider({ children }: PropsWithChildren) {
   const { data, isPending } = useSession();
+
+  useEffect(() => {
+    let active = true;
+    authClient.getSession().then(({ data: session }) => {
+      if (!active) return;
+      authClient.__setSession(
+        (session?.user as User | null | undefined) ?? null,
+        false,
+      );
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   if (isPending) {
     return <LoadingSkeleton />;
