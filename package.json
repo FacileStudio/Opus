@@ -13,7 +13,7 @@
     "i18n:schema": "node ./scripts/i18n/schema.mjs",
     "lint": "turbo lint",
     "test": "turbo test",
-    "test:integration": "pnpm --filter @opus/api test:integration",
+    "test:integration": "pnpm --filter @opus/api-legacy test:integration",
     "prepare": "husky"
   },
   "devDependencies": {
