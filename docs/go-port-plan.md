@@ -23,6 +23,22 @@ router (serves the SPA at `/client` + `/api/*`) and proxies unported routes to t
 API at `LEGACY_API_URL` (127.0.0.1:1337). Features flip Go-native one module at a time.
 The frontend changes once — when auth swaps from better-auth to porte (Phase 1).
 
+## Status — where the port stands right now
+- **Phase 0 DONE** (scaffold + Docker single-container dual-run): commits `1c3b48f7`,
+  `7cf0d993`, `15a4e3dd`.
+- **Phase 1 K1 DONE** (commit `d733de31`): the Go auth seam (porte over portepg with a GORM
+  UserStore, `/auth/me`, local `/auth/register`+`/auth/login` answering `{token,user}`) and
+  the workspace module (list, members, logo upload/delete/serve). `go build`/`vet`/`test`
+  and `filet check .` are green. Later commits `3b7ef8e1` + `d84c112c` dropped the
+  integration phases from the plan (see below).
+- **NEXT ACTION — Phase 1 K2: the frontend auth re-plumb.** The Go auth backend exists;
+  `apps/web` still speaks better-auth. Do steps 7-10 in the K2 section, then verify with the
+  browser transport (cookie + `X-Facile-CSRF`), not a bearer token.
+- **After K2 — Phase 2**: the project/column/task block, the biggest module by LOC.
+
+If this document disagrees with the repo, the repo is the truth and this page is stale—
+lint it and push the correction.
+
 ## Decisions (baked in — re-open only if something breaks against prod)
 - **The Go backend owns its own schema on its own database.** The legacy API still
   derives `DATABASE_URL` from `POSTGRES_*` (the CUID2 `opus` database; Drizzle remains
@@ -163,6 +179,9 @@ CSRF enforced · events reach Antenne · single container serves SPA + `/api`.
 ## Gotchas
 - Commit with `git commit --no-verify` (husky runs biome + full pnpm build; commitlint
   wants conventional commits).
+- `mise run test` fails with the currently installed mise (2026.6.14): it errors on the
+  Taskfile's `depends=[":task"]` references — needs mise ≥ 2026.8.5 or a depends rewrite.
+  The underlying gates (`go test`, `go vet`, `filet check .`) all pass directly.
 - Go toolchain: `mise` (apps/api/mise.toml) or plain `go` 1.26. Run from `apps/api/`.
 - filet.yml ignores `apps/api-legacy`, `apps/web`, `apps/docs`, `apps/site` — biome owns the
   TS. filet's `arch.*` findings must never be disabled.
