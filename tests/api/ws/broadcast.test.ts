@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock events to prevent side effects from ws/index.ts top-level subscriptions
-vi.mock("../../../apps/api/src/events", () => ({
+vi.mock("../../../apps/api-legacy/src/events", () => ({
   subscribeToEvent: vi.fn(),
   publishEvent: vi.fn(),
 }));
@@ -12,7 +12,7 @@ import {
   initializeWebSocketAdapter,
   removeConnection,
   shutdownWebSocketAdapter,
-} from "../../../apps/api/src/ws/index";
+} from "../../../apps/api-legacy/src/ws/index";
 
 function makeFakeWs() {
   return {

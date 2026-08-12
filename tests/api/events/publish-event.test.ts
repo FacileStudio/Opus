@@ -4,7 +4,7 @@ import {
   publishEvent,
   shutdownEventBus,
   subscribeToEvent,
-} from "../../../apps/api/src/events/index";
+} from "../../../apps/api-legacy/src/events/index";
 
 describe("publishEvent / subscribeToEvent", () => {
   afterEach(async () => {

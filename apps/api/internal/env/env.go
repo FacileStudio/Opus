@@ -3,6 +3,7 @@ package env
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"strings"
 
@@ -13,6 +14,10 @@ import (
 // Config is the fully-loaded application configuration produced by Load.
 type Config struct {
 	troncenv.Core
+
+	// LegacyAPI is the transitional TypeScript API every /api route the Go
+	// backend does not own yet is proxied to. nil when not configured.
+	LegacyAPI *url.URL
 }
 
 // Load reads the .env file (if present) and the environment into a Config,
@@ -31,7 +36,15 @@ func Load() (Config, error) {
 	if !validLogLevel(core.LogLevel) {
 		return Config{}, fmt.Errorf("LOG_LEVEL must be one of debug, info, warn, error")
 	}
-	return Config{Core: core}, nil
+	var legacyAPI *url.URL
+	if raw := troncenv.String("LEGACY_API_URL", ""); raw != "" {
+		parsed, err := url.Parse(raw)
+		if err != nil {
+			return Config{}, fmt.Errorf("LEGACY_API_URL must be a valid URL")
+		}
+		legacyAPI = parsed
+	}
+	return Config{Core: core, LegacyAPI: legacyAPI}, nil
 }
 
 // validLogLevel reports whether level names a level the suite logger knows.

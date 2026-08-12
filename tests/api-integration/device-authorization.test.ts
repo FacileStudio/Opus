@@ -1,8 +1,8 @@
 import { createHash, randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
-import db, { schema } from "../../apps/api/src/database";
-import { createApp } from "../../apps/api/src/index";
+import db, { schema } from "../../apps/api-legacy/src/database";
+import { createApp } from "../../apps/api-legacy/src/index";
 import { resetTestDatabase } from "./helpers/database";
 import { createWorkspaceMember } from "./helpers/fixtures";
 

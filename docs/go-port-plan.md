@@ -22,14 +22,10 @@ container serves the SPA + `/api/*` and proxies unported routes to the legacy AP
 flip Go-native one module at a time. The frontend changes once — when auth swaps from
 better-auth to porte.
 
-## Current state (Phase 0, mostly done — commit `…`)
-- `git mv apps/api apps/api-legacy` (history preserved); `apps/api-legacy/package.json`
-  renamed to `@opus/api-legacy`; root `package.json` `test:integration` repointed.
-- New Go module `github.com/FacileStudio/Opus/apps/api`: `main.go` (tronc: httpx chain,
-  health, apiref `/docs`, spa, journal-signal shutdown), `internal/env` (tronc Core +
-  godotenv), `internal/documentation` (apiref registry types), `mise.toml`, `filet.yml`
-  (root, Go-scoped). Builds; `filet check .` exit 0; boots and serves `/health`, `/ready`,
-  `/docs`.
+## Current state (Phase 0 — done)
+- `git mv apps/api apps/api-legacy` (history preserved). The workspace **keeps the `@opus/api` package name**: the directory moved but the name did not, so `packages/libs` (`workspace:*` + `AppType` import) and the test suite stay unbroken. The pnpm-lockfile importer was renamed `apps/api` → `apps/api-legacy` (2 lines); `tests/` path imports retargeted (`apps/api/src` → `apps/api-legacy/src`).
+- New Go module `github.com/FacileStudio/Opus/apps/api`: `main.go` (tronc: httpx chain, health, apiref `/docs`, spa, journal-signal shutdown), `internal/env` (tronc Core + godotenv + `LEGACY_API_URL`), `internal/documentation` (apiref registry types), `internal/legacy` (strangler proxy), `mise.toml`, `filet.yml` (root, Go-scoped). Builds; `filet check .` exit 0; boots and serves `/health`, `/ready`, `/docs`.
+- Docker dual-run landed: single container, single router (the Go binary). Go serves the SPA (`/client`, `CLIENT_DIR`) + `/api/*` and proxies unported paths to the legacy API on `127.0.0.1:1337` (`LEGACY_API_URL`), including WebSocket upgrades. nginx is gone; the legacy runtime stays at `/app/apps/api` (uploads/migrations path preserved) with `node_modules` symlinked from the workspace package. `apps/web/env.sh` retargeted to `CLIENT_DIR` for runtime URL injection; MCP well-known endpoints dropped (MCP out of scope).
 
 ## Stack (from go.mod)
 tronc v0.13.0, Journal sdk/journal (latest), godotenv. Phase 1 adds porte, chi/gorilla,

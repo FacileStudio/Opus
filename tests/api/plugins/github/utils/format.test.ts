@@ -5,7 +5,7 @@ import {
   formatSyncComment,
   formatTaskDescriptionFromIssue,
   getLabelsForIssue,
-} from "../../../../../apps/api/src/plugins/github/utils/format";
+} from "../../../../../apps/api-legacy/src/plugins/github/utils/format";
 
 describe("github format helpers", () => {
   it("returns the title unchanged", () => {

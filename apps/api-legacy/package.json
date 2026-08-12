@@ -1,5 +1,5 @@
 {
-  "name": "@opus/api-legacy",
+  "name": "@opus/api",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./src/index.ts",

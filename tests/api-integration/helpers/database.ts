@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Client } from "pg";
-import db from "../../../apps/api/src/database";
+import db from "../../../apps/api-legacy/src/database";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const migrationsFolder = resolve(currentDir, "../../../apps/api/drizzle");

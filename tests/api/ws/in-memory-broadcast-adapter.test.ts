@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { BroadcastMessage } from "../../../apps/api/src/ws/broadcast-adapter";
-import { InMemoryBroadcastAdapter } from "../../../apps/api/src/ws/in-memory-broadcast-adapter";
+import type { BroadcastMessage } from "../../../apps/api-legacy/src/ws/broadcast-adapter";
+import { InMemoryBroadcastAdapter } from "../../../apps/api-legacy/src/ws/in-memory-broadcast-adapter";
 
 describe("InMemoryBroadcastAdapter", () => {
   it("delivers published messages to the subscribed handler", async () => {

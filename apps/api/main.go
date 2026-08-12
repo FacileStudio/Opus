@@ -18,6 +18,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
+	"github.com/FacileStudio/Opus/apps/api/internal/legacy"
 	"github.com/FacileStudio/tronc/apiref"
 	"github.com/FacileStudio/tronc/health"
 	"github.com/FacileStudio/tronc/healthcheck"
@@ -54,6 +55,12 @@ func buildRouter(appEnv *env.Config, appLogger *slog.Logger) chi.Router {
 
 	health.Mount(router)
 	apiref.Mount(router, referenceConfig())
+
+	router.Route("/api", func(api chi.Router) {
+		if appEnv.LegacyAPI != nil {
+			legacy.MountProxy(api, appEnv.LegacyAPI)
+		}
+	})
 
 	clientDir := spa.DirFromEnv()
 	if spa.Available(clientDir) {

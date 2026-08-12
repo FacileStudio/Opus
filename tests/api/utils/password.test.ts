@@ -4,7 +4,7 @@ import {
   hashPassword,
   isLegacyHash,
   verifyPassword,
-} from "../../../apps/api/src/password";
+} from "../../../apps/api-legacy/src/password";
 
 const PASSWORD = "correct horse battery staple";
 

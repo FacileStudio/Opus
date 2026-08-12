@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { resolveRedisMode } from "../../../apps/api/src/redis/index";
+import { resolveRedisMode } from "../../../apps/api-legacy/src/redis/index";
 
 describe("resolveRedisMode priority resolution", () => {
   const savedEnv = { ...process.env };

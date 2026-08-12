@@ -61,7 +61,7 @@ importers:
         specifier: 5.8.3
         version: 5.8.3
 
-  apps/api:
+  apps/api-legacy:
     dependencies:
       '@aws-sdk/client-s3':
         specifier: ^3.1009.0
@@ -597,7 +597,7 @@ importers:
     devDependencies:
       '@opus/api':
         specifier: workspace:*
-        version: link:../../apps/api
+        version: link:../../apps/api-legacy
       '@opus/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

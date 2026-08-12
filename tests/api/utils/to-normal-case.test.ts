@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import toNormalCase from "../../../apps/api/src/utils/to-normal-case";
+import toNormalCase from "../../../apps/api-legacy/src/utils/to-normal-case";
 
 describe("toNormalCase", () => {
   it("normalizes kebab and snake case", () => {

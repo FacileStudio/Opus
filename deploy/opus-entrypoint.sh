@@ -5,16 +5,16 @@ urlencode() {
   bun -e 'const input = process.argv[1]; process.stdout.write(encodeURIComponent(input).replace(/[!\x27()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`));' "$1"
 }
 
-api_pid=""
-nginx_pid=""
+legacy_pid=""
+go_pid=""
 
 cleanup() {
-  if [ -n "$api_pid" ]; then
-    kill "$api_pid" 2>/dev/null || true
+  if [ -n "$legacy_pid" ]; then
+    kill "$legacy_pid" 2>/dev/null || true
   fi
 
-  if [ -n "$nginx_pid" ]; then
-    kill "$nginx_pid" 2>/dev/null || true
+  if [ -n "$go_pid" ]; then
+    kill "$go_pid" 2>/dev/null || true
   fi
 }
 
@@ -50,66 +50,84 @@ if [ -z "${AUTH_SECRET:-}" ]; then
   echo "WARNING: Set AUTH_SECRET in your .env to persist sessions across restarts."
 fi
 
-/docker-entrypoint.d/env.sh
+# The legacy API keeps its pre-port uploads path even though its source now
+# lives under apps/api-legacy.
+export UPLOAD_DIR="${UPLOAD_DIR:-/app/apps/api/data/uploads}"
+
+/usr/local/bin/web-env.sh
 
 bun /app/apps/api/dist/index.js &
-api_pid=$!
+legacy_pid=$!
 
-echo "Waiting for API to be ready..."
+echo "Waiting for the legacy API to be ready..."
 until wget --spider --quiet http://127.0.0.1:1337/api/health 2>/dev/null; do
-  if ! kill -0 "$api_pid" 2>/dev/null; then
-    echo "API process exited unexpectedly"
+  if ! kill -0 "$legacy_pid" 2>/dev/null; then
+    echo "Legacy API process exited unexpectedly"
     exit 1
   fi
   sleep 1
 done
-echo "API is ready"
+echo "Legacy API is ready"
 
-nginx -g "daemon off;" &
-nginx_pid=$!
+export PORT="${PORT:-80}"
+export CLIENT_DIR="${CLIENT_DIR:-/client}"
+export LEGACY_API_URL="${LEGACY_API_URL:-http://127.0.0.1:1337}"
 
-while kill -0 "$api_pid" 2>/dev/null && kill -0 "$nginx_pid" 2>/dev/null; do
+/usr/local/bin/opus-api &
+go_pid=$!
+
+echo "Waiting for the Go API to be ready..."
+until wget --spider --quiet http://127.0.0.1:80/api/health 2>/dev/null; do
+  if ! kill -0 "$go_pid" 2>/dev/null; then
+    echo "Go API process exited unexpectedly"
+    exit 1
+  fi
+  sleep 1
+done
+echo "Go API is ready"
+
+while kill -0 "$legacy_pid" 2>/dev/null && kill -0 "$go_pid" 2>/dev/null; do
   sleep 1
 done
 
 first_failed_pid=""
 first_failed_status=""
-api_status=""
-nginx_status=""
+legacy_status=""
+go_status=""
 
-if ! kill -0 "$api_pid" 2>/dev/null; then
-  wait "$api_pid" || api_status=$?
-  api_status=${api_status:-0}
-  first_failed_pid="$api_pid"
-  first_failed_status="$api_status"
+if ! kill -0 "$legacy_pid" 2>/dev/null; then
+  wait "$legacy_pid" || legacy_status=$?
+  legacy_status=${legacy_status:-0}
+  first_failed_pid="$legacy_pid"
+  first_failed_status="$legacy_status"
 fi
 
-if [ -z "$first_failed_pid" ] && ! kill -0 "$nginx_pid" 2>/dev/null; then
-  wait "$nginx_pid" || nginx_status=$?
-  nginx_status=${nginx_status:-0}
-  first_failed_pid="$nginx_pid"
-  first_failed_status="$nginx_status"
+if [ -z "$first_failed_pid" ] && ! kill -0 "$go_pid" 2>/dev/null; then
+  wait "$go_pid" || go_status=$?
+  go_status=${go_status:-0}
+  first_failed_pid="$go_pid"
+  first_failed_status="$go_status"
 fi
 
 cleanup
 
-if [ "$first_failed_pid" != "$api_pid" ]; then
-  wait "$api_pid" || api_status=$?
+if [ "$first_failed_pid" != "$legacy_pid" ]; then
+  wait "$legacy_pid" || legacy_status=$?
 fi
 
-if [ "$first_failed_pid" != "$nginx_pid" ]; then
-  wait "$nginx_pid" || nginx_status=$?
+if [ "$first_failed_pid" != "$go_pid" ]; then
+  wait "$go_pid" || go_status=$?
 fi
 
-api_status=${api_status:-0}
-nginx_status=${nginx_status:-0}
+legacy_status=${legacy_status:-0}
+go_status=${go_status:-0}
 
 if [ -n "$first_failed_status" ]; then
   exit "$first_failed_status"
 fi
 
-if [ "$api_status" -ne 0 ]; then
-  exit "$api_status"
+if [ "$legacy_status" -ne 0 ]; then
+  exit "$legacy_status"
 fi
 
-exit "$nginx_status"
+exit "$go_status"
