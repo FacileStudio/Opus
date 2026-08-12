@@ -11,13 +11,22 @@ export const windowId = Math.random().toString(36).substring(2, 11);
 
 export const client = hc<AppType>(apiUrl, {
   fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+    const method = (init?.method || "GET").toUpperCase();
+    const headers = new Headers(init?.headers);
+    headers.set("Content-Type", "application/json");
+    headers.set("X-Opus-Window-Id", windowId);
+    // porte reads the session cookie before the Authorization header and
+    // refuses a cookie-authenticated mutating request without X-Facile-CSRF.
+    if (method !== "GET" && method !== "HEAD") {
+      headers.set("X-Facile-CSRF", "1");
+    }
+    const bearer = localStorage.getItem("opus.access_token");
+    if (bearer) {
+      headers.set("Authorization", `Bearer ${bearer}`);
+    }
     return fetch(input, {
       ...init,
-      headers: {
-        ...init?.headers,
-        "Content-Type": "application/json",
-        "X-Opus-Window-Id": windowId,
-      },
+      headers,
       credentials: "include",
     }).catch((error) => {
       if (error instanceof TypeError && error.message.includes("fetch")) {

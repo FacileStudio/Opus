@@ -1,23 +1,11 @@
-import type { authClient } from "@/lib/auth-client";
+import type { WorkspaceMember, WorkspaceInvitation } from "@/lib/auth-client";
 
-export type WorkspaceUser = NonNullable<
-  Awaited<ReturnType<typeof authClient.organization.listMembers>>["data"]
->[number];
+export type WorkspaceUser = WorkspaceMember;
 
-// Active workspace member (current user's membership)
-export type ActiveWorkspaceUser = NonNullable<
-  Awaited<ReturnType<typeof authClient.organization.getActiveMember>>["data"]
->;
+export type ActiveWorkspaceUser = WorkspaceMember;
 
-// Workspace invitation types
-export type WorkspaceUserInvitation = NonNullable<
-  Awaited<ReturnType<typeof authClient.organization.listInvitations>>["data"]
->[number];
+export type WorkspaceUserInvitation = WorkspaceInvitation;
 
-export type UserInvitation = NonNullable<
-  Awaited<
-    ReturnType<typeof authClient.organization.listUserInvitations>
-  >["data"]
->[number];
+export type UserInvitation = WorkspaceInvitation;
 
 export default WorkspaceUser;

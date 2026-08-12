@@ -1,45 +1,60 @@
-import { createAccessControl } from "better-auth/plugins/access";
-import {
-  adminAc,
-  defaultStatements,
-  memberAc,
-  ownerAc,
-} from "better-auth/plugins/organization/access";
+// Permission statements and role definitions, replacing better-auth's access
+// plugin. The server owns enforcement; this module is the client-side mirror
+// the UI reads to decide which controls to render, and the single place the
+// role→resources mapping lives.
 
-// Define custom permissions for workspace-specific resources
+export type PermissionResource = "project" | "task" | "workspace" | "team";
+
 const statement = {
-  ...defaultStatements, // Include default org/member/invitation permissions
   project: ["create", "read", "update", "delete", "share"],
   task: ["create", "read", "update", "delete", "assign"],
   workspace: ["read", "update", "delete", "manage_settings"],
-  // team: ["invite", "remove", "manage_roles"],
+  team: ["invite", "remove", "manage_roles"],
 } as const;
 
-const ac = createAccessControl(statement);
+export type PermissionStatement = {
+  [R in PermissionResource]: readonly string[];
+};
 
-// Custom role definitions that extend default permissions
-const member = ac.newRole({
-  ...memberAc.statements, // Inherit default member permissions
-  project: ["create", "read"],
-  task: ["create", "read", "update"],
-  workspace: ["read"],
-  // team: ["invite"], // Members can invite others
-});
+type Role = "owner" | "admin" | "member";
 
-const admin = ac.newRole({
-  ...adminAc.statements, // Inherit default admin permissions
-  project: ["create", "read", "update", "delete", "share"],
-  task: ["create", "read", "update", "delete", "assign"],
-  workspace: ["read", "update", "manage_settings"],
-  // team: ["invite", "remove", "manage_roles"],
-});
+// NonNullable<Record<string, readonly string[]>> shape for the permission API.
+type RuleMap = Record<PermissionResource, readonly string[] | undefined>;
 
-const owner = ac.newRole({
-  ...ownerAc.statements, // Inherit default owner permissions
-  project: ["create", "read", "update", "delete", "share"],
-  task: ["create", "read", "update", "delete", "assign"],
-  workspace: ["read", "update", "delete", "manage_settings"],
-  // team: ["invite", "remove", "manage_roles"],
-});
+function buildRole(project: readonly string[], task: readonly string[], workspace: readonly string[], team: readonly string[]): { permissions: RuleMap } {
+  return {
+    permissions: {
+      project,
+      task,
+      workspace,
+      team,
+    },
+  };
+}
+
+const MemberAC = buildRole(["create", "read"], ["create", "read", "update"], ["read"], []);
+const AdminAC = buildRole(
+  ["create", "read", "update", "delete", "share"],
+  ["create", "read", "update", "delete", "assign"],
+  ["read", "update", "manage_settings"],
+  ["invite", "remove", "manage_roles"],
+);
+const OwnerAC = buildRole(
+  ["create", "read", "update", "delete", "share"],
+  ["create", "read", "update", "delete", "assign"],
+  ["read", "update", "delete", "manage_settings"],
+  ["invite", "remove", "manage_roles"],
+);
+
+const ac = {
+  member: MemberAC,
+  admin: AdminAC,
+  owner: OwnerAC,
+} as const;
+
+const member = MemberAC;
+const admin = AdminAC;
+const owner = OwnerAC;
 
 export { ac, admin, member, owner, statement };
+export type { Role };

@@ -1,13 +1,29 @@
-import type { authClient } from "@/lib/auth-client";
+import type { WorkspaceMember } from "@/lib/auth-client";
 
-export type Workspace = NonNullable<
-  Awaited<
-    ReturnType<typeof authClient.organization.getFullOrganization>
-  >["data"]
->;
+export type Workspace = {
+  id: string;
+  name: string;
+  slug: string;
+  logo: string | null;
+  description: string | null;
+  createdAt: string;
+};
 
-export type ActiveWorkspace = NonNullable<
-  ReturnType<typeof authClient.useActiveOrganization>["data"]
->;
+export type FullWorkspace = Workspace & {
+  members: WorkspaceMember[];
+  invitations: WorkspaceInvitation[];
+};
+
+export type WorkspaceInvitation = {
+  id: string;
+  email: string;
+  role: "owner" | "admin" | "member";
+  status: "pending" | "accepted" | "rejected" | "canceled";
+  createdAt: string;
+  expiresAt: string | null;
+  workspaceId: string;
+  workspaceName: string;
+  inviterName: string;
+};
 
 export default Workspace;
