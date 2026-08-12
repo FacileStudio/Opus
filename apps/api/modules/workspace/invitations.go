@@ -48,6 +48,13 @@ func (service *Service) InviteMember(ctx context.Context, callerID, workspaceID 
 	if !validRole(role) {
 		return nil, errors.Invalid("Role must be owner, admin or member")
 	}
+	// Owners may grant any role; admins may not confer owner, or an admin
+	// escalates to a workspace they cannot otherwise reach.
+	if role == "owner" {
+		if err := service.requireRole(ctx, callerID, workspaceID, "owner"); err != nil {
+			return nil, err
+		}
+	}
 	var memberCount int64
 	err := service.orm.WithContext(ctx).
 		Table("workspace_members").
@@ -83,7 +90,7 @@ func (service *Service) InviteMember(ctx context.Context, callerID, workspaceID 
 	if err := service.orm.WithContext(ctx).Create(&invitation).Error; err != nil {
 		return nil, errors.Internal("failed to create the invitation", err)
 	}
-	return service.InvitationByID(ctx, invitation.ID)
+	return service.InvitationByID(ctx, callerID, email, invitation.ID)
 }
 
 // WorkspaceInvitations lists every invitation for one workspace, newest first,
@@ -103,7 +110,7 @@ func (service *Service) UserInvitations(ctx context.Context, email string) ([]In
 
 // InvitationByID loads one invitation, for the accept page and the frontend's
 // getInvitation call.
-func (service *Service) InvitationByID(ctx context.Context, id int64) (*InvitationResponse, error) {
+func (service *Service) InvitationByID(ctx context.Context, callerID int64, callerEmail string, id int64) (*InvitationResponse, error) {
 	rows, err := service.queryInvitations(ctx, "invitations.id = ?", id)
 	if err != nil {
 		return nil, err
@@ -111,19 +118,31 @@ func (service *Service) InvitationByID(ctx context.Context, id int64) (*Invitati
 	if len(rows) == 0 {
 		return nil, errors.NotFound("Invitation not found")
 	}
-	return &rows[0], nil
+	invitation := &rows[0]
+	// An invitation is readable by the person it is addressed to, or by the
+	// workspace's owners/admins. Anything else is an enumeration oracle on
+	// sequential int64 ids.
+	if !strings.EqualFold(strings.TrimSpace(invitation.Email), strings.TrimSpace(callerEmail)) {
+		if err := service.requireRole(ctx, callerID, invitation.WorkspaceID, "owner", "admin"); err != nil {
+			return nil, err
+		}
+	}
+	return invitation, nil
 }
 
 // AcceptInvitation moves a pending invitation to accepted and, in the same
 // transaction, creates the membership with the invitation's role. Only the
 // invited address may accept.
 func (service *Service) AcceptInvitation(ctx context.Context, callerID int64, callerEmail string, id int64) (*AcceptInvitationResponse, error) {
-	invitation, err := service.InvitationByID(ctx, id)
+	invitation, err := service.InvitationByID(ctx, callerID, callerEmail, id)
 	if err != nil {
 		return nil, err
 	}
 	if invitation.Status != "pending" {
 		return nil, errors.Conflict("This invitation is no longer pending")
+	}
+	if service.expired(invitation) {
+		return nil, errors.Conflict("This invitation has expired")
 	}
 	if !strings.EqualFold(strings.TrimSpace(invitation.Email), strings.TrimSpace(callerEmail)) {
 		return nil, errors.Forbidden("This invitation was not sent to you")
@@ -166,12 +185,15 @@ func (service *Service) AcceptInvitation(ctx context.Context, callerID int64, ca
 // RejectInvitation marks a pending invitation rejected. The invited address is
 // the only one that can decline.
 func (service *Service) RejectInvitation(ctx context.Context, callerID int64, callerEmail string, id int64) (*MessageResponse, error) {
-	invitation, err := service.InvitationByID(ctx, id)
+	invitation, err := service.InvitationByID(ctx, callerID, callerEmail, id)
 	if err != nil {
 		return nil, err
 	}
 	if invitation.Status != "pending" {
 		return nil, errors.Conflict("This invitation is no longer pending")
+	}
+	if service.expired(invitation) {
+		return nil, errors.Conflict("This invitation has expired")
 	}
 	if !strings.EqualFold(strings.TrimSpace(invitation.Email), strings.TrimSpace(callerEmail)) {
 		return nil, errors.Forbidden("This invitation was not sent to you")
@@ -186,7 +208,7 @@ func (service *Service) RejectInvitation(ctx context.Context, callerID int64, ca
 // CancelInvitation marks a pending invitation canceled. The inviter cancels
 // their own invite; an owner or admin of the workspace can cancel any.
 func (service *Service) CancelInvitation(ctx context.Context, callerID int64, id int64) (*MessageResponse, error) {
-	invitation, err := service.InvitationByID(ctx, id)
+	invitation, err := service.InvitationByID(ctx, callerID, "", id)
 	if err != nil {
 		return nil, err
 	}
@@ -203,6 +225,15 @@ func (service *Service) CancelInvitation(ctx context.Context, callerID int64, id
 		return nil, errors.Internal("failed to cancel the invitation", err)
 	}
 	return &MessageResponse{Message: "Invitation canceled"}, nil
+}
+
+// expired reports whether a pending invitation has outlived its expires_at.
+// The 7-day default set at invite time is stamped onto the row; a nil expiry
+// means the row predates the window and is treated as live (the legacy
+// better-auth invites it replaces enforced their own window on the accept
+// path, but Go owns accept now).
+func (service *Service) expired(invitation *InvitationResponse) bool {
+	return invitation.ExpiresAt != nil && !time.Now().Before(*invitation.ExpiresAt)
 }
 
 // queryInvitations runs the joined invitation select under one predicate,
@@ -257,8 +288,8 @@ func (controller *Controller) userInvitations(ctx context.Context, callerEmail s
 	return controller.service.UserInvitations(ctx, callerEmail)
 }
 
-func (controller *Controller) invitationByID(ctx context.Context, id int64) (*InvitationResponse, error) {
-	return controller.service.InvitationByID(ctx, id)
+func (controller *Controller) invitationByID(ctx context.Context, callerID int64, callerEmail string, id int64) (*InvitationResponse, error) {
+	return controller.service.InvitationByID(ctx, callerID, callerEmail, id)
 }
 
 func (controller *Controller) acceptInvitation(ctx context.Context, callerID int64, callerEmail string, id int64) (*AcceptInvitationResponse, error) {

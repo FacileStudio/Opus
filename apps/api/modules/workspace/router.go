@@ -273,12 +273,13 @@ func RegisterRoutes(router chi.Router, service *Service, authService *auth.Servi
 			}
 
 			router.Get("/", func(w http.ResponseWriter, request *http.Request) {
+				identity, _ := authcontext.IdentityFromContext(request.Context())
 				id, err := invitationID(request)
 				if err != nil {
 					httpjson.WriteError(w, errors.Invalid("invalid invitation id"))
 					return
 				}
-				resp, err := service.controller.invitationByID(request.Context(), id)
+				resp, err := service.controller.invitationByID(request.Context(), identity.UserID, identity.Email, id)
 				if err != nil {
 					httpjson.WriteError(w, err)
 					return

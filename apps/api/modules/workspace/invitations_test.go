@@ -222,3 +222,72 @@ func TestCancelInvitation(t *testing.T) {
 		t.Fatalf("owner CancelInvitation of admin's invite: %v", err)
 	}
 }
+func TestAdminCannotInviteOwner(t *testing.T) {
+	service, db := newTestService(t)
+	ownerID := createUser(t, db, "camille@facile.studio", "Camille")
+	adminID := createUser(t, db, "lea@facile.studio", "Lea")
+	workspaceID := createWorkspace(t, db, "Studio")
+	addMember(t, db, workspaceID, ownerID, "owner")
+	addMember(t, db, workspaceID, adminID, "admin")
+	ctx := context.Background()
+
+	if _, err := service.InviteMember(ctx, adminID, workspaceID, InviteMemberRequest{Email: "paul@facile.studio", Role: "owner"}); errors.Status(err) != 403 {
+		t.Fatalf("admin inviting owner status = %d, want 403", errors.Status(err))
+	}
+	invitation, err := service.InviteMember(ctx, ownerID, workspaceID, InviteMemberRequest{Email: "paul@facile.studio", Role: "owner"})
+	if err != nil {
+		t.Fatalf("owner inviting owner: %v", err)
+	}
+	if invitation.Role != "owner" {
+		t.Fatalf("role = %q, want owner", invitation.Role)
+	}
+}
+
+func TestInvitationByIDGatedToInviteeOrOwnerAdmin(t *testing.T) {
+	service, db := newTestService(t)
+	ownerID := createUser(t, db, "camille@facile.studio", "Camille")
+	memberID := createUser(t, db, "lea@facile.studio", "Lea")
+	workspaceID := createWorkspace(t, db, "Studio")
+	addMember(t, db, workspaceID, ownerID, "owner")
+	addMember(t, db, workspaceID, memberID, "member")
+	ctx := context.Background()
+
+	invitation, err := service.InviteMember(ctx, ownerID, workspaceID, InviteMemberRequest{Email: "paul@facile.studio"})
+	if err != nil {
+		t.Fatalf("invite: %v", err)
+	}
+	if _, err := service.InvitationByID(ctx, memberID, "lea@facile.studio", invitation.ID); errors.Status(err) != 403 {
+		t.Fatalf("unrelated member read status = %d, want 403", errors.Status(err))
+	}
+	if _, err := service.InvitationByID(ctx, ownerID, "camille@facile.studio", invitation.ID); err != nil {
+		t.Fatalf("owner read: %v", err)
+	}
+	other, err := service.InvitationByID(ctx, 0, "paul@facile.studio", invitation.ID)
+	if err != nil {
+		t.Fatalf("invitee-by-email read: %v", err)
+	}
+	if other.ID != invitation.ID {
+		t.Fatalf("read id = %d, want %d", other.ID, invitation.ID)
+	}
+}
+
+func TestExpiredInvitationCannotBeAccepted(t *testing.T) {
+	service, db := newTestService(t)
+	ownerID := createUser(t, db, "camille@facile.studio", "Camille")
+	inviteeID := createUser(t, db, "paul@facile.studio", "Paul")
+	workspaceID := createWorkspace(t, db, "Studio")
+	addMember(t, db, workspaceID, ownerID, "owner")
+	ctx := context.Background()
+
+	invitation, err := service.InviteMember(ctx, ownerID, workspaceID, InviteMemberRequest{Email: "paul@facile.studio"})
+	if err != nil {
+		t.Fatalf("invite: %v", err)
+	}
+	past := time.Now().Add(-time.Hour)
+	if err := db.Model(&schemas.Invitation{}).Where("id = ?", invitation.ID).Update("expires_at", &past).Error; err != nil {
+		t.Fatalf("backdate expiry: %v", err)
+	}
+	if _, err := service.AcceptInvitation(ctx, inviteeID, "paul@facile.studio", invitation.ID); errors.Status(err) != 409 {
+		t.Fatalf("accept expired status = %d, want 409", errors.Status(err))
+	}
+}

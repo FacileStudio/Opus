@@ -88,7 +88,7 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	passwords, err := local.New(local.Config{AllowRegistration: !appEnv.SSOOnly, MinPasswordLength: 8}, local.Deps{
+	passwords, err := local.New(local.Config{AllowRegistration: !appEnv.SSOOnly, MinPasswordLength: 12}, local.Deps{
 		Users:      users,
 		Identities: store.Identities(),
 		Sessions:   sessions,

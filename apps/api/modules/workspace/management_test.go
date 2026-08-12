@@ -242,3 +242,23 @@ func TestRemoveMember(t *testing.T) {
 		t.Fatalf("last-owner remove status = %d, want 400", errors.Status(err))
 	}
 }
+func TestRemoveMemberByOwnerGate(t *testing.T) {
+	service, db := newTestService(t)
+	ownerID := createUser(t, db, "camille@facile.studio", "Camille")
+	adminID := createUser(t, db, "lea@facile.studio", "Lea")
+	coOwnerID := createUser(t, db, "nora@facile.studio", "Nora")
+	workspaceID := createWorkspace(t, db, "Studio")
+	addMember(t, db, workspaceID, ownerID, "owner")
+	addMember(t, db, workspaceID, adminID, "admin")
+	addMember(t, db, workspaceID, coOwnerID, "owner")
+	ctx := context.Background()
+
+	// Admin must not be able to remove a co-owner: only owners manage owners.
+	if _, err := service.RemoveMember(ctx, adminID, workspaceID, strconv.FormatInt(coOwnerID, 10)); errors.Status(err) != 403 {
+		t.Fatalf("admin removing owner status = %d, want 403", errors.Status(err))
+	}
+	// Owner can.
+	if _, err := service.RemoveMember(ctx, ownerID, workspaceID, strconv.FormatInt(coOwnerID, 10)); err != nil {
+		t.Fatalf("owner removing co-owner: %v", err)
+	}
+}

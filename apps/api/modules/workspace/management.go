@@ -198,7 +198,12 @@ func (service *Service) RemoveMember(ctx context.Context, callerID, workspaceID 
 	if err != nil {
 		return nil, err
 	}
+	// Only owners manage owners: an admin removing a co-owner (or the owner)
+	// escalates past the role boundary invite already enforces.
 	if member.Role == "owner" {
+		if err := service.requireRole(ctx, callerID, workspaceID, "owner"); err != nil {
+			return nil, err
+		}
 		owners, err := service.ownerCount(ctx, workspaceID)
 		if err != nil {
 			return nil, err
