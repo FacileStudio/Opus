@@ -6,6 +6,7 @@ services:
       - .env
     volumes:
       - opus-db-data:/var/lib/postgresql/data
+      - ./deploy/db/init:/docker-entrypoint-initdb.d:ro
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U opus -d opus"]

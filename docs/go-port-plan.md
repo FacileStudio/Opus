@@ -24,15 +24,26 @@ API at `LEGACY_API_URL` (127.0.0.1:1337). Features flip Go-native one module at 
 The frontend changes once — when auth swaps from better-auth to porte (Phase 1).
 
 ## Decisions (baked in — re-open only if something breaks against prod)
-- **Fresh DB for the port dev cycle.** The Go backend and the legacy API share one dev
-  Postgres that a `docker compose up` owns. Do NOT write a better-auth→porte data migration
-  now. Live prod keeps running on the old TS API until Phase 6.
-- **Schema ownership stays with Drizzle until Phase 6.** Both apps share one dev DB; the
-  legacy API auto-runs Drizzle migrations on boot and they are the schema authority. The Go
-  backend must NOT run goose against the same DB — dual ownership of one schema is the bug
-  class to avoid. The goose baseline (`apps/api/migrations/00001_baseline.sql` + own package
-  with `//go:embed *.sql`) is a **Phase 6** step, taken from a `pg_dump --schema-only` of the
-  live DB at cutover, with the raw `INSERT INTO goose_db_version` baseline dance.
+- **The Go backend owns its own schema on its own database.** The legacy API still
+  derives `DATABASE_URL` from `POSTGRES_*` (the CUID2 `opus` database; Drizzle remains
+  the live schema authority for the legacy app). The Go binary is scoped to its own
+  `GO_DATABASE_URL` (default `postgresql://…/opus_go`), created by
+  `deploy/db/init/01-opus-go.sql` on a fresh volume or `createdb` by hand. This REPLACES
+  the original "one shared dev DB, Drizzle owns the schema" rule: it could not survive the
+  int64 decision below, and two processes owning one schema is exactly the bug class the
+  old rule existed to avoid.
+- **Identity is int64, matching the suite and porte.** Opus was the only suite app on
+  CUID2 text ids; porte froze `Identity.UserID int64` across its whole contract (sessions,
+  identities, stores). The port adopts the suite's int64 model rather than a custom
+  int64↔text surrogate store — the original plan step 3 sketched a "CUID2 + argon2 hash +
+  oidc_subject + roles" user model that does not match the real schema anyway (better-auth
+  keeps the hash in `account`, and there are no `oidc_subject` or roles columns). The
+  frontend treats ids as opaque strings, so int64 serialises unchanged through URL
+  building. Live prod still runs the old TS API's CUID2 data; a real data migration is a
+  Phase 6 cutover concern.
+- **Schema ownership of the Go tables is GORM AutoMigrate** (like Sablier), not goose.
+  Goose on its own baseline remains a Phase 6 step, from a `pg_dump` of the live DB at
+  cutover.
 - **Casier = fail-soft.** `CASIER_MACHINE_TOKEN` set → pull env secrets from Casier at boot
   (`GET /api/projects/{project}/environments/{env}/secrets/export` with the machine token);
   on any failure, log and continue with `.env`/env vars. Hard fail only once prod cutover is
@@ -57,6 +68,55 @@ The frontend changes once — when auth swaps from better-auth to porte (Phase 1
 - Gates: `go build`/`vet`/`test` green; `filet check .` exit 0; `filet docker .` warns only
   (RUN-layering + pnpm-as-npm false positives — ignore, don't tune config).
 
+## Phase 1 — Auth seam + Workspace (IN PROGRESS)
+
+### K1 — Go side: DONE (this session)
+- `go.mod`: porte v0.2.10, gorm + postgres/sqlite drivers.
+- `apps/api/schemas/` — Go-owned `users`, `workspaces`, `workspace_members` (int64 PKs),
+  GORM AutoMigrate via `schemas.Migrate` in `run()`.
+- `apps/api/modules/auth/` — `UserStore` (porte `UserStore` + `PasswordUserStore`,
+  int64 ids, kept with the Service like Sablier); Service (RequireAuth, IdentityForUser,
+  LoadUser, Register/Login → `{token, user}`); `/auth/me`; local `/auth/register` +
+  `/auth/login` (the local kit's own Mount is deliberately NOT used: it would collide
+  with these paths and answers porte's lean `{user_id, token}`).
+- `apps/api/internal/{authcontext,middleware}` — porte session middleware + context
+  hydration.
+- `apps/api/internal/env` — porte block (OIDC_*, SSO_ONLY) + `Porte()`, `UploadDir`.
+- `apps/api/main.go` — `buildAuth` ported from Sablier (session.Manager + oidc.Kit +
+  local.Kit over portepg); router mounts sessions, kit, auth, workspace BEFORE the legacy
+  proxy; `schemas.Migrate`; upload dirs created.
+- `apps/api/modules/workspace/` — GET / (list), GET /{id}/members, POST/DELETE /{id}/logo,
+  GET /{id}/logo (public, matching legacy). Logo files under `UPLOAD_DIR/workspaces/{id}`;
+  logo column stamped as cache-buster.
+- `apps/api/internal/storage/logo.go` — Save/Delete/Read workspace logos.
+- Tests: `modules/auth/users_test.go`, `modules/workspace/service_test.go` (sqlite
+  in-memory). `go build`/`vet`/`test`/`filet check .` all green.
+- Infra: `deploy/opus-entrypoint.sh` scopes the Go process to `GO_DATABASE_URL`;
+  `deploy/db/init/01-opus-go.sql` creates `opus_go`; compose mounts it; `.env.sample`
+  documents `GO_DATABASE_URL` / `POSTGRES_DB_GO`.
+
+### K2 — Frontend (next, forced by the porte swap)
+7. `apps/web/src/lib/auth-client.ts` — replace better-auth client with a thin fetch client
+   against the Go API: `GET /api/auth/config`, `GET /api/auth/oidc`, `GET /api/auth/me`,
+   `POST /api/auth/login` and `POST /api/auth/register` (both answering `{token, user}`),
+   `POST /api/auth/logout`. No `/auth/local/*` paths exist — porte and this port serve the
+   plain `/auth/login` + `/auth/register`.
+8. `apps/web/src/components/providers/auth-provider/` (index.tsx, hooks/use-auth.ts) —
+   re-plumb to the new client; session = porte cookie, user = `/auth/me`, bearer token kept
+   for the fetch wrapper.
+9. `apps/web/src/routes/auth/*` (sign-in, sign-up, verify-otp, check-email) — porte flow:
+   OIDC redirect or local sign-in; render the `error` query param OUTSIDE any SSO_ONLY gate.
+10. Every mutating fetch in the web app: add `X-Facile-CSRF` header (porte reads cookie
+    before Authorization; a cookie-authenticated write without the header = 403).
+    Test with the browser's transport, not a bearer token.
+
+
+### Contract parity (every flipped feature)
+Capture the legacy OpenAPI (`GET /docs/openapi.json` from a running legacy API, or
+`apps/api-legacy/src/utils/openapi-spec.ts`) as a fixture; assert the Go handler answers the
+same JSON shape for the routes the frontend actually calls. Route-by-route, flip off the
+proxy when parity holds.
+
 ## Reference implementation (read before writing Phase 1 code)
 - **Sablier** `apps/api/main.go` — the canonical tronc+porte+journal wiring: `buildAuth`
   (session.Manager + oidc.Kit + local.Kit over portepg), `buildRouter` (httpx chain, health,
@@ -66,50 +126,6 @@ The frontend changes once — when auth swaps from better-auth to porte (Phase 1
 - **porte SPEC** at `~/.mycelium/memory/conventions/facile-suite-auth.md` + porte repo SPEC.md.
 - Suite go.mod floor (Sablier): tronc v0.12+, porte **v0.2.10**, Journal sdk/journal,
   chi, gorm (postgres + sqlite test drivers), godotenv.
-
-## Phase 1 — Auth seam + Workspace (next)
-
-### K1 — Go side
-1. `apps/api/go.mod` — add: porte v0.2.10+, gorm (gorm.io/driver/postgres), chi (have),
-   goose NOT yet (Phase 6). Run `go get` in `apps/api`.
-2. `apps/api/internal/database/database.go` — gorm Open from `appEnv.DatabaseURL` (tronc
-   Core). `db.DB()` BEFORE any migration call (the old bug class).
-3. `apps/api/internal/auth/users.go` — `auth.NewUserStore(db)` implementing porte's user
-   interface (upsert by email, count, find): model the legacy `userTable` (schema:
-   `apps/api-legacy/src/database/schema.ts` — CUID2 id, email, name, argon2 hash,
-   oidc_subject, roles). porte `local` verifies argon2id at suite params (64MiB/3/2) —
-   legacy hashes from better-auth are compatible; the `isLegacyHash` path covers `$2a$`/`$2b$`.
-4. `apps/api/main.go` — port Sablier's `buildAuth`: `session.New`, `oidc.New`,
-   `local.New(local.Config{AllowRegistration: !appEnv.SSOOnly, MinPasswordLength: 8})`.
-   Mount `/api/auth/*` (sessions + oidc + local routes) BEFORE the legacy proxy.
-5. `apps/api/internal/env` — add the porte env block (OIDC_ISSUER/CLIENT_ID/CLIENT_SECRET/
-   REDIRECT_URL/SUCCESS_URL, SSO_ONLY) shaping `porte.Config` exactly like Sablier.
-6. **Workspace module** `apps/api/modules/workspace/{router,controller,service,types,
-   documentation}.go` — port these routes (path under `/api/workspace`, auth required):
-   - `GET /` — list user workspaces (getUserWorkspaces)
-   - `GET /{workspaceId}/members` — list members (getWorkspaceMembers)
-   - `POST /{workspaceId}/logo` — upload logo (local storage, `UPLOAD_DIR`)
-   - `DELETE /{workspaceId}/logo` — delete logo
-   Response shapes come from `apps/api-legacy/src/workspace/index.ts` + controllers
-   (contract parity, below). Mount BEFORE the proxy; the proxy then skips these.
-
-### K2 — Frontend (parallel, forced by the porte swap)
-7. `apps/web/src/lib/auth-client.ts` — replace better-auth client with a thin fetch client
-   against porte: `GET /api/auth/config`, `GET /api/auth/oidc`, `POST /api/auth/oidc/callback`,
-   `POST /api/auth/local/{sign-in|register}`, `POST /api/auth/logout`.
-8. `apps/web/src/components/providers/auth-provider/` (index.tsx, hooks/use-auth.ts) —
-   re-plumb to the new client; session = porte cookie, not better-auth session fetch.
-9. `apps/web/src/routes/auth/*` (sign-in, sign-up, verify-otp, check-email) — porte flow:
-   OIDC redirect or local sign-in; render the `error` query param OUTSIDE any SSO_ONLY gate.
-10. Every mutating fetch in the web app: add `X-Facile-CSRF` header (porte reads cookie
-    before Authorization; a cookie-authenticated write without the header = 403).
-    Test with the browser's transport, not a bearer token.
-
-### Contract parity (every flipped feature)
-Capture the legacy OpenAPI (`GET /docs/openapi.json` from a running legacy API, or
-`apps/api-legacy/src/utils/openapi-spec.ts`) as a fixture; assert the Go handler answers the
-same JSON shape for the routes the frontend actually calls. Route-by-route, flip off the
-proxy when parity holds.
 
 ## Later phases (from the original plan — order preserved)
 - **Phase 2 — Core domain**: project, column, task (incl. bulk/import/export/number), label,

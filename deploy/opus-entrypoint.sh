@@ -73,7 +73,25 @@ export PORT="${PORT:-80}"
 export CLIENT_DIR="${CLIENT_DIR:-/client}"
 export LEGACY_API_URL="${LEGACY_API_URL:-http://127.0.0.1:1337}"
 
-/usr/local/bin/opus-api &
+# The Go backend owns its own schema on its own database: the port adopts the
+# suite's int64 identity model, while the legacy Drizzle schema keys everything
+# on CUID2 text ids. The two cannot share one database, so the Go process gets
+# its own URL scoped to this one process — the DATABASE_URL above still belongs
+# to the legacy API.
+if [ -z "${GO_DATABASE_URL:-}" ]; then
+  go_db="${POSTGRES_DB_GO:-opus_go}"
+  if [ -n "${POSTGRES_PASSWORD:-}" ]; then
+    encoded_go_user="$(urlencode "$POSTGRES_USER")"
+    encoded_go_password="$(urlencode "$POSTGRES_PASSWORD")"
+    GO_DATABASE_URL="postgresql://${encoded_go_user}:${encoded_go_password}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${go_db}"
+  else
+    GO_DATABASE_URL="$DATABASE_URL"
+    echo "WARNING: no POSTGRES_PASSWORD — the Go backend shares the legacy database"
+  fi
+  echo "GO_DATABASE_URL not set — derived from POSTGRES_* vars"
+fi
+
+DATABASE_URL="$GO_DATABASE_URL" /usr/local/bin/opus-api &
 go_pid=$!
 
 echo "Waiting for the Go API to be ready..."

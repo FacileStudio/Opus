@@ -9,16 +9,23 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"strconv"
 	"syscall"
 	"time"
 
 	"github.com/FacileStudio/Journal/sdk/journal"
-	"github.com/FacileStudio/Opus/apps/api/internal/env"
-	"github.com/go-chi/chi/v5"
-
+	"github.com/FacileStudio/Opus/apps/api/internal/database"
 	documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
+	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/legacy"
+	"github.com/FacileStudio/Opus/apps/api/modules/auth"
+	"github.com/FacileStudio/Opus/apps/api/modules/workspace"
+	"github.com/FacileStudio/Opus/apps/api/schemas"
+	"github.com/FacileStudio/porte/local"
+	"github.com/FacileStudio/porte/oidc"
+	portepg "github.com/FacileStudio/porte/pg"
+	"github.com/FacileStudio/porte/session"
 	"github.com/FacileStudio/tronc/apiref"
 	"github.com/FacileStudio/tronc/health"
 	"github.com/FacileStudio/tronc/healthcheck"
@@ -26,7 +33,13 @@ import (
 	"github.com/FacileStudio/tronc/logger"
 	troncmiddleware "github.com/FacileStudio/tronc/middleware"
 	"github.com/FacileStudio/tronc/spa"
+	"github.com/go-chi/chi/v5"
+	"gorm.io/gorm"
 )
+
+type sqlPinger interface {
+	PingContext(ctx context.Context) error
+}
 
 // referenceConfig describes the API for the reference page at /docs.
 func referenceConfig() apiref.Config {
@@ -35,14 +48,65 @@ func referenceConfig() apiref.Config {
 		Description: "Self-hosted project management for teams.",
 		Servers:     []string{"/api"},
 		Registry: documentation.Response{
-			Modules: []documentation.Module{},
+			Modules: []documentation.Module{
+				auth.Documentation,
+				workspace.Documentation,
+			},
 		},
 	}
 }
 
+// buildAuth constructs porte: one session manager, shared by the OIDC kit and
+// the local login, over the identity tables.
+//
+// One manager and not two: they would each keep their own idea of the clock
+// and of whether the cookie is Secure, and porte refuses a kit whose config
+// disagrees with its manager's for exactly that reason. Discovery runs here,
+// so an unreachable or half-configured issuer fails at boot rather than on
+// somebody's first login.
+func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger) (*session.Manager, *local.Kit, *oidc.Kit, error) {
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	store := portepg.New(sqlDB)
+	users := auth.NewUserStore(db)
+	cfg := appEnv.Porte()
+
+	sessions, err := session.New(cfg, session.Deps{Sessions: store.Sessions(), Logger: appLogger})
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	kit, err := oidc.New(ctx, cfg, oidc.Deps{
+		Users:      users,
+		Identities: store.Identities(),
+		Sessions:   sessions,
+		Codes:      store.LoginCodes(),
+		Logger:     appLogger,
+	})
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	passwords, err := local.New(local.Config{AllowRegistration: !appEnv.SSOOnly, MinPasswordLength: 8}, local.Deps{
+		Users:      users,
+		Identities: store.Identities(),
+		Sessions:   sessions,
+		Logger:     appLogger,
+		Count:      users.CountUsers,
+	})
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	return sessions, passwords, kit, nil
+}
+
 // buildRouter assembles the chi router with the suite middleware chain, health
-// probes, the API reference and the SPA catch-all.
-func buildRouter(appEnv *env.Config, appLogger *slog.Logger) chi.Router {
+// probes, the API reference, the native modules, the legacy proxy for
+// unported paths and the SPA catch-all.
+func buildRouter(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *slog.Logger, sessions *session.Manager, passwords *local.Kit, kit *oidc.Kit) chi.Router {
+	authService := auth.NewService(db, sessions, passwords, appLogger)
+	workspaceService := workspace.NewService(db, appEnv.UploadDir)
+
 	router := httpx.NewRouter(httpx.Config{
 		TrustedProxies: appEnv.TrustedProxies,
 		CDNProxies:     appEnv.CDNProxies,
@@ -53,10 +117,15 @@ func buildRouter(appEnv *env.Config, appLogger *slog.Logger) chi.Router {
 		},
 	})
 
-	health.Mount(router)
+	health.Mount(router, sqlDB.PingContext)
 	apiref.Mount(router, referenceConfig())
 
 	router.Route("/api", func(api chi.Router) {
+		sessions.Mount(api)
+		kit.Mount(api)
+		auth.RegisterRoutes(api, authService, *appEnv)
+		workspace.RegisterRoutes(api, workspaceService, authService)
+
 		if appEnv.LegacyAPI != nil {
 			legacy.MountProxy(api, appEnv.LegacyAPI)
 		}
@@ -72,8 +141,12 @@ func buildRouter(appEnv *env.Config, appLogger *slog.Logger) chi.Router {
 }
 
 // createApiServer builds the HTTP server the process listens on.
-func createApiServer(appEnv *env.Config, appLogger *slog.Logger) (*http.Server, error) {
-	router := buildRouter(appEnv, appLogger)
+func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *slog.Logger) (*http.Server, error) {
+	sessions, passwords, kit, err := buildAuth(context.Background(), db, appEnv, appLogger)
+	if err != nil {
+		return nil, err
+	}
+	router := buildRouter(db, sqlDB, appEnv, appLogger, sessions, passwords, kit)
 	addr := ":" + strconv.Itoa(appEnv.Port)
 	return &http.Server{
 		Addr:              addr,
@@ -95,8 +168,8 @@ func main() {
 	}
 }
 
-// run wires the environment, the logger and the server, then blocks until the
-// process is told to stop.
+// run wires the environment, the logger, the database and the server, then
+// blocks until the process is told to stop.
 func run() error {
 	appEnv, err := env.Load()
 	appLogger := logger.New(logger.Config{})
@@ -120,7 +193,38 @@ func run() error {
 		defer journalClient.Close()
 	}
 
-	server, err := createApiServer(&appEnv, appLogger)
+	db, err := database.Open(appEnv.DatabaseURL)
+	if err != nil {
+		appLogger.Error("failed to open database", slog.Any("error", err))
+		return err
+	}
+	if err := schemas.Migrate(db); err != nil {
+		appLogger.Error("failed to run migrations", slog.Any("error", err))
+		return err
+	}
+	appLogger.Info("database migrations applied")
+
+	if err := os.MkdirAll(appEnv.UploadDir, 0o755); err != nil {
+		appLogger.Error("failed to prepare upload directory", slog.Any("error", err))
+		return err
+	}
+	if err := os.MkdirAll(filepath.Join(appEnv.UploadDir, "workspaces"), 0o755); err != nil {
+		appLogger.Error("failed to prepare upload subdirectories", slog.Any("error", err))
+		return err
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		appLogger.Error("failed to access database handle", slog.Any("error", err))
+		return err
+	}
+	defer func() {
+		if err := sqlDB.Close(); err != nil {
+			appLogger.Error("failed to close database", slog.Any("error", err))
+		}
+	}()
+
+	server, err := createApiServer(db, sqlDB, &appEnv, appLogger)
 	if err != nil {
 		appLogger.Error("failed to create server", slog.Any("error", err))
 		return err

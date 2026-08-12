@@ -7,9 +7,37 @@ import (
 	"os"
 	"strings"
 
+	"github.com/FacileStudio/porte"
 	troncenv "github.com/FacileStudio/tronc/env"
 	"github.com/joho/godotenv"
 )
+
+// OIDCConfig holds the OIDC settings read from the environment when
+// OIDC_ISSUER is set.
+type OIDCConfig struct {
+	Issuer       string
+	ClientID     string
+	ClientSecret string
+	RedirectURL  string
+	SuccessURL   string
+}
+
+// Porte returns the shared auth kit's configuration. The environment variable
+// names are the suite convention and do not change; this only reshapes what
+// Load already read.
+func (c Config) Porte() porte.Config {
+	if c.OIDC == nil {
+		return porte.Config{SSOOnly: c.SSOOnly}
+	}
+	return porte.Config{
+		Issuer:      c.OIDC.Issuer,
+		ClientID:    c.OIDC.ClientID,
+		ClientSecret: c.OIDC.ClientSecret,
+		RedirectURL: c.OIDC.RedirectURL,
+		SuccessURL:  c.OIDC.SuccessURL,
+		SSOOnly:     c.SSOOnly,
+	}
+}
 
 // Config is the fully-loaded application configuration produced by Load.
 type Config struct {
@@ -18,6 +46,13 @@ type Config struct {
 	// LegacyAPI is the transitional TypeScript API every /api route the Go
 	// backend does not own yet is proxied to. nil when not configured.
 	LegacyAPI *url.URL
+
+	// UploadDir files uploaded assets under, workspace logos today.
+	UploadDir string
+
+	// OIDC and SSOOnly shape the porte auth kit.
+	OIDC    *OIDCConfig
+	SSOOnly bool
 }
 
 // Load reads the .env file (if present) and the environment into a Config,
@@ -44,7 +79,40 @@ func Load() (Config, error) {
 		}
 		legacyAPI = parsed
 	}
-	return Config{Core: core, LegacyAPI: legacyAPI}, nil
+
+	ssoOnly, err := troncenv.Bool("SSO_ONLY", false)
+	if err != nil {
+		return Config{}, err
+	}
+
+	config := Config{
+		Core:      core,
+		LegacyAPI: legacyAPI,
+		UploadDir: troncenv.String("UPLOAD_DIR", "./data/uploads"),
+		SSOOnly:   ssoOnly,
+	}
+
+	if issuer := troncenv.String("OIDC_ISSUER", ""); issuer != "" {
+		clientID := troncenv.String("OIDC_CLIENT_ID", "")
+		clientSecret := troncenv.String("OIDC_CLIENT_SECRET", "")
+		redirectURL := troncenv.String("OIDC_REDIRECT_URL", "")
+		if clientID == "" || clientSecret == "" || redirectURL == "" {
+			return Config{}, fmt.Errorf("OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, and OIDC_REDIRECT_URL are required when OIDC_ISSUER is set")
+		}
+		successURL := troncenv.String("OIDC_SUCCESS_URL", "")
+		if successURL == "" && len(config.CORSAllowedOrigins) > 0 {
+			successURL = config.CORSAllowedOrigins[0]
+		}
+		config.OIDC = &OIDCConfig{
+			Issuer:       issuer,
+			ClientID:     clientID,
+			ClientSecret: clientSecret,
+			RedirectURL:  redirectURL,
+			SuccessURL:   successURL,
+		}
+	}
+
+	return config, nil
 }
 
 // validLogLevel reports whether level names a level the suite logger knows.
