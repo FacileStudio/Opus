@@ -15,7 +15,7 @@ Self-hosted project management platform. Simplicity and performance first -- fea
 | Email | `packages/email/` |
 | Shared libs | `packages/libs/` |
 | Linting | Biome (spaces for JS/TS, tabs elsewhere, double quotes, semicolons required) |
-| Commits | Conventional Commits enforced by commitlint + Husky |
+| Commits | Conventional Commits + gitmoji enforced by shared lefthook config (`FacileStudio/hooks`) |
 | Deploy | Docker (single-image), Helm chart (`charts/`), optional Redis for HA WebSocket pub/sub |
 | i18n | JSON translation files in `i18n/`, scripts in `scripts/i18n/` |
 
@@ -110,12 +110,13 @@ opus/
 
 ## Pre-commit Hooks
 
-The Husky pre-commit hook runs:
+Lefthook pulls the shared commit-msg policy from `FacileStudio/hooks` (`ref: v1`); local
+pre-commit jobs run:
 1. `biome ci .` -- lint/format check
 2. `pnpm run build` -- full monorepo build
 
 Commits are slow because of the build step. Make sure code compiles before committing.
-Commit messages are validated by commitlint (Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, etc.).
+Commit messages are validated by the shared hook (Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, etc.), which also prepends the gitmoji.
 
 ## Environment
 

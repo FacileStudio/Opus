@@ -43,8 +43,7 @@ COPY --from=api-builder /app/apps/site/package.json ./apps/site/
 # Do not put `--no-optional` back: @node-rs/argon2 ships its compiled binding
 # as a per-platform optionalDependency, so the flag installs the JS wrapper
 # with nothing to load and the API dies on boot.
-RUN sed -i 's/"prepare": "husky"/"prepare": ""/g' package.json && \
-  HUSKY=0 NODE_ENV=production pnpm install --prod --frozen-lockfile
+RUN NODE_ENV=production pnpm install --prod --frozen-lockfile
 
 # The legacy runtime stays at /app/apps/api so its uploads, migrations and
 # relative paths match the pre-port deployment; only the source directory

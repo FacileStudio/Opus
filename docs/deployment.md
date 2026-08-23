@@ -10,8 +10,7 @@ globally:
 
 1. `api-builder` — installs the full workspace from the lockfile, builds `packages/email` and then
    bundles `apps/api` with esbuild into `apps/api/dist`.
-2. `api-deps` — reinstalls with `--prod --frozen-lockfile --no-optional` (with the `prepare` script
-   neutered so Husky does not run), then copies in the built API, the Drizzle migrations and the
+2. `api-deps` — reinstalls with `--prod --frozen-lockfile --no-optional`, then copies in the built API, the Drizzle migrations and the
    built email package.
 3. `web-builder` — installs, copies `i18n/` and `apps/web`, and runs the Vite production build.
 4. `runtime` — `oven/bun:1-slim` plus nginx and wget. Runs as the unprivileged `appuser` (uid

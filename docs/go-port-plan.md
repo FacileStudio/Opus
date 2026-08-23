@@ -1,7 +1,7 @@
 # Opus backend → Go port plan
 
 Cold-start handoff. A fresh session with NO prior conversation can pick up any phase from
-this document. Branch `feat/go-backend`. Commits with `git commit --no-verify` (husky runs
+this document. Branch `feat/go-backend`. Commits with `git commit --no-verify` (lefthook runs
 biome + full pnpm build; see Gotchas).
 
 ## Goal
@@ -205,8 +205,8 @@ green · parity vs captured OpenAPI where a feature flips · porte login works i
 CSRF enforced · events reach Antenne · single container serves SPA + `/api`.
 
 ## Gotchas
-- Commit with `git commit --no-verify` (husky runs biome + full pnpm build; commitlint
-  wants conventional commits).
+- Commit with `git commit --no-verify` (lefthook runs biome + full pnpm build on pre-commit;
+  commit-msg wants conventional commits and derives the gitmoji).
 - `mise run test` fails with the currently installed mise (2026.6.14): it errors on the
   Taskfile's `depends=[":task"]` references — needs mise ≥ 2026.8.5 or a depends rewrite.
   The underlying gates (`go test`, `go vet`, `filet check .`) all pass directly.

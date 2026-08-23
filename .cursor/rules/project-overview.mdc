@@ -49,7 +49,7 @@ opus/
 - **Package Manager**: pnpm
 - **Linting/Formatting**: Biome
 - **TypeScript**: Strict mode enabled
-- **Git Hooks**: Husky
+- **Git Hooks**: lefthook (shared FacileStudio/hooks config)
 
 ## Key Principles
 
