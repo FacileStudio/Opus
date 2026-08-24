@@ -7,5 +7,8 @@ import "gorm.io/gorm"
 // a dev-cycle schema the Drizzle migration runner no longer owns. Goose takes
 // over at cutover (Phase 6), from a pg_dump of the live database.
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate(&User{}, &Workspace{}, &WorkspaceMember{}, &Invitation{})
+	if err := db.AutoMigrate(&User{}, &Workspace{}, &WorkspaceMember{}, &Invitation{}); err != nil {
+		return err
+	}
+	return AdoptPorte(db)
 }

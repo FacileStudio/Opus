@@ -1,0 +1,9 @@
+<!doctype html><html><body><pre id="out">running...</pre><script>
+const out = document.getElementById("out");
+const log = (m) => out.textContent += "\n" + m;
+const tryFetch = (label, url, opts) =>
+  fetch(url, opts).then(r => log(label + ": " + r.status)).catch(e => log(label + ": FAIL " + e.message));
+tryFetch("8080 cred", "http://localhost:8080/api/auth/me", { credentials: "include" })
+  .then(() => tryFetch("9099 cred", "http://localhost:9099/x", { credentials: "include" }))
+  .then(() => tryFetch("8080 cred again", "http://localhost:8080/api/auth/me", { credentials: "include" }));
+</script></body></html>

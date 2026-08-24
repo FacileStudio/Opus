@@ -20,13 +20,22 @@ function AuthProvider({ children }: PropsWithChildren) {
     let active = true;
 
     const refresh = () => {
-      authClient.getSession().then(({ data: session }) => {
-        if (!active) return;
-        authClient.__setSession(
-          (session?.user as User | null | undefined) ?? null,
-          false,
-        );
-      });
+      // A rejected fetch (API down, network blip) must degrade to signed-out,
+      // not leave isPending stuck: the whole app gates on it and would show
+      // the loading skeleton forever.
+      authClient
+        .getSession()
+        .then(({ data: session }) => {
+          if (!active) return;
+          authClient.__setSession(
+            (session?.user as User | null | undefined) ?? null,
+            false,
+          );
+        })
+        .catch(() => {
+          if (!active) return;
+          authClient.__setSession(null, false);
+        });
     };
 
     refresh();

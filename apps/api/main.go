@@ -115,6 +115,15 @@ func buildRouter(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *sl
 		Logger:         appLogger,
 		CORS: troncmiddleware.CORSConfig{
 			AllowedOrigins: appEnv.CORSAllowedOrigins,
+			// The web app fetches with credentials: include (the HttpOnly
+			// session cookie is the transport), so every cross-origin response
+			// must carry Access-Control-Allow-Credentials or the browser drops
+			// it and the fetch rejects. X-Opus-Window-Id rides on every hono
+			// client request, so the preflight must allow it.
+			AllowCredentials: true,
+			AllowedHeaders: []string{
+				"Accept", "Authorization", "Content-Type", "X-Facile-CSRF", "X-Opus-Window-Id",
+			},
 		},
 	})
 
