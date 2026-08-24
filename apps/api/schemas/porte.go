@@ -9,10 +9,15 @@ import "gorm.io/gorm"
 //
 // The one UPDATE is porte v0.3.0's re-keying of password identities onto the
 // account id. It is idempotent: once every local subject holds the account id
-// the predicate is false for every row. It is deliberately allowed to fail in
-// porte's own copy of the schema; here the statement list is applied verbatim
-// and a failure surfaces at boot, which is the right time to learn about two
-// password identities on one account.
+// the predicate is false for every row. Unlike porte, which tolerates this
+// statement failing, the whole script is one Exec here: the state that could
+// make it fail (two password identities on one account) is unreachable on a
+// schema this port created, and if it is ever reached, refusing to boot is
+// the right answer to ambiguous credentials.
+//
+// Sablier's AdoptPorte also backfills OIDC subjects from a pre-port users
+// table; Opus has none — the port created the schema it migrates — so there
+// is nothing to backfill and no issuer parameter.
 //
 // Every statement is PostgreSQL. The tests run against in-memory SQLite and
 // porte/pg is Postgres-only, so on any other dialect there is nothing to

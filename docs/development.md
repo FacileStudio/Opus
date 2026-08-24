@@ -102,6 +102,9 @@ The gate is lefthook (`lefthook.yml`), pulling the shared commit-msg policy from
 - `commit-msg` (shared `common.yml`) validates Conventional Commits and prepends the gitmoji —
   never write the emoji yourself; the hook derives it from the type.
 - Hooks install via `mise install` (`[hooks] postinstall = "lefthook install"` in `mise.toml`).
+- The `build` pre-commit job needs the mise toolchain on PATH (node ≥ 20.19 for Vite 7);
+  a bare shell without it fails with `crypto.hash is not a function`, which is the
+  environment, not the code.
 
 Formatting and linting are Biome (`biome.json`): spaces for JS and TS, tabs elsewhere, double
 quotes, semicolons required, imports auto-sorted. CSS and `package.json` are excluded.
