@@ -27,10 +27,21 @@ import (
 )
 
 const (
-	userIDHeader  = "X-Opus-User-Id"
+	userIDHeader    = "X-Opus-User-Id"
 	userEmailHeader = "X-Opus-User-Email"
-	authHeader    = "X-Opus-Auth"
+	authHeader      = "X-Opus-Auth"
 )
+
+// corsHeaders are set by the legacy API's own cors middleware; forwarding
+// them would duplicate the ones the Go router already applies.
+var corsHeaders = []string{
+	"Access-Control-Allow-Origin",
+	"Access-Control-Allow-Credentials",
+	"Access-Control-Allow-Headers",
+	"Access-Control-Allow-Methods",
+	"Access-Control-Expose-Headers",
+	"Access-Control-Max-Age",
+}
 
 // Authenticator is the slice of the session manager the bridge needs: an
 // optional auth check that attaches an identity when one is present and lets
@@ -64,6 +75,13 @@ func tag(secret, userID string) string {
 // legacy API decides. The tag header is only ever written when a porte
 // session was verified, and the legacy API only honours the headers when the
 // tag matches the shared secret.
+//
+// Upstream CORS headers are stripped: the legacy API runs its own hono cors
+// middleware, and forwarding its Access-Control-* headers alongside the ones
+// tronc's CORS middleware sets duplicates Access-Control-Allow-Origin on the
+// response. Browsers reject duplicated ACAO on credentialed requests, which
+// silently fails every proxied fetch in the web app while the server still
+// logs a 200.
 func MountProxy(api chi.Router, remote *url.URL, sessions Authenticator, identities IdentityResolver, secret string) {
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	director := proxy.Director
@@ -86,6 +104,16 @@ func MountProxy(api chi.Router, remote *url.URL, sessions Authenticator, identit
 		request.Header.Set(userIDHeader, strconv.FormatInt(userID, 10))
 		request.Header.Set(userEmailHeader, email)
 		request.Header.Set(authHeader, tag(secret, strconv.FormatInt(userID, 10)))
+	}
+	modifyResponse := proxy.ModifyResponse
+	proxy.ModifyResponse = func(response *http.Response) error {
+		for _, header := range corsHeaders {
+			response.Header.Del(header)
+		}
+		if modifyResponse != nil {
+			return modifyResponse(response)
+		}
+		return nil
 	}
 	api.Handle("/*", sessions.Optional(proxy))
 }
