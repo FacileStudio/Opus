@@ -1,4 +1,4 @@
-import type { WorkspaceMember, WorkspaceInvitation } from "@/lib/auth-client";
+import type { WorkspaceInvitation, WorkspaceMember } from "@/lib/auth-client";
 
 export type WorkspaceUser = WorkspaceMember;
 

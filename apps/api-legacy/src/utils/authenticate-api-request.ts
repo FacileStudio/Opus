@@ -1,6 +1,6 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { createHmac, timingSafeEqual } from "node:crypto";
 import { auth } from "../auth";
 import { verifyApiKey } from "./verify-api-key";
 

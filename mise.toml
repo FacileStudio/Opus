@@ -1,5 +1,6 @@
 [tools]
 lefthook = "latest"
+node = "22.22.1"
 
 [hooks]
 postinstall = "lefthook install"

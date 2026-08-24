@@ -71,10 +71,9 @@ type ApiResult<T> = Promise<{ data: T | null; error: ApiError | null }>;
 const API_PREFIX = "/api";
 
 function apiUrl(path: string): string {
-  const base = (import.meta.env.VITE_API_URL || "http://localhost:1337").replace(
-    /\/+$/,
-    "",
-  );
+  const base = (
+    import.meta.env.VITE_API_URL || "http://localhost:1337"
+  ).replace(/\/+$/, "");
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return `${base}${API_PREFIX}${normalizedPath}`;
 }
@@ -92,7 +91,9 @@ const sessionListeners = new Set<() => void>();
 
 function setSessionState(next: Partial<typeof sessionState>) {
   sessionState = { ...sessionState, ...next };
-  sessionListeners.forEach((listener) => listener());
+  for (const listener of sessionListeners) {
+    listener();
+  }
 }
 
 function subscribeSession(listener: () => void) {
@@ -126,7 +127,11 @@ async function request<T>(
   // one but it lacks permission. A 401 therefore means the session is gone:
   // clear the store so the UI stops holding a ghost user instead of waiting
   // for a reload. The next getSession on focus confirms or restores it.
-  if (response.status === 401 && path !== "/auth/login" && path !== "/auth/register") {
+  if (
+    response.status === 401 &&
+    path !== "/auth/login" &&
+    path !== "/auth/register"
+  ) {
     setSessionState({ user: null, isPending: false });
   }
   if (!response.ok) {
@@ -275,10 +280,14 @@ export const authClient = {
     email: string;
     password: string;
   }): Promise<{ data: Session | null; error: ApiError | null }> {
-    const result = await request<{ token: string; user: User }>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify(input),
-    }, { mutation: true });
+    const result = await request<{ token: string; user: User }>(
+      "/auth/login",
+      {
+        method: "POST",
+        body: JSON.stringify(input),
+      },
+      { mutation: true },
+    );
     if (result.error) {
       return { data: null, error: result.error };
     }
@@ -293,10 +302,14 @@ export const authClient = {
     password: string;
     name: string;
   }): Promise<{ data: Session | null; error: ApiError | null }> {
-    const result = await request<{ token: string; user: User }>("/auth/register", {
-      method: "POST",
-      body: JSON.stringify(input),
-    }, { mutation: true });
+    const result = await request<{ token: string; user: User }>(
+      "/auth/register",
+      {
+        method: "POST",
+        body: JSON.stringify(input),
+      },
+      { mutation: true },
+    );
     if (result.error) {
       return { data: null, error: result.error };
     }
@@ -307,9 +320,13 @@ export const authClient = {
   },
 
   async signOut(): Promise<{ data: null; error: ApiError | null }> {
-    const result = await request<{ loggedOut: boolean }>("/auth/logout", {
-      method: "POST",
-    }, { mutation: true });
+    const result = await request<{ loggedOut: boolean }>(
+      "/auth/logout",
+      {
+        method: "POST",
+      },
+      { mutation: true },
+    );
     localStorage.removeItem("opus.access_token");
     setSessionState({ user: null, isPending: false });
     return { data: null, error: result.error };
@@ -320,10 +337,14 @@ export const authClient = {
     locale?: string;
     color?: string;
   }): Promise<{ data: Session | null; error: ApiError | null }> {
-    const result = await request<{ token: string; user: User }>("/auth/me", {
-      method: "PATCH",
-      body: JSON.stringify(input),
-    }, { mutation: true });
+    const result = await request<{ token: string; user: User }>(
+      "/auth/me",
+      {
+        method: "PATCH",
+        body: JSON.stringify(input),
+      },
+      { mutation: true },
+    );
     if (result.error) {
       return { data: null, error: result.error };
     }
@@ -336,10 +357,14 @@ export const authClient = {
     currentPassword: string;
     newPassword: string;
   }): Promise<{ data: null; error: ApiError | null }> {
-    const result = await request<{ message: string }>("/auth/change-password", {
-      method: "POST",
-      body: JSON.stringify(input),
-    }, { mutation: true });
+    const result = await request<{ message: string }>(
+      "/auth/change-password",
+      {
+        method: "POST",
+        body: JSON.stringify(input),
+      },
+      { mutation: true },
+    );
     return { data: null, error: result.error };
   },
 
@@ -349,16 +374,17 @@ export const authClient = {
 
   organization: {
     async list(): ApiResult<Workspace[]> {
-      const result = await request<
-        Array<{
-          id: number | string;
-          name: string;
-          slug: string;
-          logo?: string | null;
-          description?: string | null;
-          createdAt?: string;
-        }>
-      >("/workspace");
+      const result =
+        await request<
+          Array<{
+            id: number | string;
+            name: string;
+            slug: string;
+            logo?: string | null;
+            description?: string | null;
+            createdAt?: string;
+          }>
+        >("/workspace");
       if (result.error) {
         return { data: null, error: result.error };
       }
@@ -455,14 +481,18 @@ export const authClient = {
         logo?: string | null;
         description?: string | null;
         createdAt?: string;
-      }>("/workspace", {
-        method: "POST",
-        body: JSON.stringify({
-          name: input.name,
-          slug: input.slug,
-          description: input.metadata?.description,
-        }),
-      }, { mutation: true });
+      }>(
+        "/workspace",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            name: input.name,
+            slug: input.slug,
+            description: input.metadata?.description,
+          }),
+        },
+        { mutation: true },
+      );
       if (result.error) {
         return { data: null, error: result.error };
       }
@@ -485,14 +515,18 @@ export const authClient = {
         logo?: string | null;
         description?: string | null;
         createdAt?: string;
-      }>(`/workspace/${input.organizationId}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          name: input.data.name,
-          slug: input.data.slug,
-          description: input.data.metadata?.description,
-        }),
-      }, { mutation: true });
+      }>(
+        `/workspace/${input.organizationId}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            name: input.data.name,
+            slug: input.data.slug,
+            description: input.data.metadata?.description,
+          }),
+        },
+        { mutation: true },
+      );
       if (result.error) {
         return { data: null, error: result.error };
       }
@@ -502,9 +536,13 @@ export const authClient = {
     async delete(input: {
       organizationId: string;
     }): Promise<{ data: { message: string } | null; error: ApiError | null }> {
-      return request<{ message: string }>(`/workspace/${input.organizationId}`, {
-        method: "DELETE",
-      }, { mutation: true });
+      return request<{ message: string }>(
+        `/workspace/${input.organizationId}`,
+        {
+          method: "DELETE",
+        },
+        { mutation: true },
+      );
     },
 
     async inviteMember(input: {
@@ -522,13 +560,17 @@ export const authClient = {
         workspaceId: number | string;
         workspaceName?: string;
         inviterName?: string;
-      }>(`/workspace/${input.organizationId}/members`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: input.email,
-          role: input.role ?? "member",
-        }),
-      }, { mutation: true });
+      }>(
+        `/workspace/${input.organizationId}/members`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: input.email,
+            role: input.role ?? "member",
+          }),
+        },
+        { mutation: true },
+      );
       if (result.error) {
         return { data: null, error: result.error };
       }
@@ -557,10 +599,14 @@ export const authClient = {
         email: string;
         image?: string | null;
         role: string;
-      }>(`/workspace/${input.organizationId}/members/${input.memberId}`, {
-        method: "PATCH",
-        body: JSON.stringify({ role: input.role }),
-      }, { mutation: true });
+      }>(
+        `/workspace/${input.organizationId}/members/${input.memberId}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ role: input.role }),
+        },
+        { mutation: true },
+      );
       if (result.error) {
         return { data: null, error: result.error };
       }
@@ -574,17 +620,19 @@ export const authClient = {
       if (!organizationId) {
         return { data: [], error: null };
       }
-      const result = await request<Array<{
-        id: number | string;
-        email: string;
-        role: string;
-        status: string;
-        createdAt?: string;
-        expiresAt?: string | null;
-        workspaceId: number | string;
-        workspaceName?: string;
-        inviterName?: string;
-      }>>(`/workspace/${organizationId}/invitations`);
+      const result = await request<
+        Array<{
+          id: number | string;
+          email: string;
+          role: string;
+          status: string;
+          createdAt?: string;
+          expiresAt?: string | null;
+          workspaceId: number | string;
+          workspaceName?: string;
+          inviterName?: string;
+        }>
+      >(`/workspace/${organizationId}/invitations`);
       if (result.error) {
         return { data: null, error: result.error };
       }
@@ -592,17 +640,20 @@ export const authClient = {
     },
 
     async listUserInvitations(): ApiResult<WorkspaceInvitation[]> {
-      const result = await request<Array<{
-        id: number | string;
-        email: string;
-        role: string;
-        status: string;
-        createdAt?: string;
-        expiresAt?: string | null;
-        workspaceId: number | string;
-        workspaceName?: string;
-        inviterName?: string;
-      }>>("/invitation");
+      const result =
+        await request<
+          Array<{
+            id: number | string;
+            email: string;
+            role: string;
+            status: string;
+            createdAt?: string;
+            expiresAt?: string | null;
+            workspaceId: number | string;
+            workspaceName?: string;
+            inviterName?: string;
+          }>
+        >("/invitation");
       if (result.error) {
         return { data: null, error: result.error };
       }
@@ -632,25 +683,37 @@ export const authClient = {
     async acceptInvitation(input: {
       invitationId: string;
     }): Promise<{ data: { message: string } | null; error: ApiError | null }> {
-      return request<{ message: string }>(`/invitation/${input.invitationId}/accept`, {
-        method: "POST",
-      }, { mutation: true });
+      return request<{ message: string }>(
+        `/invitation/${input.invitationId}/accept`,
+        {
+          method: "POST",
+        },
+        { mutation: true },
+      );
     },
 
     async rejectInvitation(input: {
       invitationId: string;
     }): Promise<{ data: { message: string } | null; error: ApiError | null }> {
-      return request<{ message: string }>(`/invitation/${input.invitationId}/reject`, {
-        method: "POST",
-      }, { mutation: true });
+      return request<{ message: string }>(
+        `/invitation/${input.invitationId}/reject`,
+        {
+          method: "POST",
+        },
+        { mutation: true },
+      );
     },
 
     async cancelInvitation(input: {
       invitationId: string;
     }): Promise<{ data: { message: string } | null; error: ApiError | null }> {
-      return request<{ message: string }>(`/invitation/${input.invitationId}`, {
-        method: "DELETE",
-      }, { mutation: true });
+      return request<{ message: string }>(
+        `/invitation/${input.invitationId}`,
+        {
+          method: "DELETE",
+        },
+        { mutation: true },
+      );
     },
 
     async setActive(input: { organizationId: string }): Promise<{
@@ -681,7 +744,10 @@ export const authClient = {
       permissions?: Record<string, string[]>;
       role: string;
     }): boolean {
-      return hasRolePermission(input.role as WorkspaceMember["role"], input.permissions);
+      return hasRolePermission(
+        input.role as WorkspaceMember["role"],
+        input.permissions,
+      );
     },
   },
 
