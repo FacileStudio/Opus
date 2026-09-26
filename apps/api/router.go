@@ -118,6 +118,7 @@ func buildRouter(deps routerDeps) chi.Router {
 	}
 
 	router.Route("/api", func(api chi.Router) {
+		health.Mount(api, deps.sqlDB.PingContext)
 		deps.kits.sessions.Mount(api)
 		deps.kits.oidc.Mount(api)
 		auth.RegisterRoutes(api, authService, *deps.appEnv)
