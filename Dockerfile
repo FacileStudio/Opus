@@ -9,7 +9,6 @@ COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/email/package.json ./packages/email/
 COPY packages/libs/package.json ./packages/libs/
 COPY packages/mcp/package.json ./packages/mcp/
-COPY apps/api-legacy/package.json ./apps/api-legacy/
 COPY apps/web/package.json ./apps/web/
 COPY apps/site/package.json ./apps/site/
 

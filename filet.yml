@@ -6,9 +6,7 @@
 #   filet docker .    the Dockerfile
 #
 # Opus is a mixed repo: the Go backend (apps/api) is filet's, the TypeScript
-# frontend and the transitional TS API are biome's. That split is why the
-# extension list is Go-only and apps/api-legacy is ignored rather than left
-# for filet to fail on.
+# frontend is biome's. That split is why the extension list is Go-only.
 
 # The defaults already cover node_modules, vendor, build, dist, target,
 # testdata and coverage, and every dotted directory is skipped whether it is
@@ -23,7 +21,6 @@ ignore:
   - dist
   - testdata
   - coverage
-  - apps/api-legacy # transitional TS API, linted by biome
   - apps/web # React frontend, linted by biome
   - apps/docs # Fumadocs site, linted by biome
   - apps/site # marketing site, linted by biome

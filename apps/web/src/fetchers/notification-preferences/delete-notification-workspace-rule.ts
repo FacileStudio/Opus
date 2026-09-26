@@ -8,6 +8,9 @@ async function deleteNotificationWorkspaceRule(
     getApiUrl(`/notification-preferences/workspaces/${workspaceId}`),
     {
       credentials: "include",
+      headers: {
+        "X-Facile-CSRF": "1",
+      },
       method: "DELETE",
     },
   );

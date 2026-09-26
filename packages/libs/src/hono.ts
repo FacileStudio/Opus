@@ -1,8 +1,8 @@
 /// <reference types="vite/types/importMeta.d.ts" />
 
-import type { AppType } from "@opus/api";
 import { hc } from "hono/client";
 import { resolveApiBaseUrl } from "./api-url";
+import type { AppType } from "./types";
 
 const apiUrl = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
 

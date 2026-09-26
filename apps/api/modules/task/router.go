@@ -56,6 +56,20 @@ func registerTaskQueryRoutes(router chi.Router, service *Service) {
 		}
 		httpjson.WriteJSON(w, http.StatusOK, resp)
 	})
+	router.Get("/export/{projectId}", func(w http.ResponseWriter, request *http.Request) {
+		projectID, err := parseIDParam(request, "projectId")
+		if err != nil {
+			httpjson.WriteError(w, errors.Invalid("invalid project id"))
+			return
+		}
+		identity, _ := authcontext.IdentityFromContext(request.Context())
+		resp, err := service.controller.export(request.Context(), identity.UserID, projectID)
+		if err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		httpjson.WriteJSON(w, http.StatusOK, resp)
+	})
 }
 
 func registerTaskBulkRoutes(router chi.Router, service *Service) {
@@ -83,9 +97,32 @@ func registerTaskMutationRoutes(router chi.Router, service *Service) {
 
 func registerLifecycleMutationRoutes(router chi.Router, service *Service) {
 	registerCreateTaskRoute(router, service)
+	registerImportTasksRoute(router, service)
 	registerMoveTaskRoute(router, service)
 	registerUpdateTaskRoute(router, service)
 	registerDeleteTaskRoute(router, service)
+}
+
+func registerImportTasksRoute(router chi.Router, service *Service) {
+	router.Post("/import/{projectId}", func(w http.ResponseWriter, request *http.Request) {
+		projectID, err := parseIDParam(request, "projectId")
+		if err != nil {
+			httpjson.WriteError(w, errors.Invalid("invalid project id"))
+			return
+		}
+		var req ImportTasksRequest
+		if err := httpjson.DecodeJSON(w, request, &req); err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		identity, _ := authcontext.IdentityFromContext(request.Context())
+		resp, err := service.controller.importTasks(request.Context(), identity.UserID, projectID, &req)
+		if err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		httpjson.WriteJSON(w, http.StatusOK, resp)
+	})
 }
 
 func registerCreateTaskRoute(router chi.Router, service *Service) {
@@ -170,3 +207,20 @@ func registerDeleteTaskRoute(router chi.Router, service *Service) {
 		httpjson.WriteJSON(w, http.StatusOK, resp)
 	})
 }
+
+// RegisterPublicRoutes mounts public project inspection endpoints.
+func RegisterPublicRoutes(router chi.Router, service *Service) {
+	router.Get("/public-project/{id}", func(w http.ResponseWriter, request *http.Request) {
+		id := chi.URLParam(request, "id")
+		data, err := service.GetPublicProject(request.Context(), id)
+		if err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		httpjson.WriteJSON(w, http.StatusOK, data)
+	})
+	router.Get("/external-link/task/{taskId}", func(w http.ResponseWriter, _ *http.Request) {
+		httpjson.WriteJSON(w, http.StatusOK, []any{})
+	})
+}
+

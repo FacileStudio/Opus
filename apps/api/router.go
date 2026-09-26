@@ -13,6 +13,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
 	"github.com/FacileStudio/Opus/apps/api/modules/column"
 	"github.com/FacileStudio/Opus/apps/api/modules/comment"
+	"github.com/FacileStudio/Opus/apps/api/modules/config"
 	"github.com/FacileStudio/Opus/apps/api/modules/label"
 	"github.com/FacileStudio/Opus/apps/api/modules/notification"
 	"github.com/FacileStudio/Opus/apps/api/modules/project"
@@ -64,15 +65,19 @@ func referenceConfig() apiref.Config {
 				notification.Documentation(),
 				search.Documentation(),
 				asset.Documentation(),
+				config.Documentation(),
 			},
 		},
 	}
 }
 
 func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Authenticator, appEnv *env.Config) {
+	config.RegisterRoutes(api, config.NewService(appEnv))
 	project.RegisterRoutes(api, project.NewService(db), authService)
 	column.RegisterRoutes(api, column.NewService(db), authService)
-	task.RegisterRoutes(api, task.NewService(db), authService)
+	taskService := task.NewService(db)
+	task.RegisterRoutes(api, taskService, authService)
+	task.RegisterPublicRoutes(api, taskService)
 	taskrelation.RegisterRoutes(api, taskrelation.NewService(db), authService)
 	label.RegisterRoutes(api, label.NewService(db), authService)
 	comment.RegisterRoutes(api, comment.NewService(db), authService)

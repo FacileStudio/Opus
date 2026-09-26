@@ -1,1 +1,0 @@
-DROP INDEX "share_link_token_idx";

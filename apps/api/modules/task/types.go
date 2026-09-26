@@ -194,3 +194,58 @@ type ListTasksResult struct {
 	Tasks   []TaskRecord
 	Total   int64
 }
+
+// ExportTaskItem represents a task in the export bundle.
+type ExportTaskItem struct {
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	Status      string     `json:"status"`
+	Priority    string     `json:"priority"`
+	DueDate     *time.Time `json:"dueDate"`
+	StartDate   *time.Time `json:"startDate"`
+	UserID      *int64     `json:"userId"`
+}
+
+// ExportProjectMeta contains project metadata for task export.
+type ExportProjectMeta struct {
+	Name        string `json:"name"`
+	Slug        string `json:"slug"`
+	Description string `json:"description"`
+	ExportedAt  string `json:"exportedAt"`
+}
+
+// ExportTasksResponse is the root payload returned when exporting project tasks.
+type ExportTasksResponse struct {
+	Project ExportProjectMeta `json:"project"`
+	Tasks   []ExportTaskItem  `json:"tasks"`
+}
+
+// ImportTaskItem represents an individual task to import.
+type ImportTaskItem struct {
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	Status      string     `json:"status"`
+	Priority    string     `json:"priority"`
+	DueDate     *time.Time `json:"dueDate"`
+	StartDate   *time.Time `json:"startDate"`
+	UserID      *int64     `json:"userId"`
+}
+
+// ImportTasksSummary reports the outcome of the import batch.
+type ImportTasksSummary struct {
+	Total      int `json:"total"`
+	Successful int `json:"successful"`
+	Failed     int `json:"failed"`
+}
+
+// ImportTasksRequest specifies the payload for importing tasks into a project.
+type ImportTasksRequest struct {
+	Tasks []ImportTaskItem `json:"tasks"`
+}
+
+// ImportTasksResponse is returned after tasks have been imported.
+type ImportTasksResponse struct {
+	ImportedAt string             `json:"importedAt"`
+	Results    ImportTasksSummary `json:"results"`
+}
+

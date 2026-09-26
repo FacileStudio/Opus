@@ -23,6 +23,7 @@ async function updateNotificationPreferences(
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "X-Facile-CSRF": "1",
     },
     method: "PUT",
   });

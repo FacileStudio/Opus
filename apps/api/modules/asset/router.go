@@ -70,7 +70,9 @@ func writeAssetStream(w http.ResponseWriter, download *AssetDownload) {
 		w.Header().Set("Last-Modified", download.LastModified.UTC().Format(http.TimeFormat))
 	}
 	w.WriteHeader(http.StatusOK)
-	_, _ = io.Copy(w, download.Body)
+	if _, err := io.Copy(w, download.Body); err != nil {
+		return
+	}
 }
 
 func registerTaskUploadRoutes(router chi.Router, service *Service, authService middleware.Authenticator) {
