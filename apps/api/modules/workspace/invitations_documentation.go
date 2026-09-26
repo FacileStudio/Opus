@@ -2,12 +2,8 @@ package workspace
 
 import documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
 
-// InvitationsDocumentation registers the invitation routes for the reference
-// page, alongside the workspace routes that create them.
-var InvitationsDocumentation = documentation.Module{
-	Name:        "invitation",
-	Description: "Invitations are how a workspace gains a member: addressed to an email, created by an admin, and acted on by the invited address alone.",
-	Routes: []documentation.Route{
+func workspaceInviteRoutes() []documentation.Route {
+	return []documentation.Route{
 		{
 			Method:       "POST",
 			Path:         "/workspace/{workspaceId}/members",
@@ -33,6 +29,11 @@ var InvitationsDocumentation = documentation.Module{
 				{Status: 403, Code: "permission_denied", Description: "The caller is not a member"},
 			},
 		},
+	}
+}
+
+func userInviteRoutes() []documentation.Route {
+	return []documentation.Route{
 		{
 			Method:       "GET",
 			Path:         "/invitation",
@@ -86,5 +87,14 @@ var InvitationsDocumentation = documentation.Module{
 				{Status: 403, Code: "permission_denied", Description: "The caller is not the inviter nor an owner or admin of the workspace"},
 			},
 		},
-	},
+	}
+}
+
+// InvitationsDocumentation returns the invitation routes for the reference page.
+func InvitationsDocumentation() documentation.Module {
+	return documentation.Module{
+		Name:        "invitation",
+		Description: "Invitations are how a workspace gains a member: addressed to an email, created by an admin, and acted on by the invited address alone.",
+		Routes:      append(workspaceInviteRoutes(), userInviteRoutes()...),
+	}
 }

@@ -44,7 +44,7 @@ func (controller *Controller) changePassword(w http.ResponseWriter, r *http.Requ
 	if req.CurrentPassword == "" || req.NewPassword == "" {
 		return nil, errors.Invalid("currentPassword and newPassword are required")
 	}
-	if err := controller.service.ChangePassword(r.Context(), w, r, userID, req.CurrentPassword, req.NewPassword); err != nil {
+	if err := controller.service.ChangePassword(w, r, userID, req.CurrentPassword, req.NewPassword); err != nil {
 		return nil, err
 	}
 	return &ChangePasswordResponse{Message: "Password changed successfully"}, nil
@@ -69,7 +69,7 @@ func (controller *Controller) register(w http.ResponseWriter, r *http.Request, r
 	if email == "" {
 		return nil, errors.Invalid("invalid email")
 	}
-	user, token, err := controller.service.Register(r.Context(), w, r, email, strings.TrimSpace(req.Name), req.Password)
+	user, token, err := controller.service.Register(w, r, email, strings.TrimSpace(req.Name), req.Password)
 	if err != nil {
 		return nil, err
 	}

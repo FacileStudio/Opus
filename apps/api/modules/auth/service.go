@@ -77,12 +77,12 @@ func (service *Service) LoadUser(ctx context.Context, userID int64) (*schemas.Us
 
 // Register creates an account through porte/local and signs it in. The cookie
 // is set on the way out and the token returns for the bearer transport.
-func (service *Service) Register(ctx context.Context, w http.ResponseWriter, r *http.Request, email, name, password string) (*schemas.User, string, error) {
-	userID, token, err := service.passwords.Register(ctx, w, r, email, name, password)
+func (service *Service) Register(w http.ResponseWriter, r *http.Request, email, name, password string) (*schemas.User, string, error) {
+	userID, token, err := service.passwords.Register(r.Context(), w, r, email, name, password)
 	if err != nil {
 		return nil, "", err
 	}
-	user, err := service.LoadUser(ctx, userID)
+	user, err := service.LoadUser(r.Context(), userID)
 	if err != nil {
 		return nil, "", err
 	}
@@ -128,7 +128,7 @@ func (service *Service) UpdateProfile(ctx context.Context, userID int64, req Upd
 // sets a new one and rotates the session so a stolen token dies with the old
 // password. The error is passed on so the controller can answer the right
 // status instead of a flat unauthorized.
-func (service *Service) ChangePassword(ctx context.Context, w http.ResponseWriter, r *http.Request, userID int64, current, next string) error {
-	_, _, err := service.passwords.ChangePassword(ctx, w, r, userID, current, next)
+func (service *Service) ChangePassword(w http.ResponseWriter, r *http.Request, userID int64, current, next string) error {
+	_, _, err := service.passwords.ChangePassword(r.Context(), w, r, userID, current, next)
 	return err
 }

@@ -98,8 +98,6 @@ func TestMountProxyPassesThroughUnauthenticated(t *testing.T) {
 		t.Fatalf("parse upstream: %v", err)
 	}
 	router := chi.NewRouter()
-	// The optional session check leaves an anonymous caller without an
-	// identity, and the proxy must forward it untouched.
 	MountProxy(router, remote, noopAuthenticator{}, fakeIdentityResolver{}, "hunter2")
 
 	request := httptest.NewRequest("GET", "/api/config", nil)

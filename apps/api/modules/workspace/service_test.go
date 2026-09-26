@@ -120,17 +120,17 @@ func TestLogoRoundTrip(t *testing.T) {
 		t.Fatal("SetLogo left the logo column empty")
 	}
 
-	data, ext, ok, err := service.Logo(ctx, workspaceID)
-	if err != nil || !ok || string(data) != "fake-png-bytes" || ext != "png" {
-		t.Fatalf("Logo = %q/%q/%v, %v; want stored bytes", data, ext, ok, err)
+	logo, err := service.Logo(ctx, workspaceID)
+	if err != nil || logo == nil || string(logo.Data) != "fake-png-bytes" || logo.Extension != "png" {
+		t.Fatalf("Logo = %v, %v; want stored bytes", logo, err)
 	}
 
 	if err := service.ClearLogo(ctx, workspaceID); err != nil {
 		t.Fatalf("ClearLogo: %v", err)
 	}
-	_, _, ok, err = service.Logo(ctx, workspaceID)
-	if err != nil || ok {
-		t.Fatalf("Logo after ClearLogo: ok=%v err=%v, want gone", ok, err)
+	logo, err = service.Logo(ctx, workspaceID)
+	if err != nil || logo != nil {
+		t.Fatalf("Logo after ClearLogo: logo=%v err=%v, want gone", logo, err)
 	}
 	if err := db.First(&workspace, workspaceID).Error; err != nil {
 		t.Fatalf("reload workspace: %v", err)

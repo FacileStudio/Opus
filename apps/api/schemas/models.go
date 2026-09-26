@@ -53,3 +53,91 @@ type Invitation struct {
 	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
 	ExpiresAt   *time.Time `gorm:"column:expires_at"`
 }
+
+// Project is a container for tasks, columns and views within a workspace.
+type Project struct {
+	ID          int64      `gorm:"column:id;primaryKey;autoIncrement"`
+	WorkspaceID int64      `gorm:"column:workspace_id;not null;index"`
+	Slug        string     `gorm:"column:slug;not null"`
+	Icon        string     `gorm:"column:icon;default:Layout"`
+	Name        string     `gorm:"column:name;not null"`
+	Description string     `gorm:"column:description"`
+	IsPublic    bool       `gorm:"column:is_public;default:false"`
+	ArchivedAt  *time.Time `gorm:"column:archived_at"`
+	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
+}
+
+// Column is a stage in a project's workflow board.
+type Column struct {
+	ID        int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	ProjectID int64     `gorm:"column:project_id;not null;index"`
+	Name      string    `gorm:"column:name;not null"`
+	Slug      string    `gorm:"column:slug;not null"`
+	Position  int       `gorm:"column:position;not null;default:0"`
+	Icon      string    `gorm:"column:icon"`
+	Color     string    `gorm:"column:color"`
+	IsFinal   bool      `gorm:"column:is_final;not null;default:false"`
+	CreatedAt time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt time.Time `gorm:"column:updated_at;not null"`
+}
+
+// Task is a work unit within a project and workspace.
+type Task struct {
+	ID          int64      `gorm:"column:id;primaryKey;autoIncrement"`
+	ProjectID   int64      `gorm:"column:project_id;not null;index"`
+	WorkspaceID int64      `gorm:"column:workspace_id;not null;index"`
+	ColumnID    *int64     `gorm:"column:column_id;index"`
+	ActorID     *int64     `gorm:"column:actor_id;index"`
+	Number      int        `gorm:"column:number;not null;default:1"`
+	Position    int        `gorm:"column:position;not null;default:0"`
+	Title       string     `gorm:"column:title;not null"`
+	Description string     `gorm:"column:description"`
+	Status      string     `gorm:"column:status;not null;default:to-do"`
+	Priority    string     `gorm:"column:priority;not null;default:low"`
+	StartDate   *time.Time `gorm:"column:start_date"`
+	DueDate     *time.Time `gorm:"column:due_date;index"`
+	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
+	UpdatedAt   time.Time  `gorm:"column:updated_at;not null"`
+}
+
+// Label tags tasks within a workspace or specific task.
+type Label struct {
+	ID          int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	WorkspaceID int64     `gorm:"column:workspace_id;not null;index"`
+	TaskID      *int64    `gorm:"column:task_id;index"`
+	Name        string    `gorm:"column:name;not null"`
+	Color       string    `gorm:"column:color;not null"`
+	CreatedAt   time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;not null"`
+}
+
+// Comment is a discussion entry on a task.
+type Comment struct {
+	ID        int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	TaskID    int64     `gorm:"column:task_id;not null;index"`
+	UserID    int64     `gorm:"column:user_id;not null;index"`
+	Content   string    `gorm:"column:content;not null"`
+	CreatedAt time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt time.Time `gorm:"column:updated_at;not null"`
+}
+
+// TaskRelation defines a dependency between two tasks.
+type TaskRelation struct {
+	ID           int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	SourceTaskID int64     `gorm:"column:source_task_id;not null;index"`
+	TargetTaskID int64     `gorm:"column:target_task_id;not null;index"`
+	RelationType string    `gorm:"column:relation_type;not null"`
+	CreatedAt    time.Time `gorm:"column:created_at;not null"`
+}
+
+// Activity records state changes and audit events on a task.
+type Activity struct {
+	ID        int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	TaskID    int64     `gorm:"column:task_id;not null;index"`
+	UserID    *int64    `gorm:"column:user_id;index"`
+	Type      string    `gorm:"column:type;not null"`
+	Content   string    `gorm:"column:content"`
+	EventData string    `gorm:"column:event_data"`
+	CreatedAt time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt time.Time `gorm:"column:updated_at;not null"`
+}

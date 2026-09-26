@@ -63,6 +63,42 @@ type Config struct {
 	SSOOnly bool
 }
 
+func parseLegacyAPI() (*url.URL, error) {
+	raw := troncenv.String("LEGACY_API_URL", "")
+	if raw == "" {
+		return nil, nil
+	}
+	parsed, err := url.Parse(raw)
+	if err != nil {
+		return nil, fmt.Errorf("LEGACY_API_URL must be a valid URL")
+	}
+	return parsed, nil
+}
+
+func parseOIDCConfig(corsOrigins []string) (*OIDCConfig, error) {
+	issuer := troncenv.String("OIDC_ISSUER", "")
+	if issuer == "" {
+		return nil, nil
+	}
+	clientID := troncenv.String("OIDC_CLIENT_ID", "")
+	clientSecret := troncenv.String("OIDC_CLIENT_SECRET", "")
+	redirectURL := troncenv.String("OIDC_REDIRECT_URL", "")
+	if clientID == "" || clientSecret == "" || redirectURL == "" {
+		return nil, fmt.Errorf("OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, and OIDC_REDIRECT_URL are required when OIDC_ISSUER is set")
+	}
+	successURL := troncenv.String("OIDC_SUCCESS_URL", "")
+	if successURL == "" && len(corsOrigins) > 0 {
+		successURL = corsOrigins[0]
+	}
+	return &OIDCConfig{
+		Issuer:       issuer,
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		RedirectURL:  redirectURL,
+		SuccessURL:   successURL,
+	}, nil
+}
+
 // Load reads the .env file (if present) and the environment into a Config,
 // validating PORT and LOG_LEVEL before returning it.
 func Load() (Config, error) {
@@ -79,49 +115,26 @@ func Load() (Config, error) {
 	if !validLogLevel(core.LogLevel) {
 		return Config{}, fmt.Errorf("LOG_LEVEL must be one of debug, info, warn, error")
 	}
-	var legacyAPI *url.URL
-	if raw := troncenv.String("LEGACY_API_URL", ""); raw != "" {
-		parsed, err := url.Parse(raw)
-		if err != nil {
-			return Config{}, fmt.Errorf("LEGACY_API_URL must be a valid URL")
-		}
-		legacyAPI = parsed
+	legacyAPI, err := parseLegacyAPI()
+	if err != nil {
+		return Config{}, err
 	}
-
 	ssoOnly, err := troncenv.Bool("SSO_ONLY", false)
 	if err != nil {
 		return Config{}, err
 	}
-
-	config := Config{
+	oidcConfig, err := parseOIDCConfig(core.CORSAllowedOrigins)
+	if err != nil {
+		return Config{}, err
+	}
+	return Config{
 		Core:             core,
 		LegacyAPI:        legacyAPI,
 		UploadDir:        troncenv.String("UPLOAD_DIR", "./data/uploads"),
 		AuthBridgeSecret: troncenv.String("AUTH_BRIDGE_SECRET", ""),
 		SSOOnly:          ssoOnly,
-	}
-
-	if issuer := troncenv.String("OIDC_ISSUER", ""); issuer != "" {
-		clientID := troncenv.String("OIDC_CLIENT_ID", "")
-		clientSecret := troncenv.String("OIDC_CLIENT_SECRET", "")
-		redirectURL := troncenv.String("OIDC_REDIRECT_URL", "")
-		if clientID == "" || clientSecret == "" || redirectURL == "" {
-			return Config{}, fmt.Errorf("OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, and OIDC_REDIRECT_URL are required when OIDC_ISSUER is set")
-		}
-		successURL := troncenv.String("OIDC_SUCCESS_URL", "")
-		if successURL == "" && len(config.CORSAllowedOrigins) > 0 {
-			successURL = config.CORSAllowedOrigins[0]
-		}
-		config.OIDC = &OIDCConfig{
-			Issuer:       issuer,
-			ClientID:     clientID,
-			ClientSecret: clientSecret,
-			RedirectURL:  redirectURL,
-			SuccessURL:   successURL,
-		}
-	}
-
-	return config, nil
+		OIDC:             oidcConfig,
+	}, nil
 }
 
 // validLogLevel reports whether level names a level the suite logger knows.

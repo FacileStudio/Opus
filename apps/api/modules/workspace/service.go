@@ -124,12 +124,11 @@ func (service *Service) ClearLogo(ctx context.Context, workspaceID int64) error 
 	return nil
 }
 
-// Logo loads the stored logo bytes for serving. ok is false when the
-// workspace has none.
-func (service *Service) Logo(ctx context.Context, workspaceID int64) (data []byte, ext string, ok bool, err error) {
-	data, ext, ok, readErr := storage.ReadWorkspaceLogo(service.uploadDir, workspaceID)
+// Logo loads the stored logo bytes for serving.
+func (service *Service) Logo(ctx context.Context, workspaceID int64) (*storage.LogoFile, error) {
+	file, readErr := storage.ReadWorkspaceLogo(service.uploadDir, workspaceID)
 	if readErr != nil {
-		return nil, "", false, errors.Internal("failed to read the logo", readErr)
+		return nil, errors.Internal("failed to read the logo", readErr)
 	}
-	return data, ext, ok, nil
+	return file, nil
 }

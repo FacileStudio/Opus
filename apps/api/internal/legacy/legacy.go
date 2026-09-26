@@ -61,7 +61,7 @@ type IdentityResolver interface {
 // replayed against a different identity.
 func tag(secret, userID string) string {
 	mac := hmac.New(sha256.New, []byte(secret))
-	_, _ = mac.Write([]byte(userID))
+	mac.Write([]byte(userID))
 	return hex.EncodeToString(mac.Sum(nil))
 }
 

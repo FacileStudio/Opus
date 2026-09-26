@@ -2,10 +2,8 @@ package auth
 
 import documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
 
-var Documentation = documentation.Module{
-	Name:        "auth",
-	Description: "Authentication, through the suite's porte kit. A session is a random 32 byte token stored SHA-256 hashed, sent as Authorization: Bearer <token> or, after a single sign-on login, as an HttpOnly __Host-session cookie. A cookie-authenticated request that is not GET, HEAD or OPTIONS must also carry an X-Facile-CSRF header with any non-empty value.",
-	Routes: []documentation.Route{
+func oidcRoutes() []documentation.Route {
+	return []documentation.Route{
 		{
 			Method:       "POST",
 			Path:         "/auth/logout",
@@ -44,6 +42,11 @@ var Documentation = documentation.Module{
 			Description: "Returns sso_only and oidc_enabled, so the client knows whether to show the password form.",
 			Auth:        "public",
 		},
+	}
+}
+
+func profileRoutes() []documentation.Route {
+	return []documentation.Route{
 		{
 			Method:       "GET",
 			Path:         "/auth/me",
@@ -73,6 +76,11 @@ var Documentation = documentation.Module{
 				{Status: 400, Code: "invalid_argument", Description: "The account has no password, or the new one is too short"},
 			},
 		},
+	}
+}
+
+func credentialRoutes() []documentation.Route {
+	return []documentation.Route{
 		{
 			Method:       "POST",
 			Path:         "/auth/register",
@@ -98,5 +106,14 @@ var Documentation = documentation.Module{
 				{Status: 401, Code: "unauthenticated", Description: "Invalid email or password"},
 			},
 		},
-	},
+	}
+}
+
+// Documentation returns the auth module API reference metadata.
+func Documentation() documentation.Module {
+	return documentation.Module{
+		Name:        "auth",
+		Description: "Authentication, through the suite's porte kit. A session is a random 32 byte token stored SHA-256 hashed, sent as Authorization: Bearer <token> or, after a single sign-on login, as an HttpOnly __Host-session cookie. A cookie-authenticated request that is not GET, HEAD or OPTIONS must also carry an X-Facile-CSRF header with any non-empty value.",
+		Routes:      append(oidcRoutes(), append(profileRoutes(), credentialRoutes()...)...),
+	}
 }

@@ -29,9 +29,9 @@ func ExtensionFromMime(mime string) (string, bool) {
 	}
 }
 
-// logoExtensions is the set written by SaveWorkspaceLogo; the png family
-// resolves below so uploads and lookups agree on the filenames.
-var logoExtensions = []string{"png", "jpg", "webp", "svg", "gif"}
+func allowedLogoExtensions() []string {
+	return []string{"png", "jpg", "webp", "svg", "gif"}
+}
 
 func workspaceLogoDir(uploadDir string, workspaceID int64) string {
 	return filepath.Join(uploadDir, "workspaces", strconv.FormatInt(workspaceID, 10))
@@ -44,7 +44,7 @@ func SaveWorkspaceLogo(uploadDir string, workspaceID int64, data []byte, ext str
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
-	for _, other := range logoExtensions {
+	for _, other := range allowedLogoExtensions() {
 		if other == ext {
 			continue
 		}
@@ -58,7 +58,7 @@ func SaveWorkspaceLogo(uploadDir string, workspaceID int64, data []byte, ext str
 // DeleteWorkspaceLogo removes every stored logo extension for a workspace.
 func DeleteWorkspaceLogo(uploadDir string, workspaceID int64) error {
 	dir := workspaceLogoDir(uploadDir, workspaceID)
-	for _, ext := range logoExtensions {
+	for _, ext := range allowedLogoExtensions() {
 		if err := os.Remove(filepath.Join(dir, "logo."+ext)); err != nil && !os.IsNotExist(err) {
 			return err
 		}
@@ -66,20 +66,25 @@ func DeleteWorkspaceLogo(uploadDir string, workspaceID int64) error {
 	return nil
 }
 
-// ReadWorkspaceLogo returns the stored logo bytes and their extension. ok is
-// false when the workspace has no logo on disk.
-func ReadWorkspaceLogo(uploadDir string, workspaceID int64) (data []byte, ext string, ok bool, err error) {
+// LogoFile holds the stored logo bytes and format extension.
+type LogoFile struct {
+	Data      []byte
+	Extension string
+}
+
+// ReadWorkspaceLogo returns the stored logo bytes and their extension.
+func ReadWorkspaceLogo(uploadDir string, workspaceID int64) (*LogoFile, error) {
 	dir := workspaceLogoDir(uploadDir, workspaceID)
-	for _, candidate := range logoExtensions {
+	for _, candidate := range allowedLogoExtensions() {
 		path := filepath.Join(dir, "logo."+candidate)
 		raw, readErr := os.ReadFile(path)
 		if readErr != nil {
 			if os.IsNotExist(readErr) {
 				continue
 			}
-			return nil, "", false, readErr
+			return nil, readErr
 		}
-		return raw, candidate, true, nil
+		return &LogoFile{Data: raw, Extension: candidate}, nil
 	}
-	return nil, "", false, nil
+	return nil, nil
 }

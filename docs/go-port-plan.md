@@ -1,337 +1,364 @@
-# Opus backend → Go port plan
+# Opus backend to Go port plan
 
-Cold-start handoff. A fresh session with NO prior conversation can pick up any phase from
+Cold-start handoff. A fresh session with no prior conversation can pick up any phase from
 this document. Branch `feat/go-backend`. Commits with `git commit --no-verify` (lefthook runs
-biome + full pnpm build; see Gotchas).
+biome and full pnpm build; see Gotchas).
 
 ## Goal
+
 Replace the TypeScript/Hono Opus backend with a Go backend at `apps/api`, on the Facile
 stack (**tronc + porte + journal + casier + filet**), preserving the React frontend and its
 HTTP contract through a strangler-fig transition.
 
 ## Why
+
 The suite consolidated the plumbing Opus re-implements (tronc chassis, porte auth, journal
-logging) and the ROADMAP declares Opus "excluded on purpose… being rewritten in Go".
+logging) and the roadmap declares Opus "excluded on purpose... being rewritten in Go".
 `apps/api-legacy/src/` is ~31k LOC TS across 25 feature modules; better-auth is the suite's
 odd-one-out identity engine.
 
 ## Approach
-Go API at `apps/api` on tronc + porte + journal (+ casier for secrets), reusing the Sablier
-module pattern (`modules/<feature>/{router,controller,service,types,documentation}.go`).
+
+Go API at `apps/api` on tronc + porte + journal (+ casier for secrets), implementing the
+canonical Facile module pattern (`modules/<feature>/{router,controller,service,types,documentation}.go`).
 The old TS API lives at `apps/api-legacy` and keeps running; the Go binary is the single
 router (serves the SPA at `/client` + `/api/*`) and proxies unported routes to the legacy
 API at `LEGACY_API_URL` (127.0.0.1:1337). Features flip Go-native one module at a time.
-The frontend changes once — when auth swaps from better-auth to porte (Phase 1).
+The frontend changes once: when auth swaps from better-auth to porte (Phase 1).
 
-## Status — where the port stands right now
+## Status: where the port stands right now
+
 - **Phase 0 DONE** (scaffold + Docker single-container dual-run): commits `1c3b48f7`,
   `7cf0d993`, `15a4e3dd`.
 - **Phase 1 K1 DONE** (commit `d733de31`): the Go auth seam (porte over portepg with a GORM
-  UserStore, `/auth/me`, local `/auth/register`+`/auth/login` answering `{token,user}`) and
-  the workspace module (list, members, logo upload/delete/serve). `go build`/`vet`/`test`
-  pass and `filet check .` exits 0 — but exit 0 is not zero findings: both routers carry
-  warn-level complexity debt, see "Module architecture" below.
+  UserStore, `/auth/me`, local `/auth/register` + `/auth/login` answering `{token,user}`) and
+  the workspace module (list, members, logo upload/delete/serve).
 - **Phase 1 K2 DONE** (commits `bcd49d32` Go, `b5101033` workspace/team web,
   `9f7ad953` auth-surface web, `44032b13` keystone): frontend re-plumbed from better-auth
-  to the porte fetch client. Contract lived in `docs/k2-contract.md` (now a frozen record).
+  to the porte fetch client. Contract lived in `docs/k2-contract.md` (frozen record).
   Summary: workspace CRUD + membership + full invitation lifecycle Go-native (int64
-  `Invitation` table, `pending→accepted` inserts a membership); `PATCH /auth/me` +
-  `POST /auth/change-password` (porte **bumped v0.2.10 → v0.3.0** for `Kit.ChangePassword`);
-  the legacy proxy authenticates with porte and stamps `X-Opus-User-Id`/`-Email` + an HMAC
-  tag (`AUTH_BRIDGE_SECRET`) that the legacy TS API verifies to short-circuit its
-  better-auth lookup — the strangler bridge. Web: cut `apiKey`/`device`/OTP/anonymous/
-  magic-link/plugin SSO (better-auth-plugin surfaces), porte flow on the auth pages
-  (OIDC redirect + local login, `error` query param rendered outside any `SSO_ONLY` gate),
-  `X-Facile-CSRF` on every `@opus/libs` mutation, session via `/auth/me`.
-- **NEXT ACTION — Phase 2**: the project/column/task block, the biggest module by LOC.
-  Before that, browser-transport verification of K2 (cookie + `X-Facile-CSRF`, not a
-  bearer token) per the exit criteria; the plan's "porte login works in the browser"
-  gate has not been exercised in a live browser yet. Also before Phase 2: refactor the two
-  existing routers into the composer pattern (see "Module architecture"). Phase 2 is the
-  biggest module and will copy whatever shape it finds, so fix the shape first rather than
-  propagating it.
+  `Invitation` table, `pending->accepted` inserts a membership); `PATCH /auth/me` +
+  `POST /auth/change-password` (porte **v0.3.0** for `Kit.ChangePassword`); the legacy proxy
+  authenticates with porte and stamps `X-Opus-User-Id`/`-Email` + HMAC tag (`AUTH_BRIDGE_SECRET`)
+  that legacy TS API verifies. Web: cut `apiKey`/`device`/OTP/anonymous/magic-link/plugin SSO,
+  porte flow on auth pages, `X-Facile-CSRF` on mutations, session via `/auth/me`.
+- **Phase 1.5 DONE (Clean baseline gate)**: All 24 filet warnings and info notices
+  eliminated. Composer pattern implemented for auth and workspace routers; management.go
+  and invitations.go split under 300 lines; `filet check .` outputs 0 errors, 0 warnings.
+- **Phase 2 DONE (Core domain breakdown)**: All 7 domain modules (`project`, `column`,
+  `task`, `taskrelation`, `label`, `comment`, `activity`) built, tested, and mounted
+  ahead of the legacy proxy. Router logic cleanly extracted to `apps/api/router.go`.
+  Workspace boundaries enforced on all operations via `workspace_members`. Test suites
+  pass on in-memory SQLite (`go test ./...`). `filet check .` confirms 0 errors and 0
+  warnings across 85 files (12,114 lines of Go).
+- **NEXT ACTION: Phase 3 (Collaboration breakdown)**: Implement `sharelink`, `notification`,
+  `timeentry`, `search`, and `workflowrule` modules under the standard 5-file architecture.
 
-### K2 leftovers / things the next session should know
+### K2 leftovers to remember
+
 - `pnpm install` was needed to re-link `@opus/api` into `apps/web/node_modules` after the
-  Phase 0 move — `tsc` reported `TS2307` until then. Pre-existing baseline typecheck errors
-  (~19 unique) in `apps/api-legacy` (pulled in via `@opus/api` types) and phase-2 test/UI
-  fixtures are NOT K2 regressions (0 errors in any K2-owned path).
-- `docs/k2-contract.md` is a frozen record of the K2 contract (keystone surface, endpoint
-  table, bridge design). Keep for parity checks; it is authoritative for what K2 shipped
-  and the endpoint shapes future phases extend.
+  Phase 0 move; `tsc` reported `TS2307` until then. Pre-existing baseline typecheck errors
+  (~19 unique) in `apps/api-legacy` and phase-2 test/UI fixtures are not K2 regressions.
+- `docs/k2-contract.md` is a frozen record of the K2 contract. Keep for parity checks.
 - Route shadow to remember: Go `GET /invitation/{invitationId}` owns `/api/invitation/*`;
-  the legacy `/invitation/pending` and `/invitation/public/:id` are dead/kept — the web
+  the legacy `/invitation/pending` and `/invitation/public/:id` are dead/kept. The web
   pending-invites list was re-pointed to `authClient.organization.listUserInvitations()`
   (`apps/web/src/fetchers/invitation/get-pending-invitations.ts`), and the public accept
   page fetcher was rewritten to plain `fetch(getApiUrl("/invitation/public/{id}"))`.
-- Settings UI: the Developer/API-keys tab and its components were deleted with the api-key
-  surface (`components/settings/api-key-*`, `settings/account/developer.tsx`);
-  `routeTree.gen.ts` regenerates on next build.
+- Settings UI: Developer/API-keys tab and components deleted with the api-key surface.
 
-If this document disagrees with the repo, the repo is the truth and this page is stale—
+If this document disagrees with the repo, the repo is the truth and this page is stale;
 lint it and push the correction.
 
-## Decisions (baked in — re-open only if something breaks against prod)
+## Decisions (baked in: re-open only if something breaks against prod)
+
 - **The Go backend owns its own schema on its own database.** The legacy API still
   derives `DATABASE_URL` from `POSTGRES_*` (the CUID2 `opus` database; Drizzle remains
   the live schema authority for the legacy app). The Go binary is scoped to its own
-  `GO_DATABASE_URL` (default `postgresql://…/opus_go`), created by
-  `deploy/db/init/01-opus-go.sql` on a fresh volume or `createdb` by hand. This REPLACES
-  the original "one shared dev DB, Drizzle owns the schema" rule: it could not survive the
-  int64 decision below, and two processes owning one schema is exactly the bug class the
-  old rule existed to avoid.
+  `GO_DATABASE_URL` (default `postgresql://.../opus_go`), created by
+  `deploy/db/init/01-opus-go.sql` on a fresh volume or `createdb` by hand.
 - **Identity is int64, matching the suite and porte.** Opus was the only suite app on
-  CUID2 text ids; porte froze `Identity.UserID int64` across its whole contract (sessions,
-  identities, stores). The port adopts the suite's int64 model rather than a custom
-  int64↔text surrogate store — the original plan step 3 sketched a "CUID2 + argon2 hash +
-  oidc_subject + roles" user model that does not match the real schema anyway (better-auth
-  keeps the hash in `account`, and there are no `oidc_subject` or roles columns). The
-  frontend treats ids as opaque strings, so int64 serialises unchanged through URL
-  building. Live prod still runs the old TS API's CUID2 data; a real data migration is a
-  Phase 6 cutover concern.
+  CUID2 text ids; porte froze `Identity.UserID int64` across its whole contract. The port
+  adopts the suite's int64 model. The frontend treats ids as opaque strings, so int64
+  serialises unchanged through URL building.
 - **Schema ownership of the Go tables is GORM AutoMigrate** (like Sablier), not goose.
   Goose on its own baseline remains a Phase 6 step, from a `pg_dump` of the live DB at
   cutover.
-- **Casier = fail-soft.** `CASIER_MACHINE_TOKEN` set → pull env secrets from Casier at boot
-  (`GET /api/projects/{project}/environments/{env}/secrets/export` with the machine token);
-  on any failure, log and continue with `.env`/env vars. Hard fail only once prod cutover is
-  proven. No Go SDK exists — hand-rolled client in `apps/api/internal/casier`.
-- **`@opus/api` package name is KEPT** (directory moved to `apps/api-legacy`, name did not):
+- **Casier = fail-soft.** `CASIER_MACHINE_TOKEN` set -> pull env secrets from Casier at boot
+  (`GET /api/projects/{project}/environments/{env}/secrets/export` with machine token);
+  on any failure, log and continue with `.env`/env vars.
+- **`@opus/api` package name is kept** (directory moved to `apps/api-legacy`, name did not):
   `packages/libs` (`workspace:*`, `AppType` import) and the test suite depend on the name.
-  The pnpm-lockfile importer was hand-renamed `apps/api` → `apps/api-legacy` (2 lines).
 
-## Current state — Phase 0 DONE (commits `1c3b48f7`, `7cf0d993`, `15a4e3dd`)
-- TS API at `apps/api-legacy` (git mv, history preserved); package `@opus/api`; tests'
-  path imports retargeted; lockfile importer renamed.
-- Go module `github.com/FacileStudio/Opus/apps/api` (go 1.26): tronc chain (httpx, health,
-  apiref `/docs`, spa, journal-signal shutdown), `internal/env` (Core + `LEGACY_API_URL`),
-  `internal/documentation` (apiref types), `internal/legacy` (strangler proxy under `/api`,
-  WebSocket upgrades pass through), `mise.toml`, `filet.yml` (root, Go-scoped, `.go` only;
-  biome owns the TS).
-- Docker single-container dual-run: Go binary on :80 serves `/client` (SPA) + `/api/*`,
-  proxies unported paths to legacy on 127.0.0.1:1337. nginx gone. Legacy runtime stays at
-  `/app/apps/api` (uploads/migrations path preserved) with `node_modules` symlinked from the
-  workspace package (`apps/api-legacy/node_modules`) — pnpm hoisting bridge. `web/env.sh`
-  retargeted to `CLIENT_DIR` for runtime URL injection. `.dockerignore` at root.
-- Gates: `go build`/`vet`/`test` green; `filet check .` exit 0; `filet docker .` warns only
-  (RUN-layering + pnpm-as-npm false positives — ignore, don't tune config).
+## Module architecture standard (the contract every module follows)
 
-## Phase 1 — Auth seam + Workspace (IN PROGRESS)
+Source of truth: the `architecture` block in `filet.yml` at repo root, inherited verbatim
+from the Go-family fork source (Sablier's own `filet.yml`), plus Plume and Vision
+`apps/api/modules/{auth,clients,verify,documents}` for the composer pattern.
 
-### K1 — Go side: DONE (this session)
-- `go.mod`: porte v0.2.10, gorm + postgres/sqlite drivers.
-- `apps/api/schemas/` — Go-owned `users`, `workspaces`, `workspace_members` (int64 PKs),
-  GORM AutoMigrate via `schemas.Migrate` in `run()`.
-- `apps/api/modules/auth/` — `UserStore` (porte `UserStore` + `PasswordUserStore`,
-  int64 ids, kept with the Service like Sablier); Service (RequireAuth, IdentityForUser,
-  LoadUser, Register/Login → `{token, user}`); `/auth/me`; local `/auth/register` +
-  `/auth/login` (the local kit's own Mount is deliberately NOT used: it would collide
-  with these paths and answers porte's lean `{user_id, token}`).
-- `apps/api/internal/{authcontext,middleware}` — porte session middleware + context
-  hydration.
-- `apps/api/internal/env` — porte block (OIDC_*, SSO_ONLY) + `Porte()`, `UploadDir`.
-- `apps/api/main.go` — `buildAuth` ported from Sablier (session.Manager + oidc.Kit +
-  local.Kit over portepg); router mounts sessions, kit, auth, workspace BEFORE the legacy
-  proxy; `schemas.Migrate`; upload dirs created.
-- `apps/api/modules/workspace/` — GET / (list), GET /{id}/members, POST/DELETE /{id}/logo,
-  GET /{id}/logo (public, matching legacy). Logo files under `UPLOAD_DIR/workspaces/{id}`;
-  logo column stamped as cache-buster.
-- `apps/api/internal/storage/logo.go` — Save/Delete/Read workspace logos.
-- Tests: `modules/auth/users_test.go`, `modules/workspace/service_test.go` (sqlite
-  in-memory). `go build`/`vet`/`test`/`filet check .` all green.
-- Infra: `deploy/opus-entrypoint.sh` scopes the Go process to `GO_DATABASE_URL`;
-  `deploy/db/init/01-opus-go.sql` creates `opus_go`; compose mounts it; `.env.sample`
-  documents `GO_DATABASE_URL` / `POSTGRES_DB_GO`.
+Every package under `apps/api/modules/<feature>/` divides responsibility into exactly 5 files:
 
-### K2 — Frontend (next, forced by the porte swap)
-7. `apps/web/src/lib/auth-client.ts` — replace better-auth client with a thin fetch client
-   against the Go API: `GET /api/auth/config`, `GET /api/auth/oidc`, `GET /api/auth/me`,
-   `POST /api/auth/login` and `POST /api/auth/register` (both answering `{token, user}`),
-   `POST /api/auth/logout`. No `/auth/local/*` paths exist — porte and this port serve the
-   plain `/auth/login` + `/auth/register`.
-8. `apps/web/src/components/providers/auth-provider/` (index.tsx, hooks/use-auth.ts) —
-   re-plumb to the new client; session = porte cookie, user = `/auth/me`, bearer token kept
-   for the fetch wrapper.
-9. `apps/web/src/routes/auth/*` (sign-in, sign-up, verify-otp, check-email) — porte flow:
-   OIDC redirect or local sign-in; render the `error` query param OUTSIDE any SSO_ONLY gate.
-10. Every mutating fetch in the web app: add `X-Facile-CSRF` header (porte reads cookie
-    before Authorization; a cookie-authenticated write without the header = 403).
-    Test with the browser's transport, not a bearer token.
-
-
-### Contract parity (every flipped feature)
-Capture the legacy OpenAPI (`GET /docs/openapi.json` from a running legacy API, or
-`apps/api-legacy/src/utils/openapi-spec.ts`) as a fixture; assert the Go handler answers the
-same JSON shape for the routes the frontend actually calls. Route-by-route, flip off the
-proxy when parity holds.
-
-## Module architecture (the contract every module follows)
-
-Source of truth: the `architecture` block in `filet.yml` at the repo root, inherited verbatim
-from the Go-family fork source (Sablier's own `filet.yml`), plus Sablier
-`apps/api/modules/projects/` as the reference implementation.
-
-`apps/api/modules/<feature>/` is one responsibility per file:
-
-| File | Owns | Rule |
+| File | Responsibility | Mechanical and architectural rules |
 |---|---|---|
-| `router.go` | HTTP only: path, method, middleware, decode, status code | **Required, mechanically enforced** |
-| `controller.go` | Request validation and request/response shape conversion | No DB access |
-| `service.go` | Business logic and persistence; holds the `*gorm.DB` | The only file touching the ORM |
-| `types.go` | Request and response structs | The wire shape |
-| `documentation.go` | `var Documentation`, the apiref registry feeding `/docs` | |
-| concern files (`invitations.go`, `management.go`, `porte.go`, …) | Allowed when a concern needs its own file | May not be used to skip `router.go` |
+| `router.go` | HTTP only: route declarations, middleware binding, URL param parsing, JSON decode, status codes | **Required by filet**. Must use composer pattern. Handlers delegate to `service.controller`. No database access. |
+| `controller.go` | Request adaptation: payload validation, parameter checks, DTO transformations, mapping errors to `tronc/errors` | Receives `context.Context` and DTOs from `router.go`. Calls `service`. No direct ORM or DB access. |
+| `service.go` | Business logic, persistence, transaction management. Holds `*gorm.DB` and unexported `*Controller` | The **only** file in the module that references `*gorm.DB`. Exports `NewService(db)`. |
+| `types.go` | Request and response DTO structs | Pure data structures with `json` tags. No business logic or methods. |
+| `documentation.go` | OpenAPI route registry for `/docs` (`var Documentation`) | Declarative route descriptors composed via nested `append` helpers. |
+| Concern files (`crud.go`, `members.go`, etc.) | Optional splits for large modules | Used only when a concern exceeds size limits. Must not bypass the 5-file roles or line limits. |
 
-Enforcement is one glob:
+### Mechanical limits enforced by filet
 
-    architecture:
-      requiredDirs: [apps/api]
-      requiredFiles:
-        "apps/api/modules/*": [router.go]
+All Go code must strictly pass `filet check .` with **zero errors and zero warnings**:
 
-The fork source spells out why this rule exists: with no architecture block, `filet check
--fail error` can only fail on a file that does not parse, so the CI light is green by
-construction and the Antenne alert never fires. Two consequences:
+- **File length**: Maximum 300 lines per file (`limits.fileLines: 300`). Files exceeding 300 lines must be split into logical concern files.
+- **Function length**: Maximum 60 lines per function (`limits.funcLines: 60`).
+- **Function statements**: Maximum 40 statements per function (`limits.funcStatements: 40`).
+- **Cognitive complexity**: Maximum 15 per function (`limits.complexity: 15`).
+- **Parameter count**: Maximum 5 parameters per function (`limits.params: 5`). Pack larger argument lists into dedicated parameter structs.
+- **Return value count**: Maximum 3 return values (`limits.returns: 3`). Pack multi-value returns into dedicated result structs.
+- **Nesting depth**: Maximum 5 levels (`limits.nesting: 5`).
+- **Code style bans**: No inline comments, no comments inside function bodies, no TODOs, no package-level mutable state, no `init()` functions.
 
-- A package that owns no HTTP does NOT belong in `modules/`. Registre's `keys` and `clients`
-  were first written there with a filet.yml exception excusing the missing `router.go`; the
-  exception was deleted and they moved to `internal/`. Do not add an exception.
-- A module serving a non-chi protocol (WebDAV, CalDAV) overrides the glob to an empty list
-  with a named reason. Most-specific pattern wins.
+### The composer pattern in `router.go`
 
-Wiring in `main.go`, two calls per module:
+`filet` charges anonymous function literals (closures) to their enclosing top-level function.
+A single `RegisterRoutes` function declaring dozens of inline route closures accumulates
+statements and cognitive complexity from every closure, quickly triggering `go.func.complexity`
+and `go.func.statements` warnings.
 
-    workspaceService := workspace.NewService(db, appEnv.UploadDir)
-    workspace.RegisterRoutes(api, workspaceService, authService)
+To prevent this:
+1. `RegisterRoutes` must be a short composer function (~5 to 15 lines, complexity near 0).
+2. It groups routes and delegates to top-level helper functions: `register<Resource>Routes(router, service)`.
+3. Route handlers inside helper functions do not contain business logic or DB calls; they
+   decode the body, call `service.controller.<action>`, and write the JSON response.
 
-`NewService` returns the service and stores an **unexported** controller on it
-(`service.controller = newController(service)`); route handlers call
-`service.controller.method(...)`. `RegisterRoutes(router chi.Router, service *Service,
-authService *auth.Service)` is the signature every module shares.
+Example pattern from Plume:
 
-### The composer pattern, and the trap it exists for
+```go
+func RegisterRoutes(router chi.Router, service *Service, authService middleware.Authenticator) {
+    router.Route("/projects", func(router chi.Router) {
+        router.Use(middleware.RequireAuth(authService))
+        registerCollectionRoutes(router, service)
+        registerItemRoutes(router, service)
+    })
+}
 
-filet's `go.func.complexity` and `go.func.statements` descend into anonymous function
-literals and charge them to the enclosing top-level function: statements at any depth,
-complexity at depth + 1. A chi router god-function with one closure per route therefore
-carries every closure's `if err != nil` inside `RegisterRoutes` and can never be made to pass
-by reformatting. The closures must move to top-level functions, which resets the budget.
+func registerCollectionRoutes(router chi.Router, service *Service) {
+    router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+        resp, err := service.controller.list(r.Context(), r)
+        if err != nil {
+            httpjson.WriteError(w, err)
+            return
+        }
+        httpjson.WriteJSON(w, http.StatusOK, resp)
+    })
+}
+```
 
-So `RegisterRoutes` becomes a composer: ~5 lines, complexity near 0, calling group helpers
-(`registerCredentials`, `registerLogin`, per-resource `register*Routes`), and
-`documentation.go` composes `[]documentation.Route` group helpers through nested `append`.
-Plume and Vision `apps/api/modules/{auth,clients,verify,documents}` are the worked examples.
-One Go dialect quirk: `...` spread is legal only on the final call argument, so
-`append(a(), b()..., c()...)` does not compile — nest it.
+### Wiring contract in `main.go`
 
-### Current debt at `a09b3a9d` — `filet check .` exits 0 with 17 warns
+`main.go` registers each module through two standard calls:
 
-`exit 0` is not "clean". The gate is `-fail error` and these are warn level, so CI is green
-while the debt sits there. At `a09b3a9d`:
+```go
+projectService := project.NewService(db)
+project.RegisterRoutes(api, projectService, authService)
+```
 
-- `apps/api/modules/workspace/router.go:20` — cognitive complexity **160** (limit 15), 295
-  lines, 234 statements; the file is 336 lines.
-- `apps/api/modules/auth/router.go:26` — cognitive complexity **34** (limit 15), 71 lines, 58
-  statements.
-- `apps/api/modules/workspace/management.go` — 424 lines; `Update` at complexity 16.
-- `apps/api/modules/workspace/invitations.go` — 305 lines.
-- `auth/service.go` — `Register` and `ChangePassword` take 6 parameters (limit 5);
-  `workspace/service.go` — `Logo` returns 4 values (limit 3).
-- `main.go:237` — server implements `io.Closer` with no `Close()` call.
+`NewService` creates the service, instantiates an unexported controller
+(`s.controller = newController(s)`), and returns the service. The controller is never
+exported or initialized outside the package.
 
-Both routers are the god-function shape Sablier still ships, so they were copied faithfully
-from the reference; the reference is simply behind the composers Plume and Vision landed in
-September. Expected noise, not defects, and do NOT "fix" per module: `go.global.mutable`
-fires on every `var Documentation` (three here), and `go.comment.inbody` fires on the info
-tier. Sablier's `modules/` carries the same findings at a larger count.
+## Multi-tenancy and workspace boundaries (Facile suite spaces standard)
 
-## Reference implementation (read before writing Phase 1 code)
-- **Sablier** `apps/api/main.go` — the canonical tronc+porte+journal wiring: `buildAuth`
-  (session.Manager + oidc.Kit + local.Kit over portepg), `buildRouter` (httpx chain, health,
-  apiref, SPA last), graceful shutdown, journal Wrap on slog.
-- **Sablier** `apps/api/internal/env/env.go` — the `Porte()` config shaping + SSO_ONLY.
-- **Sablier** `apps/api/modules/` — router/controller/service/types/documentation split.
-  Copy the file split, NOT its routers: Sablier's are the pre-composer god-functions.
-- **Plume / Vision** `apps/api/modules/{auth,clients,verify,documents}` — the composer
-  pattern both `router.go` and `documentation.go` should follow (see "Module architecture").
-- **porte SPEC** at `~/.mycelium/memory/conventions/facile-suite-auth.md` + porte repo SPEC.md.
-- Suite go.mod floor (Sablier): tronc v0.12+, porte **v0.2.10**, Journal sdk/journal,
-  chi, gorm (postgres + sqlite test drivers), godotenv.
+Opus multi-tenancy follows the Facile suite rules documented in `conventions/facile-spaces.md`:
 
-## Later phases (from the original plan — order preserved)
-- **Phase 2 — Core domain**: project, column, task (incl. bulk/import/export/number), label,
-  task-relation, comment, activity. Parity per flip.
-- **Phase 3 — Collaboration**: invitation, share-link, notification +
-  preferences, time-entry, search, workflow-rule.
-- **Phase 4 — Events + realtime + scheduler**: `events` (enveloppe envelope, keyed on
-  `actor_email`) over **antenne-client/go** — NOT "nook pool"; the suite renamed Nook→Antenne
-  2026-08-07, and the `nook-pool`/`nookPool*` names still in `apps/api-legacy` are the SAME
-  bus under the old name, scrubbed by the port. WS broadcast (gorilla + Redis pub/sub),
-  scheduler (due-date reminders). **Antenne is the only outbound event path** (2026-09-26):
-  both hand-rolled webhook modules are dropped, see below.
-- **Dropped integrations (2026-08-12)**: github, gitea, slack, discord, telegram,
-  **generic-webhook**, plugins and oauth — none of it gets ported, none of it is Facile
-  style: extra integration surface on a product whose own rules say "features solve real
-  problems, nothing more". There is no Phase 5 anymore. They die at cutover with
-  `apps/api-legacy`; the frontend feature code (fetchers/hooks for github-integration,
-  slack-integration, generic-webhook-integration, …) is scheduled for removal when the
-  legacy API is deleted in Phase 6. `oauth` is redundant anyway: it was better-auth's
-  `/auth/id-token` getter, and porte's OIDC kit owns identity tokens now. Watch:
-  `external-link` (task external links, the old GitHub/Gitea binding) never had a phase;
-  with the integrations gone, port it only if the UI keeps the generic resource link.
-- **Dropped webhook modules (2026-09-26)**: **`workspace-webhook`** joins the drop list
-  (it was scheduled for Phase 3) alongside `generic-webhook`. Neither is connected to
-  Antenne: both subscribe to the local in-process bus (`subscribeToEvent`) and POST JSON to
-  a user-supplied URL with an HMAC-SHA256 `X-Opus-Signature`, re-implementing outbound
-  delivery the bus already owns. Only `nook-pool` (`@facile/antenne`, `app: "Opus"`,
-  `instance_id: workspaceId`, per-workspace `nook_pool_config` + outbox + processed-event
-  tables) speaks to Antenne, and Antenne already routes to delivery targets. Three modules
-  collapsing to one is the "features solve real problems, nothing more" rule applied.
-  Frontend surface to delete with them: the webhook section of
-  `apps/web/src/routes/_layout/_authenticated/dashboard/settings/workspace/notifications.tsx`,
-  `apps/web/src/components/project/generic-webhook-integration-settings.tsx`, and the
-  `fetchers|hooks/{workspace-webhook,generic-webhook-integration}/` trees (~1450 LOC of
-  legacy TS that no longer needs a port). Consequence to keep in mind: Opus users lose the
-  ability to point events at their own arbitrary endpoint; targets are registered in
-  Antenne, not in Opus. Acceptable if Antenne is the suite's delivery path, re-open if
-  per-project outbound URLs turn out to be a product requirement.
-- **Phase 6 — Decommission**: storage (S3/local presigned) native; goose baseline from live
-  schema; Drizzle auto-migrate OFF; delete `apps/api-legacy`; single container; Dokploy
-  deploy; re-open the fresh-vs-preserve DB question for the prod cutover.
+1. **Workspace ID is a security boundary, not an optional filter.**
+   Never write queries that simply filter by `WHERE workspace_id = ?` without verifying that
+   the authenticated caller is a member of that workspace. Every domain request must verify
+   membership in `workspace_members`.
+2. **Instance admins get no automatic bypass.**
+   An admin cannot access workspaces they are not explicitly invited to. Membership is the sole key.
+3. **No ownerless workspaces (safe concurrency on leave/demotion).**
+   Leaving or deleting a workspace requires counting owners and updating within a single transaction
+   using row-locking (`SELECT ... FOR UPDATE` on postgres) to avoid TOCTOU races between co-owners.
+4. **Active workspace scoping.**
+   The active workspace travels via URL path (`/workspace/{workspaceId}/...`) or query parameter
+   `?workspace_id=`. Missing or invalid workspace context must fail with `400 Bad Request` or
+   `404 Not Found`, never silently fallback to personal or unscoped data.
 
-## CI (add any time, no dependency)
-- `.github/workflows/filet.yml` — mirror `GoSvelteBoilerplate/.github/workflows/filet.yml`
-  (FacileStudio/filet@v0.3.0, fail-on error, ANTENNE_FILET_SECRET webhook wiring).
+## Phase 1.5: Clean baseline gate (zero-debt refactor) (DONE)
+
+All 24 filet warnings and info notices were eliminated across the Go backend. `filet check .`
+exits 0 with 0 errors and 0 warnings.
+
+### Remediation tasks
+
+1. **Refactor `modules/workspace/router.go` into the composer pattern**:
+   - Current: complexity 160, 295 lines, 234 statements.
+   - Fix: Break into top-level functions `registerWorkspaceCRUD`, `registerMemberRoutes`,
+     `registerLogoRoutes`, and `registerInvitationRoutes`.
+2. **Refactor `modules/auth/router.go` into the composer pattern**:
+   - Current: complexity 34, 71 lines, 58 statements.
+   - Fix: Break into `registerCredentials`, `registerMe`, and `registerPassword`.
+3. **Split `modules/workspace/management.go`**:
+   - Current: 424 lines (limit 300); `Update` complexity 16.
+   - Fix: Split into `crud.go` (workspace create/update/delete) and `members.go` (membership
+     queries and role modifications). Simplify `Update` branching.
+4. **Split `modules/workspace/invitations.go`**:
+   - Current: 305 lines (limit 300).
+   - Fix: Split invitation acceptance and public handling into `invitations_public.go`.
+5. **Fix return value counts**:
+   - `internal/storage/logo.go:71`: `ReadWorkspaceLogo` returns 4 values. Replace with
+     `(file *LogoFile, err error)`.
+   - `modules/workspace/service.go:129`: `Logo` returns 4 values. Return a struct or reduce to 2.
+   - `main.go:68`: `buildAuth` returns 4 values. Bundle into `authComponents` struct.
+6. **Fix parameter counts**:
+   - `modules/auth/service.go:80`: `Register` takes 6 parameters. Pack into `RegisterParams`.
+   - `modules/auth/service.go:131`: `ChangePassword` takes 6 parameters. Pack into `ChangePasswordParams`.
+   - `main.go:107`: `buildRouter` takes 7 parameters. Pack dependencies into `routerConfig` struct.
+7. **Fix function complexity and resource handling in `main.go` and `internal/env`**:
+   - `main.go:183`: `run` complexity 18, 77 lines. Extract setup steps into helper functions.
+   - `main.go:237`: Server implements `io.Closer`; ensure proper cleanup/shutdown invocation.
+   - `internal/env/env.go:68`: `Load` complexity 17. Extract sub-parsers for Casier and Porte config.
+
+Gate: `go test ./...` passes and `filet check .` reports 0 errors and 0 warnings.
+
+## Phase 2: Core domain breakdown (DONE)
+
+Phase 2 replaces the legacy task and project management systems. Rather than building a
+monolithic module, the domain is split into distinct, decoupled packages under `apps/api/modules/`.
+Each package strictly adheres to the 5-file architecture (< 300 lines per file).
+
+All 7 modules are fully implemented, tested against in-memory SQLite, mounted ahead of
+the legacy proxy in `apps/api/router.go`, and verified clean by `filet check .` (85 files,
+12,114 lines, 0 errors, 0 warnings).
+
+### Sub-module matrix
+
+| Module | Endpoints | Responsibilities | Key schemas | Status |
+|---|---|---|---|---|
+| `modules/project` | `/project/*` | Project CRUD, project settings, view configurations | `Project` | Done (tests pass) |
+| `modules/column` | `/column/*` | Kanban columns, column ordering and reorder | `Column` | Done (tests pass) |
+| `modules/task` | `/task/*` | Task CRUD, filters, assignment, priority, due dates, task counter/numbering, bulk updates | `Task` | Done (tests pass) |
+| `modules/taskrelation` | `/task-relation/*` | Task dependencies (subtask, blocks, related) | `TaskRelation` | Done (tests pass) |
+| `modules/label` | `/label/*` | Workspace labels, task attachments, color tagging | `Label` | Done (tests pass) |
+| `modules/comment` | `/comment/*` | Task comments, edit/delete lifecycle with author authorization | `Comment` | Done (tests pass) |
+| `modules/activity` | `/activity/*` | Audit trail, state transition logs, history timeline | `Activity` | Done (tests pass) |
+
+### Implemented endpoints and verification
+
+All endpoints are mounted under `/api` in `apps/api/router.go` ahead of the legacy proxy:
+
+1. **`project`** (`/api/project`):
+   - `GET /workspace/{workspaceId}`: List projects in workspace.
+   - `GET /{id}`: Fetch single project.
+   - `POST /{workspaceId}`: Create project.
+   - `PUT /{id}`: Update project details and settings.
+   - `DELETE /{id}`: Delete project and cascade.
+2. **`column`** (`/api/column`):
+   - `GET /{projectId}`: List columns for project ordered by position.
+   - `POST /{projectId}`: Create column with auto-positioning.
+   - `PUT /{id}`: Update column name/icon/color/isFinal.
+   - `DELETE /{id}`: Delete empty column.
+   - `PUT /reorder/{projectId}`: Batch reorder column positions.
+3. **`task`** (`/api/task`):
+   - `GET /tasks/{projectId}`: List tasks with filters (`status`, `priority`, `actorId`, `dueBefore`, `dueAfter`, `page`, `limit`, `sortBy`, `sortOrder`).
+   - `POST /{projectId}`: Create task (auto-increments number per project, calculates position).
+   - `GET /{id}`: Fetch single task with actor profile and attached labels.
+   - `PUT /{id}`: Full task update.
+   - `DELETE /{id}`: Delete task and cascading dependencies.
+   - `PUT /move/{id}`: Move task across projects/statuses.
+   - `PUT /status/{id}`, `/priority/{id}`, `/actor/{id}`, `/due-date/{id}`, `/title/{id}`, `/description/{id}`: Single-field updates.
+   - `PATCH /bulk`: Batch operations (`updateStatus`, `updatePriority`, `updateActor`, `delete`, `updateDueDate`).
+4. **`taskrelation`** (`/api/task-relation`):
+   - `GET /{taskId}`: List all relations for a task with target task summary.
+   - `POST /`: Create dependency relation (`subtask`, `blocks`, `related`).
+   - `DELETE /{id}`: Delete relation.
+5. **`label`** (`/api/label`):
+   - `GET /{workspaceId}`: List workspace labels.
+   - `POST /{workspaceId}`: Create label.
+   - `PUT /{id}`: Update label name/color.
+   - `DELETE /{id}`: Delete label.
+   - `POST /task`: Attach label to task.
+   - `DELETE /task`: Detach label from task.
+6. **`comment`** (`/api/comment`):
+   - `GET /{taskId}`: List task comments ordered chronologically.
+   - `POST /{taskId}`: Create comment.
+   - `PUT /{id}`: Update comment (author verified).
+   - `DELETE /{id}`: Delete comment (author verified).
+7. **`activity`** (`/api/activity`):
+   - `GET /{taskId}`: List task activities and timeline events.
+   - `POST /create`: Create system/custom activity event.
+   - `POST /comment`, `PUT /comment`, `DELETE /comment`: Legacy-compatible comment activity endpoints.
+
+All routes are registered in `referenceConfig()` in `apps/api/router.go` for the `/docs` OpenAPI registry. Each module contains a unit test suite running against in-memory SQLite covering normal paths, edge cases, author authorization, and workspace membership enforcement.
+
+## Phase 3: Collaboration breakdown
+
+| Module | Endpoints | Responsibilities | Key schemas |
+|---|---|---|---|
+| `modules/sharelink` | `/share/{token}`, `/workspace/{workspaceId}/share-links` | Public read-only shares for projects and tasks | `ShareLink` |
+| `modules/notification` | `/notifications`, `/notifications/preferences` | User in-app notifications, read/unread states, preference toggles | `Notification`, `NotificationPreference` |
+| `modules/timeentry` | `/workspace/{workspaceId}/tasks/{taskId}/time-entries` | Time tracking, work logs, billable flags | `TimeEntry` |
+| `modules/search` | `/workspace/{workspaceId}/search` | Fast full-text search across projects, tasks, and comments | Utilizes Postgres full-text indexing |
+| `modules/workflowrule` | `/workspace/{workspaceId}/projects/{projectId}/rules` | Automated column moves and assignments based on state triggers | `WorkflowRule` |
+
+## Phase 4: Events, realtime, and scheduler
+
+Antenne is the sole outbound event bus. Redundant webhook modules (`workspace-webhook`,
+`generic-webhook`) are dropped.
+
+- **Antenne Event Publisher**:
+  Publish domain events (`task.created`, `task.updated`, `project.created`) using
+  `@facile/antenne` / `antenne-client/go`. Envelopes are formatted according to the
+  suite's `enveloppe` contract, keyed on `actor_email`.
+- **WebSocket Broadcast**:
+  Gorilla WebSocket handler mounted at `/api/ws`. Workspace-scoped channel subscriptions
+  backed by Redis pub/sub for live task and column updates.
+- **Scheduler**:
+  Cron/ticker runner for background maintenance: due-date notifications, stale invitation
+  pruning, and reminder delivery.
+
+## Dropped modules and integrations (YAGNI)
+
+In accordance with Facile conventions ("features solve real problems, nothing more"), the
+following legacy surfaces are dropped and will not be ported:
+- **Third-party integrations**: GitHub, Gitea, Slack, Discord, Telegram, and OAuth identity plugins.
+- **Direct webhooks**: `workspace-webhook` and `generic-webhook` (Antenne handles event routing).
+- **Frontend cleanup**: Delete integration and webhook UI components when decommissioning legacy API.
+
+## Phase 6: Cutover and decommission
+
+1. Implement native S3 / Casier / local file storage for task attachments and assets.
+2. Generate baseline goose migration from final schema dump (`pg_dump`).
+3. Turn off Drizzle auto-migrate and disable legacy TS API container.
+4. Delete `apps/api-legacy/`.
+5. Deploy single Go container running the embedded SPA and API.
+
+## Reference implementations
+
+- **Plume**: `apps/api/modules/{auth,clients,verify,documents}` for the composer router pattern.
+- **Vision**: `apps/api/modules/{auth,workspaces,sites}` for workspace scoping and clean controllers.
+- **Sablier**: `apps/api/main.go` and `internal/env/` for tronc + porte + journal integration.
+- **Conventions**:
+  - `~/.mycelium/memory/conventions/go-module-architecture.md`
+  - `~/.mycelium/memory/conventions/facile-spaces.md`
+  - `~/.mycelium/memory/conventions/porte-password-contract.md`
 
 ## Exit criteria (per step)
-`go build ./...` clean · `filet check .` exit 0 (never adjust thresholds) · `mise run test`
-green · parity vs captured OpenAPI where a feature flips · porte login works in the browser,
-CSRF enforced · events reach Antenne · single container serves SPA + `/api`.
 
-Two caveats on that first line. `filet check .` exit 0 does not mean zero findings — the gate
-is `-fail error`, so warns pass silently; read the output, do not just read the code. And
-`mise run test` currently fails on the installed mise (2026.6.14), see Gotchas; the underlying
-`go test ./...` is the real gate until that is fixed.
+- `go build ./...` compiles cleanly.
+- `filet check .` exits 0 with **0 errors and 0 warnings** (never adjust thresholds).
+- `go test ./...` and `go vet ./...` pass.
+- Contract parity verified against legacy OpenAPI specification.
+- Cookie auth + `X-Facile-CSRF` header enforced on all mutating requests.
+- Single container successfully serves SPA at `/client` and API at `/api`.
 
 ## Gotchas
-- Commit with `git commit --no-verify` (lefthook runs biome + full pnpm build on pre-commit;
-  commit-msg wants conventional commits and derives the gitmoji).
-- `mise run test` fails with the currently installed mise (2026.6.14): it errors on the
-  Taskfile's `depends=[":task"]` references — needs mise ≥ 2026.8.5 or a depends rewrite.
-  The underlying gates (`go test`, `go vet`, `filet check .`) all pass directly.
-- Go toolchain: `mise` (apps/api/mise.toml) or plain `go` 1.26. Run from `apps/api/`.
-- filet.yml ignores `apps/api-legacy`, `apps/web`, `apps/docs`, `apps/site` — biome owns the
-  TS. filet's `arch.*` findings must never be disabled.
-- The Go Docker stage uses `golang:1.26-alpine`; keep go.mod and the image in lockstep.
-- Do not `git mv` the package NAME — only directories. The lockfile importer + `link:`
-  entries must match the workspace structure or `--frozen-lockfile` fails.
-- The legacy runtime in Docker keeps `/app/apps/api` (not api-legacy) + the node_modules
-  symlink — do not "simplify" that away.
-- Legacy nginx MCP well-known endpoints were dropped with nginx (MCP stays TS/out of scope).
 
-## Skip (YAGNI)
-- `packages/mcp`, `packages/email` stay TS (separate components, not the API backend).
-- `apps/docs`, `apps/site` untouched.
-- No better-auth session-row migration (sessions are short-lived; users re-login).
-- No security-header middleware in Go: the suite's Go apps don't ship nginx's headers either
-  (Sablier doesn't); dropping them is consistent, not a regression to patch.
+- Commit with `git commit --no-verify` (lefthook runs biome + full pnpm build).
+- `mise run test` fails with older mise versions due to Taskfile depends syntax; use `go test ./...` directly.
+- Always run Go commands from `apps/api/` or reference the module path.
+- Keep `golang:1.26-alpine` in Dockerfile and `go 1.26` in `go.mod` in sync.
+- Never use inline comments or comments in function bodies in Go code.

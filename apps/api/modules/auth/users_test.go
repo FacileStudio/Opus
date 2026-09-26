@@ -21,8 +21,6 @@ func newTestUserStore(t *testing.T) *UserStore {
 	if err := db.AutoMigrate(&schemas.User{}); err != nil {
 		t.Fatalf("migrate user: %v", err)
 	}
-	// The store resolves identities by joining porte/pg's table; the test
-	// creates the minimal shape so the upsert path is exercised.
 	if err := db.Exec("CREATE TABLE porte_identities (user_id integer, provider text, subject text)").Error; err != nil {
 		t.Fatalf("create porte_identities: %v", err)
 	}
@@ -87,8 +85,6 @@ func TestUserStoreUpsertFromOIDC(t *testing.T) {
 		t.Fatalf("upsert changed the user id: %d -> %d", id, again)
 	}
 
-	// With the identity row present, the store resolves through the JOIN
-	// without the email fallback.
 	if err := store.orm.Exec("INSERT INTO porte_identities (user_id, provider, subject) VALUES (?, 'authentik', 'user-123')", id).Error; err != nil {
 		t.Fatalf("seed identity: %v", err)
 	}

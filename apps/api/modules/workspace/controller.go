@@ -74,27 +74,29 @@ func (controller *Controller) deleteLogo(ctx context.Context, userID, workspaceI
 
 // serveLogo streams the stored logo bytes, or 404 when the workspace has none.
 func (controller *Controller) serveLogo(ctx context.Context, workspaceID int64, w http.ResponseWriter) error {
-	data, ext, ok, err := controller.service.Logo(ctx, workspaceID)
+	file, err := controller.service.Logo(ctx, workspaceID)
 	if err != nil {
 		return err
 	}
-	if !ok {
+	if file == nil {
 		return errors.NotFound("No logo found")
 	}
 	contentType := map[string]string{
-		"png": "image/png",
-		"jpg": "image/jpeg",
+		"png":  "image/png",
+		"jpg":  "image/jpeg",
 		"webp": "image/webp",
-		"svg": "image/svg+xml",
-		"gif": "image/gif",
-	}[ext]
+		"svg":  "image/svg+xml",
+		"gif":  "image/gif",
+	}[file.Extension]
 	if contentType == "" {
 		contentType = "application/octet-stream"
 	}
 	w.Header().Set("Content-Type", contentType)
 	w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
-	w.Header().Set("Content-Length", strconv.Itoa(len(data)))
+	w.Header().Set("Content-Length", strconv.Itoa(len(file.Data)))
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(data)
+	if _, err := w.Write(file.Data); err != nil {
+		return err
+	}
 	return nil
 }
