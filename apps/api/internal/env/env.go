@@ -58,6 +58,9 @@ type Config struct {
 	// legacy 401 behaviour.
 	AuthBridgeSecret string
 
+	// RedisURL configures the Redis pub/sub broker for realtime broadcasts.
+	RedisURL string
+
 	// OIDC and SSOOnly shape the porte auth kit.
 	OIDC    *OIDCConfig
 	SSOOnly bool
@@ -132,6 +135,7 @@ func Load() (Config, error) {
 		LegacyAPI:        legacyAPI,
 		UploadDir:        troncenv.String("UPLOAD_DIR", "./data/uploads"),
 		AuthBridgeSecret: troncenv.String("AUTH_BRIDGE_SECRET", ""),
+		RedisURL:         troncenv.String("REDIS_URL", ""),
 		SSOOnly:          ssoOnly,
 		OIDC:             oidcConfig,
 	}, nil

@@ -7,6 +7,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/legacy"
 	"github.com/FacileStudio/Opus/apps/api/internal/middleware"
+	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/modules/activity"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
 	"github.com/FacileStudio/Opus/apps/api/modules/column"
@@ -31,11 +32,12 @@ import (
 )
 
 type routerDeps struct {
-	db        *gorm.DB
-	sqlDB     sqlPinger
-	appEnv    *env.Config
-	appLogger *slog.Logger
-	kits      *authKits
+	db          *gorm.DB
+	sqlDB       sqlPinger
+	appEnv      *env.Config
+	appLogger   *slog.Logger
+	kits        *authKits
+	realtimeHub *realtime.Hub
 }
 
 func referenceConfig() apiref.Config {
@@ -101,12 +103,22 @@ func buildRouter(deps routerDeps) chi.Router {
 	health.Mount(router, deps.sqlDB.PingContext)
 	apiref.Mount(router, referenceConfig())
 
+	if deps.realtimeHub != nil {
+		router.Get("/ws", deps.realtimeHub.ServeWS)
+		router.Get("/ws/{projectId}", deps.realtimeHub.ServeWS)
+	}
+
 	router.Route("/api", func(api chi.Router) {
 		deps.kits.sessions.Mount(api)
 		deps.kits.oidc.Mount(api)
 		auth.RegisterRoutes(api, authService, *deps.appEnv)
 		workspace.RegisterRoutes(api, workspaceService, authService)
 		registerDomainRoutes(api, deps.db, authService)
+
+		if deps.realtimeHub != nil {
+			api.Get("/ws", deps.realtimeHub.ServeWS)
+			api.Get("/ws/{projectId}", deps.realtimeHub.ServeWS)
+		}
 
 		if deps.appEnv.LegacyAPI != nil {
 			legacy.MountProxy(api, deps.appEnv.LegacyAPI, deps.kits.sessions, authService, deps.appEnv.AuthBridgeSecret)

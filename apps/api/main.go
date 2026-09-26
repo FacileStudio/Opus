@@ -16,6 +16,9 @@ import (
 
 	"github.com/FacileStudio/Opus/apps/api/internal/database"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
+	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
+	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/Journal/sdk/journal"
@@ -75,27 +78,68 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	return &authKits{sessions: sessions, passwords: passwords, oidc: kit}, nil
 }
 
-func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *slog.Logger) (*http.Server, error) {
+type serverBundle struct {
+	server  *http.Server
+	cleanup func()
+}
+
+func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *slog.Logger) (*realtime.Hub, func(), error) {
+	eventsPub := events.New(events.LoadConfig(), events.WithLogger(appLogger))
+	eventsPub.Start(context.Background())
+
+	adapter := realtime.NewRedisAdapter(appEnv.RedisURL, appLogger)
+	wsAuth := realtime.NewSessionAuthenticator(kits.sessions)
+	hub, err := realtime.NewHub(realtime.Config{
+		Adapter:       adapter,
+		Authenticator: wsAuth,
+		Logger:        appLogger,
+	})
+	if err != nil {
+		eventsPub.Close()
+		return nil, nil, err
+	}
+
+	sched := scheduler.NewScheduler(db, appLogger, 5*time.Minute)
+	schedCtx, cancelSched := context.WithCancel(context.Background())
+	go sched.Start(schedCtx)
+
+	cleanup := func() {
+		cancelSched()
+		if closeErr := hub.Close(); closeErr != nil {
+			appLogger.Warn("realtime hub close error", slog.Any("error", closeErr))
+		}
+		eventsPub.Close()
+	}
+	return hub, cleanup, nil
+}
+
+func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *slog.Logger) (*serverBundle, error) {
 	kits, err := buildAuth(context.Background(), db, appEnv, appLogger)
 	if err != nil {
 		return nil, err
 	}
+	hub, cleanup, err := initServices(db, kits, appEnv, appLogger)
+	if err != nil {
+		return nil, err
+	}
 	router := buildRouter(routerDeps{
-		db:        db,
-		sqlDB:     sqlDB,
-		appEnv:    appEnv,
-		appLogger: appLogger,
-		kits:      kits,
+		db:          db,
+		sqlDB:       sqlDB,
+		appEnv:      appEnv,
+		appLogger:   appLogger,
+		kits:        kits,
+		realtimeHub: hub,
 	})
 	addr := ":" + strconv.Itoa(appEnv.Port)
-	return &http.Server{
+	srv := &http.Server{
 		Addr:              addr,
 		Handler:           router,
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      15 * time.Second,
 		IdleTimeout:       60 * time.Second,
-	}, nil
+	}
+	return &serverBundle{server: srv, cleanup: cleanup}, nil
 }
 
 func main() {
@@ -190,11 +234,12 @@ func run() error {
 	}
 	defer sqlDB.Close()
 
-	server, err := createApiServer(db, sqlDB, &appEnv, appLogger)
+	bundle, err := createApiServer(db, sqlDB, &appEnv, appLogger)
 	if err != nil {
 		appLogger.Error("failed to create server", slog.Any("error", err))
 		return err
 	}
-	defer server.Close()
-	return listenAndServeWithGracefulShutdown(server, appLogger)
+	defer bundle.cleanup()
+	defer bundle.server.Close()
+	return listenAndServeWithGracefulShutdown(bundle.server, appLogger)
 }

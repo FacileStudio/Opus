@@ -1,4 +1,4 @@
-# Phase 4 Handoff: Events, Realtime, and Scheduler
+# Phase 6 Handoff: Cutover and Decommission
 
 ## Current State
 
@@ -9,45 +9,32 @@
   - **Phase 1.5**: Baseline filet refactor; composer pattern applied to all routers.
   - **Phase 2**: Core domain modules (`project`, `column`, `task`, `taskrelation`, `label`, `comment`, `activity`) fully Go-native with in-memory SQLite unit tests.
   - **Phase 3**: Collaboration modules (`sharelink`, `timeentry`, `workflowrule`, `notification`, `search`) fully Go-native with table-driven unit tests.
+  - **Phase 4**: Events, realtime, and scheduler:
+    - `internal/events`: Antenne event publisher with `enveloppe.Event` standard structure.
+    - `internal/realtime`: WebSocket live broadcast hub at `/api/ws` and `/api/ws/{projectId}`, in-memory and Redis pub/sub adapters, session cookie/token authentication, windowId initiator exclusion.
+    - `internal/scheduler`: Background maintenance runner for stale invitation pruning and due date notification generation.
 - **Quality verification**:
-  - `filet check .` outputs `clean 117 files, 16211 lines, nothing to complain about` (0 errors, 0 warnings).
+  - `filet check .` outputs 0 errors and 0 warnings across 138 files (18,912 lines).
   - `go test -count=1 ./...` passes across all packages.
   - `go build ./...` compiles cleanly.
 
 ---
 
-## Phase 4 Objectives
+## Phase 6 Objectives: Cutover and Decommission
 
-Phase 4 ports events, realtime pub/sub, and background job scheduling into the Go backend.
+Phase 5 (third-party plugins and direct webhooks) was dropped under Facile YAGNI conventions. Phase 6 is the final decommissioning step:
 
-### 1. Antenne Event Publisher
-
-- **Protocol**: Suite standard outbound event bus via `antenne` client.
-- **Events to publish**:
-  - `task.created`, `task.updated`, `task.deleted`, `task.status_changed`, `task.actor_changed`
-  - `project.created`, `project.updated`, `project.deleted`
-  - `comment.created`
-  - `workspace.created`
-- **Envelope contract**:
-  - Envelopes follow the Facile `enveloppe` structure, keyed on `actor_email` or `user_id`.
-- **Note on dropped legacy code**:
-  - `workspace-webhook` and `generic-webhook-integration` are intentionally dropped. Antenne handles downstream webhook dispatching and event subscriptions.
-
-### 2. WebSocket Broadcast (`/api/ws`)
-
-- **Route**: `GET /api/ws` (Gorilla WebSocket or similar standard Go websocket handler).
-- **Authentication**: Authenticate caller via session cookie / bearer token on connection handshake.
-- **Subscriptions**: Workspace-scoped channels (`workspace:{workspaceId}`).
-- **Backing bus**: Redis pub/sub (using `REDIS_URL` with fail-soft in-memory channel broadcast when Redis is unreachable or unconfigured in local dev).
-- **Payloads**: Realtime events to notify web clients of live task updates and column position changes.
-
-### 3. Background Maintenance Scheduler
-
-- **Mechanism**: Go ticker / runner executing periodic cron jobs.
-- **Tasks**:
-  - Stale invitation cleanup (pruning expired invitations).
-  - Due-date notification generator (finding tasks with `due_date <= now` and dispatching in-app notifications).
-  - Reminder delivery.
+1. **Native File & Asset Storage**:
+   - Port task attachment and asset upload handling to Go (S3/local storage).
+2. **Database Migration Baseline**:
+   - Generate baseline goose migration from final schema dump (`pg_dump`).
+3. **Decommission Legacy Backend**:
+   - Stop Drizzle migrations and disable the legacy TypeScript API container.
+   - Delete `apps/api-legacy/`.
+4. **Frontend Cleanup**:
+   - Delete legacy webhook and integration UI components in `apps/web`.
+5. **Single-Container Dokploy Deployment**:
+   - Deploy single container running Go API and embedded React SPA at `/client`.
 
 ---
 

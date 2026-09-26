@@ -229,3 +229,11 @@ type UserNotificationWorkspaceRule struct {
 	UpdatedAt          time.Time `gorm:"column:updated_at;not null"`
 }
 
+// TaskReminderSent tracks which reminder types have already been dispatched.
+type TaskReminderSent struct {
+	ID           int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	TaskID       int64     `gorm:"column:task_id;not null;uniqueIndex:idx_task_reminder_type"`
+	ReminderType string    `gorm:"column:reminder_type;not null;uniqueIndex:idx_task_reminder_type"`
+	SentAt       time.Time `gorm:"column:sent_at;not null"`
+}
+

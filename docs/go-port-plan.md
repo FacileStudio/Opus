@@ -56,8 +56,12 @@ The frontend changes once: when auth swaps from better-auth to porte (Phase 1).
   in `apps/api/router.go`. Strict 5-file architecture respected. Tests pass against
   in-memory SQLite. `filet check .` reports 0 errors and 0 warnings across 116 files
   (15,936 lines of Go).
-- **NEXT ACTION: Phase 4 (Events, realtime, and scheduler)**: Implement Antenne event publisher,
-  WebSocket live broadcast at `/api/ws`, and maintenance scheduler.
+- **Phase 4 DONE (Events, realtime, and scheduler)**:
+  - Antenne event publisher in `internal/events` with suite standard `enveloppe.Event` structure.
+  - WebSocket hub in `internal/realtime` mounted at `/api/ws` and `/api/ws/{projectId}`, with in-memory adapter and Redis pub/sub adapter (`REDIS_URL`), cookie/token authentication, and initiator exclusion.
+  - Background maintenance scheduler in `internal/scheduler` executing stale invitation pruning and due date notification alerts.
+  - Quality verification: `filet check .` reports 0 errors and 0 warnings across 138 files (18,912 lines of Go). All unit tests pass (`go test ./...`).
+- **NEXT ACTION: Phase 6 (Cutover and decommission)**: Implement native file/attachment storage, generate baseline goose migration, decommission legacy TS API container, and clean up dropped UI components.
 
 ### K2 leftovers to remember
 
@@ -311,7 +315,7 @@ All 5 collaboration modules are fully implemented, tested against in-memory SQLi
 | `modules/search` | `/search` | Fast multi-domain search across projects, tasks, and comments | Full-text query scoped by membership | Done (tests pass) |
 | `modules/workflowrule` | `/workflow-rule/*` | Automated column moves and assignments based on state triggers | `WorkflowRule` | Done (tests pass) |
 
-## Phase 4: Events, realtime, and scheduler
+## Phase 4: Events, realtime, and scheduler (DONE)
 
 Antenne is the sole outbound event bus. Redundant webhook modules (`workspace-webhook`,
 `generic-webhook`) are dropped.
