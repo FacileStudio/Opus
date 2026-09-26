@@ -24,6 +24,8 @@ RUN cd apps/web && NODE_ENV=production pnpm run build
 # Stage 2: Build the Go backend on the tronc chassis
 FROM golang:1.26-alpine AS go-builder
 
+RUN apk add --no-cache git ca-certificates
+
 ARG TARGETOS=linux
 ARG TARGETARCH
 
