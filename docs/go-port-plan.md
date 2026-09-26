@@ -29,7 +29,8 @@ The frontend changes once — when auth swaps from better-auth to porte (Phase 1
 - **Phase 1 K1 DONE** (commit `d733de31`): the Go auth seam (porte over portepg with a GORM
   UserStore, `/auth/me`, local `/auth/register`+`/auth/login` answering `{token,user}`) and
   the workspace module (list, members, logo upload/delete/serve). `go build`/`vet`/`test`
-  and `filet check .` are green.
+  pass and `filet check .` exits 0 — but exit 0 is not zero findings: both routers carry
+  warn-level complexity debt, see "Module architecture" below.
 - **Phase 1 K2 DONE** (commits `bcd49d32` Go, `b5101033` workspace/team web,
   `9f7ad953` auth-surface web, `44032b13` keystone): frontend re-plumbed from better-auth
   to the porte fetch client. Contract lived in `docs/k2-contract.md` (now a frozen record).
@@ -45,7 +46,10 @@ The frontend changes once — when auth swaps from better-auth to porte (Phase 1
 - **NEXT ACTION — Phase 2**: the project/column/task block, the biggest module by LOC.
   Before that, browser-transport verification of K2 (cookie + `X-Facile-CSRF`, not a
   bearer token) per the exit criteria; the plan's "porte login works in the browser"
-  gate has not been exercised in a live browser yet.
+  gate has not been exercised in a live browser yet. Also before Phase 2: refactor the two
+  existing routers into the composer pattern (see "Module architecture"). Phase 2 is the
+  biggest module and will copy whatever shape it finds, so fix the shape first rather than
+  propagating it.
 
 ### K2 leftovers / things the next session should know
 - `pnpm install` was needed to re-link `@opus/api` into `apps/web/node_modules` after the
@@ -161,12 +165,95 @@ Capture the legacy OpenAPI (`GET /docs/openapi.json` from a running legacy API, 
 same JSON shape for the routes the frontend actually calls. Route-by-route, flip off the
 proxy when parity holds.
 
+## Module architecture (the contract every module follows)
+
+Source of truth: the `architecture` block in `filet.yml` at the repo root, inherited verbatim
+from the Go-family fork source (Sablier's own `filet.yml`), plus Sablier
+`apps/api/modules/projects/` as the reference implementation.
+
+`apps/api/modules/<feature>/` is one responsibility per file:
+
+| File | Owns | Rule |
+|---|---|---|
+| `router.go` | HTTP only: path, method, middleware, decode, status code | **Required, mechanically enforced** |
+| `controller.go` | Request validation and request/response shape conversion | No DB access |
+| `service.go` | Business logic and persistence; holds the `*gorm.DB` | The only file touching the ORM |
+| `types.go` | Request and response structs | The wire shape |
+| `documentation.go` | `var Documentation`, the apiref registry feeding `/docs` | |
+| concern files (`invitations.go`, `management.go`, `porte.go`, …) | Allowed when a concern needs its own file | May not be used to skip `router.go` |
+
+Enforcement is one glob:
+
+    architecture:
+      requiredDirs: [apps/api]
+      requiredFiles:
+        "apps/api/modules/*": [router.go]
+
+The fork source spells out why this rule exists: with no architecture block, `filet check
+-fail error` can only fail on a file that does not parse, so the CI light is green by
+construction and the Antenne alert never fires. Two consequences:
+
+- A package that owns no HTTP does NOT belong in `modules/`. Registre's `keys` and `clients`
+  were first written there with a filet.yml exception excusing the missing `router.go`; the
+  exception was deleted and they moved to `internal/`. Do not add an exception.
+- A module serving a non-chi protocol (WebDAV, CalDAV) overrides the glob to an empty list
+  with a named reason. Most-specific pattern wins.
+
+Wiring in `main.go`, two calls per module:
+
+    workspaceService := workspace.NewService(db, appEnv.UploadDir)
+    workspace.RegisterRoutes(api, workspaceService, authService)
+
+`NewService` returns the service and stores an **unexported** controller on it
+(`service.controller = newController(service)`); route handlers call
+`service.controller.method(...)`. `RegisterRoutes(router chi.Router, service *Service,
+authService *auth.Service)` is the signature every module shares.
+
+### The composer pattern, and the trap it exists for
+
+filet's `go.func.complexity` and `go.func.statements` descend into anonymous function
+literals and charge them to the enclosing top-level function: statements at any depth,
+complexity at depth + 1. A chi router god-function with one closure per route therefore
+carries every closure's `if err != nil` inside `RegisterRoutes` and can never be made to pass
+by reformatting. The closures must move to top-level functions, which resets the budget.
+
+So `RegisterRoutes` becomes a composer: ~5 lines, complexity near 0, calling group helpers
+(`registerCredentials`, `registerLogin`, per-resource `register*Routes`), and
+`documentation.go` composes `[]documentation.Route` group helpers through nested `append`.
+Plume and Vision `apps/api/modules/{auth,clients,verify,documents}` are the worked examples.
+One Go dialect quirk: `...` spread is legal only on the final call argument, so
+`append(a(), b()..., c()...)` does not compile — nest it.
+
+### Current debt at `a09b3a9d` — `filet check .` exits 0 with 17 warns
+
+`exit 0` is not "clean". The gate is `-fail error` and these are warn level, so CI is green
+while the debt sits there. At `a09b3a9d`:
+
+- `apps/api/modules/workspace/router.go:20` — cognitive complexity **160** (limit 15), 295
+  lines, 234 statements; the file is 336 lines.
+- `apps/api/modules/auth/router.go:26` — cognitive complexity **34** (limit 15), 71 lines, 58
+  statements.
+- `apps/api/modules/workspace/management.go` — 424 lines; `Update` at complexity 16.
+- `apps/api/modules/workspace/invitations.go` — 305 lines.
+- `auth/service.go` — `Register` and `ChangePassword` take 6 parameters (limit 5);
+  `workspace/service.go` — `Logo` returns 4 values (limit 3).
+- `main.go:237` — server implements `io.Closer` with no `Close()` call.
+
+Both routers are the god-function shape Sablier still ships, so they were copied faithfully
+from the reference; the reference is simply behind the composers Plume and Vision landed in
+September. Expected noise, not defects, and do NOT "fix" per module: `go.global.mutable`
+fires on every `var Documentation` (three here), and `go.comment.inbody` fires on the info
+tier. Sablier's `modules/` carries the same findings at a larger count.
+
 ## Reference implementation (read before writing Phase 1 code)
 - **Sablier** `apps/api/main.go` — the canonical tronc+porte+journal wiring: `buildAuth`
   (session.Manager + oidc.Kit + local.Kit over portepg), `buildRouter` (httpx chain, health,
   apiref, SPA last), graceful shutdown, journal Wrap on slog.
 - **Sablier** `apps/api/internal/env/env.go` — the `Porte()` config shaping + SSO_ONLY.
 - **Sablier** `apps/api/modules/` — router/controller/service/types/documentation split.
+  Copy the file split, NOT its routers: Sablier's are the pre-composer god-functions.
+- **Plume / Vision** `apps/api/modules/{auth,clients,verify,documents}` — the composer
+  pattern both `router.go` and `documentation.go` should follow (see "Module architecture").
 - **porte SPEC** at `~/.mycelium/memory/conventions/facile-suite-auth.md` + porte repo SPEC.md.
 - Suite go.mod floor (Sablier): tronc v0.12+, porte **v0.2.10**, Journal sdk/journal,
   chi, gorm (postgres + sqlite test drivers), godotenv.
@@ -220,6 +307,11 @@ proxy when parity holds.
 `go build ./...` clean · `filet check .` exit 0 (never adjust thresholds) · `mise run test`
 green · parity vs captured OpenAPI where a feature flips · porte login works in the browser,
 CSRF enforced · events reach Antenne · single container serves SPA + `/api`.
+
+Two caveats on that first line. `filet check .` exit 0 does not mean zero findings — the gate
+is `-fail error`, so warns pass silently; read the output, do not just read the code. And
+`mise run test` currently fails on the installed mise (2026.6.14), see Gotchas; the underlying
+`go test ./...` is the real gate until that is fixed.
 
 ## Gotchas
 - Commit with `git commit --no-verify` (lefthook runs biome + full pnpm build on pre-commit;
