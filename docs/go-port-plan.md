@@ -174,13 +174,14 @@ proxy when parity holds.
 ## Later phases (from the original plan — order preserved)
 - **Phase 2 — Core domain**: project, column, task (incl. bulk/import/export/number), label,
   task-relation, comment, activity. Parity per flip.
-- **Phase 3 — Collaboration**: invitation, share-link, workspace-webhook, notification +
+- **Phase 3 — Collaboration**: invitation, share-link, notification +
   preferences, time-entry, search, workflow-rule.
 - **Phase 4 — Events + realtime + scheduler**: `events` (enveloppe envelope, keyed on
   `actor_email`) over **antenne-client/go** — NOT "nook pool"; the suite renamed Nook→Antenne
   2026-08-07, and the `nook-pool`/`nookPool*` names still in `apps/api-legacy` are the SAME
   bus under the old name, scrubbed by the port. WS broadcast (gorilla + Redis pub/sub),
-  scheduler (due-date reminders).
+  scheduler (due-date reminders). **Antenne is the only outbound event path** (2026-09-26):
+  both hand-rolled webhook modules are dropped, see below.
 - **Dropped integrations (2026-08-12)**: github, gitea, slack, discord, telegram,
   **generic-webhook**, plugins and oauth — none of it gets ported, none of it is Facile
   style: extra integration surface on a product whose own rules say "features solve real
@@ -191,6 +192,22 @@ proxy when parity holds.
   `/auth/id-token` getter, and porte's OIDC kit owns identity tokens now. Watch:
   `external-link` (task external links, the old GitHub/Gitea binding) never had a phase;
   with the integrations gone, port it only if the UI keeps the generic resource link.
+- **Dropped webhook modules (2026-09-26)**: **`workspace-webhook`** joins the drop list
+  (it was scheduled for Phase 3) alongside `generic-webhook`. Neither is connected to
+  Antenne: both subscribe to the local in-process bus (`subscribeToEvent`) and POST JSON to
+  a user-supplied URL with an HMAC-SHA256 `X-Opus-Signature`, re-implementing outbound
+  delivery the bus already owns. Only `nook-pool` (`@facile/antenne`, `app: "Opus"`,
+  `instance_id: workspaceId`, per-workspace `nook_pool_config` + outbox + processed-event
+  tables) speaks to Antenne, and Antenne already routes to delivery targets. Three modules
+  collapsing to one is the "features solve real problems, nothing more" rule applied.
+  Frontend surface to delete with them: the webhook section of
+  `apps/web/src/routes/_layout/_authenticated/dashboard/settings/workspace/notifications.tsx`,
+  `apps/web/src/components/project/generic-webhook-integration-settings.tsx`, and the
+  `fetchers|hooks/{workspace-webhook,generic-webhook-integration}/` trees (~1450 LOC of
+  legacy TS that no longer needs a port). Consequence to keep in mind: Opus users lose the
+  ability to point events at their own arbitrary endpoint; targets are registered in
+  Antenne, not in Opus. Acceptable if Antenne is the suite's delivery path, re-open if
+  per-project outbound URLs turn out to be a product requirement.
 - **Phase 6 — Decommission**: storage (S3/local presigned) native; goose baseline from live
   schema; Drizzle auto-migrate OFF; delete `apps/api-legacy`; single container; Dokploy
   deploy; re-open the fresh-vs-preserve DB question for the prod cutover.
