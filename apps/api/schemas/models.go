@@ -141,3 +141,91 @@ type Activity struct {
 	CreatedAt time.Time `gorm:"column:created_at;not null"`
 	UpdatedAt time.Time `gorm:"column:updated_at;not null"`
 }
+
+// ShareLink provides public read-only access to a project.
+type ShareLink struct {
+	ID             int64      `gorm:"column:id;primaryKey;autoIncrement"`
+	ProjectID      int64      `gorm:"column:project_id;not null;index"`
+	Token          string     `gorm:"column:token;uniqueIndex;not null"`
+	Label          string     `gorm:"column:label"`
+	ExpiresAt      *time.Time `gorm:"column:expires_at"`
+	IsActive       bool       `gorm:"column:is_active;not null;default:true"`
+	LastAccessedAt *time.Time `gorm:"column:last_accessed_at"`
+	AccessCount    int        `gorm:"column:access_count;not null;default:0"`
+	CreatedBy      int64      `gorm:"column:created_by;not null;index"`
+	CreatedAt      time.Time  `gorm:"column:created_at;not null"`
+	UpdatedAt      time.Time  `gorm:"column:updated_at;not null"`
+}
+
+// TimeEntry logs work duration against a task.
+type TimeEntry struct {
+	ID          int64      `gorm:"column:id;primaryKey;autoIncrement"`
+	TaskID      int64      `gorm:"column:task_id;not null;index"`
+	UserID      *int64     `gorm:"column:user_id;index"`
+	Description string     `gorm:"column:description"`
+	StartTime   time.Time  `gorm:"column:start_time;not null"`
+	EndTime     *time.Time `gorm:"column:end_time"`
+	Duration    int        `gorm:"column:duration;not null;default:0"`
+	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
+}
+
+// WorkflowRule triggers automated task actions based on integration events.
+type WorkflowRule struct {
+	ID              int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	ProjectID       int64     `gorm:"column:project_id;not null;index"`
+	IntegrationType string    `gorm:"column:integration_type;not null"`
+	EventType       string    `gorm:"column:event_type;not null"`
+	ColumnID        int64     `gorm:"column:column_id;not null;index"`
+	CreatedAt       time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt       time.Time `gorm:"column:updated_at;not null"`
+}
+
+// Notification represents an in-app alert for a user.
+type Notification struct {
+	ID           int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	UserID       int64     `gorm:"column:user_id;not null;index"`
+	Title        string    `gorm:"column:title"`
+	Content      string    `gorm:"column:content"`
+	Type         string    `gorm:"column:type;not null;default:info"`
+	EventData    string    `gorm:"column:event_data"`
+	IsRead       bool      `gorm:"column:is_read;not null;default:false"`
+	ResourceID   *string   `gorm:"column:resource_id"`
+	ResourceType *string   `gorm:"column:resource_type"`
+	CreatedAt    time.Time `gorm:"column:created_at;not null"`
+}
+
+// UserNotificationPreference stores global notification delivery settings.
+type UserNotificationPreference struct {
+	ID              int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	UserID          int64     `gorm:"column:user_id;uniqueIndex;not null"`
+	EmailEnabled    bool      `gorm:"column:email_enabled;not null;default:false"`
+	NtfyEnabled     bool      `gorm:"column:ntfy_enabled;not null;default:false"`
+	NtfyServerURL   string    `gorm:"column:ntfy_server_url"`
+	NtfyTopic       string    `gorm:"column:ntfy_topic"`
+	NtfyToken       string    `gorm:"column:ntfy_token"`
+	GotifyEnabled   bool      `gorm:"column:gotify_enabled;not null;default:false"`
+	GotifyServerURL string    `gorm:"column:gotify_server_url"`
+	GotifyToken     string    `gorm:"column:gotify_token"`
+	WebhookEnabled  bool      `gorm:"column:webhook_enabled;not null;default:false"`
+	WebhookURL      string    `gorm:"column:webhook_url"`
+	WebhookSecret   string    `gorm:"column:webhook_secret"`
+	CreatedAt       time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt       time.Time `gorm:"column:updated_at;not null"`
+}
+
+// UserNotificationWorkspaceRule overrides preferences per workspace.
+type UserNotificationWorkspaceRule struct {
+	ID                 int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	UserID             int64     `gorm:"column:user_id;not null;index"`
+	WorkspaceID        int64     `gorm:"column:workspace_id;not null;index"`
+	IsActive           bool      `gorm:"column:is_active;not null;default:true"`
+	EmailEnabled       bool      `gorm:"column:email_enabled;not null;default:false"`
+	NtfyEnabled        bool      `gorm:"column:ntfy_enabled;not null;default:false"`
+	GotifyEnabled      bool      `gorm:"column:gotify_enabled;not null;default:false"`
+	WebhookEnabled     bool      `gorm:"column:webhook_enabled;not null;default:false"`
+	ProjectMode        string    `gorm:"column:project_mode;not null;default:all"`
+	SelectedProjectIDs string    `gorm:"column:selected_project_ids"`
+	CreatedAt          time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt          time.Time `gorm:"column:updated_at;not null"`
+}
+

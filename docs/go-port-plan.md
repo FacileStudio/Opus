@@ -51,8 +51,13 @@ The frontend changes once: when auth swaps from better-auth to porte (Phase 1).
   Workspace boundaries enforced on all operations via `workspace_members`. Test suites
   pass on in-memory SQLite (`go test ./...`). `filet check .` confirms 0 errors and 0
   warnings across 85 files (12,114 lines of Go).
-- **NEXT ACTION: Phase 3 (Collaboration breakdown)**: Implement `sharelink`, `notification`,
-  `timeentry`, `search`, and `workflowrule` modules under the standard 5-file architecture.
+- **Phase 3 DONE (Collaboration breakdown)**: All 5 collaboration modules (`sharelink`,
+  `timeentry`, `workflowrule`, `notification`, `search`) built, tested, and mounted
+  in `apps/api/router.go`. Strict 5-file architecture respected. Tests pass against
+  in-memory SQLite. `filet check .` reports 0 errors and 0 warnings across 116 files
+  (15,936 lines of Go).
+- **NEXT ACTION: Phase 4 (Events, realtime, and scheduler)**: Implement Antenne event publisher,
+  WebSocket live broadcast at `/api/ws`, and maintenance scheduler.
 
 ### K2 leftovers to remember
 
@@ -294,15 +299,17 @@ All endpoints are mounted under `/api` in `apps/api/router.go` ahead of the lega
 
 All routes are registered in `referenceConfig()` in `apps/api/router.go` for the `/docs` OpenAPI registry. Each module contains a unit test suite running against in-memory SQLite covering normal paths, edge cases, author authorization, and workspace membership enforcement.
 
-## Phase 3: Collaboration breakdown
+## Phase 3: Collaboration breakdown (DONE)
 
-| Module | Endpoints | Responsibilities | Key schemas |
-|---|---|---|---|
-| `modules/sharelink` | `/share/{token}`, `/workspace/{workspaceId}/share-links` | Public read-only shares for projects and tasks | `ShareLink` |
-| `modules/notification` | `/notifications`, `/notifications/preferences` | User in-app notifications, read/unread states, preference toggles | `Notification`, `NotificationPreference` |
-| `modules/timeentry` | `/workspace/{workspaceId}/tasks/{taskId}/time-entries` | Time tracking, work logs, billable flags | `TimeEntry` |
-| `modules/search` | `/workspace/{workspaceId}/search` | Fast full-text search across projects, tasks, and comments | Utilizes Postgres full-text indexing |
-| `modules/workflowrule` | `/workspace/{workspaceId}/projects/{projectId}/rules` | Automated column moves and assignments based on state triggers | `WorkflowRule` |
+All 5 collaboration modules are fully implemented, tested against in-memory SQLite, mounted ahead of the legacy proxy in `apps/api/router.go`, and verified clean by `filet check .` (116 files, 15,936 lines, 0 errors, 0 warnings).
+
+| Module | Endpoints | Responsibilities | Key schemas | Status |
+|---|---|---|---|---|
+| `modules/sharelink` | `/share-link/*`, `/shared-project/{token}`, `/share/{token}` | Public read-only shares for projects and tasks | `ShareLink` | Done (tests pass) |
+| `modules/notification` | `/notification/*`, `/notifications/*`, `/notification-preferences/*` | In-app notifications, read/unread states, preference toggles | `Notification`, `UserNotificationPreference`, `UserNotificationWorkspaceRule` | Done (tests pass) |
+| `modules/timeentry` | `/time-entry/*` | Time tracking, work logs, billable flags | `TimeEntry` | Done (tests pass) |
+| `modules/search` | `/search` | Fast multi-domain search across projects, tasks, and comments | Full-text query scoped by membership | Done (tests pass) |
+| `modules/workflowrule` | `/workflow-rule/*` | Automated column moves and assignments based on state triggers | `WorkflowRule` | Done (tests pass) |
 
 ## Phase 4: Events, realtime, and scheduler
 

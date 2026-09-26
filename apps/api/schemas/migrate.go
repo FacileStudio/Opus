@@ -19,6 +19,12 @@ func Migrate(db *gorm.DB) error {
 		&Comment{},
 		&TaskRelation{},
 		&Activity{},
+		&ShareLink{},
+		&TimeEntry{},
+		&WorkflowRule{},
+		&Notification{},
+		&UserNotificationPreference{},
+		&UserNotificationWorkspaceRule{},
 	}
 	if err := db.AutoMigrate(models...); err != nil {
 		return err

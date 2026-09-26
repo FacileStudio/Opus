@@ -12,9 +12,14 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/modules/column"
 	"github.com/FacileStudio/Opus/apps/api/modules/comment"
 	"github.com/FacileStudio/Opus/apps/api/modules/label"
+	"github.com/FacileStudio/Opus/apps/api/modules/notification"
 	"github.com/FacileStudio/Opus/apps/api/modules/project"
+	"github.com/FacileStudio/Opus/apps/api/modules/search"
+	"github.com/FacileStudio/Opus/apps/api/modules/sharelink"
 	"github.com/FacileStudio/Opus/apps/api/modules/task"
 	"github.com/FacileStudio/Opus/apps/api/modules/taskrelation"
+	"github.com/FacileStudio/Opus/apps/api/modules/timeentry"
+	"github.com/FacileStudio/Opus/apps/api/modules/workflowrule"
 	"github.com/FacileStudio/Opus/apps/api/modules/workspace"
 	"github.com/FacileStudio/tronc/apiref"
 	"github.com/FacileStudio/tronc/health"
@@ -50,6 +55,11 @@ func referenceConfig() apiref.Config {
 				label.Documentation(),
 				comment.Documentation(),
 				activity.Documentation(),
+				sharelink.Documentation(),
+				timeentry.Documentation(),
+				workflowrule.Documentation(),
+				notification.Documentation(),
+				search.Documentation(),
 			},
 		},
 	}
@@ -63,6 +73,11 @@ func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Au
 	label.RegisterRoutes(api, label.NewService(db), authService)
 	comment.RegisterRoutes(api, comment.NewService(db), authService)
 	activity.RegisterRoutes(api, activity.NewService(db), authService)
+	sharelink.RegisterRoutes(api, sharelink.NewService(db), authService)
+	timeentry.RegisterRoutes(api, timeentry.NewService(db), authService)
+	workflowrule.RegisterRoutes(api, workflowrule.NewService(db), authService)
+	notification.RegisterRoutes(api, notification.NewService(db), authService)
+	search.RegisterRoutes(api, search.NewService(db), authService)
 }
 
 func buildRouter(deps routerDeps) chi.Router {
