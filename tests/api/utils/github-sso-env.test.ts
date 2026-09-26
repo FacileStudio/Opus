@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   getGithubSsoOAuthCredentials,
   isGithubSsoConfigured,
-} from "../../../apps/api/src/utils/github-sso-env";
+} from "../../../apps/api-legacy/src/utils/github-sso-env";
 
 const keys = [
   "GITHUB_OAUTH_CLIENT_ID",

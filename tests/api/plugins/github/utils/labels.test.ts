@@ -4,7 +4,7 @@ import {
   ensureLabelsExist,
   getLabelColor,
   removeLabel,
-} from "../../../../../apps/api/src/plugins/github/utils/labels";
+} from "../../../../../apps/api-legacy/src/plugins/github/utils/labels";
 
 function createOctokitMock() {
   return {

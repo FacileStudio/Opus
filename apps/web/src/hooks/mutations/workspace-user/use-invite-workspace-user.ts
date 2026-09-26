@@ -6,7 +6,6 @@ type InviteWorkspaceUserRequest = {
   workspaceId: string;
   email: string;
   role: "admin" | "member" | "owner";
-  resend?: boolean;
 };
 
 function useInviteWorkspaceUser() {
@@ -15,13 +14,11 @@ function useInviteWorkspaceUser() {
       workspaceId,
       email,
       role,
-      resend,
     }: InviteWorkspaceUserRequest) => {
       const { data, error } = await authClient.organization.inviteMember({
         email,
         role,
         organizationId: workspaceId,
-        resend,
       });
 
       if (error) {

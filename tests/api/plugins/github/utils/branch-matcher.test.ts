@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { GitHubConfig } from "../../../../../apps/api/src/plugins/github/config";
+import type { GitHubConfig } from "../../../../../apps/api-legacy/src/plugins/github/config";
 import {
   createBranchRegex,
   extractTaskNumber,
@@ -7,7 +7,7 @@ import {
   extractTaskNumberFromPRBody,
   extractTaskNumberFromPRTitle,
   generateBranchName,
-} from "../../../../../apps/api/src/plugins/github/utils/branch-matcher";
+} from "../../../../../apps/api-legacy/src/plugins/github/utils/branch-matcher";
 
 const baseConfig: GitHubConfig = {
   repositoryOwner: "opus",

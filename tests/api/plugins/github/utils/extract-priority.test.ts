@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   extractIssuePriority,
   extractIssueStatus,
-} from "../../../../../apps/api/src/plugins/github/utils/extract-priority";
+} from "../../../../../apps/api-legacy/src/plugins/github/utils/extract-priority";
 
 describe("extractIssuePriority", () => {
   it("returns the first valid priority label", () => {

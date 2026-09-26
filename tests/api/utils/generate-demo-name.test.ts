@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { generateDemoName } from "../../../apps/api/src/utils/generate-demo-name";
+import { generateDemoName } from "../../../apps/api-legacy/src/utils/generate-demo-name";
 
 afterEach(() => {
   vi.restoreAllMocks();

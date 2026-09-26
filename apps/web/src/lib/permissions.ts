@@ -1,45 +1,56 @@
-import { createAccessControl } from "better-auth/plugins/access";
-import {
-  adminAc,
-  defaultStatements,
-  memberAc,
-  ownerAc,
-} from "better-auth/plugins/organization/access";
+// Permission statements and role definitions, replacing better-auth's access
+// plugin. The server owns enforcement; this module is the client-side mirror
+// the UI reads to decide which controls to render, and the single place the
+// role→resources mapping lives.
 
-// Define custom permissions for workspace-specific resources
-const statement = {
-  ...defaultStatements, // Include default org/member/invitation permissions
+export type PermissionResource = "project" | "task" | "workspace" | "team";
+
+export const statement = {
   project: ["create", "read", "update", "delete", "share"],
   task: ["create", "read", "update", "delete", "assign"],
   workspace: ["read", "update", "delete", "manage_settings"],
-  // team: ["invite", "remove", "manage_roles"],
+  team: ["invite", "remove", "manage_roles"],
 } as const;
 
-const ac = createAccessControl(statement);
+export type Role = "owner" | "admin" | "member";
 
-// Custom role definitions that extend default permissions
-const member = ac.newRole({
-  ...memberAc.statements, // Inherit default member permissions
+type RuleMap = Record<PermissionResource, readonly string[]>;
+
+const memberRules: RuleMap = {
   project: ["create", "read"],
   task: ["create", "read", "update"],
   workspace: ["read"],
-  // team: ["invite"], // Members can invite others
-});
+  team: [],
+};
 
-const admin = ac.newRole({
-  ...adminAc.statements, // Inherit default admin permissions
+const adminRules: RuleMap = {
   project: ["create", "read", "update", "delete", "share"],
   task: ["create", "read", "update", "delete", "assign"],
   workspace: ["read", "update", "manage_settings"],
-  // team: ["invite", "remove", "manage_roles"],
-});
+  team: ["invite", "remove", "manage_roles"],
+};
 
-const owner = ac.newRole({
-  ...ownerAc.statements, // Inherit default owner permissions
+const ownerRules: RuleMap = {
   project: ["create", "read", "update", "delete", "share"],
   task: ["create", "read", "update", "delete", "assign"],
   workspace: ["read", "update", "delete", "manage_settings"],
-  // team: ["invite", "remove", "manage_roles"],
-});
+  team: ["invite", "remove", "manage_roles"],
+};
 
-export { ac, admin, member, owner, statement };
+export const ac: Record<Role, { permissions: RuleMap }> = {
+  member: { permissions: memberRules },
+  admin: { permissions: adminRules },
+  owner: { permissions: ownerRules },
+};
+
+export const member = ac.member;
+export const admin = ac.admin;
+export const owner = ac.owner;
+
+// roleHas answers whether a role may perform action on resource. It is the
+// only client-side gate the UI consults (via auth-client.checkRolePermission);
+// the server re-enforces every one of these on the wire.
+export function roleHas(role: Role, resource: string, action: string): boolean {
+  const rules = ac[role]?.permissions;
+  return Boolean(rules?.[resource as PermissionResource]?.includes(action));
+}

@@ -2,23 +2,14 @@
 set -eu
 
 urlencode() {
-  bun -e 'const input = process.argv[1]; process.stdout.write(encodeURIComponent(input).replace(/[!\x27()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`));' "$1"
-}
-
-api_pid=""
-nginx_pid=""
-
-cleanup() {
-  if [ -n "$api_pid" ]; then
-    kill "$api_pid" 2>/dev/null || true
-  fi
-
-  if [ -n "$nginx_pid" ]; then
-    kill "$nginx_pid" 2>/dev/null || true
+  if command -v bun >/dev/null 2>&1; then
+    bun -e 'const input = process.argv[1]; process.stdout.write(encodeURIComponent(input).replace(/[!\x27()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`));' "$1"
+  elif command -v node >/dev/null 2>&1; then
+    node -e 'const input = process.argv[1]; process.stdout.write(encodeURIComponent(input).replace(/[!\x27()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`));' "$1"
+  else
+    printf '%s' "$1"
   fi
 }
-
-trap cleanup EXIT INT TERM
 
 # Derive OPUS_API_URL from OPUS_CLIENT_URL if not explicitly set
 client_url_trimmed="$(printf '%s' "${OPUS_CLIENT_URL:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
@@ -30,7 +21,7 @@ fi
 
 # Derive DATABASE_URL from individual postgres vars if not explicitly set
 if [ -z "${DATABASE_URL:-}" ]; then
-  POSTGRES_DB="${POSTGRES_DB:-opus}"
+  POSTGRES_DB="${POSTGRES_DB:-opus_go}"
   POSTGRES_USER="${POSTGRES_USER:-opus}"
   if [ -n "${POSTGRES_PASSWORD:-}" ]; then
     encoded_user="$(urlencode "$POSTGRES_USER")"
@@ -43,73 +34,17 @@ if [ -z "${DATABASE_URL:-}" ]; then
   fi
 fi
 
-# Auto-generate AUTH_SECRET if not set
-if [ -z "${AUTH_SECRET:-}" ]; then
-  export AUTH_SECRET="$(bun -e 'process.stdout.write(require("node:crypto").randomBytes(32).toString("hex"))')"
-  echo "WARNING: AUTH_SECRET not set — generated a random secret for this session."
-  echo "WARNING: Set AUTH_SECRET in your .env to persist sessions across restarts."
+if [ -n "${GO_DATABASE_URL:-}" ]; then
+  export DATABASE_URL="$GO_DATABASE_URL"
 fi
 
-/docker-entrypoint.d/env.sh
+export PORT="${PORT:-80}"
+export CLIENT_DIR="${CLIENT_DIR:-/client}"
+export UPLOAD_DIR="${UPLOAD_DIR:-/app/data/uploads}"
 
-bun /app/apps/api/dist/index.js &
-api_pid=$!
-
-echo "Waiting for API to be ready..."
-until wget --spider --quiet http://127.0.0.1:1337/api/health 2>/dev/null; do
-  if ! kill -0 "$api_pid" 2>/dev/null; then
-    echo "API process exited unexpectedly"
-    exit 1
-  fi
-  sleep 1
-done
-echo "API is ready"
-
-nginx -g "daemon off;" &
-nginx_pid=$!
-
-while kill -0 "$api_pid" 2>/dev/null && kill -0 "$nginx_pid" 2>/dev/null; do
-  sleep 1
-done
-
-first_failed_pid=""
-first_failed_status=""
-api_status=""
-nginx_status=""
-
-if ! kill -0 "$api_pid" 2>/dev/null; then
-  wait "$api_pid" || api_status=$?
-  api_status=${api_status:-0}
-  first_failed_pid="$api_pid"
-  first_failed_status="$api_status"
+if [ -f /usr/local/bin/web-env.sh ]; then
+  /usr/local/bin/web-env.sh
 fi
 
-if [ -z "$first_failed_pid" ] && ! kill -0 "$nginx_pid" 2>/dev/null; then
-  wait "$nginx_pid" || nginx_status=$?
-  nginx_status=${nginx_status:-0}
-  first_failed_pid="$nginx_pid"
-  first_failed_status="$nginx_status"
-fi
-
-cleanup
-
-if [ "$first_failed_pid" != "$api_pid" ]; then
-  wait "$api_pid" || api_status=$?
-fi
-
-if [ "$first_failed_pid" != "$nginx_pid" ]; then
-  wait "$nginx_pid" || nginx_status=$?
-fi
-
-api_status=${api_status:-0}
-nginx_status=${nginx_status:-0}
-
-if [ -n "$first_failed_status" ]; then
-  exit "$first_failed_status"
-fi
-
-if [ "$api_status" -ne 0 ]; then
-  exit "$api_status"
-fi
-
-exit "$nginx_status"
+echo "Starting Opus Go backend..."
+exec /usr/local/bin/opus-api

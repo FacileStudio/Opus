@@ -47,7 +47,7 @@ export function SignInForm({ onSuccess, defaultEmail }: SignInFormProps) {
   const onSubmit = async (data: SignInFormValues) => {
     setIsPending(true);
     try {
-      const result = await authClient.signIn.email({
+      const result = await authClient.signInEmail({
         email: data.email,
         password: data.password,
       });

@@ -1,5 +1,15 @@
-import type { User as BetterAuthUser } from "better-auth/types";
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string;
+  color: string;
+  locale: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
-export type User = BetterAuthUser & {
-  locale?: string | null;
+export type Session = {
+  user: User;
 };

@@ -1,0 +1,65 @@
+# The Facile Go coding standard, enforced by filet.
+# https://github.com/FacileStudio/filet
+#
+#   filet check .     the rules
+#   filet roast .     the rules, with commentary
+#   filet docker .    the Dockerfile
+#
+# Opus is a mixed repo: the Go backend (apps/api) is filet's, the TypeScript
+# frontend is biome's. That split is why the extension list is Go-only.
+
+# The defaults already cover node_modules, vendor, build, dist, target,
+# testdata and coverage, and every dotted directory is skipped whether it is
+# listed or not.
+
+kind: app
+
+ignore:
+  - node_modules
+  - vendor
+  - build
+  - dist
+  - testdata
+  - coverage
+  - apps/web # React frontend, linted by biome
+  - apps/docs # Fumadocs site, linted by biome
+  - apps/site # marketing site, linted by biome
+
+extensions: [.go]
+
+limits:
+  fileLines: 300 # ESLint max-lines
+  funcsPerFile: 0 # off: the package, not the file, is Go's unit of organisation
+  funcLines: 60 # funlen default
+  funcStatements: 40 # funlen default
+  lineLength: 120 # lll default
+  params: 5
+  returns: 3
+  nesting: 5 # ESLint max-depth 4, plus one for the function's own block
+  complexity: 15 # SonarSource cognitive complexity
+  structFields: 15
+  interfaceMethods: 5
+
+architecture:
+  requiredDirs: [apps/api]
+  # A module that owns HTTP declares it in router.go. This is the one
+  # structural convention the Go family actually shares, and it is the rule
+  # that gives the `error` gate teeth.
+  requiredFiles:
+    "apps/api/modules/*": [router.go]
+
+style:
+  banInlineComments: true
+  banTODO: true
+  requireDocComments: true
+  banGlobalMutable: true
+  banInit: true
+  banTrailingSpace: true
+
+disabled:
+  # gofmt owns Go line breaking. Every survivor is therefore a line nothing
+  # could have wrapped, and flagging what the formatter already decided is
+  # noise.
+  - gen.line.long
+
+failOn: error

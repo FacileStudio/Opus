@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 // We need to mock the events module to prevent side effects from the
 // top-level subscribeToEvent calls in ws/index.ts
-vi.mock("../../../apps/api/src/events", () => ({
+vi.mock("../../../apps/api-legacy/src/events", () => ({
   subscribeToEvent: vi.fn(),
   publishEvent: vi.fn(),
 }));
@@ -10,7 +10,7 @@ vi.mock("../../../apps/api/src/events", () => ({
 import {
   addConnection,
   removeConnection,
-} from "../../../apps/api/src/ws/index";
+} from "../../../apps/api-legacy/src/ws/index";
 
 function makeFakeWs() {
   return {

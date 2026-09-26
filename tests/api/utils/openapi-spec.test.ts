@@ -8,7 +8,7 @@ import {
   normalizeEmptyRequiredArrays,
   normalizeNullableSchemasForOpenApi30,
   normalizeOrganizationAuthOperations,
-} from "../../../apps/api/src/utils/openapi-spec";
+} from "../../../apps/api-legacy/src/utils/openapi-spec";
 
 describe("openapi spec helpers", () => {
   it("normalizes API server urls", () => {

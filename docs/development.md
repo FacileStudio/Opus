@@ -94,12 +94,17 @@ pnpm --filter @opus/web typecheck
 
 ## Quality gate
 
-Opus has no `mise.toml` and no `scripts/check.sh`. The gate is Husky:
+The gate is lefthook (`lefthook.yml`), pulling the shared commit-msg policy from
+`FacileStudio/hooks` at `ref: v1` and adding local pre-commit jobs on top:
 
-- `.husky/pre-commit` runs `pnpm exec biome ci .` then `pnpm run build`. The full build on every
-  commit is deliberate and slow — make sure the code compiles before you commit.
-- `.husky/commit-msg` runs `commitlint`. **Opus enforces Conventional Commits**, which the rest of
-  the suite does not. Follow the repo, not the suite habit, when committing here.
+- `pre-commit` runs `pnpm exec biome ci .` then `pnpm run build`. The full build on every commit
+  is deliberate and slow — make sure the code compiles before you commit.
+- `commit-msg` (shared `common.yml`) validates Conventional Commits and prepends the gitmoji —
+  never write the emoji yourself; the hook derives it from the type.
+- Hooks install via `mise install` (`[hooks] postinstall = "lefthook install"` in `mise.toml`).
+- The `build` pre-commit job needs the mise toolchain on PATH (node ≥ 20.19 for Vite 7);
+  a bare shell without it fails with `crypto.hash is not a function`, which is the
+  environment, not the code.
 
 Formatting and linting are Biome (`biome.json`): spaces for JS and TS, tabs elsewhere, double
 quotes, semicolons required, imports auto-sorted. CSS and `package.json` are excluded.

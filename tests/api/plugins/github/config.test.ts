@@ -3,7 +3,7 @@ import {
   branchPatterns,
   getDefaultConfig,
   validateGitHubConfig,
-} from "../../../../apps/api/src/plugins/github/config";
+} from "../../../../apps/api-legacy/src/plugins/github/config";
 
 describe("github config", () => {
   it("exposes the supported branch patterns", () => {

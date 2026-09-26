@@ -10,7 +10,7 @@ import {
   parsePositiveInt,
   sanitizePathSegment,
   validateTaskAssetUploadInput,
-} from "../../../apps/api/src/storage/s3";
+} from "../../../apps/api-legacy/src/storage/s3";
 
 describe("S3 helpers", () => {
   const originalMaxSize = process.env.S3_MAX_IMAGE_UPLOAD_BYTES;

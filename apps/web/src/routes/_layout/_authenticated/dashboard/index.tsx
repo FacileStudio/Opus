@@ -13,8 +13,7 @@ export const Route = createFileRoute("/_layout/_authenticated/dashboard/")({
       throw redirect({ to: "/invitations" });
     }
 
-    const session = await authClient.getSession();
-    const activeWorkspaceId = session?.data?.session?.activeOrganizationId;
+    const activeWorkspaceId = localStorage.getItem("opus.active_workspace");
 
     if (workspaces && workspaces.length > 0) {
       if (

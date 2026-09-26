@@ -8,6 +8,9 @@ async function uploadWorkspaceLogo(workspaceId: string, file: File) {
     method: "POST",
     body: formData,
     credentials: "include",
+    headers: {
+      "X-Facile-CSRF": "1",
+    },
   });
 
   if (!response.ok) {
@@ -24,6 +27,9 @@ async function deleteWorkspaceLogo(workspaceId: string) {
   const response = await fetch(getApiUrl(`/workspace/${workspaceId}/logo`), {
     method: "DELETE",
     credentials: "include",
+    headers: {
+      "X-Facile-CSRF": "1",
+    },
   });
 
   if (!response.ok) {

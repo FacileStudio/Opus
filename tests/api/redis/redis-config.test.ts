@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   isRedisConfigured,
   parseNodeList,
-} from "../../../apps/api/src/redis/index";
+} from "../../../apps/api-legacy/src/redis/index";
 
 describe("parseNodeList", () => {
   describe("basic hostname:port parsing", () => {

@@ -21,8 +21,6 @@ function useCreateWorkspace() {
       description,
       logo,
       slug,
-      keepCurrentActiveOrganization = false,
-      userId,
     }: CreateWorkspaceRequest) => {
       const metadata = description ? { description } : undefined;
       const existingWorkspaces = slug
@@ -41,11 +39,12 @@ function useCreateWorkspace() {
           slug: workspaceSlug,
           logo: logo || undefined,
           metadata,
-          keepCurrentActiveOrganization,
-          userId: userId,
         });
 
         if (!error) {
+          if (!data) {
+            throw new Error("Failed to create workspace");
+          }
           return data;
         }
 

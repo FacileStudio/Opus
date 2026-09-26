@@ -12,16 +12,12 @@ async function getWorkspaceUsers({
   workspaceId,
   limit,
   offset,
-  sortBy,
-  sortDirection,
 }: GetWorkspaceUsersRequest) {
   const { data, error } = await authClient.organization.listMembers({
     query: {
       organizationId: workspaceId,
       limit,
       offset,
-      sortBy,
-      sortDirection,
     },
   });
 
@@ -29,7 +25,7 @@ async function getWorkspaceUsers({
     throw new Error(error.message || "Failed to fetch space users");
   }
 
-  return data || [];
+  return data || { members: [] };
 }
 
 export default getWorkspaceUsers;

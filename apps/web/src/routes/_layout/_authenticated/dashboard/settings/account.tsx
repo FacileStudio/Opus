@@ -1,4 +1,4 @@
-import { Bell, Code, Settings, User } from "@solar-icons/react";
+import { Bell, Settings, User } from "@solar-icons/react";
 import {
   createFileRoute,
   Link,
@@ -89,31 +89,6 @@ function RouteComponent() {
                     </Button>
                   </SidebarMenuItem>
                 ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup className="gap-1 p-1">
-            <SidebarGroupLabel className="h-7 px-2 text-[11px] uppercase tracking-wide text-sidebar-foreground/70">
-              {t("settings:developer")}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="gap-0.5">
-                <SidebarMenuItem>
-                  <Button
-                    render={<Link to="/dashboard/settings/account/developer" />}
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      "h-8 w-full justify-start gap-2 rounded-lg px-2 text-[11px] font-normal text-sidebar-foreground/80",
-                      isActivePath("/dashboard/settings/account/developer") &&
-                        "bg-sidebar-accent text-sidebar-accent-foreground",
-                    )}
-                  >
-                    <Code className="h-4 w-4" />
-                    <span>{t("settings:apiKeys")}</span>
-                  </Button>
-                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

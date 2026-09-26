@@ -1,0 +1,174 @@
+package task
+
+import (
+	"context"
+	"testing"
+	"time"
+
+	"github.com/FacileStudio/Opus/apps/api/schemas"
+)
+
+func TestCreateTask(t *testing.T) {
+	service, db := newTestService(t)
+	userID, projectID, col := seedProject(t, db)
+	ctx := context.Background()
+
+	now := time.Now()
+	req := CreateTaskRequest{
+		Title:       "Test task",
+		Description: "Task description",
+		Status:      col.Slug,
+		Priority:    "medium",
+		StartDate:   &now,
+		DueDate:     &now,
+	}
+
+	task, err := service.controller.create(ctx, userID, projectID, &req)
+	if err != nil {
+		t.Fatalf("create task: %v", err)
+	}
+	if task.Title != "Test task" || task.Number != 1 || task.Position != 1 {
+		t.Fatalf("unexpected task metadata: %+v", task)
+	}
+
+	task2, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{
+		Title:    "Second task",
+		Status:   col.Slug,
+		Priority: "high",
+	})
+	if err != nil {
+		t.Fatalf("create second task: %v", err)
+	}
+	if task2.Number != 2 || task2.Position != 2 {
+		t.Fatalf("unexpected second task number or position: %+v", task2)
+	}
+}
+
+func TestGetTask(t *testing.T) {
+	service, db := newTestService(t)
+	userID, projectID, col := seedProject(t, db)
+	ctx := context.Background()
+
+	created, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{
+		Title:  "Get task",
+		Status: col.Slug,
+	})
+	if err != nil {
+		t.Fatalf("create task: %v", err)
+	}
+
+	fetched, err := service.controller.get(ctx, userID, created.ID)
+	if err != nil {
+		t.Fatalf("get task: %v", err)
+	}
+	if fetched.ID != created.ID || fetched.Title != "Get task" {
+		t.Fatalf("unexpected fetched task: %+v", fetched)
+	}
+
+	if _, err := service.controller.get(ctx, userID, 9999); err == nil {
+		t.Fatal("expected error for non-existent task")
+	}
+}
+
+func TestListTasks(t *testing.T) {
+	service, db := newTestService(t)
+	userID, projectID, col := seedProject(t, db)
+	ctx := context.Background()
+
+	for _, title := range []string{"Task 1", "Task 2", "Task 3"} {
+		if _, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{
+			Title:    title,
+			Status:   col.Slug,
+			Priority: "low",
+		}); err != nil {
+			t.Fatalf("create task %s: %v", title, err)
+		}
+	}
+
+	listResp, err := service.controller.list(ctx, userID, projectID, ListTasksFilter{})
+	if err != nil {
+		t.Fatalf("list tasks: %v", err)
+	}
+	if listResp.Pagination.Total != 3 {
+		t.Fatalf("expected 3 tasks, got %d", listResp.Pagination.Total)
+	}
+	if len(listResp.Data.Columns) != 1 || len(listResp.Data.Columns[0].Tasks) != 3 {
+		t.Fatalf("expected 3 tasks in column, got %+v", listResp.Data.Columns)
+	}
+
+	page := 1
+	limit := 2
+	pagedResp, err := service.controller.list(ctx, userID, projectID, ListTasksFilter{
+		Page:  &page,
+		Limit: &limit,
+	})
+	if err != nil {
+		t.Fatalf("list paged tasks: %v", err)
+	}
+	if pagedResp.Pagination.TotalPages != 2 || len(pagedResp.Data.Columns[0].Tasks) != 2 {
+		t.Fatalf("unexpected paged response: %+v", pagedResp.Pagination)
+	}
+}
+
+func TestUpdateTask(t *testing.T) {
+	service, db := newTestService(t)
+	userID, projectID, col := seedProject(t, db)
+	ctx := context.Background()
+
+	created, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{
+		Title:  "Original title",
+		Status: col.Slug,
+	})
+	if err != nil {
+		t.Fatalf("create task: %v", err)
+	}
+
+	updated, err := service.controller.update(ctx, userID, created.ID, &UpdateTaskRequest{
+		Title:       "Updated title",
+		Description: "New description",
+		Status:      col.Slug,
+		Priority:    "urgent",
+		ProjectID:   projectID,
+		Position:    5,
+	})
+	if err != nil {
+		t.Fatalf("update task: %v", err)
+	}
+	if updated.Title != "Updated title" || updated.Priority != "urgent" || updated.Position != 5 {
+		t.Fatalf("unexpected updated task: %+v", updated)
+	}
+}
+
+func TestDeleteTask(t *testing.T) {
+	service, db := newTestService(t)
+	userID, projectID, col := seedProject(t, db)
+	ctx := context.Background()
+
+	created, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{
+		Title:  "To be deleted",
+		Status: col.Slug,
+	})
+	if err != nil {
+		t.Fatalf("create task: %v", err)
+	}
+
+	if err := db.Create(&schemas.Comment{
+		TaskID:  created.ID,
+		UserID:  userID,
+		Content: "test comment",
+	}).Error; err != nil {
+		t.Fatalf("seed comment: %v", err)
+	}
+
+	deleted, err := service.controller.delete(ctx, userID, created.ID)
+	if err != nil {
+		t.Fatalf("delete task: %v", err)
+	}
+	if deleted.ID != created.ID {
+		t.Fatalf("unexpected deleted task: %+v", deleted)
+	}
+
+	if _, err := service.controller.get(ctx, userID, created.ID); err == nil {
+		t.Fatal("expected error getting deleted task")
+	}
+}

@@ -17,7 +17,7 @@ async function getActiveWorkspaceUsers({
     throw new Error(error.message || "Failed to fetch space users");
   }
 
-  return data || [];
+  return data || { members: [] };
 }
 
 export default getActiveWorkspaceUsers;

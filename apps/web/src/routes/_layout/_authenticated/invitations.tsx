@@ -53,7 +53,7 @@ function InvitationsPage() {
   ) => {
     setAcceptingId(invitationId);
     try {
-      const { data, error } = await authClient.organization.acceptInvitation({
+      const { error } = await authClient.organization.acceptInvitation({
         invitationId,
       });
 
@@ -63,7 +63,7 @@ function InvitationsPage() {
       }
 
       await authClient.organization.setActive({
-        organizationId: data?.invitation.organizationId || organizationId,
+        organizationId,
       });
 
       toast.success(t("invitations:toast.acceptSuccess"));
@@ -75,7 +75,7 @@ function InvitationsPage() {
       navigate({
         to: "/dashboard/workspace/$workspaceId",
         params: {
-          workspaceId: data?.invitation.organizationId || organizationId,
+          workspaceId: organizationId,
         },
       });
     } catch (error) {
@@ -117,14 +117,14 @@ function InvitationsPage() {
     }
   };
 
-  const getExpiryStatus = (expiresAt: string) => {
-    const expiryDate = new Date(expiresAt);
+  const getExpiryStatus = (expiresAt: string | null) => {
+    const expiryDate = new Date(expiresAt ?? "");
     const now = new Date();
     const daysDiff = Math.ceil(
       (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
     );
 
-    const formattedDate = formatDateMedium(expiresAt);
+    const formattedDate = expiresAt ? formatDateMedium(expiresAt) : "—";
 
     if (daysDiff <= 1) {
       return {

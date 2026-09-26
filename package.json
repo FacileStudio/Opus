@@ -2,7 +2,10 @@
   "name": "opus",
   "private": false,
   "type": "module",
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -12,16 +15,11 @@
     "i18n:report:fix": "node ./scripts/i18n/report.mjs --fix",
     "i18n:schema": "node ./scripts/i18n/schema.mjs",
     "lint": "turbo lint",
-    "test": "turbo test",
-    "test:integration": "pnpm --filter @opus/api test:integration",
-    "prepare": "husky"
+    "test": "turbo test"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.8",
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
     "esbuild": "0.27.3",
-    "husky": "^9.1.7",
     "linkifyjs": ">=4.3.2",
     "tar-fs": ">=3.1.1",
     "turbo": "^2.7.2",
