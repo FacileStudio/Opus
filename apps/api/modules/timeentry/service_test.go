@@ -169,3 +169,52 @@ func TestTimeEntryUnauthorized(t *testing.T) {
 		t.Fatalf("expected 403 got %d", w.Code)
 	}
 }
+
+func TestTimeEntryValidationTable(t *testing.T) {
+	db := newTestDB(t)
+	userID, _, taskID := seedFixture(t, db)
+	service := NewService(db)
+	auth := &testAuth{userID: userID, email: "user@facile.studio"}
+	router := chi.NewRouter()
+	RegisterRoutes(router, service, auth)
+
+	now := time.Now()
+	before := now.Add(-1 * time.Hour)
+	after := now.Add(1 * time.Hour)
+
+	cases := []struct {
+		name       string
+		req        CreateTimeEntryRequest
+		wantStatus int
+	}{
+		{
+			name:       "missing task id",
+			req:        CreateTimeEntryRequest{TaskID: 0, StartTime: now},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "end before start",
+			req:        CreateTimeEntryRequest{TaskID: taskID, StartTime: now, EndTime: &before},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "valid with duration",
+			req:        CreateTimeEntryRequest{TaskID: taskID, StartTime: now, EndTime: &after},
+			wantStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, _ := json.Marshal(tc.req)
+			req := httptest.NewRequest("POST", "/time-entry", bytes.NewReader(b))
+			req.Header.Set("Content-Type", "application/json")
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			if w.Code != tc.wantStatus {
+				t.Fatalf("expected status %d, got %d", tc.wantStatus, w.Code)
+			}
+		})
+	}
+}
+

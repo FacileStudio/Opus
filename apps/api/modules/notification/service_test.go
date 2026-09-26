@@ -159,3 +159,50 @@ func TestPreferencesLifecycle(t *testing.T) {
 		t.Fatalf("delete workspace rule expected 200 got %d", w.Code)
 	}
 }
+
+func TestNotificationValidationTable(t *testing.T) {
+	db := newTestDB(t)
+	user := schemas.User{Email: "user@facile.studio", Name: "User One"}
+	db.Create(&user)
+	service := NewService(db)
+	auth := &testAuth{userID: user.ID}
+	router := chi.NewRouter()
+	RegisterRoutes(router, service, auth)
+
+	cases := []struct {
+		name       string
+		method     string
+		path       string
+		body       any
+		wantStatus int
+	}{
+		{
+			name:       "missing notification type",
+			method:     "POST",
+			path:       "/notification",
+			body:       CreateNotificationRequest{Type: ""},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "invalid project mode in workspace rule",
+			method:     "PUT",
+			path:       "/notification-preferences/workspaces/1",
+			body:       UpsertWorkspaceRuleRequest{ProjectMode: "invalid-mode"},
+			wantStatus: http.StatusBadRequest,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, _ := json.Marshal(tc.body)
+			req := httptest.NewRequest(tc.method, tc.path, bytes.NewReader(b))
+			req.Header.Set("Content-Type", "application/json")
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			if w.Code != tc.wantStatus {
+				t.Fatalf("expected status %d, got %d", tc.wantStatus, w.Code)
+			}
+		})
+	}
+}
+

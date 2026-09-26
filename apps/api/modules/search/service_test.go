@@ -145,3 +145,46 @@ func TestSearchWorkspaceIsolation(t *testing.T) {
 		t.Fatalf("expected 0 results for non-member user, got %d", resp.TotalCount)
 	}
 }
+
+func TestSearchValidationTable(t *testing.T) {
+	db := newTestDB(t)
+	userID, _ := seedFixture(t, db)
+	service := NewService(db)
+	auth := &testAuth{userID: userID}
+	router := chi.NewRouter()
+	RegisterRoutes(router, service, auth)
+
+	cases := []struct {
+		name       string
+		path       string
+		wantStatus int
+	}{
+		{
+			name:       "empty query string",
+			path:       "/search?q=",
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "missing query parameter",
+			path:       "/search",
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "search comments type",
+			path:       "/search?q=responsive&type=comments",
+			wantStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest("GET", tc.path, nil)
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			if w.Code != tc.wantStatus {
+				t.Fatalf("expected status %d, got %d", tc.wantStatus, w.Code)
+			}
+		})
+	}
+}
+

@@ -161,3 +161,48 @@ func TestWorkflowRuleUnauthorized(t *testing.T) {
 		t.Fatalf("expected 403 got %d", w.Code)
 	}
 }
+
+func TestWorkflowRuleValidationTable(t *testing.T) {
+	db := newTestDB(t)
+	f := seedFixture(t, db)
+	service := NewService(db)
+	auth := &testAuth{userID: f.userID, email: "user@facile.studio"}
+	router := chi.NewRouter()
+	RegisterRoutes(router, service, auth)
+
+	cases := []struct {
+		name       string
+		req        UpsertWorkflowRuleRequest
+		wantStatus int
+	}{
+		{
+			name:       "missing integration type",
+			req:        UpsertWorkflowRuleRequest{IntegrationType: "", EventType: "push", ColumnID: f.columnID},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "missing event type",
+			req:        UpsertWorkflowRuleRequest{IntegrationType: "github", EventType: "", ColumnID: f.columnID},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "column not in project",
+			req:        UpsertWorkflowRuleRequest{IntegrationType: "github", EventType: "push", ColumnID: 9999},
+			wantStatus: http.StatusBadRequest,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, _ := json.Marshal(tc.req)
+			req := httptest.NewRequest("PUT", "/workflow-rule/"+strconv.FormatInt(f.projectID, 10), bytes.NewReader(b))
+			req.Header.Set("Content-Type", "application/json")
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			if w.Code != tc.wantStatus {
+				t.Fatalf("expected status %d, got %d", tc.wantStatus, w.Code)
+			}
+		})
+	}
+}
+

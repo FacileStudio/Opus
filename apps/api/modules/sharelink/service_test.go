@@ -177,3 +177,51 @@ func TestShareLinkExpiry(t *testing.T) {
 		t.Fatalf("expected 404 for expired share link, got %d", w.Code)
 	}
 }
+
+func TestShareLinkValidationTable(t *testing.T) {
+	db := newTestDB(t)
+	userID, _, projID := seedFixture(t, db)
+	service := NewService(db)
+	auth := &testAuth{userID: userID, email: "test@facile.studio"}
+	router := chi.NewRouter()
+	RegisterRoutes(router, service, auth)
+
+	past := time.Now().Add(-1 * time.Hour)
+	future := time.Now().Add(1 * time.Hour)
+
+	cases := []struct {
+		name       string
+		req        CreateShareLinkRequest
+		wantStatus int
+	}{
+		{
+			name:       "missing project id",
+			req:        CreateShareLinkRequest{ProjectID: 0},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "past expiry date",
+			req:        CreateShareLinkRequest{ProjectID: projID, ExpiresAt: &past},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name:       "valid with future expiry",
+			req:        CreateShareLinkRequest{ProjectID: projID, ExpiresAt: &future},
+			wantStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, _ := json.Marshal(tc.req)
+			req := httptest.NewRequest("POST", "/share-link", bytes.NewReader(b))
+			req.Header.Set("Content-Type", "application/json")
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			if w.Code != tc.wantStatus {
+				t.Fatalf("expected status %d, got %d", tc.wantStatus, w.Code)
+			}
+		})
+	}
+}
+
