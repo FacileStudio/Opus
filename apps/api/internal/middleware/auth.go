@@ -48,3 +48,32 @@ func RequireAuth(auth Authenticator) func(http.Handler) http.Handler {
 		return auth.RequireAuth(hydrate(next))
 	}
 }
+
+// OptionalAuth attempts to authenticate the request, populating identity if valid.
+func OptionalAuth(auth Authenticator) func(http.Handler) http.Handler {
+	hydrate := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
+			authenticated, ok := porte.From(request.Context())
+			if !ok {
+				next.ServeHTTP(w, request)
+				return
+			}
+			userID, email, err := auth.IdentityForUser(request.Context(), authenticated.UserID)
+			if err != nil {
+				next.ServeHTTP(w, request)
+				return
+			}
+			authContext := authcontext.WithIdentity(request.Context(), authcontext.Identity{
+				UserID: userID,
+				Email:  email,
+			})
+			next.ServeHTTP(w, request.WithContext(authContext))
+		})
+	}
+	return func(next http.Handler) http.Handler {
+		if optionaler, ok := auth.(interface{ Optional(http.Handler) http.Handler }); ok {
+			return optionaler.Optional(hydrate(next))
+		}
+		return hydrate(next)
+	}
+}

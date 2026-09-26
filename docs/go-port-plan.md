@@ -61,7 +61,13 @@ The frontend changes once: when auth swaps from better-auth to porte (Phase 1).
   - WebSocket hub in `internal/realtime` mounted at `/api/ws` and `/api/ws/{projectId}`, with in-memory adapter and Redis pub/sub adapter (`REDIS_URL`), cookie/token authentication, and initiator exclusion.
   - Background maintenance scheduler in `internal/scheduler` executing stale invitation pruning and due date notification alerts.
   - Quality verification: `filet check .` reports 0 errors and 0 warnings across 138 files (18,912 lines of Go). All unit tests pass (`go test ./...`).
-- **NEXT ACTION: Phase 6 (Cutover and decommission)**: Implement native file/attachment storage, generate baseline goose migration, decommission legacy TS API container, and clean up dropped UI components.
+- **Phase 6 DONE (Cutover and decommission)**:
+  - Native asset & file storage implemented in `apps/api/modules/asset/`, `internal/storage/asset.go`, and `internal/storage/s3.go` supporting local disk and S3 with AWS SigV4 presigned URLs.
+  - Baseline Goose migration created in `apps/api/migrations/00001_baseline_opus.sql` and wired in `internal/database/migrations.go` with Postgres session lock and GORM fallback.
+  - Legacy proxy eliminated from `apps/api/router.go`; backend is 100% Go-native.
+  - Dropped third-party integration settings (GitHub, Gitea, Slack, Discord, Telegram) and custom webhook UI surfaces cleaned up in `apps/web/`.
+  - Single-container Dokploy deployment configured in `Dockerfile` and `deploy/opus-entrypoint.sh` serving both SPA (`/client`) and API (`/api`).
+  - Quality verification: `filet check .` reports 0 errors and 0 warnings across 147 files (19,946 lines of Go). All unit tests pass (`go test ./...`). SPA builds cleanly (`pnpm --filter @opus/web build`).
 
 ### K2 leftovers to remember
 

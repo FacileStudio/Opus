@@ -26,6 +26,7 @@ func Migrate(db *gorm.DB) error {
 		&UserNotificationPreference{},
 		&UserNotificationWorkspaceRule{},
 		&TaskReminderSent{},
+		&Asset{},
 	}
 	if err := db.AutoMigrate(models...); err != nil {
 		return err

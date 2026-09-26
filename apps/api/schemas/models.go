@@ -237,3 +237,25 @@ type TaskReminderSent struct {
 	SentAt       time.Time `gorm:"column:sent_at;not null"`
 }
 
+// Asset represents an uploaded file or media asset.
+type Asset struct {
+	ID          string    `gorm:"primaryKey;size:64" json:"id"`
+	WorkspaceID int64     `gorm:"not null;index" json:"workspace_id"`
+	ProjectID   int64     `gorm:"not null;index" json:"project_id"`
+	TaskID      *int64    `gorm:"index" json:"task_id,omitempty"`
+	ActivityID  *int64    `gorm:"index" json:"activity_id,omitempty"`
+	ObjectKey   string    `gorm:"not null;uniqueIndex;size:512" json:"object_key"`
+	Filename    string    `gorm:"not null;size:255" json:"filename"`
+	MimeType    string    `gorm:"not null;size:100" json:"mime_type"`
+	Size        int64     `gorm:"not null" json:"size"`
+	Kind        string    `gorm:"not null;default:'image';size:32" json:"kind"`
+	Surface     string    `gorm:"not null;default:'description';size:32" json:"surface"`
+	CreatedBy   *int64    `gorm:"index" json:"created_by,omitempty"`
+	CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
+}
+
+// TableName returns the database table name for Asset.
+func (Asset) TableName() string {
+	return "asset"
+}
+

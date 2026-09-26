@@ -1,27 +1,7 @@
-import {
-  AltArrowDown as ChevronDown,
-  BranchingPathsDown as FolderGit,
-  BranchingPathsUp as Github,
-  ChatRoundDots as MessageCircle,
-  Radio,
-  Plain as Send,
-  Global as Webhook,
-} from "@solar-icons/react";
+import { Radio } from "@solar-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
-import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";
-import { DiscordIntegrationSettings } from "@/components/project/discord-integration-settings";
-import { GenericWebhookIntegrationSettings } from "@/components/project/generic-webhook-integration-settings";
-import { GiteaIntegrationSettings } from "@/components/project/gitea-integration-settings";
-import { GitHubIntegrationSettings } from "@/components/project/github-integration-settings";
-import { SlackIntegrationSettings } from "@/components/project/slack-integration-settings";
-import { TelegramIntegrationSettings } from "@/components/project/telegram-integration-settings";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
 export const Route = createFileRoute(
   "/_layout/_authenticated/dashboard/settings/projects/$projectId/integrations",
@@ -31,7 +11,6 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { projectId } = Route.useParams();
 
   return (
     <>
@@ -46,95 +25,16 @@ function RouteComponent() {
           </p>
         </div>
 
-        <div className="space-y-6">
-          <IntegrationSection
-            icon={<Github className="size-4" />}
-            subtitle={t("settings:projectIntegrations.githubSectionSubtitle")}
-            title={t("settings:projectIntegrations.githubSectionTitle")}
-          >
-            <GitHubIntegrationSettings projectId={projectId} />
-          </IntegrationSection>
-
-          <IntegrationSection
-            icon={<FolderGit className="size-4" />}
-            subtitle={t("settings:projectIntegrations.giteaSectionSubtitle")}
-            title={t("settings:projectIntegrations.giteaSectionTitle")}
-          >
-            <GiteaIntegrationSettings projectId={projectId} />
-          </IntegrationSection>
-
-          <IntegrationSection
-            icon={<MessageCircle className="size-4" />}
-            subtitle={t("settings:projectIntegrations.discordSectionSubtitle")}
-            title={t("settings:projectIntegrations.discordSectionTitle")}
-          >
-            <DiscordIntegrationSettings projectId={projectId} />
-          </IntegrationSection>
-
-          <IntegrationSection
-            icon={<Radio className="size-4" />}
-            subtitle={t(
-              "settings:projectIntegrations.genericWebhookSectionSubtitle",
-            )}
-            title={t("settings:projectIntegrations.genericWebhookSectionTitle")}
-          >
-            <GenericWebhookIntegrationSettings projectId={projectId} />
-          </IntegrationSection>
-
-          <IntegrationSection
-            icon={<Webhook className="size-4" />}
-            subtitle={t("settings:projectIntegrations.slackSectionSubtitle")}
-            title={t("settings:projectIntegrations.slackSectionTitle")}
-          >
-            <SlackIntegrationSettings projectId={projectId} />
-          </IntegrationSection>
-
-          <IntegrationSection
-            icon={<Send className="size-4" />}
-            subtitle={t("settings:projectIntegrations.telegramSectionSubtitle")}
-            title={t("settings:projectIntegrations.telegramSectionTitle")}
-          >
-            <TelegramIntegrationSettings projectId={projectId} />
-          </IntegrationSection>
+        <div className="rounded-xl border border-border bg-background p-6 space-y-2">
+          <div className="flex items-center gap-2 font-medium text-sm">
+            <Radio className="size-4 text-muted-foreground" />
+            <span>Event Bus</span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            External integrations and webhook events are routed via Antenne.
+          </p>
         </div>
       </div>
     </>
-  );
-}
-
-function IntegrationSection({
-  title,
-  subtitle,
-  icon,
-  defaultOpen = false,
-  children,
-}: {
-  title: string;
-  subtitle: string;
-  icon: ReactNode;
-  defaultOpen?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <Collapsible
-      className="rounded-xl border border-border bg-background"
-      defaultOpen={defaultOpen}
-    >
-      <CollapsibleTrigger className="group flex w-full items-center justify-between gap-4 px-4 py-4 text-left">
-        <div className="flex min-w-0 items-start gap-3">
-          <div className="mt-0.5 text-muted-foreground">{icon}</div>
-          <div className="min-w-0">
-            <h2 className="text-md font-medium">{title}</h2>
-            <p className="text-xs text-muted-foreground">{subtitle}</p>
-          </div>
-        </div>
-
-        <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[panel-open]:rotate-180" />
-      </CollapsibleTrigger>
-
-      <CollapsibleContent>
-        <div className="border-t border-border p-4">{children}</div>
-      </CollapsibleContent>
-    </Collapsible>
   );
 }

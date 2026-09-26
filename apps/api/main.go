@@ -176,16 +176,22 @@ func initDatabaseAndStorage(appEnv *env.Config, appLogger *slog.Logger) (*gorm.D
 	if err != nil {
 		return nil, nil, err
 	}
-	if err := schemas.Migrate(db); err != nil {
+	sqlDB, err := db.DB()
+	if err != nil {
 		return nil, nil, err
+	}
+	if err := database.RunMigrations(sqlDB); err != nil {
+		appLogger.Warn("goose migrations failed, using GORM schema migration", slog.Any("error", err))
+		if err := schemas.Migrate(db); err != nil {
+			return nil, nil, err
+		}
 	}
 	appLogger.Info("database migrations applied")
 
 	if err := os.MkdirAll(filepath.Join(appEnv.UploadDir, "workspaces"), 0o755); err != nil {
 		return nil, nil, err
 	}
-	sqlDB, err := db.DB()
-	if err != nil {
+	if err := os.MkdirAll(filepath.Join(appEnv.UploadDir, "assets"), 0o755); err != nil {
 		return nil, nil, err
 	}
 	return db, sqlDB, nil

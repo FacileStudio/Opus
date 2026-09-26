@@ -39,6 +39,11 @@ func (service *Service) RequireAuth(next http.Handler) http.Handler {
 	return service.sessions.RequireAuth(next)
 }
 
+// Optional is porte's optional session middleware.
+func (service *Service) Optional(next http.Handler) http.Handler {
+	return service.sessions.Optional(next)
+}
+
 // IdentityForUser resolves the user id porte authenticated into the identity
 // the rest of the app reads. The email costs one query per authenticated
 // request; porte deliberately carries neither email nor role.

@@ -5,10 +5,11 @@ import (
 
 	documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
-	"github.com/FacileStudio/Opus/apps/api/internal/legacy"
 	"github.com/FacileStudio/Opus/apps/api/internal/middleware"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
+	"github.com/FacileStudio/Opus/apps/api/internal/storage"
 	"github.com/FacileStudio/Opus/apps/api/modules/activity"
+	"github.com/FacileStudio/Opus/apps/api/modules/asset"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
 	"github.com/FacileStudio/Opus/apps/api/modules/column"
 	"github.com/FacileStudio/Opus/apps/api/modules/comment"
@@ -62,12 +63,13 @@ func referenceConfig() apiref.Config {
 				workflowrule.Documentation(),
 				notification.Documentation(),
 				search.Documentation(),
+				asset.Documentation(),
 			},
 		},
 	}
 }
 
-func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Authenticator) {
+func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Authenticator, appEnv *env.Config) {
 	project.RegisterRoutes(api, project.NewService(db), authService)
 	column.RegisterRoutes(api, column.NewService(db), authService)
 	task.RegisterRoutes(api, task.NewService(db), authService)
@@ -80,6 +82,8 @@ func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Au
 	workflowrule.RegisterRoutes(api, workflowrule.NewService(db), authService)
 	notification.RegisterRoutes(api, notification.NewService(db), authService)
 	search.RegisterRoutes(api, search.NewService(db), authService)
+	assetStorage := storage.NewAssetStorage(appEnv.UploadDir, storage.LoadS3Config())
+	asset.RegisterRoutes(api, asset.NewService(db, assetStorage), authService)
 }
 
 func buildRouter(deps routerDeps) chi.Router {
@@ -113,15 +117,11 @@ func buildRouter(deps routerDeps) chi.Router {
 		deps.kits.oidc.Mount(api)
 		auth.RegisterRoutes(api, authService, *deps.appEnv)
 		workspace.RegisterRoutes(api, workspaceService, authService)
-		registerDomainRoutes(api, deps.db, authService)
+		registerDomainRoutes(api, deps.db, authService, deps.appEnv)
 
 		if deps.realtimeHub != nil {
 			api.Get("/ws", deps.realtimeHub.ServeWS)
 			api.Get("/ws/{projectId}", deps.realtimeHub.ServeWS)
-		}
-
-		if deps.appEnv.LegacyAPI != nil {
-			legacy.MountProxy(api, deps.appEnv.LegacyAPI, deps.kits.sessions, authService, deps.appEnv.AuthBridgeSecret)
 		}
 	})
 
