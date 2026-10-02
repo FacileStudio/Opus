@@ -57,13 +57,13 @@ COPY --chown=appuser:appuser apps/web/env.sh /usr/local/bin/web-env.sh
 RUN chmod +x /usr/local/bin/opus-entrypoint.sh /usr/local/bin/web-env.sh
 
 ENV NODE_ENV=production
-ENV PORT=80
+ENV PORT=27538
 ENV CLIENT_DIR=/client
 
 USER appuser
-EXPOSE 80
+EXPOSE 27538
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:80/api/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:27538/api/health || exit 1
 
 CMD ["/usr/local/bin/opus-entrypoint.sh"]

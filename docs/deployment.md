@@ -13,8 +13,8 @@ ruche through Dokploy or to Kubernetes through the bundled Helm chart.
    static binary (`CGO_ENABLED=0`, `-trimpath`, stripped).
 3. `runtime` — `alpine:3.21` with `ca-certificates`, `tzdata` and `wget`. Runs as the
    unprivileged `appuser` (uid 1001), copies the SPA to `/client` and the binary to
-   `/usr/local/bin/opus-api`, exposes `80`, and declares a `HEALTHCHECK` against
-   `http://127.0.0.1:80/api/health`.
+   `/usr/local/bin/opus-api`, exposes `27538`, and declares a `HEALTHCHECK` against
+   `http://127.0.0.1:27538/api/health`.
 
 There is no Node, no nginx and no separate migration job: one Go process serves both the API and
 the built client, and migrations run at startup.
@@ -22,7 +22,7 @@ the built client, and migrations run at startup.
 ## One process, one port
 
 ```
-Traefik ──▶ :80 opus-api ──┬──▶ /api/*     Go handlers (auth, workspaces, tasks, …)
+Traefik ──▶ :27538 opus-api ──┬──▶ /api/*     Go handlers (auth, workspaces, tasks, …)
                            ├──▶ /health, /ready, /api/health, /api/ready
                            ├──▶ /ws, /api/ws   realtime WebSocket hub
                            └──▶ /*      /client, SPA fallback to index.html
@@ -35,7 +35,7 @@ Traefik ──▶ :80 opus-api ──┬──▶ /api/*     Go handlers (auth, 
    defaulting `POSTGRES_DB` to `opus_go` and the host to `postgres`. **Exits 1** when neither
    `DATABASE_URL` nor `POSTGRES_PASSWORD` is set. `GO_DATABASE_URL`, when set, overrides the
    result.
-3. Exports `PORT` (default `80`), `CLIENT_DIR` (default `/client`) and `UPLOAD_DIR`
+3. Exports `PORT` (default `27538`), `CLIENT_DIR` (default `/client`) and `UPLOAD_DIR`
    (default `/app/data/uploads`).
 4. Runs `web-env.sh`, which rewrites the `OPUS_API_URL`, `OPUS_CLIENT_URL` and other `OPUS_*`
    placeholders inside the built JavaScript and CSS.
@@ -91,8 +91,8 @@ A commented-out `redis` service (Valkey) is included for the HA setup described 
 
 ## Behind Traefik on la ruche
 
-Route one hostname to the `opus` container's **port `80`** — the port the image listens on, not the
-old `5173`. Nothing else in the container should be exposed. The variable that matters for the
+Route one hostname to the `opus` container's **port `27538`** — the port the image listens on.
+Nothing else in the container should be exposed. The variable that matters for the
 public hostname:
 
 ```sh
@@ -109,7 +109,7 @@ cookies are issued `SameSite=Lax` without `Secure`.
 nosniff`, Traefik has no router for the host: the domain is not bound to the running service, or it
 still points at a container that the Go cutover replaced. Check this before debugging the binary.
 In Dokploy, open the application (or the `opus` service of the Compose app), go to **Domains**, and
-make sure the hostname is mapped to container port `80`. Recreating a Dokploy application drops its
+make sure the hostname is mapped to container port `27538`. Recreating a Dokploy application drops its
 domain configuration, so re-add it after a rebuild.
 
 A healthy container is not proof the front end is reachable: `GET /` must return the SPA's
@@ -134,10 +134,11 @@ external database for anything serious.
 helm install opus ./charts/opus --set opus.env.OPUS_CLIENT_URL=https://opus.example.com
 ```
 
-Two things to check before installing:
+The chart's `opus.service.port` and `opus.service.targetPort` default to `27538`, matching the port
+the image listens on; the Ingress and HTTPRoute backends use the same value.
 
-- `opus.service.port` and `opus.service.targetPort` default to `5173`, but the image listens on
-  `80`. Override both, or the Service will point at a closed port.
+One thing to check before installing:
+
 - The default Postgres credentials in `values.yaml` are `opus_user` / `opus_password` and create the
   `opus` database. Point the application at `opus_go` and let startup create it, or use
   `postgresql.auth.existingSecret`.

@@ -47,6 +47,8 @@ spec:
               value: "{{ .Values.opus.env.clientUrl }}"
             - name: CORS_ORIGINS
               value: {{ $corsOriginsValue | quote }}
+            - name: PORT
+              value: "{{ .Values.opus.service.targetPort }}"
             - name: AUTH_SECRET
               {{- if .Values.opus.env.existingSecret.enabled }}
               valueFrom:

@@ -66,8 +66,8 @@ opus:
   securityContext: {}
   service:
     type: ClusterIP
-    port: 5173
-    targetPort: 5173
+    port: 27538
+    targetPort: 27538
   # Resources are optional and disabled by default
   resources: {}
   # resources:
@@ -160,7 +160,7 @@ ingress:
         - path: /
           pathType: Prefix
           service: opus
-          port: 5173
+          port: 27538
   tls: []
 
 # Gateway API configuration
@@ -177,4 +177,4 @@ gateway:
             value: /
       backendRefs:
         - service: opus
-          port: 5173
+          port: 27538

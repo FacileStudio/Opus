@@ -29,9 +29,9 @@ Attach the route by setting .Values.gateway.parentRefs to your Gateway listener 
 
 To access the application, set up port forwarding:
 
-$ kubectl port-forward svc/{{ include "opus.fullname" . }}-opus 5173:{{ .Values.opus.service.port }} -n {{ .Release.Namespace }}
+$ kubectl port-forward svc/{{ include "opus.fullname" . }}-opus 8080:{{ .Values.opus.service.port }} -n {{ .Release.Namespace }}
 
-Then access the application at http://localhost:5173
+Then access the application at http://localhost:8080
 
 Alternatively, expose the service using an Ingress by setting .Values.ingress.enabled=true
 or Gateway API by setting .Values.gateway.enabled=true
@@ -58,4 +58,4 @@ NOTES:
    You can customize these values in your values.yaml file.
 
 3. The opus image combines the API and web frontend in a single container.
-   nginx runs on port 5173 and proxies /api/ requests to the internal Node API.
+   The Go server listens on port {{ .Values.opus.service.targetPort }} and serves both the SPA and /api.
