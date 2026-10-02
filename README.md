@@ -31,7 +31,7 @@ Live at [opus.facile.studio](https://opus.facile.studio).
 | Client | React 19, Vite 7, TanStack Router and Query, Tailwind CSS 4, Radix UI, Tiptap 3 |
 | Runtime | Node 20.19+ with `tsx` in development, Bun 1 in the container; pnpm 10.32 workspaces and Turborepo |
 | Storage | PostgreSQL for data, S3-compatible object storage for task images, local disk for workspace logos |
-| Deploy | Docker Compose, one Go container serving the API and SPA on `:27538`, Helm chart in `charts/opus` |
+| Deploy | Docker Compose, one Go container serving the API and SPA on `:80`, Helm chart in `charts/opus` |
 
 ## Quick start
 
@@ -41,7 +41,7 @@ docker compose up -d
 ```
 
 Set at least `OPUS_CLIENT_URL`, `POSTGRES_PASSWORD` and `AUTH_SECRET` in `.env` before starting.
-The compose file publishes no host ports — the `opus` container listens on `27538` internally and is
+The compose file publishes no host ports — the `opus` container listens on `80` internally and is
 meant to sit behind Traefik. Add a `ports:` mapping to reach it directly.
 
 ### Local development

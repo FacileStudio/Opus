@@ -2,6 +2,12 @@
 
 All notable changes to Opus are documented here.
 
+## [2.8.1] - 2026-10-02
+
+### Changed
+
+- The container listens on port `80` again, reverting the `27538` default introduced in 2.8.0.
+
 ## [2.8.0] - 2026-10-02
 
 ### Changed

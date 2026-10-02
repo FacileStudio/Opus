@@ -38,7 +38,7 @@ if [ -n "${GO_DATABASE_URL:-}" ]; then
   export DATABASE_URL="$GO_DATABASE_URL"
 fi
 
-export PORT="${PORT:-27538}"
+export PORT="${PORT:-80}"
 export CLIENT_DIR="${CLIENT_DIR:-/client}"
 export UPLOAD_DIR="${UPLOAD_DIR:-/app/data/uploads}"
 
