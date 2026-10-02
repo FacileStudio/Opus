@@ -205,4 +205,3 @@ func TestWorkflowRuleValidationTable(t *testing.T) {
 		})
 	}
 }
-

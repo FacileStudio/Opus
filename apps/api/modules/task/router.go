@@ -223,4 +223,3 @@ func RegisterPublicRoutes(router chi.Router, service *Service) {
 		httpjson.WriteJSON(w, http.StatusOK, []any{})
 	})
 }
-

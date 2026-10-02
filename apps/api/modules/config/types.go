@@ -3,7 +3,7 @@ package config
 // ConfigResponse represents the application configuration and feature flags.
 type ConfigResponse struct {
 	SSOOnly                     bool    `json:"ssoOnly"`
-	DisableRegistration        bool    `json:"disableRegistration"`
+	DisableRegistration         bool    `json:"disableRegistration"`
 	DisablePasswordRegistration bool    `json:"disablePasswordRegistration"`
 	IsDemoMode                  bool    `json:"isDemoMode"`
 	HasSMTP                     bool    `json:"hasSmtp"`

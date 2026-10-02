@@ -187,4 +187,3 @@ func TestSearchValidationTable(t *testing.T) {
 		})
 	}
 }
-

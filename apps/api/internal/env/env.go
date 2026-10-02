@@ -30,12 +30,12 @@ func (c Config) Porte() porte.Config {
 		return porte.Config{SSOOnly: c.SSOOnly}
 	}
 	return porte.Config{
-		Issuer:      c.OIDC.Issuer,
-		ClientID:    c.OIDC.ClientID,
+		Issuer:       c.OIDC.Issuer,
+		ClientID:     c.OIDC.ClientID,
 		ClientSecret: c.OIDC.ClientSecret,
-		RedirectURL: c.OIDC.RedirectURL,
-		SuccessURL:  c.OIDC.SuccessURL,
-		SSOOnly:     c.SSOOnly,
+		RedirectURL:  c.OIDC.RedirectURL,
+		SuccessURL:   c.OIDC.SuccessURL,
+		SSOOnly:      c.SSOOnly,
 	}
 }
 

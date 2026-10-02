@@ -27,7 +27,7 @@ func (s *Service) Get() ConfigResponse {
 	}
 	return ConfigResponse{
 		SSOOnly:                     ssoOnly,
-		DisableRegistration:        false,
+		DisableRegistration:         false,
 		DisablePasswordRegistration: ssoOnly,
 		IsDemoMode:                  false,
 		HasSMTP:                     false,

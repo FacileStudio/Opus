@@ -224,4 +224,3 @@ func TestShareLinkValidationTable(t *testing.T) {
 		})
 	}
 }
-

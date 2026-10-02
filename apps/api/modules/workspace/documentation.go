@@ -46,12 +46,12 @@ func workspaceCrudRoutes() []documentation.Route {
 			},
 		},
 		{
-			Method:      "GET",
-			Path:        "/workspace/{workspaceId}/full",
-			Summary:     "Return a workspace and its members",
-			Description: "The workspace row and every member, the shape the organization screen renders.",
-			Auth:        "bearer",
-			PathParams:  []documentation.Field{{Name: "workspaceId", Type: "int64", Description: "The workspace's id"}},
+			Method:       "GET",
+			Path:         "/workspace/{workspaceId}/full",
+			Summary:      "Return a workspace and its members",
+			Description:  "The workspace row and every member, the shape the organization screen renders.",
+			Auth:         "bearer",
+			PathParams:   []documentation.Field{{Name: "workspaceId", Type: "int64", Description: "The workspace's id"}},
 			ResponseBody: `{"workspace":{...},"members":[{...}]}`,
 		},
 	}

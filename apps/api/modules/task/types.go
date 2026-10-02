@@ -32,18 +32,18 @@ type TaskTimestamps struct {
 
 // TaskResponse is the JSON wire shape for a task.
 type TaskResponse struct {
-	ID             int64               `json:"id"`
-	ProjectID      int64               `json:"projectId"`
-	WorkspaceID    int64               `json:"workspaceId"`
-	ColumnID       *int64              `json:"columnId,omitempty"`
-	Number         int                 `json:"number"`
-	Position       int                 `json:"position"`
-	Title          string              `json:"title"`
-	Description    string              `json:"description"`
-	Status         string              `json:"status"`
-	Priority       string              `json:"priority"`
-	TaskActor                          `json:",inline"`
-	TaskTimestamps                     `json:",inline"`
+	ID             int64  `json:"id"`
+	ProjectID      int64  `json:"projectId"`
+	WorkspaceID    int64  `json:"workspaceId"`
+	ColumnID       *int64 `json:"columnId,omitempty"`
+	Number         int    `json:"number"`
+	Position       int    `json:"position"`
+	Title          string `json:"title"`
+	Description    string `json:"description"`
+	Status         string `json:"status"`
+	Priority       string `json:"priority"`
+	TaskActor      `json:",inline"`
+	TaskTimestamps `json:",inline"`
 	Labels         []TaskLabelResponse `json:"labels"`
 }
 
@@ -248,4 +248,3 @@ type ImportTasksResponse struct {
 	ImportedAt string             `json:"importedAt"`
 	Results    ImportTasksSummary `json:"results"`
 }
-

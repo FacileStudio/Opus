@@ -71,7 +71,9 @@ func OptionalAuth(auth Authenticator) func(http.Handler) http.Handler {
 		})
 	}
 	return func(next http.Handler) http.Handler {
-		if optionaler, ok := auth.(interface{ Optional(http.Handler) http.Handler }); ok {
+		if optionaler, ok := auth.(interface {
+			Optional(http.Handler) http.Handler
+		}); ok {
 			return optionaler.Optional(hydrate(next))
 		}
 		return hydrate(next)

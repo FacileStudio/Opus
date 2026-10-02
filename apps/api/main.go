@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/FacileStudio/Journal/sdk/journal"
 	"github.com/FacileStudio/Opus/apps/api/internal/database"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
@@ -21,7 +22,6 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
-	"github.com/FacileStudio/Journal/sdk/journal"
 	"github.com/FacileStudio/porte/local"
 	"github.com/FacileStudio/porte/oidc"
 	portepg "github.com/FacileStudio/porte/pg"
@@ -172,6 +172,9 @@ func initAppLogger(appEnv *env.Config) (*slog.Logger, func()) {
 }
 
 func initDatabaseAndStorage(appEnv *env.Config, appLogger *slog.Logger) (*gorm.DB, *sql.DB, error) {
+	if err := database.EnsureDatabase(appEnv.DatabaseURL); err != nil {
+		appLogger.Warn("database bootstrap skipped", slog.Any("error", err))
+	}
 	db, err := database.Open(appEnv.DatabaseURL)
 	if err != nil {
 		return nil, nil, err

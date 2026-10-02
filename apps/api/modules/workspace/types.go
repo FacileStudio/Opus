@@ -71,8 +71,8 @@ type MessageResponse struct {
 // workspace row plus its members and its invitations, flattened for the
 // frontend's organization view.
 type FullWorkspaceResponse struct {
-	Workspace   *WorkspaceResponse  `json:"workspace"`
-	Members     []MemberResponse    `json:"members"`
+	Workspace   *WorkspaceResponse   `json:"workspace"`
+	Members     []MemberResponse     `json:"members"`
 	Invitations []InvitationResponse `json:"invitations"`
 }
 

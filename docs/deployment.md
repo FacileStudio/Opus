@@ -5,48 +5,68 @@ ruche through Dokploy or to Kubernetes through the bundled Helm chart.
 
 ## The image
 
-`Dockerfile` is a four-stage build, all stages based on `oven/bun` with pnpm 10.32.1 installed
-globally:
+`Dockerfile` is a three-stage build:
 
-1. `api-builder` — installs the full workspace from the lockfile, builds `packages/email` and then
-   bundles `apps/api` with esbuild into `apps/api/dist`.
-2. `api-deps` — reinstalls with `--prod --frozen-lockfile --no-optional`, then copies in the built API, the Drizzle migrations and the
-   built email package.
-3. `web-builder` — installs, copies `i18n/` and `apps/web`, and runs the Vite production build.
-4. `runtime` — `oven/bun:1-slim` plus nginx and wget. Runs as the unprivileged `appuser` (uid
-   1001), exposes `80`, and declares a `HEALTHCHECK` against `http://127.0.0.1:80/api/health`.
+1. `web-builder` — `oven/bun:1` with pnpm 10.32.1 installed globally. Installs the workspace from
+   the lockfile and builds the React SPA in `apps/web`, which reaches the Go binary as `/client`.
+2. `go-builder` — `golang:1.26-alpine`. Downloads `apps/api`'s modules and compiles a single
+   static binary (`CGO_ENABLED=0`, `-trimpath`, stripped).
+3. `runtime` — `alpine:3.21` with `ca-certificates`, `tzdata` and `wget`. Runs as the
+   unprivileged `appuser` (uid 1001), copies the SPA to `/client` and the binary to
+   `/usr/local/bin/opus-api`, exposes `80`, and declares a `HEALTHCHECK` against
+   `http://127.0.0.1:80/api/health`.
 
-`apps/api/drizzle` is copied into the runtime stage. Migrations ship with the image and run at
-startup — there is no separate migration job.
+There is no Node, no nginx and no separate migration job: one Go process serves both the API and
+the built client, and migrations run at startup.
 
-## One container, two processes
-
-This is the one-container / one-router / one-hostname shape the suite standardizes on. nginx owns
-the public port; the API is never exposed directly.
+## One process, one port
 
 ```
-Traefik ──▶ :80 nginx ──┬──▶ /api/*                    ──▶ 127.0.0.1:1337  Hono API
-                         ├──▶ /.well-known/oauth-*      ──▶ 127.0.0.1:1337
-                         ├──▶ /.well-known/*            ──▶ 404
-                         └──▶ /*                        ──▶ /usr/share/nginx/html, SPA fallback
+Traefik ──▶ :80 opus-api ──┬──▶ /api/*     Go handlers (auth, workspaces, tasks, …)
+                           ├──▶ /health, /ready, /api/health, /api/ready
+                           ├──▶ /ws, /api/ws   realtime WebSocket hub
+                           └──▶ /*      /client, SPA fallback to index.html
 ```
 
 `deploy/opus-entrypoint.sh` is the container command and, in order:
 
-1. Derives `OPUS_API_URL` as `<OPUS_CLIENT_URL>/api` when it is unset.
-2. Derives `DATABASE_URL` from the `POSTGRES_*` variables, URL-encoding user and password. **Exits
-   1** when neither `DATABASE_URL` nor `POSTGRES_PASSWORD` is set.
-3. Generates a random `AUTH_SECRET` when unset and logs a warning — sessions will not survive a
-   restart, so always set it explicitly in production.
-4. Runs `/docker-entrypoint.d/env.sh`, which rewrites the `OPUS_API_URL` and `OPUS_CLIENT_URL`
-   placeholders inside the built JavaScript and injects the MCP OAuth discovery JSON into the nginx
-   config.
-5. Starts the API, polls `/api/health` until it answers, then starts nginx.
-6. Watches both processes; if either dies it kills the other and exits with the first non-zero
-   status.
+1. Derives `OPUS_API_URL` as `<OPUS_CLIENT_URL>/api` when it is unset (trailing slash trimmed).
+2. Derives `DATABASE_URL` from the `POSTGRES_*` variables, URL-encoding user and password and
+   defaulting `POSTGRES_DB` to `opus_go` and the host to `postgres`. **Exits 1** when neither
+   `DATABASE_URL` nor `POSTGRES_PASSWORD` is set. `GO_DATABASE_URL`, when set, overrides the
+   result.
+3. Exports `PORT` (default `80`), `CLIENT_DIR` (default `/client`) and `UPLOAD_DIR`
+   (default `/app/data/uploads`).
+4. Runs `web-env.sh`, which rewrites the `OPUS_API_URL`, `OPUS_CLIENT_URL` and other `OPUS_*`
+   placeholders inside the built JavaScript and CSS.
+5. `exec`s `/usr/local/bin/opus-api`.
 
-nginx sets `X-Content-Type-Options`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy` and a
-`client_max_body_size` of 25 MB, and gzips text responses.
+`GET /api/health` returns `{"status":"ok"}` and `GET /api/ready` pings the database, answering
+`503` until it is reachable.
+
+## Databases
+
+The Go backend keeps its own schema on its own database (`opus_go`, suite int64 ids) separate from
+the legacy TypeScript database (`opus`, CUID2). The legacy backend has been decommissioned, so a
+fresh install only needs `opus_go`.
+
+At startup the API checks for the database and creates it when missing, so an existing PostgreSQL
+volume — where `deploy/db/init/01-opus-go.sql` never ran, because init scripts only fire on a fresh
+volume — no longer blocks the boot. If the role lacks `CREATEDB`, creation is skipped and the
+underlying connection error is logged instead. To create it by hand:
+
+```sh
+docker exec opus-db psql -U opus -c 'CREATE DATABASE opus_go'
+```
+
+Two failure modes to know:
+
+- **`password authentication failed for user "opus"`** — `POSTGRES_PASSWORD` changed after the
+  volume was initialised. Postgres applies that password only on first init; an existing volume
+  keeps the original role password. Keep the env var stable, or fix it in place with
+  `ALTER USER opus WITH PASSWORD '…'`.
+- **`tls error: server refused TLS connection`** — benign. pgx defaults to `sslmode=prefer`, tries
+  TLS, the stock Postgres image has none, and it falls back to plaintext.
 
 ## Docker Compose
 
@@ -61,8 +81,8 @@ Two services:
   `pg_isready` healthcheck.
 - `opus` — built from the local `Dockerfile` and tagged `ghcr.io/facilestudio/opus:latest`, named
   container `opus-app`, depends on Postgres being healthy, mounts `opus-uploads` at
-  `/app/apps/api/data/uploads` for workspace logos, restarts unless stopped, and repeats the
-  image's healthcheck.
+  `/app/data/uploads` for uploaded assets, restarts unless stopped, and repeats the image's
+  healthcheck.
 
 Neither service publishes a host port. The `opus` container is reachable only on the compose
 network, which is what you want behind Traefik and what you must change for a direct local run.
@@ -71,31 +91,37 @@ A commented-out `redis` service (Valkey) is included for the HA setup described 
 
 ## Behind Traefik on la ruche
 
-Route one hostname to the `opus` container's port `80`. Nothing else in the container should be
-exposed. The variables that must match the public hostname:
+Route one hostname to the `opus` container's **port `80`** — the port the image listens on, not the
+old `5173`. Nothing else in the container should be exposed. The variable that matters for the
+public hostname:
 
 ```sh
 OPUS_CLIENT_URL=https://opus.facile.studio
 ```
 
-`OPUS_API_URL` is then derived as `https://opus.facile.studio/api`, `better-auth` picks up its
-`baseURL` and trusted origins from those two, and CORS falls back to `OPUS_CLIENT_URL`. Setting
-`CORS_ORIGINS` explicitly is still a good idea in production — leaving both unset makes the API
-echo back any origin.
+`OPUS_API_URL` is then derived as `https://opus.facile.studio/api`, and CORS falls back to
+`OPUS_CLIENT_URL`. Setting `CORS_ORIGINS` explicitly is still a good idea in production — leaving
+both unset makes the API echo back any origin. Because the client and the API share a hostname,
+cookies are issued `SameSite=Lax` without `Secure`.
 
-Because the client and the API share a hostname, cookies are issued `SameSite=Lax` without
-`Secure`. Split them across subdomains and `better-auth` switches to
-`SameSite=None; Secure; Partitioned` automatically. Use `COOKIE_DOMAIN` only if you actually need
-a shared parent domain.
+**A `404 page not found` from the edge is a routing problem, not an application one.** If every path
+— including `/api/health` — answers with a short `text/plain` body and `x-content-type-options:
+nosniff`, Traefik has no router for the host: the domain is not bound to the running service, or it
+still points at a container that the Go cutover replaced. Check this before debugging the binary.
+In Dokploy, open the application (or the `opus` service of the Compose app), go to **Domains**, and
+make sure the hostname is mapped to container port `80`. Recreating a Dokploy application drops its
+domain configuration, so re-add it after a rebuild.
 
-Prefer the `dokploy` CLI over SSH plus docker for managing the deployment.
+A healthy container is not proof the front end is reachable: `GET /` must return the SPA's
+`index.html`, and `/api/health` must return `200`. Verify both from outside the host, not just
+`127.0.0.1` inside it.
 
 ## Scaling out
 
 The default WebSocket broadcast adapter is in-memory, so more than one replica silently loses
 real-time updates between them. Set `REDIS_URL` (or the sentinel or cluster variables) before
-raising the replica count. Uploads have the same problem in reverse: workspace logos are written to
-local disk, so either keep a single replica or back `UPLOAD_DIR` with shared storage.
+raising the replica count. Uploads have the same problem in reverse: assets are written to local
+disk (`UPLOAD_DIR`), so either keep a single replica or back it with shared storage.
 
 ## Kubernetes
 
@@ -112,16 +138,9 @@ Two things to check before installing:
 
 - `opus.service.port` and `opus.service.targetPort` default to `5173`, but the image listens on
   `80`. Override both, or the Service will point at a closed port.
-- The default Postgres credentials in `values.yaml` are `opus_user` / `opus_password`. Use
+- The default Postgres credentials in `values.yaml` are `opus_user` / `opus_password` and create the
+  `opus` database. Point the application at `opus_go` and let startup create it, or use
   `postgresql.auth.existingSecret`.
 
-`opus.extraEnv` takes arbitrary environment variables for the application container.
-
-## Health and observability
-
-`GET /api/health` returns `{"status":"ok"}` as soon as the Hono app is listening. It says nothing
-about the database, the pool connection or whether nginx is up — a green health check is not proof
-that the front end is being served. Verify the root path returns the SPA too.
-
-Startup logs are worth reading on a first deploy: the entrypoint announces every value it derived,
-the migrator prints its progress, and the pool client logs a line per workspace connection.
+The chart's liveness and readiness probes already target `/api/health`. `opus.extraEnv` takes
+arbitrary environment variables for the application container.

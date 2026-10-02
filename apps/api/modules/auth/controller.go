@@ -8,6 +8,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 )
+
 // Controller serves the /auth routes porte does not own.
 type Controller struct {
 	service *Service

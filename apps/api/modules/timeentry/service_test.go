@@ -217,4 +217,3 @@ func TestTimeEntryValidationTable(t *testing.T) {
 		})
 	}
 }
-
