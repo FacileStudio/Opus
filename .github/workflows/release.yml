@@ -1,0 +1,116 @@
+name: release
+
+# Publishes the container image and the GitHub release when a version tag is
+# pushed. The tag must have a matching section in CHANGELOG.md and the same
+# version in package.json — the release notes come from the changelog section,
+# so the changelog is the source of truth for what shipped.
+#
+# The image is one Go binary serving both the API and the built SPA, so there
+# is a single image to build: ghcr.io/facilestudio/opus.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Verify version matches the changelog
+        run: |
+          set -euo pipefail
+          tag_version="${GITHUB_REF_NAME#v}"
+          pkg_version="$(node -p "require('./package.json').version")"
+          if [ "$tag_version" != "$pkg_version" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match package.json version ${pkg_version}" >&2
+            exit 1
+          fi
+          if ! grep -q "^## \[${tag_version}\]" CHANGELOG.md; then
+            echo "CHANGELOG.md has no section for ${tag_version}" >&2
+            exit 1
+          fi
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/api/go.mod
+          cache-dependency-path: apps/api/go.sum
+
+      - name: Build and test the API
+        working-directory: apps/api
+        run: |
+          go build ./...
+          go test -count=1 ./...
+
+  release:
+    needs: checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Extract the changelog entry
+        id: changelog
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          section="$(awk -v ver="$version" '
+            index($0, "## [" ver "]") == 1 { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md)"
+          if [ -z "${section//[[:space:]]/}" ]; then
+            echo "CHANGELOG.md has no section for ${version}" >&2
+            exit 1
+          fi
+          printf '%s\n' "$section" > "$RUNNER_TEMP/release-notes.md"
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/facilestudio/opus
+          tags: |
+            type=semver,pattern={{version}},value=${{ github.ref_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ github.ref_name }}
+            type=raw,value=latest
+
+      - name: Build and push the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$tag" --repo "$GITHUB_REPOSITORY" \
+              --notes-file "$RUNNER_TEMP/release-notes.md"
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" \
+              --title "$tag" --notes-file "$RUNNER_TEMP/release-notes.md"
+          fi
