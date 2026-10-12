@@ -1,14 +1,12 @@
 import { windowId } from "@opus/libs";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
+import { getApiUrl } from "@/fetchers/get-api-url";
 import { authClient } from "@/lib/auth-client";
 
 function getWsUrl(projectId: string) {
-  const base = (
-    import.meta.env.VITE_API_URL || "http://localhost:1337"
-  ).replace(/\/+$/, "");
-  const wsBase = base.replace(/^http/, "ws");
-  return `${wsBase}/api/ws/${encodeURIComponent(projectId)}?windowId=${encodeURIComponent(windowId)}`;
+  const httpUrl = getApiUrl(`/ws/${encodeURIComponent(projectId)}`);
+  return `${httpUrl.replace(/^http/, "ws")}?windowId=${encodeURIComponent(windowId)}`;
 }
 
 const MAX_RETRIES = 5;

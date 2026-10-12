@@ -8,6 +8,7 @@ import { z } from "zod/v4";
 import PageTitle from "@/components/page-title";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { getApiUrl } from "@/fetchers/get-api-url";
 import useGetConfig from "@/hooks/queries/config/use-get-config";
 import { AuthLayout } from "../../components/auth/layout";
 import { SignInForm } from "../../components/auth/sign-in-form";
@@ -25,13 +26,6 @@ export const Route = createFileRoute("/auth/sign-in")({
   component: SignIn,
   validateSearch: signInSearchSchema,
 });
-
-function getApiBase() {
-  return (import.meta.env.VITE_API_URL || "http://localhost:1337").replace(
-    /\/+$/,
-    "",
-  );
-}
 
 function SignIn() {
   const { t } = useTranslation();
@@ -60,7 +54,7 @@ function SignIn() {
   };
 
   const handleSso = () => {
-    window.location.href = `${getApiBase()}/api/auth/oidc`;
+    window.location.href = getApiUrl("/auth/oidc");
   };
 
   const handleSignInSuccess = () => {

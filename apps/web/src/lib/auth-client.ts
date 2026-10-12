@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { getApiUrl } from "@/fetchers/get-api-url";
 import { roleHas } from "./permissions";
 
 /**
@@ -68,14 +69,8 @@ export type ApiError = {
 
 type ApiResult<T> = Promise<{ data: T | null; error: ApiError | null }>;
 
-const API_PREFIX = "/api";
-
 function apiUrl(path: string): string {
-  const base = (
-    import.meta.env.VITE_API_URL || "http://localhost:1337"
-  ).replace(/\/+$/, "");
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${base}${API_PREFIX}${normalizedPath}`;
+  return getApiUrl(path);
 }
 
 const CSRF_HEADER = "X-Facile-CSRF";
