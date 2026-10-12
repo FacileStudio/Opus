@@ -64,6 +64,6 @@ USER appuser
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:80/api/health || exit 1
+  CMD ["/usr/local/bin/opus-api", "healthcheck"]
 
 CMD ["/usr/local/bin/opus-entrypoint.sh"]

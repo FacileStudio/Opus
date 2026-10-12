@@ -2,6 +2,15 @@
 
 All notable changes to Opus are documented here.
 
+## [Unreleased]
+
+## [2.8.2] - 2026-10-12
+
+### Fixed
+
+- Healthcheck probe now uses the native `/usr/local/bin/opus-api healthcheck` command instead of GNU `wget --spider`.
+- Mount `HEAD` handlers on `/health` and `/api/health` to answer HTTP HEAD probes with 200.
+
 ## [2.8.1] - 2026-10-02
 
 ### Changed

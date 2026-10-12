@@ -110,6 +110,8 @@ func buildRouter(deps routerDeps) chi.Router {
 	})
 
 	health.Mount(router, deps.sqlDB.PingContext)
+	router.Head("/health", health.Live())
+	router.Head("/api/health", health.Live())
 	apiref.Mount(router, referenceConfig())
 
 	if deps.realtimeHub != nil {
@@ -119,6 +121,7 @@ func buildRouter(deps routerDeps) chi.Router {
 
 	router.Route("/api", func(api chi.Router) {
 		health.Mount(api, deps.sqlDB.PingContext)
+		api.Head("/health", health.Live())
 		deps.kits.sessions.Mount(api)
 		deps.kits.oidc.Mount(api)
 		auth.RegisterRoutes(api, authService, *deps.appEnv)

@@ -13,8 +13,8 @@ ruche through Dokploy or to Kubernetes through the bundled Helm chart.
    static binary (`CGO_ENABLED=0`, `-trimpath`, stripped).
 3. `runtime` — `alpine:3.21` with `ca-certificates`, `tzdata` and `wget`. Runs as the
    unprivileged `appuser` (uid 1001), copies the SPA to `/client` and the binary to
-   `/usr/local/bin/opus-api`, exposes `80`, and declares a `HEALTHCHECK` against
-   `http://127.0.0.1:80/api/health`.
+   `/usr/local/bin/opus-api`, exposes `80`, and declares a `HEALTHCHECK` running
+   `/usr/local/bin/opus-api healthcheck`.
 
 There is no Node, no nginx and no separate migration job: one Go process serves both the API and
 the built client, and migrations run at startup.
