@@ -15,9 +15,9 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-// AuthResponse is the {token, user} shape register, login, /auth/me and
-// PATCH /auth/me all answer with. The frontend was better-auth shaped, whose
-// session is exactly this pair; the re-plumb keeps it.
+// AuthResponse is the {token, user} shape register, login and PATCH /auth/me
+// answer with. GET /auth/me answers the bare UserResponse. The frontend was
+// better-auth shaped, whose session is exactly the pair; the re-plumb keeps it.
 type AuthResponse struct {
 	Token string        `json:"token"`
 	User  *UserResponse `json:"user"`

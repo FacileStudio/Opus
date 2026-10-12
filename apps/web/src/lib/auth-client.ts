@@ -262,13 +262,23 @@ export const authClient = {
     };
   },
 
+  // GET /auth/me answers the bare profile; register, login and PATCH /auth/me
+  // answer {token, user}. Reading only the wrapped shape threw a TypeError on
+  // every session probe, so an authenticated browser sat on the landing page.
   async getSession(): Promise<{ data: Session | null }> {
-    const result = await request<{ token: string; user: User }>("/auth/me");
+    type MeUser = Parameters<typeof mapSessionUser>[0];
+    const result = await request<{ token?: string; user?: MeUser } | MeUser>(
+      "/auth/me",
+    );
     if (result.error) {
       return { data: null };
     }
-    const user = mapSessionUser(result.data.user);
-    return { data: { user } };
+    const payload = result.data;
+    const raw = "user" in payload ? payload.user : payload;
+    if (!raw) {
+      return { data: null };
+    }
+    return { data: { user: mapSessionUser(raw) } };
   },
 
   async signInEmail(input: {
