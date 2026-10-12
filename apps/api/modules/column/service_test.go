@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/FacileStudio/tronc/errors"
@@ -236,8 +237,8 @@ func TestReorderColumns(t *testing.T) {
 
 	reordered, err := service.controller.reorder(ctx, userID, projectID, &ReorderColumnsRequest{
 		Columns: []ColumnOrderItem{
-			{ID: c1.ID, Position: 1},
-			{ID: c2.ID, Position: 0},
+			{ID: wireid.ID(c1.ID), Position: 1},
+			{ID: wireid.ID(c2.ID), Position: 0},
 		},
 	})
 	if err != nil {

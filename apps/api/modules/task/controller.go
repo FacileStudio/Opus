@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 )
@@ -234,9 +235,9 @@ func (controller *Controller) updatePriority(ctx context.Context, userID, taskID
 func (controller *Controller) updateActor(ctx context.Context, userID, taskID int64, req *UpdateActorRequest) (*TaskResponse, error) {
 	var actorID *int64
 	if req != nil {
-		actorID = req.ActorID
+		actorID = wireid.Int64Ptr(req.ActorID)
 		if actorID == nil {
-			actorID = req.UserID
+			actorID = wireid.Int64Ptr(req.UserID)
 		}
 	}
 	record, err := controller.service.UpdateActor(ctx, userID, taskID, actorID)

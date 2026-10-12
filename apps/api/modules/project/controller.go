@@ -58,7 +58,7 @@ func (c *controller) create(ctx context.Context, userID int64, req *CreateProjec
 		slug = slugify(slug)
 	}
 	project := schemas.Project{
-		WorkspaceID: req.WorkspaceID,
+		WorkspaceID: int64(req.WorkspaceID),
 		Name:        name,
 		Slug:        slug,
 		Icon:        icon,

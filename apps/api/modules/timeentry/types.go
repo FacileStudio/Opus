@@ -3,10 +3,10 @@ package timeentry
 import (
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
 
-// TimeEntryUserResponse describes the user who logged the time entry.
 type TimeEntryUserResponse struct {
 	ID    int64  `json:"id"`
 	Name  string `json:"name"`
@@ -28,7 +28,7 @@ type TimeEntryResponse struct {
 
 // CreateTimeEntryRequest carries the payload for logging time on a task.
 type CreateTimeEntryRequest struct {
-	TaskID      int64      `json:"taskId"`
+	TaskID      wireid.ID  `json:"taskId"`
 	StartTime   time.Time  `json:"startTime"`
 	EndTime     *time.Time `json:"endTime,omitempty"`
 	Description string     `json:"description,omitempty"`

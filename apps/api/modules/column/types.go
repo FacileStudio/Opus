@@ -1,9 +1,12 @@
 // Package column implements the column management API.
 package column
 
-import "time"
+import (
+	"time"
 
-// ColumnResponse is the wire shape for a board column.
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
+)
+
 type ColumnResponse struct {
 	ID        int64     `json:"id"`
 	ProjectID int64     `json:"projectId"`
@@ -35,8 +38,8 @@ type UpdateColumnRequest struct {
 
 // ColumnOrderItem defines the position update for a single column.
 type ColumnOrderItem struct {
-	ID       int64 `json:"id"`
-	Position int   `json:"position"`
+	ID       wireid.ID `json:"id"`
+	Position int       `json:"position"`
 }
 
 // ReorderColumnsRequest is the body of PUT /column/reorder/{projectId}.

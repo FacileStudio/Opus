@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/go-chi/chi/v5"
@@ -91,7 +92,7 @@ func TestWorkflowRuleUpsertAndList(t *testing.T) {
 	body, _ := json.Marshal(UpsertWorkflowRuleRequest{
 		IntegrationType: "github",
 		EventType:       "pull_request.merged",
-		ColumnID:        f.columnID,
+		ColumnID:        wireid.ID(f.columnID),
 	})
 	req := httptest.NewRequest("PUT", "/workflow-rule/"+strconv.FormatInt(f.projectID, 10), bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
@@ -127,7 +128,7 @@ func TestWorkflowRuleDelete(t *testing.T) {
 	rule, _ := service.Upsert(context.Background(), f.userID, f.projectID, &UpsertWorkflowRuleRequest{
 		IntegrationType: "github",
 		EventType:       "issue.closed",
-		ColumnID:        f.columnID,
+		ColumnID:        wireid.ID(f.columnID),
 	})
 
 	req := httptest.NewRequest("DELETE", "/workflow-rule/"+strconv.FormatInt(rule.ID, 10), nil)
@@ -150,7 +151,7 @@ func TestWorkflowRuleUnauthorized(t *testing.T) {
 	body, _ := json.Marshal(UpsertWorkflowRuleRequest{
 		IntegrationType: "github",
 		EventType:       "pr.merged",
-		ColumnID:        f.columnID,
+		ColumnID:        wireid.ID(f.columnID),
 	})
 	req := httptest.NewRequest("PUT", "/workflow-rule/"+strconv.FormatInt(f.projectID, 10), bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
@@ -177,12 +178,12 @@ func TestWorkflowRuleValidationTable(t *testing.T) {
 	}{
 		{
 			name:       "missing integration type",
-			req:        UpsertWorkflowRuleRequest{IntegrationType: "", EventType: "push", ColumnID: f.columnID},
+			req:        UpsertWorkflowRuleRequest{IntegrationType: "", EventType: "push", ColumnID: wireid.ID(f.columnID)},
 			wantStatus: http.StatusBadRequest,
 		},
 		{
 			name:       "missing event type",
-			req:        UpsertWorkflowRuleRequest{IntegrationType: "github", EventType: "", ColumnID: f.columnID},
+			req:        UpsertWorkflowRuleRequest{IntegrationType: "github", EventType: "", ColumnID: wireid.ID(f.columnID)},
 			wantStatus: http.StatusBadRequest,
 		},
 		{

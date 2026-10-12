@@ -134,12 +134,12 @@ func calculateDuration(start time.Time, end *time.Time) int {
 
 // Create records a new time entry against a task.
 func (service *Service) Create(ctx context.Context, userID int64, req *CreateTimeEntryRequest) (*schemas.TimeEntry, error) {
-	if err := service.verifyTaskAccess(ctx, userID, req.TaskID); err != nil {
+	if err := service.verifyTaskAccess(ctx, userID, int64(req.TaskID)); err != nil {
 		return nil, err
 	}
 	duration := calculateDuration(req.StartTime, req.EndTime)
 	entry := schemas.TimeEntry{
-		TaskID:      req.TaskID,
+		TaskID:      int64(req.TaskID),
 		UserID:      &userID,
 		Description: req.Description,
 		StartTime:   req.StartTime,

@@ -6,6 +6,7 @@ import (
 
 	"github.com/FacileStudio/Opus/apps/api/internal/authcontext"
 	"github.com/FacileStudio/Opus/apps/api/internal/middleware"
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/tronc/errors"
 	"github.com/FacileStudio/tronc/httpjson"
 	"github.com/go-chi/chi/v5"
@@ -112,7 +113,9 @@ func handleDeleteComment(service *Service) http.HandlerFunc {
 		}
 		if req.ActivityID <= 0 {
 			if qID := request.URL.Query().Get("activityId"); qID != "" {
-				req.ActivityID, _ = strconv.ParseInt(qID, 10, 64)
+				if parsed, err := strconv.ParseInt(qID, 10, 64); err == nil {
+					req.ActivityID = wireid.ID(parsed)
+				}
 			}
 		}
 		identity, _ := authcontext.IdentityFromContext(request.Context())

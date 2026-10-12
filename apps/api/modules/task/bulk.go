@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 	"gorm.io/gorm"
@@ -168,7 +169,7 @@ func (service *Service) Bulk(ctx context.Context, userID int64, req *BulkUpdateR
 		return nil, errors.Invalid("taskIds list cannot be empty")
 	}
 	var tasks []schemas.Task
-	if err := service.db.WithContext(ctx).Where("id IN ?", req.TaskIDs).Find(&tasks).Error; err != nil {
+	if err := service.db.WithContext(ctx).Where("id IN ?", wireid.Int64s(req.TaskIDs)).Find(&tasks).Error; err != nil {
 		return nil, errors.Internal("failed to fetch tasks", err)
 	}
 	if len(tasks) == 0 {

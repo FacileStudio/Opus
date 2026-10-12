@@ -1,8 +1,11 @@
 package workflowrule
 
-import "time"
+import (
+	"time"
 
-// WorkflowRuleResponse is the JSON wire representation of an automated workflow rule.
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
+)
+
 type WorkflowRuleResponse struct {
 	ID              int64     `json:"id"`
 	ProjectID       int64     `json:"projectId"`
@@ -15,7 +18,7 @@ type WorkflowRuleResponse struct {
 
 // UpsertWorkflowRuleRequest carries the payload for configuring an automated rule.
 type UpsertWorkflowRuleRequest struct {
-	IntegrationType string `json:"integrationType"`
-	EventType       string `json:"eventType"`
-	ColumnID        int64  `json:"columnId"`
+	IntegrationType string    `json:"integrationType"`
+	EventType       string    `json:"eventType"`
+	ColumnID        wireid.ID `json:"columnId"`
 }

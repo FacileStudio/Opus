@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 	"gorm.io/driver/sqlite"
@@ -72,7 +73,7 @@ func TestCreateLabel(t *testing.T) {
 	wsLabel, err := service.CreateLabel(ctx, userID, CreateLabelRequest{
 		Name:        "Bug",
 		Color:       "#ff0000",
-		WorkspaceID: wsID,
+		WorkspaceID: wireid.ID(wsID),
 	})
 	if err != nil || wsLabel.ID == 0 || wsLabel.TaskID != nil || wsLabel.Name != "Bug" {
 		t.Fatalf("CreateLabel workspace = %v, err %v", wsLabel, err)
@@ -81,7 +82,7 @@ func TestCreateLabel(t *testing.T) {
 	dupWsLabel, err := service.CreateLabel(ctx, userID, CreateLabelRequest{
 		Name:        "Bug",
 		Color:       "#00ff00",
-		WorkspaceID: wsID,
+		WorkspaceID: wireid.ID(wsID),
 	})
 	if err != nil || dupWsLabel.ID != wsLabel.ID {
 		t.Fatalf("CreateLabel duplicate workspace = %v, err %v", dupWsLabel, err)
@@ -90,8 +91,8 @@ func TestCreateLabel(t *testing.T) {
 	taskLabel, err := service.CreateLabel(ctx, userID, CreateLabelRequest{
 		Name:        "Feature",
 		Color:       "#0000ff",
-		WorkspaceID: wsID,
-		TaskID:      &taskID,
+		WorkspaceID: wireid.ID(wsID),
+		TaskID:      wireid.FromInt64Ptr(&taskID),
 	})
 	if err != nil || taskLabel.ID == 0 || taskLabel.TaskID == nil || *taskLabel.TaskID != taskID {
 		t.Fatalf("CreateLabel task = %v, err %v", taskLabel, err)
@@ -100,8 +101,8 @@ func TestCreateLabel(t *testing.T) {
 	dupTaskLabel, err := service.CreateLabel(ctx, userID, CreateLabelRequest{
 		Name:        "Feature",
 		Color:       "#ffff00",
-		WorkspaceID: wsID,
-		TaskID:      &taskID,
+		WorkspaceID: wireid.ID(wsID),
+		TaskID:      wireid.FromInt64Ptr(&taskID),
 	})
 	if err != nil || dupTaskLabel.ID != taskLabel.ID {
 		t.Fatalf("CreateLabel duplicate task = %v, err %v", dupTaskLabel, err)
@@ -116,7 +117,7 @@ func TestGetLabel(t *testing.T) {
 	created, err := service.CreateLabel(ctx, userID, CreateLabelRequest{
 		Name:        "Urgent",
 		Color:       "#f00",
-		WorkspaceID: wsID,
+		WorkspaceID: wireid.ID(wsID),
 	})
 	if err != nil {
 		t.Fatalf("CreateLabel: %v", err)
@@ -143,15 +144,15 @@ func TestGetLabelsByWorkspaceAndTask(t *testing.T) {
 	userID, wsID, taskID := seedFixture(t, db)
 	ctx := context.Background()
 
-	_, err := service.CreateLabel(ctx, userID, CreateLabelRequest{Name: "L1", Color: "#111", WorkspaceID: wsID})
+	_, err := service.CreateLabel(ctx, userID, CreateLabelRequest{Name: "L1", Color: "#111", WorkspaceID: wireid.ID(wsID)})
 	if err != nil {
 		t.Fatalf("create L1: %v", err)
 	}
 	_, err = service.CreateLabel(ctx, userID, CreateLabelRequest{
 		Name:        "L2",
 		Color:       "#222",
-		WorkspaceID: wsID,
-		TaskID:      &taskID,
+		WorkspaceID: wireid.ID(wsID),
+		TaskID:      wireid.FromInt64Ptr(&taskID),
 	})
 	if err != nil {
 		t.Fatalf("create L2: %v", err)
@@ -178,7 +179,7 @@ func TestUpdateAndAssign(t *testing.T) {
 	userID, wsID, taskID := seedFixture(t, db)
 	ctx := context.Background()
 
-	label, err := service.CreateLabel(ctx, userID, CreateLabelRequest{Name: "Old", Color: "#aaa", WorkspaceID: wsID})
+	label, err := service.CreateLabel(ctx, userID, CreateLabelRequest{Name: "Old", Color: "#aaa", WorkspaceID: wireid.ID(wsID)})
 	if err != nil {
 		t.Fatalf("create: %v", err)
 	}
@@ -209,7 +210,7 @@ func TestDeleteLabel(t *testing.T) {
 	userID, wsID, taskID := seedFixture(t, db)
 	ctx := context.Background()
 
-	wsLabel, err := service.CreateLabel(ctx, userID, CreateLabelRequest{Name: "WsOnly", Color: "#111", WorkspaceID: wsID})
+	wsLabel, err := service.CreateLabel(ctx, userID, CreateLabelRequest{Name: "WsOnly", Color: "#111", WorkspaceID: wireid.ID(wsID)})
 	if err != nil {
 		t.Fatalf("create ws label: %v", err)
 	}
@@ -222,8 +223,8 @@ func TestDeleteLabel(t *testing.T) {
 	taskLabel, err := service.CreateLabel(ctx, userID, CreateLabelRequest{
 		Name:        "TaskOnly",
 		Color:       "#222",
-		WorkspaceID: wsID,
-		TaskID:      &taskID,
+		WorkspaceID: wireid.ID(wsID),
+		TaskID:      wireid.FromInt64Ptr(&taskID),
 	})
 	if err != nil {
 		t.Fatalf("create task label: %v", err)

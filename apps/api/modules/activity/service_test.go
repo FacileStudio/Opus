@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/FacileStudio/tronc/errors"
@@ -184,12 +185,12 @@ func TestControllerValidation(t *testing.T) {
 		t.Fatalf("want 400 for create invalid task id, got %v", err)
 	}
 
-	_, err = service.controller.create(ctx, userID, &CreateActivityRequest{TaskID: taskID, Type: " "})
+	_, err = service.controller.create(ctx, userID, &CreateActivityRequest{TaskID: wireid.ID(taskID), Type: " "})
 	if err == nil || errors.Status(err) != 400 {
 		t.Fatalf("want 400 for create empty type, got %v", err)
 	}
 
-	_, err = service.controller.createComment(ctx, userID, &CommentActivityRequest{TaskID: taskID, Comment: " "})
+	_, err = service.controller.createComment(ctx, userID, &CommentActivityRequest{TaskID: wireid.ID(taskID), Comment: " "})
 	if err == nil || errors.Status(err) != 400 {
 		t.Fatalf("want 400 for create empty comment, got %v", err)
 	}
@@ -230,7 +231,7 @@ func TestRouterEndpoints(t *testing.T) {
 
 	msg := "hello activity\n\n\nworld"
 	rec := executeJSONRequest(router, "POST", "/activity/create", CreateActivityRequest{
-		TaskID:  taskID,
+		TaskID:  wireid.ID(taskID),
 		Message: &msg,
 		Type:    "task",
 	})
@@ -244,7 +245,7 @@ func TestRouterEndpoints(t *testing.T) {
 	}
 
 	rec = executeJSONRequest(router, "POST", "/activity/comment", CommentActivityRequest{
-		TaskID:  taskID,
+		TaskID:  wireid.ID(taskID),
 		Comment: "http comment",
 	})
 	if rec.Code != http.StatusOK {
@@ -256,7 +257,7 @@ func TestRouterEndpoints(t *testing.T) {
 	}
 
 	rec = executeJSONRequest(router, "PUT", "/activity/comment", UpdateCommentActivityRequest{
-		ActivityID: cmt.ID,
+		ActivityID: wireid.ID(cmt.ID),
 		Comment:    "edited comment",
 	})
 	if rec.Code != http.StatusOK {
@@ -264,7 +265,7 @@ func TestRouterEndpoints(t *testing.T) {
 	}
 
 	rec = executeJSONRequest(router, "DELETE", "/activity/comment", DeleteCommentActivityRequest{
-		ActivityID: cmt.ID,
+		ActivityID: wireid.ID(cmt.ID),
 	})
 	if rec.Code != http.StatusOK {
 		t.Fatalf("DELETE /activity/comment = %d, want 200", rec.Code)

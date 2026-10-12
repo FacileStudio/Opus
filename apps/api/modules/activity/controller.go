@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 )
@@ -51,8 +52,10 @@ func (controller *Controller) create(ctx context.Context, authUserID int64, req 
 }
 
 func resolveCreateParams(authUserID int64, activityType string, req *CreateActivityRequest) ActivityParams {
-	targetUserID := req.UserID
-	if targetUserID == nil && authUserID > 0 {
+	var targetUserID *int64
+	if req.UserID != nil {
+		targetUserID = wireid.Int64Ptr(req.UserID)
+	} else if authUserID > 0 {
 		uid := authUserID
 		targetUserID = &uid
 	}
@@ -67,7 +70,7 @@ func resolveCreateParams(authUserID int64, activityType string, req *CreateActiv
 		eventData = string(req.EventData)
 	}
 	return ActivityParams{
-		TaskID:    req.TaskID,
+		TaskID:    int64(req.TaskID),
 		UserID:    targetUserID,
 		Type:      activityType,
 		Content:   content,
@@ -86,7 +89,7 @@ func (controller *Controller) createComment(ctx context.Context, userID int64, r
 	if content == "" {
 		return nil, errors.Invalid("comment is required")
 	}
-	activity, err := controller.service.CreateComment(ctx, userID, req.TaskID, content)
+	activity, err := controller.service.CreateComment(ctx, userID, int64(req.TaskID), content)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +108,7 @@ func (controller *Controller) updateComment(ctx context.Context, userID int64, r
 	if content == "" {
 		return nil, errors.Invalid("comment is required")
 	}
-	activity, err := controller.service.UpdateComment(ctx, userID, req.ActivityID, content)
+	activity, err := controller.service.UpdateComment(ctx, userID, int64(req.ActivityID), content)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +120,7 @@ func (controller *Controller) deleteComment(ctx context.Context, userID int64, r
 	if req.ActivityID <= 0 {
 		return nil, errors.Invalid("invalid activity id")
 	}
-	activity, err := controller.service.DeleteComment(ctx, userID, req.ActivityID)
+	activity, err := controller.service.DeleteComment(ctx, userID, int64(req.ActivityID))
 	if err != nil {
 		return nil, err
 	}

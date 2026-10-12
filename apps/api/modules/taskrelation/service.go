@@ -133,14 +133,14 @@ func (service *Service) ListForTask(ctx context.Context, userID, taskID int64) (
 
 // CreateRelation stores a new task relation after validating task existence and access.
 func (service *Service) CreateRelation(ctx context.Context, userID int64, req CreateTaskRelationRequest) (*schemas.TaskRelation, error) {
-	sourceTask, err := service.findTask(ctx, req.SourceTaskID, "Source task not found")
+	sourceTask, err := service.findTask(ctx, int64(req.SourceTaskID), "Source task not found")
 	if err != nil {
 		return nil, err
 	}
 	if err := service.RequireMember(ctx, userID, sourceTask.WorkspaceID); err != nil {
 		return nil, err
 	}
-	targetTask, err := service.findTask(ctx, req.TargetTaskID, "Target task not found")
+	targetTask, err := service.findTask(ctx, int64(req.TargetTaskID), "Target task not found")
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (service *Service) CreateRelation(ctx context.Context, userID int64, req Cr
 		Model(&schemas.TaskRelation{}).
 		Where(
 			"relation_type = ? AND ((source_task_id = ? AND target_task_id = ?) OR (source_task_id = ? AND target_task_id = ?))",
-			req.RelationType, req.SourceTaskID, req.TargetTaskID, req.TargetTaskID, req.SourceTaskID,
+			req.RelationType, int64(req.SourceTaskID), int64(req.TargetTaskID), int64(req.TargetTaskID), int64(req.SourceTaskID),
 		).
 		Count(&count).Error
 	if err != nil {
@@ -162,8 +162,8 @@ func (service *Service) CreateRelation(ctx context.Context, userID int64, req Cr
 		return nil, errors.Conflict("This relation already exists")
 	}
 	relation := schemas.TaskRelation{
-		SourceTaskID: req.SourceTaskID,
-		TargetTaskID: req.TargetTaskID,
+		SourceTaskID: int64(req.SourceTaskID),
+		TargetTaskID: int64(req.TargetTaskID),
 		RelationType: req.RelationType,
 		CreatedAt:    time.Now(),
 	}

@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -97,7 +98,7 @@ func TestHTTPBulkAndFieldUpdates(t *testing.T) {
 
 	val := "urgent"
 	bulkBody, _ := json.Marshal(BulkUpdateRequest{
-		TaskIDs:   []int64{t1.ID},
+		TaskIDs:   wireid.FromInt64s([]int64{t1.ID}),
 		Operation: "updatePriority",
 		Value:     &val,
 	})

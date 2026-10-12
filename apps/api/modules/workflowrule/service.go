@@ -90,7 +90,7 @@ func (service *Service) Upsert(ctx context.Context, userID, projectID int64, req
 		return nil, err
 	}
 	var column schemas.Column
-	err := service.db.WithContext(ctx).First(&column, "id = ? AND project_id = ?", req.ColumnID, projectID).Error
+	err := service.db.WithContext(ctx).First(&column, "id = ? AND project_id = ?", int64(req.ColumnID), projectID).Error
 	if err != nil {
 		if stderrors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.Invalid("Column not found in project")
@@ -103,7 +103,7 @@ func (service *Service) Upsert(ctx context.Context, userID, projectID int64, req
 		First(&existing).Error
 	now := time.Now()
 	if err == nil {
-		existing.ColumnID = req.ColumnID
+		existing.ColumnID = int64(req.ColumnID)
 		existing.UpdatedAt = now
 		if err := service.db.WithContext(ctx).Save(&existing).Error; err != nil {
 			return nil, errors.Internal("failed to update workflow rule", err)
@@ -117,7 +117,7 @@ func (service *Service) Upsert(ctx context.Context, userID, projectID int64, req
 		ProjectID:       projectID,
 		IntegrationType: req.IntegrationType,
 		EventType:       req.EventType,
-		ColumnID:        req.ColumnID,
+		ColumnID:        int64(req.ColumnID),
 		CreatedAt:       now,
 		UpdatedAt:       now,
 	}

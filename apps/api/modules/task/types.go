@@ -4,10 +4,10 @@ package task
 import (
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
 
-// TaskLabelResponse represents a label attached to a task.
 type TaskLabelResponse struct {
 	ID    int64  `json:"id"`
 	Name  string `json:"name"`
@@ -92,8 +92,8 @@ type CreateTaskRequest struct {
 	Priority    string     `json:"priority,omitempty"`
 	StartDate   *time.Time `json:"startDate,omitempty"`
 	DueDate     *time.Time `json:"dueDate,omitempty"`
-	UserID      *int64     `json:"userId,omitempty"`
-	ActorID     *int64     `json:"actorId,omitempty"`
+	UserID      *wireid.ID `json:"userId,omitempty"`
+	ActorID     *wireid.ID `json:"actorId,omitempty"`
 }
 
 // UpdateTaskRequest is the payload for updating all fields of a task.
@@ -102,18 +102,18 @@ type UpdateTaskRequest struct {
 	Description string     `json:"description"`
 	Status      string     `json:"status"`
 	Priority    string     `json:"priority"`
-	ProjectID   int64      `json:"projectId"`
+	ProjectID   wireid.ID  `json:"projectId"`
 	Position    int        `json:"position"`
 	StartDate   *time.Time `json:"startDate,omitempty"`
 	DueDate     *time.Time `json:"dueDate,omitempty"`
-	UserID      *int64     `json:"userId,omitempty"`
-	ActorID     *int64     `json:"actorId,omitempty"`
+	UserID      *wireid.ID `json:"userId,omitempty"`
+	ActorID     *wireid.ID `json:"actorId,omitempty"`
 }
 
 // MoveTaskRequest is the payload for moving a task to another project.
 type MoveTaskRequest struct {
-	DestinationProjectID int64  `json:"destinationProjectId"`
-	DestinationStatus    string `json:"destinationStatus,omitempty"`
+	DestinationProjectID wireid.ID `json:"destinationProjectId"`
+	DestinationStatus    string    `json:"destinationStatus,omitempty"`
 }
 
 // MoveTaskResponse is the response payload returned after moving a task.
@@ -135,8 +135,8 @@ type UpdatePriorityRequest struct {
 
 // UpdateActorRequest is the payload for assigning or unassigning a task.
 type UpdateActorRequest struct {
-	UserID  *int64 `json:"userId,omitempty"`
-	ActorID *int64 `json:"actorId,omitempty"`
+	UserID  *wireid.ID `json:"userId,omitempty"`
+	ActorID *wireid.ID `json:"actorId,omitempty"`
 }
 
 // UpdateDueDateRequest is the payload for updating task due date.
@@ -156,9 +156,9 @@ type UpdateDescriptionRequest struct {
 
 // BulkUpdateRequest is the payload for bulk operations on multiple tasks.
 type BulkUpdateRequest struct {
-	TaskIDs   []int64 `json:"taskIds"`
-	Operation string  `json:"operation"`
-	Value     *string `json:"value,omitempty"`
+	TaskIDs   []wireid.ID `json:"taskIds"`
+	Operation string      `json:"operation"`
+	Value     *string     `json:"value,omitempty"`
 }
 
 // BulkUpdateResponse is the response payload returned after a bulk operation.

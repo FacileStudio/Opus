@@ -96,7 +96,7 @@ func generateToken() (string, error) {
 
 // Create inserts a new share link with a unique cryptographic token.
 func (service *Service) Create(ctx context.Context, userID int64, req *CreateShareLinkRequest) (*schemas.ShareLink, error) {
-	if err := service.verifyProjectAccess(ctx, userID, req.ProjectID); err != nil {
+	if err := service.verifyProjectAccess(ctx, userID, int64(req.ProjectID)); err != nil {
 		return nil, err
 	}
 	token, err := generateToken()
@@ -109,7 +109,7 @@ func (service *Service) Create(ctx context.Context, userID int64, req *CreateSha
 		label = *req.Label
 	}
 	link := schemas.ShareLink{
-		ProjectID: req.ProjectID,
+		ProjectID: int64(req.ProjectID),
 		Token:     token,
 		Label:     label,
 		ExpiresAt: req.ExpiresAt,

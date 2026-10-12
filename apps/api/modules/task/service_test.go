@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
 
@@ -128,7 +129,7 @@ func TestUpdateTask(t *testing.T) {
 		Description: "New description",
 		Status:      col.Slug,
 		Priority:    "urgent",
-		ProjectID:   projectID,
+		ProjectID:   wireid.ID(projectID),
 		Position:    5,
 	})
 	if err != nil {

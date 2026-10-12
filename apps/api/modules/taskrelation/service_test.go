@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/FacileStudio/tronc/errors"
@@ -114,8 +115,8 @@ func TestCreateRelation(t *testing.T) {
 	ctx := context.Background()
 
 	req := CreateTaskRelationRequest{
-		SourceTaskID: fix.taskID1,
-		TargetTaskID: fix.taskID2,
+		SourceTaskID: wireid.ID(fix.taskID1),
+		TargetTaskID: wireid.ID(fix.taskID2),
 		RelationType: "subtask",
 	}
 	rel, err := service.CreateRelation(ctx, fix.userID, req)
@@ -132,8 +133,8 @@ func TestCreateRelation(t *testing.T) {
 	}
 
 	revReq := CreateTaskRelationRequest{
-		SourceTaskID: fix.taskID2,
-		TargetTaskID: fix.taskID1,
+		SourceTaskID: wireid.ID(fix.taskID2),
+		TargetTaskID: wireid.ID(fix.taskID1),
 		RelationType: "subtask",
 	}
 	_, err = service.CreateRelation(ctx, fix.userID, revReq)
@@ -154,8 +155,8 @@ func TestListAndTaskAccess(t *testing.T) {
 	ctx := context.Background()
 
 	req := CreateTaskRelationRequest{
-		SourceTaskID: fix.taskID1,
-		TargetTaskID: fix.taskID2,
+		SourceTaskID: wireid.ID(fix.taskID1),
+		TargetTaskID: wireid.ID(fix.taskID2),
 		RelationType: "blocks",
 	}
 	if _, err := service.CreateRelation(ctx, fix.userID, req); err != nil {
@@ -196,8 +197,8 @@ func TestDeleteRelation(t *testing.T) {
 	ctx := context.Background()
 
 	req := CreateTaskRelationRequest{
-		SourceTaskID: fix.taskID1,
-		TargetTaskID: fix.taskID2,
+		SourceTaskID: wireid.ID(fix.taskID1),
+		TargetTaskID: wireid.ID(fix.taskID2),
 		RelationType: "related",
 	}
 	rel, err := service.CreateRelation(ctx, fix.userID, req)
@@ -228,8 +229,8 @@ func TestControllerValidation(t *testing.T) {
 	}
 
 	selfReq := &CreateTaskRelationRequest{
-		SourceTaskID: fix.taskID1,
-		TargetTaskID: fix.taskID1,
+		SourceTaskID: wireid.ID(fix.taskID1),
+		TargetTaskID: wireid.ID(fix.taskID1),
 		RelationType: "subtask",
 	}
 	_, err = service.controller.create(ctx, fix.userID, selfReq)
@@ -238,8 +239,8 @@ func TestControllerValidation(t *testing.T) {
 	}
 
 	invalidTypeReq := &CreateTaskRelationRequest{
-		SourceTaskID: fix.taskID1,
-		TargetTaskID: fix.taskID2,
+		SourceTaskID: wireid.ID(fix.taskID1),
+		TargetTaskID: wireid.ID(fix.taskID2),
 		RelationType: "unknown",
 	}
 	_, err = service.controller.create(ctx, fix.userID, invalidTypeReq)
@@ -258,8 +259,8 @@ func TestRouterEndpoints(t *testing.T) {
 	RegisterRoutes(router, service, auth)
 
 	body, _ := json.Marshal(CreateTaskRelationRequest{
-		SourceTaskID: fix.taskID1,
-		TargetTaskID: fix.taskID2,
+		SourceTaskID: wireid.ID(fix.taskID1),
+		TargetTaskID: wireid.ID(fix.taskID2),
 		RelationType: "subtask",
 	})
 	req := httptest.NewRequest(http.MethodPost, "/task-relation", bytes.NewReader(body))

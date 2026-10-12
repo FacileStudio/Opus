@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/go-chi/chi/v5"
@@ -80,7 +81,7 @@ func TestShareLinkCreateAndList(t *testing.T) {
 	router := chi.NewRouter()
 	RegisterRoutes(router, service, auth)
 
-	body, _ := json.Marshal(CreateShareLinkRequest{ProjectID: projID})
+	body, _ := json.Marshal(CreateShareLinkRequest{ProjectID: wireid.ID(projID)})
 	req := httptest.NewRequest("POST", "/share-link", bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
@@ -106,7 +107,7 @@ func TestShareLinkUpdateAndDelete(t *testing.T) {
 	router := chi.NewRouter()
 	RegisterRoutes(router, service, auth)
 
-	link, _ := service.Create(context.Background(), userID, &CreateShareLinkRequest{ProjectID: projID})
+	link, _ := service.Create(context.Background(), userID, &CreateShareLinkRequest{ProjectID: wireid.ID(projID)})
 	newLabel := "Client Review"
 	updateBody, _ := json.Marshal(UpdateShareLinkRequest{Label: &newLabel})
 	req := httptest.NewRequest("PUT", "/share-link/"+strconv.FormatInt(link.ID, 10), bytes.NewReader(updateBody))
@@ -141,7 +142,7 @@ func TestShareLinkAccessDenied(t *testing.T) {
 	router := chi.NewRouter()
 	RegisterRoutes(router, service, auth)
 
-	body, _ := json.Marshal(CreateShareLinkRequest{ProjectID: projID})
+	body, _ := json.Marshal(CreateShareLinkRequest{ProjectID: wireid.ID(projID)})
 	req := httptest.NewRequest("POST", "/share-link", bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
@@ -201,12 +202,12 @@ func TestShareLinkValidationTable(t *testing.T) {
 		},
 		{
 			name:       "past expiry date",
-			req:        CreateShareLinkRequest{ProjectID: projID, ExpiresAt: &past},
+			req:        CreateShareLinkRequest{ProjectID: wireid.ID(projID), ExpiresAt: &past},
 			wantStatus: http.StatusBadRequest,
 		},
 		{
 			name:       "valid with future expiry",
-			req:        CreateShareLinkRequest{ProjectID: projID, ExpiresAt: &future},
+			req:        CreateShareLinkRequest{ProjectID: wireid.ID(projID), ExpiresAt: &future},
 			wantStatus: http.StatusOK,
 		},
 	}

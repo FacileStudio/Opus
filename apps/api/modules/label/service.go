@@ -5,6 +5,7 @@ import (
 	stderrors "errors"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 	"gorm.io/gorm"
@@ -52,7 +53,7 @@ func (service *Service) taskWorkspace(ctx context.Context, taskID int64) (int64,
 }
 
 func (service *Service) createOnTask(ctx context.Context, userID int64, req CreateLabelRequest) (*schemas.Label, error) {
-	wsID, err := service.taskWorkspace(ctx, *req.TaskID)
+	wsID, err := service.taskWorkspace(ctx, int64(*req.TaskID))
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +62,7 @@ func (service *Service) createOnTask(ctx context.Context, userID int64, req Crea
 	}
 	var existing schemas.Label
 	err = service.orm.WithContext(ctx).
-		Where("task_id = ? AND name = ?", *req.TaskID, req.Name).
+		Where("task_id = ? AND name = ?", int64(*req.TaskID), req.Name).
 		First(&existing).Error
 	if err == nil {
 		return &existing, nil
@@ -73,7 +74,7 @@ func (service *Service) createOnTask(ctx context.Context, userID int64, req Crea
 	label := schemas.Label{
 		Name:        req.Name,
 		Color:       req.Color,
-		TaskID:      req.TaskID,
+		TaskID:      wireid.Int64Ptr(req.TaskID),
 		WorkspaceID: wsID,
 		CreatedAt:   now,
 		UpdatedAt:   now,
@@ -85,12 +86,12 @@ func (service *Service) createOnTask(ctx context.Context, userID int64, req Crea
 }
 
 func (service *Service) createOnWorkspace(ctx context.Context, userID int64, req CreateLabelRequest) (*schemas.Label, error) {
-	if err := service.RequireMember(ctx, userID, req.WorkspaceID); err != nil {
+	if err := service.RequireMember(ctx, userID, int64(req.WorkspaceID)); err != nil {
 		return nil, err
 	}
 	var existing schemas.Label
 	err := service.orm.WithContext(ctx).
-		Where("workspace_id = ? AND task_id IS NULL AND name = ?", req.WorkspaceID, req.Name).
+		Where("workspace_id = ? AND task_id IS NULL AND name = ?", int64(req.WorkspaceID), req.Name).
 		First(&existing).Error
 	if err == nil {
 		return &existing, nil
@@ -103,7 +104,7 @@ func (service *Service) createOnWorkspace(ctx context.Context, userID int64, req
 		Name:        req.Name,
 		Color:       req.Color,
 		TaskID:      nil,
-		WorkspaceID: req.WorkspaceID,
+		WorkspaceID: int64(req.WorkspaceID),
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}

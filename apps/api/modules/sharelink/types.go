@@ -3,10 +3,10 @@ package sharelink
 import (
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
 
-// ShareLinkResponse is the JSON wire representation of a share link.
 type ShareLinkResponse struct {
 	ID             int64      `json:"id"`
 	ProjectID      int64      `json:"projectId"`
@@ -23,7 +23,7 @@ type ShareLinkResponse struct {
 
 // CreateShareLinkRequest carries the payload for creating a share link.
 type CreateShareLinkRequest struct {
-	ProjectID int64      `json:"projectId"`
+	ProjectID wireid.ID  `json:"projectId"`
 	Label     *string    `json:"label,omitempty"`
 	ExpiresAt *time.Time `json:"expiresAt,omitempty"`
 }

@@ -1,9 +1,12 @@
 // Package project manages project workspaces, columns, and workflows.
 package project
 
-import "time"
+import (
+	"time"
 
-// ProjectStatistics carries aggregate progress metrics for a project.
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
+)
+
 type ProjectStatistics struct {
 	CompletionPercentage int        `json:"completionPercentage"`
 	TotalTasks           int        `json:"totalTasks"`
@@ -26,10 +29,10 @@ type ProjectResponse struct {
 
 // CreateProjectRequest is the payload for creating a project.
 type CreateProjectRequest struct {
-	Name        string `json:"name"`
-	WorkspaceID int64  `json:"workspaceId"`
-	Icon        string `json:"icon,omitempty"`
-	Slug        string `json:"slug,omitempty"`
+	Name        string    `json:"name"`
+	WorkspaceID wireid.ID `json:"workspaceId"`
+	Icon        string    `json:"icon,omitempty"`
+	Slug        string    `json:"slug,omitempty"`
 }
 
 // UpdateProjectRequest is the payload for updating a project.

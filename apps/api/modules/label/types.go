@@ -1,8 +1,11 @@
 package label
 
-import "time"
+import (
+	"time"
 
-// LabelResponse represents the serialized label payload.
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
+)
+
 type LabelResponse struct {
 	ID          int64     `json:"id"`
 	Name        string    `json:"name"`
@@ -14,10 +17,10 @@ type LabelResponse struct {
 
 // CreateLabelRequest is the payload for creating a label.
 type CreateLabelRequest struct {
-	Name        string `json:"name"`
-	Color       string `json:"color"`
-	WorkspaceID int64  `json:"workspaceId"`
-	TaskID      *int64 `json:"taskId,omitempty"`
+	Name        string     `json:"name"`
+	Color       string     `json:"color"`
+	WorkspaceID wireid.ID  `json:"workspaceId"`
+	TaskID      *wireid.ID `json:"taskId,omitempty"`
 }
 
 // UpdateLabelRequest is the payload for updating an existing label.
@@ -28,5 +31,5 @@ type UpdateLabelRequest struct {
 
 // AssignTaskRequest is the payload for attaching a label to a task.
 type AssignTaskRequest struct {
-	TaskID int64 `json:"taskId"`
+	TaskID wireid.ID `json:"taskId"`
 }

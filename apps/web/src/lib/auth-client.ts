@@ -12,6 +12,9 @@ import { roleHas } from "./permissions";
  * with credentials: include), and every cookie-authenticated mutation carries
  * the X-Facile-CSRF header (any value). The bearer token from {token, user} is
  * kept and sent when present; bearer requests are exempt from the CSRF rule.
+ * Ids are normalised to strings in both directions: the API answers int64 and
+ * accepts a decimal string wherever a request body carries an id (Go side:
+ * internal/wireid).
  */
 
 export type User = {

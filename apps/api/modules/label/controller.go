@@ -127,7 +127,7 @@ func (controller *Controller) assignToTask(ctx context.Context, userID, labelID 
 	if req == nil || req.TaskID <= 0 {
 		return nil, errors.Invalid("valid task ID is required")
 	}
-	label, err := controller.service.AssignLabelToTask(ctx, userID, labelID, req.TaskID)
+	label, err := controller.service.AssignLabelToTask(ctx, userID, labelID, int64(req.TaskID))
 	if err != nil {
 		return nil, err
 	}

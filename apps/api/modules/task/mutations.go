@@ -5,6 +5,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 	"gorm.io/gorm"
@@ -93,9 +94,9 @@ func (service *Service) Create(ctx context.Context, userID, projectID int64, req
 	if err != nil {
 		return nil, err
 	}
-	actorID := req.ActorID
+	actorID := wireid.Int64Ptr(req.ActorID)
 	if actorID == nil {
-		actorID = req.UserID
+		actorID = wireid.Int64Ptr(req.UserID)
 	}
 	now := time.Now()
 	task := schemas.Task{
@@ -140,9 +141,9 @@ func (service *Service) Update(ctx context.Context, userID, taskID int64, req *U
 	if column != nil {
 		columnID = &column.ID
 	}
-	actorID := req.ActorID
+	actorID := wireid.Int64Ptr(req.ActorID)
 	if actorID == nil {
-		actorID = req.UserID
+		actorID = wireid.Int64Ptr(req.UserID)
 	}
 	updates := map[string]interface{}{
 		"title":       req.Title,
@@ -212,11 +213,11 @@ func (service *Service) Move(ctx context.Context, userID, taskID int64, req *Mov
 	if err != nil {
 		return nil, err
 	}
-	if task.ProjectID == req.DestinationProjectID {
+	if task.ProjectID == int64(req.DestinationProjectID) {
 		return nil, errors.Invalid("Task is already in that project")
 	}
 	var destProject schemas.Project
-	if err := service.db.WithContext(ctx).First(&destProject, req.DestinationProjectID).Error; err != nil {
+	if err := service.db.WithContext(ctx).First(&destProject, int64(req.DestinationProjectID)).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errors.NotFound("Destination project not found")
 		}
@@ -226,7 +227,7 @@ func (service *Service) Move(ctx context.Context, userID, taskID int64, req *Mov
 		return nil, errors.Invalid("Tasks can only be moved within the same workspace")
 	}
 	var destColumns []schemas.Column
-	if err := service.db.WithContext(ctx).Where("project_id = ?", req.DestinationProjectID).Order("position asc").Find(&destColumns).Error; err != nil {
+	if err := service.db.WithContext(ctx).Where("project_id = ?", int64(req.DestinationProjectID)).Order("position asc").Find(&destColumns).Error; err != nil {
 		return nil, errors.Internal("failed to load destination columns", err)
 	}
 	if len(destColumns) == 0 {
@@ -236,16 +237,16 @@ func (service *Service) Move(ctx context.Context, userID, taskID int64, req *Mov
 	if err != nil {
 		return nil, err
 	}
-	nextNumber, err := calculateNextTaskNumber(ctx, service.db, req.DestinationProjectID)
+	nextNumber, err := calculateNextTaskNumber(ctx, service.db, int64(req.DestinationProjectID))
 	if err != nil {
 		return nil, err
 	}
-	nextPos, err := calculateNextPosition(ctx, service.db, req.DestinationProjectID, &resolvedColumn.ID, resolvedColumn.Slug)
+	nextPos, err := calculateNextPosition(ctx, service.db, int64(req.DestinationProjectID), &resolvedColumn.ID, resolvedColumn.Slug)
 	if err != nil {
 		return nil, err
 	}
 	updates := map[string]interface{}{
-		"project_id": req.DestinationProjectID,
+		"project_id": int64(req.DestinationProjectID),
 		"status":     resolvedColumn.Slug,
 		"column_id":  resolvedColumn.ID,
 		"number":     nextNumber,
@@ -262,6 +263,6 @@ func (service *Service) Move(ctx context.Context, userID, taskID int64, req *Mov
 	return &MoveTaskResponse{
 		Task:                 toResponse(updatedRecord.Task, updatedRecord.Actor, toLabelResponses(updatedRecord.Labels)),
 		SourceProjectID:      task.ProjectID,
-		DestinationProjectID: req.DestinationProjectID,
+		DestinationProjectID: int64(req.DestinationProjectID),
 	}, nil
 }

@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/go-chi/chi/v5"
@@ -80,7 +81,7 @@ func TestTimeEntryCreateAndList(t *testing.T) {
 	start := time.Now().Add(-1 * time.Hour)
 	end := time.Now()
 	body, _ := json.Marshal(CreateTimeEntryRequest{
-		TaskID:      taskID,
+		TaskID:      wireid.ID(taskID),
 		StartTime:   start,
 		EndTime:     &end,
 		Description: "Debugging",
@@ -118,7 +119,7 @@ func TestTimeEntryUpdateAndDelete(t *testing.T) {
 
 	start := time.Now().Add(-2 * time.Hour)
 	entry, _ := service.Create(context.Background(), userID, &CreateTimeEntryRequest{
-		TaskID:    taskID,
+		TaskID:    wireid.ID(taskID),
 		StartTime: start,
 	})
 
@@ -157,7 +158,7 @@ func TestTimeEntryUnauthorized(t *testing.T) {
 	RegisterRoutes(router, service, auth)
 
 	body, _ := json.Marshal(CreateTimeEntryRequest{
-		TaskID:    taskID,
+		TaskID:    wireid.ID(taskID),
 		StartTime: time.Now(),
 	})
 	req := httptest.NewRequest("POST", "/time-entry", bytes.NewReader(body))
@@ -194,12 +195,12 @@ func TestTimeEntryValidationTable(t *testing.T) {
 		},
 		{
 			name:       "end before start",
-			req:        CreateTimeEntryRequest{TaskID: taskID, StartTime: now, EndTime: &before},
+			req:        CreateTimeEntryRequest{TaskID: wireid.ID(taskID), StartTime: now, EndTime: &before},
 			wantStatus: http.StatusBadRequest,
 		},
 		{
 			name:       "valid with duration",
-			req:        CreateTimeEntryRequest{TaskID: taskID, StartTime: now, EndTime: &after},
+			req:        CreateTimeEntryRequest{TaskID: wireid.ID(taskID), StartTime: now, EndTime: &after},
 			wantStatus: http.StatusOK,
 		},
 	}

@@ -4,10 +4,10 @@ package taskrelation
 import (
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
 
-// TaskSummary holds summary information for a task referenced by a relation.
 type TaskSummary struct {
 	ID        int64
 	Title     string
@@ -51,7 +51,7 @@ type TaskRelationResponse struct {
 
 // CreateTaskRelationRequest is the payload for creating a relation between two tasks.
 type CreateTaskRelationRequest struct {
-	SourceTaskID int64  `json:"sourceTaskId"`
-	TargetTaskID int64  `json:"targetTaskId"`
-	RelationType string `json:"relationType"`
+	SourceTaskID wireid.ID `json:"sourceTaskId"`
+	TargetTaskID wireid.ID `json:"targetTaskId"`
+	RelationType string    `json:"relationType"`
 }

@@ -37,6 +37,7 @@ import { Route as LayoutAuthenticatedDashboardWorkspaceWorkspaceIdSearchRouteImp
 import { Route as LayoutAuthenticatedDashboardWorkspaceWorkspaceIdMembersRouteImport } from './routes/_layout/_authenticated/dashboard/workspace/$workspaceId/members'
 import { Route as LayoutAuthenticatedDashboardSettingsWorkspaceSyncRouteImport } from './routes/_layout/_authenticated/dashboard/settings/workspace/sync'
 import { Route as LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRouteImport } from './routes/_layout/_authenticated/dashboard/settings/workspace/notifications'
+import { Route as LayoutAuthenticatedDashboardSettingsWorkspaceMembersRouteImport } from './routes/_layout/_authenticated/dashboard/settings/workspace/members'
 import { Route as LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRouteImport } from './routes/_layout/_authenticated/dashboard/settings/workspace/general'
 import { Route as LayoutAuthenticatedDashboardSettingsAccountPreferencesRouteImport } from './routes/_layout/_authenticated/dashboard/settings/account/preferences'
 import { Route as LayoutAuthenticatedDashboardSettingsAccountNotificationsRouteImport } from './routes/_layout/_authenticated/dashboard/settings/account/notifications'
@@ -207,6 +208,12 @@ const LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => LayoutAuthenticatedDashboardSettingsWorkspaceRoute,
   } as any)
+const LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute =
+  LayoutAuthenticatedDashboardSettingsWorkspaceMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => LayoutAuthenticatedDashboardSettingsWorkspaceRoute,
+  } as any)
 const LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute =
   LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRouteImport.update({
     id: '/general',
@@ -335,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings/account/notifications': typeof LayoutAuthenticatedDashboardSettingsAccountNotificationsRoute
   '/dashboard/settings/account/preferences': typeof LayoutAuthenticatedDashboardSettingsAccountPreferencesRoute
   '/dashboard/settings/workspace/general': typeof LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute
+  '/dashboard/settings/workspace/members': typeof LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute
   '/dashboard/settings/workspace/notifications': typeof LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute
   '/dashboard/settings/workspace/sync': typeof LayoutAuthenticatedDashboardSettingsWorkspaceSyncRoute
   '/dashboard/workspace/$workspaceId/members': typeof LayoutAuthenticatedDashboardWorkspaceWorkspaceIdMembersRoute
@@ -374,6 +382,7 @@ export interface FileRoutesByTo {
   '/dashboard/settings/account/notifications': typeof LayoutAuthenticatedDashboardSettingsAccountNotificationsRoute
   '/dashboard/settings/account/preferences': typeof LayoutAuthenticatedDashboardSettingsAccountPreferencesRoute
   '/dashboard/settings/workspace/general': typeof LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute
+  '/dashboard/settings/workspace/members': typeof LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute
   '/dashboard/settings/workspace/notifications': typeof LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute
   '/dashboard/settings/workspace/sync': typeof LayoutAuthenticatedDashboardSettingsWorkspaceSyncRoute
   '/dashboard/workspace/$workspaceId/members': typeof LayoutAuthenticatedDashboardWorkspaceWorkspaceIdMembersRoute
@@ -418,6 +427,7 @@ export interface FileRoutesById {
   '/_layout/_authenticated/dashboard/settings/account/notifications': typeof LayoutAuthenticatedDashboardSettingsAccountNotificationsRoute
   '/_layout/_authenticated/dashboard/settings/account/preferences': typeof LayoutAuthenticatedDashboardSettingsAccountPreferencesRoute
   '/_layout/_authenticated/dashboard/settings/workspace/general': typeof LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute
+  '/_layout/_authenticated/dashboard/settings/workspace/members': typeof LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute
   '/_layout/_authenticated/dashboard/settings/workspace/notifications': typeof LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute
   '/_layout/_authenticated/dashboard/settings/workspace/sync': typeof LayoutAuthenticatedDashboardSettingsWorkspaceSyncRoute
   '/_layout/_authenticated/dashboard/workspace/$workspaceId/members': typeof LayoutAuthenticatedDashboardWorkspaceWorkspaceIdMembersRoute
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings/account/notifications'
     | '/dashboard/settings/account/preferences'
     | '/dashboard/settings/workspace/general'
+    | '/dashboard/settings/workspace/members'
     | '/dashboard/settings/workspace/notifications'
     | '/dashboard/settings/workspace/sync'
     | '/dashboard/workspace/$workspaceId/members'
@@ -500,6 +511,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings/account/notifications'
     | '/dashboard/settings/account/preferences'
     | '/dashboard/settings/workspace/general'
+    | '/dashboard/settings/workspace/members'
     | '/dashboard/settings/workspace/notifications'
     | '/dashboard/settings/workspace/sync'
     | '/dashboard/workspace/$workspaceId/members'
@@ -543,6 +555,7 @@ export interface FileRouteTypes {
     | '/_layout/_authenticated/dashboard/settings/account/notifications'
     | '/_layout/_authenticated/dashboard/settings/account/preferences'
     | '/_layout/_authenticated/dashboard/settings/workspace/general'
+    | '/_layout/_authenticated/dashboard/settings/workspace/members'
     | '/_layout/_authenticated/dashboard/settings/workspace/notifications'
     | '/_layout/_authenticated/dashboard/settings/workspace/sync'
     | '/_layout/_authenticated/dashboard/workspace/$workspaceId/members'
@@ -768,6 +781,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRouteImport
       parentRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceRoute
     }
+    '/_layout/_authenticated/dashboard/settings/workspace/members': {
+      id: '/_layout/_authenticated/dashboard/settings/workspace/members'
+      path: '/members'
+      fullPath: '/dashboard/settings/workspace/members'
+      preLoaderRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceMembersRouteImport
+      parentRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceRoute
+    }
     '/_layout/_authenticated/dashboard/settings/workspace/general': {
       id: '/_layout/_authenticated/dashboard/settings/workspace/general'
       path: '/general'
@@ -909,6 +929,7 @@ const LayoutAuthenticatedDashboardSettingsProjectsRouteWithChildren =
 
 interface LayoutAuthenticatedDashboardSettingsWorkspaceRouteChildren {
   LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute
+  LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute
   LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute
   LayoutAuthenticatedDashboardSettingsWorkspaceSyncRoute: typeof LayoutAuthenticatedDashboardSettingsWorkspaceSyncRoute
 }
@@ -917,6 +938,8 @@ const LayoutAuthenticatedDashboardSettingsWorkspaceRouteChildren: LayoutAuthenti
   {
     LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute:
       LayoutAuthenticatedDashboardSettingsWorkspaceGeneralRoute,
+    LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute:
+      LayoutAuthenticatedDashboardSettingsWorkspaceMembersRoute,
     LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute:
       LayoutAuthenticatedDashboardSettingsWorkspaceNotificationsRoute,
     LayoutAuthenticatedDashboardSettingsWorkspaceSyncRoute:

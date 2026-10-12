@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"gorm.io/gorm"
 )
@@ -54,7 +55,7 @@ func TestMoveTask(t *testing.T) {
 	}
 
 	moveResp, err := service.controller.move(ctx, userID, created.ID, &MoveTaskRequest{
-		DestinationProjectID: destProjectID,
+		DestinationProjectID: wireid.ID(destProjectID),
 		DestinationStatus:    destCol.Slug,
 	})
 	if err != nil {
@@ -99,7 +100,7 @@ func TestFieldUpdates(t *testing.T) {
 		t.Fatalf("update due date: %v, task: %+v", err, dueTask)
 	}
 
-	actorTask, err := service.controller.updateActor(ctx, userID, task.ID, &UpdateActorRequest{UserID: &userID})
+	actorTask, err := service.controller.updateActor(ctx, userID, task.ID, &UpdateActorRequest{UserID: wireid.FromInt64Ptr(&userID)})
 	if err != nil || actorTask.ActorID == nil || *actorTask.ActorID != userID {
 		t.Fatalf("update actor: %v, task: %+v", err, actorTask)
 	}
@@ -115,7 +116,7 @@ func TestBulkOperations(t *testing.T) {
 
 	prioVal := "high"
 	bulkPrio, err := service.controller.bulk(ctx, userID, &BulkUpdateRequest{
-		TaskIDs:   []int64{t1.ID, t2.ID},
+		TaskIDs:   wireid.FromInt64s([]int64{t1.ID, t2.ID}),
 		Operation: "updatePriority",
 		Value:     &prioVal,
 	})
@@ -125,7 +126,7 @@ func TestBulkOperations(t *testing.T) {
 
 	dueVal := "2026-11-20T12:00:00Z"
 	bulkDue, err := service.controller.bulk(ctx, userID, &BulkUpdateRequest{
-		TaskIDs:   []int64{t1.ID, t2.ID},
+		TaskIDs:   wireid.FromInt64s([]int64{t1.ID, t2.ID}),
 		Operation: "updateDueDate",
 		Value:     &dueVal,
 	})
@@ -134,7 +135,7 @@ func TestBulkOperations(t *testing.T) {
 	}
 
 	bulkDel, err := service.controller.bulk(ctx, userID, &BulkUpdateRequest{
-		TaskIDs:   []int64{t1.ID, t2.ID},
+		TaskIDs:   wireid.FromInt64s([]int64{t1.ID, t2.ID}),
 		Operation: "delete",
 	})
 	if err != nil || bulkDel.UpdatedCount != 2 {
