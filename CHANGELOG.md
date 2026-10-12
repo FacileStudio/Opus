@@ -4,6 +4,23 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-10-12
+
+### Added
+
+- Landing page at `/` with the feature overview and sign-in CTA. Visitors who already hold a
+  session pass straight through to the dashboard.
+- Split-screen auth shell (brand panel plus form) shared by sign-in and sign-up.
+
+### Fixed
+
+- Auth, session and websocket requests doubled the `/api` prefix (`/api/api/...`) whenever
+  `VITE_API_URL` already ended in `/api`: the SSO button 404'd, `GET /auth/me` never returned a
+  session, and the project websocket never connected. All API URL building now goes through one
+  normalizer, covered by regression tests. Completing OIDC sign-in also requires
+  `https://opus.facile.studio/api/auth/oidc/callback` registered as an Opus redirect URI in
+  Registre's seed.
+
 ## [2.8.2] - 2026-10-12
 
 ### Fixed
