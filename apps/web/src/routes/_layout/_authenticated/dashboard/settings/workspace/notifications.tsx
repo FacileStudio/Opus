@@ -31,7 +31,8 @@ function RouteComponent() {
             <span>Event Bus</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            Workspace event notifications and webhooks are dispatched via Antenne.
+            Workspace event notifications and webhooks are dispatched via
+            Antenne.
           </p>
         </div>
       </div>
