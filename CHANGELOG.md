@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.9.1] - 2026-10-12
+
+### Fixed
+
+- `GET /auth/me` answers the bare profile while the client expected `{token, user}`, so every
+  session probe threw after OIDC sign-in and an authenticated browser sat on the landing page
+  instead of entering the app.
+- A failed OIDC login redirected to `/login`, a route the SPA did not serve. It now forwards the
+  reason to the sign-in page, which displays it.
+
 ## [2.9.0] - 2026-10-12
 
 ### Added
