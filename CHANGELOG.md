@@ -4,6 +4,17 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.10.0] - 2026-10-13
+
+### Changed
+
+- The settings area is wider and centred, with a refreshed sidebar, navigation
+  and workspace switcher.
+
+### Added
+
+- Workspace members settings page.
+
 ### Fixed
 
 - Creating a task no longer answers 400. The web create form sent an empty
