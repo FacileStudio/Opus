@@ -41,6 +41,7 @@ import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import { toast } from "@/lib/toast";
 import type { ProjectWithTasks } from "@/types/project";
 import type { Workspace } from "@/types/workspace";
+import { navGroupLabelClassName, navRowClassName } from "./nav-main";
 import CreateProjectModal from "./shared/modals/create-project-modal";
 import {
   AlertDialog,
@@ -104,11 +105,11 @@ function ProjectItem({
       <SidebarMenuButton
         isActive={isActive}
         size="default"
-        className="h-8 ps-3.5 text-sm hover:bg-transparent hover:text-sidebar-accent-foreground active:bg-transparent"
+        className={navRowClassName}
         onClick={onProjectClick}
       >
-        <ProjectIcon className="size-4 shrink-0 text-sidebar-foreground/60" />
-        <span>{project.name}</span>
+        <ProjectIcon className="size-4.5 shrink-0" />
+        <span className="min-w-0 flex-1 truncate">{project.name}</span>
       </SidebarMenuButton>
 
       <DropdownMenu
@@ -122,7 +123,11 @@ function ProjectItem({
           render={
             <button
               type="button"
-              className="absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-lg p-0 text-sidebar-foreground outline-hidden ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground after:-inset-2 after:absolute md:after:hidden peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 group-data-[collapsible=icon]:hidden group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0"
+              className={`absolute top-3 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden ring-sidebar-ring transition-transform focus-visible:ring-2 after:-inset-2 after:absolute md:after:hidden group-data-[collapsible=icon]:hidden group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0 ${
+                isActive
+                  ? "text-sidebar-primary-foreground hover:bg-sidebar-primary-foreground/15 hover:text-sidebar-primary-foreground peer-hover/menu-button:text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground"
+              }`}
             />
           }
         >
@@ -247,22 +252,25 @@ export function NavProjects() {
   return (
     <>
       <Collapsible defaultOpen className="group/collapsible">
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden gap-1 p-2 pt-1">
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden gap-1 p-2">
           <CollapsibleTrigger
             className="data-panel-open:[&_svg]:rotate-90"
             render={
-              <SidebarGroupLabel className="h-7 cursor-pointer justify-between px-0 text-sidebar-accent-foreground" />
+              <SidebarGroupLabel
+                className={navGroupLabelClassName}
+                render={<button type="button" />}
+              />
             }
           >
             <span>{t("navigation:sidebar.projects")}</span>
             <AltArrowRight
               size={14}
-              className="text-sidebar-foreground/60 transition-transform duration-200"
+              className="transition-transform duration-200"
             />
           </CollapsibleTrigger>
           <CollapsiblePanel>
             <SidebarGroupContent>
-              <SidebarMenu className="gap-0.5">
+              <SidebarMenu className="gap-1">
                 {projects?.map((project) => (
                   <ProjectItem
                     key={project.id}
@@ -281,11 +289,13 @@ export function NavProjects() {
                 <SidebarMenuItem className="mt-1">
                   <SidebarMenuButton
                     size="default"
-                    className="h-8 ps-3.5 text-sm hover:bg-transparent hover:text-sidebar-accent-foreground active:bg-transparent"
+                    className={`${navRowClassName} text-sidebar-foreground/70`}
                     onClick={() => setIsCreateProjectModalOpen(true)}
                   >
-                    <AddCircle className="size-4 shrink-0 text-sidebar-foreground/60" />
-                    <span>{t("navigation:projectList.addProject")}</span>
+                    <AddCircle className="size-4.5 shrink-0" />
+                    <span className="min-w-0 flex-1 truncate">
+                      {t("navigation:projectList.addProject")}
+                    </span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>

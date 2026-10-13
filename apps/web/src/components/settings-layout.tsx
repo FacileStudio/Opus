@@ -112,7 +112,12 @@ export function SettingsLayout({
         </div>
       </Layout.Header>
       <Layout.Content>
-        <div className={cn("max-w-4xl mx-auto space-y-8 py-6", className)}>
+        <div
+          className={cn(
+            "mx-auto w-full max-w-3xl space-y-8 px-4 py-6 md:px-8",
+            className,
+          )}
+        >
           {description && (
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">{description}</p>
@@ -141,7 +146,7 @@ export function SettingsSection({
   className,
 }: SettingsSectionProps) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn("space-y-4", className)}>
       <div className="flex items-center gap-3">
         {icon && (
           <div className="flex h-8 w-8 items-center justify-center rounded-md border bg-background">
@@ -172,7 +177,7 @@ export function DangerZoneSection({
   children,
 }: DangerZoneSectionProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-md border border-destructive/20 bg-destructive/10">
           <AlertTriangle size={16} className="text-destructive" />

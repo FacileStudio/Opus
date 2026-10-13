@@ -17,12 +17,12 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title={t("settings:projectWorkflow.pageTitle")} />
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="mx-auto w-full max-w-3xl space-y-8">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">
+          <h1 className="text-xl font-semibold">
             {t("settings:projectWorkflow.title")}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("settings:projectWorkflow.subtitle")}
           </p>
         </div>

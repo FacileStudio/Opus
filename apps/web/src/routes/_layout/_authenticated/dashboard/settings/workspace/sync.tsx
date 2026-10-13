@@ -146,7 +146,7 @@ function RouteComponent() {
 
   if (isLoading) {
     return (
-      <div className="max-w-xl py-8">
+      <div className="mx-auto w-full max-w-3xl py-8">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-muted rounded w-32" />
           <div className="h-4 bg-muted rounded w-80" />
@@ -158,13 +158,10 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title="Sync" />
-      <div className="max-w-xl space-y-8">
-        <div>
-          <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
-            Sync
-          </p>
-          <h1 className="text-lg font-semibold">Nook Pool</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+      <div className="mx-auto w-full max-w-3xl space-y-8">
+        <div className="space-y-2">
+          <h1 className="text-xl font-semibold">Nook Pool</h1>
+          <p className="text-sm text-muted-foreground">
             Connect this workspace to a Nook Pool instance to sync projects and
             tasks with other apps.
           </p>

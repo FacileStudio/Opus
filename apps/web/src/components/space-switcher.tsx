@@ -19,7 +19,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { UserAvatar } from "@/components/user-avatar";
 import { shortcuts } from "@/constants/shortcuts";
 import { getApiUrl } from "@/fetchers/get-api-url";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
@@ -110,99 +109,93 @@ export function SpaceSwitcher() {
 
   return (
     <>
-      <div className="flex items-center justify-between w-full gap-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-              <DropdownMenuTrigger
-                render={
-                  <SidebarMenuButton
-                    className="group h-8 w-full rounded-md px-2 text-sidebar-foreground data-[active=true]:bg-sidebar-accent/50"
-                    size="default"
-                  />
-                }
-              >
-                <div className="flex items-center gap-2 min-w-0 w-full">
-                  <Avatar className="size-5 shrink-0 rounded-md">
-                    {workspace.logo ? (
-                      <AvatarImage
-                        src={getApiUrl(
-                          `/workspace/${workspace.id}/logo?v=${workspace.logo}`,
-                        )}
-                        alt={workspace.name}
-                      />
-                    ) : null}
-                    <AvatarFallback className="rounded-md text-[10px]">
-                      {workspace.name?.charAt(0)?.toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span
-                    className={`truncate text-sm font-medium text-foreground ${isSwitching ? "opacity-50" : ""}`}
-                  >
-                    {workspace.name}
-                  </span>
-                </div>
-                <ChevronDown
-                  size={14}
-                  className={`ml-1 text-foreground/70 opacity-90 group-hover:opacity-100 data-[state=open]:opacity-100 data-[state=open]:rotate-180 transition-all duration-200 ease-out ${isSwitching ? "animate-spin" : ""}`}
-                  data-state={isOpen ? "open" : "closed"}
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger
+              render={
+                <SidebarMenuButton
+                  className="group h-11 w-full rounded-md border border-sidebar-border/60 bg-sidebar-accent/50 px-3 transition-colors hover:bg-sidebar-accent"
+                  size="default"
                 />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="min-w-(--anchor-width) text-sidebar-foreground"
-                align="start"
-                side="bottom"
-                sideOffset={4}
-              >
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>
-                    {t("navigation:workspaceSwitcher.workspaces")}
-                  </DropdownMenuLabel>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
+              }
+            >
+              <div className="flex items-center gap-2 min-w-0 w-full">
+                <Avatar className="size-5 shrink-0 rounded-md">
+                  {workspace.logo ? (
+                    <AvatarImage
+                      src={getApiUrl(
+                        `/workspace/${workspace.id}/logo?v=${workspace.logo}`,
+                      )}
+                      alt={workspace.name}
+                    />
+                  ) : null}
+                  <AvatarFallback className="rounded-md text-[10px]">
+                    {workspace.name?.charAt(0)?.toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <span
+                  className={`truncate text-sm font-medium text-foreground ${isSwitching ? "opacity-50" : ""}`}
+                >
+                  {workspace.name}
+                </span>
+              </div>
+              <ChevronDown
+                size={14}
+                className={`ml-1 text-foreground/70 opacity-90 group-hover:opacity-100 data-[state=open]:opacity-100 data-[state=open]:rotate-180 transition-all duration-200 ease-out ${isSwitching ? "animate-spin" : ""}`}
+                data-state={isOpen ? "open" : "closed"}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="min-w-(--anchor-width) text-sidebar-foreground"
+              align="start"
+              side="bottom"
+              sideOffset={4}
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>
+                  {t("navigation:workspaceSwitcher.workspaces")}
+                </DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
 
-                {workspaces?.map((ws: Workspace, index: number) => (
-                  <DropdownMenuItem
-                    key={ws.id}
-                    onClick={() => {
-                      if (!isSwitching && ws.id !== workspace.id) {
-                        handleWorkspaceChange(ws);
-                        setIsOpen(false);
-                      }
-                    }}
-                    disabled={isSwitching || ws.id === workspace.id}
-                    className="h-7 text-sm data-highlighted:bg-sidebar-accent data-highlighted:text-sidebar-accent-foreground"
-                  >
-                    <span className="flex-1 text-left">
-                      {isSwitching && ws.id === workspace?.id
-                        ? t("navigation:workspaceSwitcher.switching")
-                        : ws.name}
-                    </span>
-                    <DropdownMenuShortcut>
-                      {getModifierKeyText()} {index > 8 ? "0" : index + 1}
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                ))}
-
-                <DropdownMenuSeparator />
+              {workspaces?.map((ws: Workspace, index: number) => (
                 <DropdownMenuItem
+                  key={ws.id}
                   onClick={() => {
-                    setIsCreateSpaceModalOpen(true);
-                    setIsOpen(false);
+                    if (!isSwitching && ws.id !== workspace.id) {
+                      handleWorkspaceChange(ws);
+                      setIsOpen(false);
+                    }
                   }}
+                  disabled={isSwitching || ws.id === workspace.id}
                   className="h-7 text-sm data-highlighted:bg-sidebar-accent data-highlighted:text-sidebar-accent-foreground"
                 >
-                  <span>{t("navigation:workspaceSwitcher.addWorkspace")}</span>
+                  <span className="flex-1 text-left">
+                    {isSwitching && ws.id === workspace?.id
+                      ? t("navigation:workspaceSwitcher.switching")
+                      : ws.name}
+                  </span>
+                  <DropdownMenuShortcut>
+                    {getModifierKeyText()} {index > 8 ? "0" : index + 1}
+                  </DropdownMenuShortcut>
                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
+              ))}
 
-        <div className="h-7 w-7 shrink-0">
-          <UserAvatar />
-        </div>
-      </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setIsCreateSpaceModalOpen(true);
+                  setIsOpen(false);
+                }}
+                className="h-7 text-sm data-highlighted:bg-sidebar-accent data-highlighted:text-sidebar-accent-foreground"
+              >
+                <span>{t("navigation:workspaceSwitcher.addWorkspace")}</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
 
       <CreateSpaceModal
         open={isCreateSpaceModalOpen}

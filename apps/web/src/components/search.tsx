@@ -21,23 +21,17 @@ export default function Search() {
   });
 
   return (
-    <SidebarGroup className="pb-1">
+    <SidebarGroup>
       <button
-        className="inline-flex h-8 w-full cursor-pointer rounded-md border border-input bg-background px-2 py-1.5 text-foreground text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        className="flex h-11 w-full cursor-pointer items-center gap-2.5 rounded-md px-3 text-sm text-sidebar-foreground outline-hidden transition-colors hover:bg-sidebar-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring active:bg-sidebar-accent"
         onClick={() => setOpen(true)}
         type="button"
       >
-        <span className="flex grow items-center">
-          <SearchIcon
-            aria-hidden="true"
-            className="-ms-1 me-3 text-muted-foreground/80"
-            size={16}
-          />
-          <span className="font-normal text-muted-foreground/70">
-            {t("navigation:commandPalette.search")}
-          </span>
+        <SearchIcon aria-hidden="true" className="shrink-0" size={18} />
+        <span className="min-w-0 flex-1 truncate text-left">
+          {t("navigation:commandPalette.search")}
         </span>
-        <kbd className="-me-0.5 ms-6 inline-flex h-4 max-h-full items-center rounded border border-border/70 bg-background px-1 font-[inherit] font-medium text-[0.625rem] text-muted-foreground/60">
+        <kbd className="shrink-0 text-xs opacity-50">
           {shortcuts.search.prefix}
         </kbd>
       </button>

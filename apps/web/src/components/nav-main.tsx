@@ -22,6 +22,12 @@ import {
 import { usePendingInvitations } from "@/hooks/queries/invitation/use-pending-invitations";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 
+export const navGroupLabelClassName =
+  "cursor-pointer justify-between px-3 text-xs font-semibold uppercase tracking-wide text-sidebar-foreground/70 outline-hidden transition-colors hover:text-foreground";
+
+export const navRowClassName =
+  "h-11 rounded-md px-3 text-sm text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground active:bg-sidebar-accent data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground";
+
 export function NavMain() {
   const { t } = useTranslation();
   const { data: workspace } = useActiveWorkspace();
@@ -65,31 +71,42 @@ export function NavMain() {
         <CollapsibleTrigger
           className="data-panel-open:[&_svg]:rotate-90"
           render={
-            <SidebarGroupLabel className="h-7 cursor-pointer justify-between px-0 text-sidebar-accent-foreground" />
+            <SidebarGroupLabel
+              className={navGroupLabelClassName}
+              render={<button type="button" />}
+            />
           }
         >
           <span>{t("navigation:sidebar.overview")}</span>
           <AltArrowRight
             size={14}
-            className="text-sidebar-foreground/60 transition-transform duration-200"
+            className="transition-transform duration-200"
           />
         </CollapsibleTrigger>
         <CollapsiblePanel>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-0.5">
+            <SidebarMenu className="gap-1">
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton
                     tooltip={item.title}
                     isActive={item.isActive}
                     size="default"
-                    className="h-8 ps-3.5 text-sm hover:bg-transparent hover:text-sidebar-accent-foreground active:bg-transparent"
+                    className={navRowClassName}
                     onClick={() => navigate({ to: item.url })}
                   >
-                    <item.icon className="size-4 shrink-0 text-sidebar-foreground/60" />
-                    <span>{item.title}</span>
+                    <item.icon className="size-4.5 shrink-0" />
+                    <span className="min-w-0 flex-1 truncate">
+                      {item.title}
+                    </span>
                     {item.badge !== null && (
-                      <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm border border-sidebar-border/60 px-1 text-[11px] font-medium text-sidebar-foreground/80">
+                      <span
+                        className={
+                          item.isActive
+                            ? "flex h-5 min-w-5 items-center justify-center rounded-full border border-sidebar-primary-foreground/30 px-1 text-[11px] font-medium text-sidebar-primary-foreground"
+                            : "flex h-5 min-w-5 items-center justify-center rounded-full border border-sidebar-border/60 px-1 text-[11px] font-medium text-sidebar-foreground/80"
+                        }
+                      >
                         {item.badge}
                       </span>
                     )}

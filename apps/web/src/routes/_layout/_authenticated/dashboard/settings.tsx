@@ -3,6 +3,7 @@ import {
   Folder2,
   Settings,
   User,
+  UsersGroupTwoRounded,
 } from "@solar-icons/react";
 import {
   createFileRoute,
@@ -38,6 +39,9 @@ function SettingsLayout() {
     if (pathname.includes("/dashboard/settings/account")) {
       return "account";
     }
+    if (pathname.includes("/dashboard/settings/workspace/members")) {
+      return "members";
+    }
     if (pathname.includes("/dashboard/settings/workspace")) {
       return "workspace";
     }
@@ -71,6 +75,13 @@ function SettingsLayout() {
       disabled: false,
     },
     {
+      id: "members",
+      label: t("team:members.pageTitle"),
+      icon: UsersGroupTwoRounded,
+      to: "/dashboard/settings/workspace/members",
+      disabled: false,
+    },
+    {
       id: "project",
       label: t("navigation:sidebar.projects"),
       icon: Folder2,
@@ -99,29 +110,33 @@ function SettingsLayout() {
             {t("navigation:page.backToWorkspace")}
           </Button>
 
-          <h1 className="text-lg font-semibold">
-            {t("navigation:page.settingsTitle")}
-          </h1>
+          <div className="flex flex-col gap-4">
+            <h1 className="text-2xl font-semibold">
+              {t("navigation:page.settingsTitle")}
+            </h1>
 
-          <div className="mt-4 flex items-center gap-1.5 border-b border-border pb-3">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                disabled={tab.disabled}
-                onClick={() => navigate({ to: tab.to })}
-                className={cn(
-                  "inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-medium transition-colors",
-                  activeTab === tab.id
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                  tab.disabled && "opacity-40 pointer-events-none",
-                )}
-              >
-                <tab.icon className="size-4" />
-                {tab.label}
-              </button>
-            ))}
+            <div className="flex w-full items-center gap-1 overflow-x-auto">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  disabled={tab.disabled}
+                  onClick={() => navigate({ to: tab.to })}
+                  className={cn(
+                    "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors",
+                    activeTab === tab.id
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    tab.disabled && "pointer-events-none opacity-50",
+                  )}
+                >
+                  <tab.icon className="size-4" />
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="border-b border-border" />
           </div>
         </div>
 

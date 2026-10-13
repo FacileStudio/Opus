@@ -204,15 +204,12 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title={t("settings:informationPage.pageTitle")} />
-      <div className="max-w-xl space-y-8">
-        <div>
-          <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
-            {t("settings:account")}
-          </p>
-          <h1 className="text-lg font-semibold">
+      <div className="mx-auto w-full max-w-3xl space-y-8">
+        <div className="space-y-2">
+          <h1 className="text-xl font-semibold">
             {t("settings:informationPage.title")}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("settings:informationPage.subtitle")}
           </p>
         </div>

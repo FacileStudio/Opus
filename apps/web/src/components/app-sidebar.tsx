@@ -11,6 +11,7 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { UserAvatar } from "@/components/user-avatar";
 import { VersionDisplay } from "@/components/version-display";
 import { shortcuts } from "@/constants/shortcuts";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";
@@ -31,10 +32,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar
       collapsible="offcanvas"
       variant="inset"
-      className="border-none pt-1.5"
+      className="border-none py-3"
       {...props}
     >
-      <SidebarHeader className="pt-1 pb-1.5">
+      <SidebarHeader className="pt-2 pb-4">
         <SpaceSwitcher />
       </SidebarHeader>
       <SidebarContent className="overflow-hidden gap-1 py-1">
@@ -42,10 +43,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain />
         <NavProjects />
       </SidebarContent>
-      <SidebarFooter>
-        <div className="flex items-center justify-between">
+      <SidebarFooter className="pt-4">
+        <div className="flex h-11 items-center gap-2 rounded-md px-2 transition-colors hover:bg-sidebar-accent">
+          <UserAvatar />
           <VersionDisplay />
-          <ThemeToggleDropdown />
+          <div className="ms-auto">
+            <ThemeToggleDropdown />
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>

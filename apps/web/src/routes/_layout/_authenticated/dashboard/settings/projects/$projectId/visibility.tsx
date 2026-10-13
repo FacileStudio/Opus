@@ -91,12 +91,12 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title={t("settings:projectVisibility.pageTitle")} />
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="mx-auto w-full max-w-3xl space-y-8">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">
+          <h1 className="text-xl font-semibold">
             {t("settings:projectVisibility.title")}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("settings:projectVisibility.subtitle")}
           </p>
         </div>
