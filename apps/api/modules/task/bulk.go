@@ -200,6 +200,8 @@ func (service *Service) Bulk(ctx context.Context, userID int64, req *BulkUpdateR
 		updatedCount, err = bulkDelete(ctx, service.db, taskIDs)
 	case "updateDueDate":
 		updatedCount, err = bulkUpdateDueDate(ctx, service.db, taskIDs, req.Value)
+	case "addLabel":
+		updatedCount, err = bulkAddLabel(ctx, service, tasks, req.Value)
 	default:
 		return nil, errors.Invalid("Unknown operation: " + req.Operation)
 	}

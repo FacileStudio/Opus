@@ -24,7 +24,7 @@ async function createTask(
     json: {
       title,
       description,
-      userId,
+      userId: userId || undefined,
       status,
       startDate: startDate?.toISOString() || undefined,
       dueDate: dueDate?.toISOString() || undefined,

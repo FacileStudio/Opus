@@ -5,7 +5,7 @@ async function updateTaskDueDate(taskId: string, task: Task) {
   const response = await client.task["due-date"][":id"].$put({
     param: { id: taskId },
     json: {
-      dueDate: task.dueDate || "",
+      dueDate: task.dueDate ?? null,
     },
   });
 

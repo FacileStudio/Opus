@@ -7,7 +7,7 @@ async function updateTaskActor(taskId: string, task: UpdateTaskActorPayload) {
   const response = await client.task.actor[":id"].$put({
     param: { id: taskId },
     json: {
-      userId: task.userId || "",
+      userId: task.userId || undefined,
     },
   });
 

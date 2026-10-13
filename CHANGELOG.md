@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Creating a task no longer answers 400. The web create form sent an empty
+  `userId` for an unassigned task, which the strict request decoder rejected as
+  an invalid id; an absent assignee is now omitted. The same empty-string leak
+  is fixed on the full task update, the actor update and the due-date update, so
+  unassigning a task and clearing its due date work again.
+- `PATCH /task/bulk` understands the `addLabel` operation the board and backlog
+  toolbars send, applying a workspace label to every selected task.
+
 ## [2.9.2] - 2026-10-12
 
 ### Fixed
