@@ -4,6 +4,17 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.9.2] - 2026-10-12
+
+### Fixed
+
+- Request bodies carrying ids accept the decimal string form the web client and the MCP server
+  actually send. Every create/update endpoint binding an id to `int64` — project, label, task
+  (create, update, actor, move, bulk), activity comment, time entry, share link, task relation,
+  workflow rule and column reorder — answered `400 invalid JSON body` when the id arrived as a
+  string. The wire type now decodes both forms strictly (`internal/wireid`), with tests pinning
+  the exact payload the frontend sends.
+
 ## [2.9.1] - 2026-10-12
 
 ### Fixed
