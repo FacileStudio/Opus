@@ -1,4 +1,4 @@
-import { Bell, Settings, User } from "@solar-icons/react";
+import { Bell, Key, Settings, User } from "@solar-icons/react";
 import {
   createFileRoute,
   Link,
@@ -44,6 +44,11 @@ function RouteComponent() {
       title: t("settings:preferences"),
       url: "/dashboard/settings/account/preferences",
       icon: Settings,
+    },
+    {
+      title: t("settings:developer"),
+      url: "/dashboard/settings/account/developer",
+      icon: Key,
     },
   ];
 

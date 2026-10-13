@@ -482,6 +482,7 @@
 				"columnName": "Name",
 				"columnKey": "Key",
 				"columnCreated": "Created",
+				"columnLastUsed": "Last used",
 				"columnExpires": "Expires",
 				"columnActions": "Actions",
 				"unnamedKey": "Unnamed Key",

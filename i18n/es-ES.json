@@ -393,6 +393,7 @@
 				"columnName": "Nombre",
 				"columnKey": "Clave",
 				"columnCreated": "Fecha de creación",
+				"columnLastUsed": "Último uso",
 				"columnExpires": "Fecha de expiración",
 				"columnActions": "Acciones",
 				"unnamedKey": "Clave sin nombre",

@@ -482,6 +482,7 @@
 				"columnName": "Назва",
 				"columnKey": "Ключ",
 				"columnCreated": "Створено",
+				"columnLastUsed": "Останнє використання",
 				"columnExpires": "Закінчується",
 				"columnActions": "Дії",
 				"unnamedKey": "Ключ без назви",

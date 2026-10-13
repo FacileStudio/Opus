@@ -65,6 +65,14 @@ export type WorkspaceInvitation = {
   inviterName: string;
 };
 
+export type ApiToken = {
+  id: string;
+  name: string;
+  createdAt: string;
+  lastUsedAt: string;
+  token?: string;
+};
+
 export type ApiError = {
   message: string;
   status?: number;
@@ -225,6 +233,20 @@ function mapInvitation(invitation: {
     workspaceId: toStr(invitation.workspaceId),
     workspaceName: invitation.workspaceName ?? "",
     inviterName: invitation.inviterName ?? "",
+  };
+}
+
+function mapApiToken(token: {
+  id: number | string;
+  name: string;
+  createdAt?: string;
+  lastUsedAt?: string;
+}): ApiToken {
+  return {
+    id: toStr(token.id),
+    name: token.name,
+    createdAt: token.createdAt ?? "",
+    lastUsedAt: token.lastUsedAt ?? "",
   };
 }
 
@@ -755,6 +777,57 @@ export const authClient = {
       return hasRolePermission(
         input.role as WorkspaceMember["role"],
         input.permissions,
+      );
+    },
+  },
+
+  // Personal API tokens: a porte session with a label. They authenticate on
+  // every route a login does and never expire, which is what a CLI in a
+  // scripted job needs. The plaintext value is returned once, by create.
+  apiTokens: {
+    async list(): ApiResult<ApiToken[]> {
+      const result = await request<{
+        tokens?: Array<{
+          id: number | string;
+          name: string;
+          createdAt?: string;
+          lastUsedAt?: string;
+        }>;
+      }>("/auth/api-tokens");
+      if (result.error) {
+        return { data: null, error: result.error };
+      }
+      return { data: (result.data.tokens ?? []).map(mapApiToken), error: null };
+    },
+
+    async create(input: { name: string }): ApiResult<ApiToken> {
+      const result = await request<{
+        id: number | string;
+        name: string;
+        createdAt?: string;
+        lastUsedAt?: string;
+        token: string;
+      }>(
+        "/auth/api-tokens",
+        { method: "POST", body: JSON.stringify({ name: input.name }) },
+        { mutation: true },
+      );
+      if (result.error) {
+        return { data: null, error: result.error };
+      }
+      return {
+        data: { ...mapApiToken(result.data), token: result.data.token },
+        error: null,
+      };
+    },
+
+    async revoke(input: {
+      id: string;
+    }): Promise<{ data: { deleted: boolean } | null; error: ApiError | null }> {
+      return request<{ deleted: boolean }>(
+        `/auth/api-tokens/${input.id}`,
+        { method: "DELETE" },
+        { mutation: true },
       );
     },
   },

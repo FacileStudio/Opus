@@ -4,6 +4,19 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.11.0] - 2026-10-13
+
+### Added
+
+- Personal API tokens: `POST /auth/api-tokens` mints one, `GET /auth/api-tokens`
+  lists the caller's own, `DELETE /auth/api-tokens/{id}` revokes one. A token is a
+  labelled porte session, so it authenticates as its owner on every route a browser
+  login does, and it never idles out — which is what a CLI or a cron job needs. The
+  plaintext comes back once, on create; the server stores only the hash.
+- The account settings area has a Developer page that lists those tokens, creates
+  one with the value and the `~/.opus.yml` / `OPUS_TOKEN` snippets shown once, and
+  revokes one behind a confirmation.
+
 ## [2.10.0] - 2026-10-13
 
 ### Changed

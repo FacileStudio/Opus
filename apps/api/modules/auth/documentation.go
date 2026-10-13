@@ -109,11 +109,50 @@ func credentialRoutes() []documentation.Route {
 	}
 }
 
+func tokenRoutes() []documentation.Route {
+	return []documentation.Route{
+		{
+			Method:       "GET",
+			Path:         "/auth/api-tokens",
+			Summary:      "List the caller's personal API tokens",
+			Description:  "Returns the named tokens only. Browser logins share the session store but are not tokens and are not listed here.",
+			Auth:         "bearer",
+			ResponseBody: `{"tokens":[{"id":int64,"name":string,"createdAt":string,"lastUsedAt":string}]}`,
+		},
+		{
+			Method:       "POST",
+			Path:         "/auth/api-tokens",
+			Summary:      "Mint a personal API token",
+			Description:  "Creates a named token that never expires and authenticates as the caller on every route a session does. The plaintext value is returned once and cannot be read again. A cookie-authenticated mutation must carry X-Facile-CSRF.",
+			Auth:         "bearer",
+			RequestBody:  `{"name":string}`,
+			ResponseBody: `{"id":int64,"name":string,"createdAt":string,"lastUsedAt":string,"token":string}`,
+		},
+		{
+			Method:       "DELETE",
+			Path:         "/auth/api-tokens/{id}",
+			Summary:      "Revoke a personal API token",
+			Description:  "Ends one named token by id. Refuses an id that is not a named token of the caller. A cookie-authenticated mutation must carry X-Facile-CSRF.",
+			Auth:         "bearer",
+			PathParams:   []documentation.Field{{Name: "id", Type: "int64", Description: "Token id"}},
+			ResponseBody: `{"deleted":true}`,
+			Errors: []documentation.Error{
+				{Status: 404, Code: "not_found", Description: "No such named token for this caller"},
+			},
+		},
+	}
+}
+
 // Documentation returns the auth module API reference metadata.
 func Documentation() documentation.Module {
+	routes := make([]documentation.Route, 0)
+	routes = append(routes, oidcRoutes()...)
+	routes = append(routes, profileRoutes()...)
+	routes = append(routes, credentialRoutes()...)
+	routes = append(routes, tokenRoutes()...)
 	return documentation.Module{
 		Name:        "auth",
-		Description: "Authentication, through the suite's porte kit. A session is a random 32 byte token stored SHA-256 hashed, sent as Authorization: Bearer <token> or, after a single sign-on login, as an HttpOnly __Host-session cookie. A cookie-authenticated request that is not GET, HEAD or OPTIONS must also carry an X-Facile-CSRF header with any non-empty value.",
-		Routes:      append(oidcRoutes(), append(profileRoutes(), credentialRoutes()...)...),
+		Description: "Authentication, through the suite's porte kit. A session is a random 32 byte token stored SHA-256 hashed, sent as Authorization: Bearer <token> or, after a single sign-on login, as an HttpOnly __Host-session cookie. A cookie-authenticated request that is not GET, HEAD or OPTIONS must also carry an X-Facile-CSRF header with any non-empty value. A personal API token is that same session with a label, so it authenticates everywhere a login does and is revoked from /auth/api-tokens.",
+		Routes:      routes,
 	}
 }

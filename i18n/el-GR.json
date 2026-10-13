@@ -482,6 +482,7 @@
 				"columnName": "Όνομα",
 				"columnKey": "Κλειδί",
 				"columnCreated": "Δημιουργήθηκε",
+				"columnLastUsed": "Τελευταία χρήση",
 				"columnExpires": "Λήγει",
 				"columnActions": "Ενέργειες",
 				"unnamedKey": "Κλειδί χωρίς όνομα",

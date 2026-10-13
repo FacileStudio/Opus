@@ -7,12 +7,17 @@ import (
 	"strings"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
+	"github.com/FacileStudio/porte"
 	"github.com/FacileStudio/porte/local"
 	"github.com/FacileStudio/porte/session"
 	"github.com/FacileStudio/tronc/errors"
 
 	"gorm.io/gorm"
 )
+
+// tokenNameMaxLength caps what a caller may name a token, so a name cannot be
+// used as an unbounded log line or list cell.
+const tokenNameMaxLength = 64
 
 // Service is what is left of Opus's authentication after porte took the
 // credential: the profile lookup the rest of the app reads, the /me answer,
@@ -136,4 +141,72 @@ func (service *Service) UpdateProfile(ctx context.Context, userID int64, req Upd
 func (service *Service) ChangePassword(w http.ResponseWriter, r *http.Request, userID int64, current, next string) error {
 	_, _, err := service.passwords.ChangePassword(r.Context(), w, r, userID, current, next)
 	return err
+}
+
+// IssueToken mints a personal API token for a user. A named token is a porte
+// session carrying a label, so it authenticates on every route a session does,
+// it never expires, and porte's sweeper leaves it alone.
+func (service *Service) IssueToken(ctx context.Context, userID int64, name string) (string, TokenResponse, error) {
+	label, err := normalizeTokenName(name)
+	if err != nil {
+		return "", TokenResponse{}, err
+	}
+	rawToken, session, err := service.sessions.Issue(ctx, userID, label)
+	if err != nil {
+		return "", TokenResponse{}, err
+	}
+	return rawToken, toTokenResponse(session), nil
+}
+
+// ListTokens returns the caller's named tokens. Unlabelled sessions are
+// browser logins, and showing somebody their own laptop as an API token, with
+// a revoke button next to it, is not the same feature.
+func (service *Service) ListTokens(ctx context.Context, userID int64) ([]TokenResponse, error) {
+	held, err := service.sessions.List(ctx, userID)
+	if err != nil {
+		return nil, errors.Internal("failed to list api tokens", err)
+	}
+	tokens := make([]TokenResponse, 0, len(held))
+	for _, session := range held {
+		if session.IsAPIToken() {
+			tokens = append(tokens, toTokenResponse(session))
+		}
+	}
+	return tokens, nil
+}
+
+// RevokeToken ends one named token. It refuses an unlabelled session, so the
+// endpoint cannot be used to log a browser out, and porte's Revoke already
+// scopes the write to the caller's own id.
+func (service *Service) RevokeToken(ctx context.Context, userID, tokenID int64) error {
+	held, err := service.sessions.List(ctx, userID)
+	if err != nil {
+		return errors.Internal("failed to read api tokens", err)
+	}
+	for _, session := range held {
+		if session.ID == tokenID && session.IsAPIToken() {
+			return service.sessions.Revoke(ctx, userID, tokenID)
+		}
+	}
+	return errors.NotFound("token not found")
+}
+
+func normalizeTokenName(name string) (string, error) {
+	trimmed := strings.TrimSpace(name)
+	if trimmed == "" {
+		return "", errors.Invalid("name is required")
+	}
+	if len(trimmed) > tokenNameMaxLength {
+		return "", errors.Invalid("name must be at most 64 characters")
+	}
+	return trimmed, nil
+}
+
+func toTokenResponse(session porte.Session) TokenResponse {
+	return TokenResponse{
+		ID:         session.ID,
+		Name:       session.Label,
+		CreatedAt:  session.CreatedAt,
+		LastUsedAt: session.LastUsedAt,
+	}
 }

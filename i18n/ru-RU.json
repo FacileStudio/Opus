@@ -482,6 +482,7 @@
 				"columnName": "Название",
 				"columnKey": "Ключ",
 				"columnCreated": "Создан",
+				"columnLastUsed": "Последнее использование",
 				"columnExpires": "Истекает",
 				"columnActions": "Действия",
 				"unnamedKey": "Безымянный ключ",

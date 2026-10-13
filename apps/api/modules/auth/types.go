@@ -42,6 +42,28 @@ type ChangePasswordResponse struct {
 	Message string `json:"message"`
 }
 
+// CreateTokenRequest is the body of POST /auth/api-tokens. The name is what
+// makes a token recognisable in a list, so it is required.
+type CreateTokenRequest struct {
+	Name string `json:"name"`
+}
+
+// TokenResponse describes one personal API token. Token carries the plaintext
+// credential and is set only on the create answer: porte stores a hash, so no
+// later read can show the value again.
+type TokenResponse struct {
+	ID         int64     `json:"id"`
+	Name       string    `json:"name"`
+	CreatedAt  time.Time `json:"createdAt"`
+	LastUsedAt time.Time `json:"lastUsedAt"`
+	Token      string    `json:"token,omitempty"`
+}
+
+// TokenListResponse is the caller's named tokens, newest first.
+type TokenListResponse struct {
+	Tokens []TokenResponse `json:"tokens"`
+}
+
 // UserResponse is the profile the frontend reads. IDs are int64 on the wire:
 // the port adopts the suite's identity model, and the frontend treats them as
 // opaque strings anyway.

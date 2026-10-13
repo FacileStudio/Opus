@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
@@ -87,6 +88,34 @@ func (controller *Controller) login(w http.ResponseWriter, r *http.Request, req 
 		return nil, err
 	}
 	return &AuthResponse{Token: token, User: toUserResponse(user)}, nil
+}
+
+// createToken mints a personal API token and answers it once, in plaintext.
+func (controller *Controller) createToken(ctx context.Context, userID int64, req *CreateTokenRequest) (*TokenResponse, error) {
+	rawToken, token, err := controller.service.IssueToken(ctx, userID, req.Name)
+	if err != nil {
+		return nil, err
+	}
+	token.Token = rawToken
+	return &token, nil
+}
+
+// listTokens returns the caller's own tokens, never anybody else's.
+func (controller *Controller) listTokens(ctx context.Context, userID int64) (*TokenListResponse, error) {
+	tokens, err := controller.service.ListTokens(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return &TokenListResponse{Tokens: tokens}, nil
+}
+
+// revokeToken ends one token by id.
+func (controller *Controller) revokeToken(ctx context.Context, userID int64, tokenID string) error {
+	id, err := strconv.ParseInt(tokenID, 10, 64)
+	if err != nil || id <= 0 {
+		return errors.Invalid("token id must be a positive integer")
+	}
+	return controller.service.RevokeToken(ctx, userID, id)
 }
 
 func toUserResponse(user *schemas.User) *UserResponse {

@@ -393,6 +393,7 @@
 				"columnName": "Naam",
 				"columnKey": "Sleutel",
 				"columnCreated": "Aangemaakt",
+				"columnLastUsed": "Laatst gebruikt",
 				"columnExpires": "Verloopt",
 				"columnActions": "Acties",
 				"unnamedKey": "Naamloze sleutel",

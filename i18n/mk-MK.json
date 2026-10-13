@@ -482,6 +482,7 @@
 				"columnName": "Име",
 				"columnKey": "Клуч",
 				"columnCreated": "Креиран",
+				"columnLastUsed": "Последно користење",
 				"columnExpires": "Истекува",
 				"columnActions": "Акции",
 				"unnamedKey": "Неименуван клуч",
