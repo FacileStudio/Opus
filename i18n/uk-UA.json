@@ -632,8 +632,10 @@
 			"toastUpdated": "Видимість оновлено",
 			"toastUpdateError": "Не вдалося оновити видимість",
 			"shareLinks": {
-				"accessCount": "{{count}} view",
-				"accessCount_other": "{{count}} views",
+				"accessCount_one": "{{count}} перегляд",
+				"accessCount_few": "{{count}} перегляди",
+				"accessCount_many": "{{count}} переглядів",
+				"accessCount_other": "{{count}} перегляду",
 				"active": "Active",
 				"copyToast": "Share link copied",
 				"create": "Create Link",
