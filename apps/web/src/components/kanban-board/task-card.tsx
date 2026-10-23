@@ -183,14 +183,12 @@ function TaskCard({ task }: TaskCardProps) {
           {/** biome-ignore lint/a11y/noStaticElementInteractions: false positive for onClick and onKeyDown */}
           <div
             onClick={handleTaskCardClick}
-            className={`group relative rounded-lg border bg-background p-3 shadow-xs/5 transition-all duration-200 ease-out ${
+            className={`group relative rounded-lg bg-background p-3 transition-all duration-200 ease-out ${
               isDragging
-                ? "cursor-grabbing border-ring/40 bg-card shadow-lg"
-                : "cursor-pointer hover:border-border/90 hover:bg-background hover:shadow-sm active:cursor-grabbing"
+                ? "cursor-grabbing bg-card shadow-lg"
+                : "cursor-pointer hover:bg-card active:cursor-grabbing"
             } ${
-              isTaskSelected
-                ? "border-ring/40 bg-accent/50 shadow-sm ring-1 ring-inset ring-ring/30"
-                : "border-border"
+              isTaskSelected ? "bg-accent ring-1 ring-inset ring-ring/30" : ""
             } ${isTaskFocused ? "ring-2 ring-inset ring-ring/50" : ""}`}
             onKeyDown={(e) => {
               if (e.key === "Enter") {

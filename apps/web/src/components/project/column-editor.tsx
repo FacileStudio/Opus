@@ -133,7 +133,7 @@ export default function ColumnEditor({ projectId }: ColumnEditorProps) {
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
-            className="flex items-center gap-2 p-2 border border-border rounded-md bg-sidebar hover:bg-sidebar-accent/50 transition-colors"
+            className="flex items-center gap-2 p-2 rounded-md bg-sidebar hover:bg-sidebar-accent/50 transition-colors"
           >
             <Reorder
               size={16}
