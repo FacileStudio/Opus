@@ -4,6 +4,17 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.16.0] - 2026-10-23
+
+### Added
+
+- My tasks refreshes live when someone else changes a task in the workspace.
+
+### Changed
+
+- Project events also reach clients listening on the project's workspace.
+- The project view switcher and the backlog filter button no longer have borders.
+
 ## [2.15.0] - 2026-10-23
 
 ### Added
