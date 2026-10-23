@@ -4,6 +4,15 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.11.2] - 2026-10-23
+
+### Fixed
+
+- Board cards show a pointer on hover and a grabbing cursor while pressed or
+  dragged, instead of the move cursor.
+- Clearing a task's priority sends `no-priority`, which the API accepts, instead of
+  an empty string, which it rejects with a 400.
+
 ## [2.11.1] - 2026-10-23
 
 ### Fixed
