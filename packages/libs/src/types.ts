@@ -45,6 +45,21 @@ export type ProjectRecord = {
   [key: string]: unknown;
 };
 
+export type MyTask = {
+  id: string;
+  projectId: string;
+  projectSlug: string;
+  projectName: string;
+  projectIcon: string;
+  number: number;
+  title: string;
+  status: string;
+  priority: string;
+  dueDate?: string | null;
+  subtaskTotal: number;
+  subtaskDone: number;
+};
+
 export type TasksApiResponse = {
   data: {
     id: string;
@@ -202,6 +217,12 @@ export type AppSchema = {
         priority?: string;
       };
     }>;
+  };
+  "/task/me": {
+    $get: Endpoint<
+      { query: { workspaceId: string; includeDone?: string } },
+      MyTask[]
+    >;
   };
   "/task/:id": {
     $get: Endpoint<{ param: { id: string } }>;

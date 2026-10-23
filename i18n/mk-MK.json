@@ -1103,7 +1103,8 @@
 			"members": "Членови",
 			"invitations": "Покани",
 			"more": "Повеќе",
-			"backToBoard": "Назад на табла"
+			"backToBoard": "Назад на табла",
+			"myTasks": "My tasks"
 		},
 		"projectList": {
 			"viewProject": "Погледни проект",
@@ -1722,6 +1723,11 @@
 		"shortLink": {
 			"loading": "Opening task...",
 			"notFound": "Task {{key}} was not found."
+		},
+		"myTasks": {
+			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
+			"emptyTitle": "Nothing assigned to you",
+			"pageTitle": "My tasks"
 		}
 	},
 	"invitations": {

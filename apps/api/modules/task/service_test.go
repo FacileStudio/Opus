@@ -201,3 +201,41 @@ func TestSubtaskProgress(t *testing.T) {
 		t.Fatalf("expected 1 of 2 subtasks done, got %d of %d", record.SubtaskDone, record.SubtaskTotal)
 	}
 }
+
+func TestListMineExcludesDoneAndArchived(t *testing.T) {
+	service, db := newTestService(t)
+	userID, projectID, col := seedProject(t, db)
+	ctx := context.Background()
+	final := schemas.Column{ProjectID: projectID, Name: "Done", Slug: "done", Position: 1, IsFinal: true, CreatedAt: time.Now(), UpdatedAt: time.Now()}
+	if err := db.Create(&final).Error; err != nil {
+		t.Fatalf("seed final column: %v", err)
+	}
+	actor := wireid.ID(userID)
+	for _, status := range []string{col.Slug, "done", "archived"} {
+		if _, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{Title: status, Status: status, ActorID: &actor}); err != nil {
+			t.Fatalf("create %s: %v", status, err)
+		}
+	}
+	if _, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{Title: "unassigned", Status: col.Slug}); err != nil {
+		t.Fatalf("create unassigned: %v", err)
+	}
+	var project schemas.Project
+	if err := db.First(&project, projectID).Error; err != nil {
+		t.Fatalf("load project: %v", err)
+	}
+
+	open, err := service.controller.listMine(ctx, userID, project.WorkspaceID, false)
+	if err != nil {
+		t.Fatalf("list mine: %v", err)
+	}
+	if len(open) != 1 || open[0].Status != col.Slug || open[0].ProjectSlug != project.Slug {
+		t.Fatalf("unexpected open tasks: %+v", open)
+	}
+	all, err := service.controller.listMine(ctx, userID, project.WorkspaceID, true)
+	if err != nil {
+		t.Fatalf("list mine with done: %v", err)
+	}
+	if len(all) != 2 {
+		t.Fatalf("expected 2 tasks with includeDone, got %d", len(all))
+	}
+}

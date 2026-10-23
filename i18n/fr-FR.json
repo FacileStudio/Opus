@@ -1100,6 +1100,7 @@
 		"sidebar": {
 			"overview": "Vue d'ensemble",
 			"projects": "Projets",
+			"myTasks": "Mes tâches",
 			"members": "Membres",
 			"invitations": "Invitations",
 			"more": "Plus",
@@ -1329,6 +1330,11 @@
 		}
 	},
 	"tasks": {
+		"myTasks": {
+			"pageTitle": "Mes tâches",
+			"emptyTitle": "Rien ne vous est assigné",
+			"emptyDescription": "Les tâches qui vous sont assignées dans cet espace de travail apparaîtront ici."
+		},
 		"status": {
 			"label": "Statut",
 			"to-do": "À faire",
