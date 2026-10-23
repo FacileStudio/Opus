@@ -2,6 +2,7 @@
 
 import { hc } from "hono/client";
 import { resolveApiBaseUrl } from "./api-url";
+import { restringify } from "./stringify-ids";
 import type { AppType } from "./types";
 
 const apiUrl = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
@@ -28,13 +29,31 @@ export const client = hc<AppType>(apiUrl, {
       ...init,
       headers,
       credentials: "include",
-    }).catch((error) => {
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        throw new Error(
-          `Failed to connect to API server at ${apiUrl}. This might be due to CORS configuration issues or the server not running. Please check your environment variables and server status.`,
-        );
-      }
-      throw error;
-    });
+    })
+      .then(async (response) => {
+        if (!response.headers.get("content-type")?.includes("json")) {
+          return response;
+        }
+        const body = await response.text();
+        if (!body) {
+          return response;
+        }
+        const responseHeaders = new Headers(response.headers);
+        responseHeaders.delete("content-length");
+        responseHeaders.delete("content-encoding");
+        return new Response(restringify(body), {
+          status: response.status,
+          statusText: response.statusText,
+          headers: responseHeaders,
+        });
+      })
+      .catch((error) => {
+        if (error instanceof TypeError && error.message.includes("fetch")) {
+          throw new Error(
+            `Failed to connect to API server at ${apiUrl}. This might be due to CORS configuration issues or the server not running. Please check your environment variables and server status.`,
+          );
+        }
+        throw error;
+      });
   },
 });
