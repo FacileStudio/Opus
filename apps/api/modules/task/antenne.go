@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/authcontext"
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
@@ -20,6 +21,9 @@ func (service *Service) emit(ctx context.Context, channel string, tasks ...schem
 	projectFacileIDs := service.projectFacileIDs(ctx, tasks)
 	for _, task := range tasks {
 		payload := events.NewTaskPayload(task, projectFacileIDs[task.ProjectID], actorEmails[task.ID])
+		if identity, ok := authcontext.IdentityFromContext(ctx); ok {
+			payload.OwnerEmail = identity.Email
+		}
 		service.emitter.EmitTask(ctx, channel, payload)
 	}
 }

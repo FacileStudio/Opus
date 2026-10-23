@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.19.3] - 2026-10-23
+
+### Fixed
+
+- Task events carry `owner_email`, the user who made the change, so Agenda can show the due date of an unassigned task in that user's calendar.
+
 ## [2.19.2] - 2026-10-23
 
 ### Fixed

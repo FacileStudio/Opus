@@ -21,6 +21,7 @@ type TaskPayload struct {
 	DueDate         string `json:"due_date,omitempty"`
 	ActorID         *int64 `json:"actor_id,omitempty"`
 	ActorEmail      string `json:"actor_email,omitempty"`
+	OwnerEmail      string `json:"owner_email,omitempty"`
 }
 
 func (t TaskPayload) entityID() string {
