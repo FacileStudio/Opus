@@ -4,6 +4,8 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.18.0] - 2026-10-23
+
 ### Added
 
 - Projects and tasks sync with Sablier in both directions over the Antenne pool. Create, update and delete apply on the other side, replays are ignored, and Opus never re-publishes a change it received. Set `ANTENNE_SYNC_WORKSPACE_ID` to choose the workspace that receives projects created in Sablier. See `docs/sablier-sync.md`.
