@@ -88,11 +88,11 @@ func resolveStatus(columns []schemas.Column, wire, current string) (target, bool
 	if wire == "" {
 		return target{}, false
 	}
-	if exact, found := exactColumn(columns, wire); found {
-		return exact, true
-	}
 	if current != "" && classify(columns, current) == wire {
 		return target{}, false
+	}
+	if exact, found := exactColumn(columns, wire); found {
+		return exact, true
 	}
 	return nearestColumn(columns, wire)
 }

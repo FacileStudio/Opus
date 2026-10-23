@@ -34,19 +34,3 @@ type PoolProcessedEvent struct {
 
 // TableName pins the ledger table name.
 func (PoolProcessedEvent) TableName() string { return "pool_processed_events" }
-
-// BackfillFacileIDs gives every project and task without a facile_id a fresh one.
-func BackfillFacileIDs(db *gorm.DB) error {
-	for _, table := range []string{"projects", "tasks"} {
-		var ids []int64
-		if err := db.Table(table).Where("facile_id IS NULL OR facile_id = ''").Pluck("id", &ids).Error; err != nil {
-			return err
-		}
-		for _, id := range ids {
-			if err := db.Table(table).Where("id = ?", id).Update("facile_id", NewFacileID()).Error; err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}

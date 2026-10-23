@@ -110,7 +110,7 @@ func (s *Service) ImportTasks(ctx context.Context, userID, projectID int64, req 
 			continue
 		}
 		successful++
-		s.emit(ctx, userID, events.ChannelTaskCreated, task)
+		s.emit(ctx, events.ChannelTaskCreated, task)
 	}
 	return &ImportTasksResponse{
 		ImportedAt: now.UTC().Format(time.RFC3339),

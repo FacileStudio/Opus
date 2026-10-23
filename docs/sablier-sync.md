@@ -10,9 +10,11 @@ Every project and task has a `facile_id`, a unique string minted by the app that
 Opus mints 26 base32 characters (crypto/rand). Events always carry it, and an inbound event matches
 rows by `facile_id` only, across all workspaces.
 
-Migration `00002_facile_id_and_pool_ledger.sql` adds the columns, gives every existing row a random
-`facile_id` and adds unique indexes. The GORM fallback path (`schemas.Migrate`) runs the same
-backfill in Go.
+Migration `00002_facile_id_and_pool_ledger.sql` adds the columns, keeps every existing `facile_id`
+and adds unique indexes. Rows with a blank id get a random one. When several rows share an id, which
+the per-workspace and per-project unique keys of the old TypeScript schema allowed, the oldest row
+(lowest `id`) keeps it and the others get a random one. The migration can run again on a
+half-migrated database. A failed migration stops the API with exit code 1.
 
 ## Channels
 
@@ -23,24 +25,31 @@ backfill in Go.
 
 Creating, renaming, re-iconing, describing or deleting a project publishes a project event.
 Creating, editing, moving, importing, bulk-updating or deleting a task publishes a task event.
-Archiving a project publishes nothing. Deleting a project publishes `project.deleted` only; the
-receiver removes its tasks with it.
+`actor_email` on a task event is the task's assignee, not the user who made the edit. Archiving a
+project publishes nothing. Deleting a project publishes `task.deleted` for each of its tasks, then
+`project.deleted`. A change applied from Sablier is never published, so the Agenda does not see
+assignee or due date changes made in Sablier.
 
 ## Inbound rules
 
-1. Events whose `app` is `Opus` are ignored.
-2. Each event's `idempotency_key` goes into the `pool_processed_events` table in the same
+1. Only events whose `app` is `Sablier` are applied. Events from `Opus` (its own echo), any other
+   app, or with no envelope are ignored.
+2. An event with no `timestamp`, or one older than 35 days (the ledger window), is dropped, so a
+   pool replay of old history cannot recreate rows or revert newer edits. An event whose
+   `facile_id` is all digits is dropped as a legacy numeric id. A task update older than the task's
+   `updated_at` is ignored.
+3. Each event's `idempotency_key` goes into the `pool_processed_events` table in the same
    transaction as the change. A key seen before is skipped. Rows older than 35 days are pruned at
    startup.
-3. Opus writes inbound changes straight to the database and never calls the publisher, so an
+4. Opus writes inbound changes straight to the database and never calls the publisher, so an
    applied change is not published back.
-4. A task whose `project_facile_id` matches no local project is dropped with a warning. The event
+5. A task whose `project_facile_id` matches no local project is dropped with a warning. The event
    is not recorded in the ledger, so a redelivery after the project arrives applies.
 5. `created` for a known row is a no-op. `updated` for an unknown row creates it. `deleted` for an
    unknown row is a no-op.
-6. Payloads are read both wrapped (`{"app", "payload": {...}}`) and bare.
-7. `actor_email` is matched to a local user, case-insensitively. No match leaves the assignee
-   unchanged.
+7. Payloads are read from the envelope (`{"app", "timestamp", "payload": {...}}`).
+8. `actor_email` is matched to a member of the task's workspace, case-insensitively. No match
+   leaves the assignee unchanged.
 
 ## Target workspace
 
@@ -52,7 +61,7 @@ wherever they live.
 ## Status mapping
 
 Opus statuses are the slugs of a project's workflow columns (default: `to-do`, `in-progress`,
-`in-review`, `done`). Sablier has exactly those four. Opus publishes its own status unchanged.
+`in-review`, `done`). Sablier has exactly those four. Opus publishes its own status unchanged. Inbound status values are lower-cased and trimmed.
 
 For an inbound status, Opus picks the first rule that matches:
 

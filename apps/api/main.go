@@ -22,7 +22,6 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
-	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte/local"
 	"github.com/FacileStudio/porte/oidc"
 	portepg "github.com/FacileStudio/porte/pg"
@@ -203,10 +202,7 @@ func initDatabaseAndStorage(appEnv *env.Config, appLogger *slog.Logger) (*gorm.D
 		return nil, nil, err
 	}
 	if err := database.RunMigrations(sqlDB); err != nil {
-		appLogger.Warn("goose migrations failed, using GORM schema migration", slog.Any("error", err))
-		if err := schemas.Migrate(db); err != nil {
-			return nil, nil, err
-		}
+		return nil, nil, err
 	}
 	appLogger.Info("database migrations applied")
 

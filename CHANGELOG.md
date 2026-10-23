@@ -4,6 +4,15 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.19.1] - 2026-10-23
+
+### Fixed
+
+- Task events carry the assignee's email in `actor_email`, not the email of the user who edited the task, so Agenda keeps due dates in the assignee's calendar.
+- The Sablier sync ignores events from apps other than Sablier, ignores replayed events with legacy ids, and never creates a project or task from an id the apps did not mint.
+- Migration `00002` blanks empty and duplicate `facile_id` values before it creates the unique indexes, so it cannot fail on legacy data.
+- A failed database migration now stops the boot. The GORM schema fallback is removed; goose is the only migration path.
+
 ## [2.19.0] - 2026-10-23
 
 ### Changed

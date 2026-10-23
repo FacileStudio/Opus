@@ -129,10 +129,12 @@ func (c *controller) delete(ctx context.Context, userID, projectID int64) (*Proj
 	if projectID <= 0 {
 		return nil, errors.Invalid("invalid project id")
 	}
+	tasks := c.service.loadTasksForEvents(ctx, projectID)
 	deleted, err := c.service.Delete(ctx, userID, projectID)
 	if err != nil {
 		return nil, err
 	}
+	c.service.emitTasksDeleted(ctx, *deleted, tasks)
 	c.service.emit(ctx, userID, events.ChannelProjectDeleted, *deleted)
 	return toProjectResponse(deleted, nil), nil
 }

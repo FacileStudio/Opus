@@ -2,16 +2,16 @@ package poolsync
 
 import (
 	"log/slog"
-	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func findTask(tx *gorm.DB, facileID string) (*schemas.Task, error) {
 	var found []schemas.Task
-	if err := tx.Where("facile_id = ?", facileID).Limit(1).Find(&found).Error; err != nil || len(found) == 0 {
+	if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("facile_id = ?", facileID).Limit(1).Find(&found).Error; err != nil || len(found) == 0 {
 		return nil, err
 	}
 	return &found[0], nil
@@ -31,8 +31,10 @@ func (s *Syncer) applyTask(tx *gorm.DB, action string, evt inbound) (outcome, er
 	switch {
 	case action == "deleted":
 		return deleteTask(tx, existing)
-	case existing == nil:
+	case existing == nil && action == "created":
 		return s.createTask(tx, evt)
+	case existing == nil:
+		return outcome{}, nil
 	default:
 		return updateTask(tx, existing, evt)
 	}
@@ -91,12 +93,12 @@ func buildTask(tx *gorm.DB, parent *schemas.Project, evt inbound, place target) 
 	if err := slot.Select("COALESCE(MAX(position), 0)").Scan(&position).Error; err != nil {
 		return schemas.Task{}, err
 	}
-	actorID, err := resolveActor(tx, evt.ActorEmail)
+	actorID, err := resolveActor(tx, parent.WorkspaceID, evt.ActorEmail)
 	if err != nil {
 		return schemas.Task{}, err
 	}
 	facileID := evt.facileID
-	now := time.Now()
+	now := evt.at
 	return schemas.Task{
 		FacileRef:   schemas.FacileRef{FacileID: &facileID},
 		ProjectID:   parent.ID,
@@ -114,6 +116,9 @@ func buildTask(tx *gorm.DB, parent *schemas.Project, evt inbound, place target) 
 }
 
 func updateTask(tx *gorm.DB, existing *schemas.Task, evt inbound) (outcome, error) {
+	if evt.at.Before(existing.UpdatedAt) {
+		return outcome{}, nil
+	}
 	updates := map[string]any{}
 	if evt.Name != "" && evt.Name != existing.Title {
 		updates["title"] = evt.Name
@@ -126,7 +131,7 @@ func updateTask(tx *gorm.DB, existing *schemas.Task, evt inbound) (outcome, erro
 		updates["status"] = place.slug
 		updates["column_id"] = place.columnID
 	}
-	actorID, err := resolveActor(tx, evt.ActorEmail)
+	actorID, err := resolveActor(tx, existing.WorkspaceID, evt.ActorEmail)
 	if err != nil {
 		return outcome{}, err
 	}
@@ -136,19 +141,22 @@ func updateTask(tx *gorm.DB, existing *schemas.Task, evt inbound) (outcome, erro
 	if len(updates) == 0 {
 		return outcome{}, nil
 	}
-	updates["updated_at"] = time.Now()
+	updates["updated_at"] = evt.at
 	if err := tx.Model(&schemas.Task{}).Where("id = ?", existing.ID).Updates(updates).Error; err != nil {
 		return outcome{}, err
 	}
 	return outcome{msgType: realtime.TypeTaskUpdated, projectID: existing.ProjectID, taskID: existing.ID}, nil
 }
 
-func resolveActor(tx *gorm.DB, email string) (*int64, error) {
+func resolveActor(tx *gorm.DB, workspaceID int64, email string) (*int64, error) {
 	if email == "" {
 		return nil, nil
 	}
 	var ids []int64
-	err := tx.Model(&schemas.User{}).Where("lower(email) = lower(?)", email).Limit(1).Pluck("id", &ids).Error
+	err := tx.Model(&schemas.User{}).
+		Where("lower(email) = lower(?)", email).
+		Where("id IN (?)", tx.Model(&schemas.WorkspaceMember{}).Select("user_id").Where("workspace_id = ?", workspaceID)).
+		Limit(1).Pluck("id", &ids).Error
 	if err != nil || len(ids) == 0 {
 		return nil, err
 	}

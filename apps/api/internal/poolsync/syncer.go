@@ -76,22 +76,42 @@ func (s *Syncer) Prune(ctx context.Context) {
 }
 
 // Handle applies one inbound event. Replaying an event, receiving one Opus
-// published itself, or receiving one it cannot place leaves the database unchanged.
+// published itself, receiving one from another app, receiving one older than
+// the ledger window, or receiving one it cannot place leaves the database unchanged.
 func (s *Syncer) Handle(ctx context.Context, channel string, raw json.RawMessage) error {
 	evt, err := decode(raw)
 	if err != nil {
 		return err
 	}
-	if evt.app == string(enveloppe.AppOpus) {
+	if evt.app != string(enveloppe.AppSablier) {
 		return nil
 	}
-	if evt.facileID == "" {
-		s.logger.Warn("pool sync: event without facile_id, dropped", slog.String("channel", channel))
+	if evt.at.IsZero() || time.Since(evt.at) > ledgerRetention {
+		s.logger.Warn("pool sync: stale or undated event dropped", slog.String("channel", channel))
+		return nil
+	}
+	if evt.facileID == "" || isLegacyID(evt.facileID) {
+		s.logger.Warn("pool sync: event without a usable facile_id, dropped", slog.String("channel", channel))
 		return nil
 	}
 	object, action, _ := strings.Cut(channel, ".")
+	applied, err := s.applyOnce(ctx, object, action, evt)
+	if errors.Is(err, gorm.ErrDuplicatedKey) {
+		applied, err = s.applyOnce(ctx, object, action, evt)
+	}
+	if errors.Is(err, errDuplicate) || errors.Is(err, errSkipped) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	realtime.Notify(ctx, s.notifier, applied.msgType, applied.projectID, applied.taskID)
+	return nil
+}
+
+func (s *Syncer) applyOnce(ctx context.Context, object, action string, evt inbound) (outcome, error) {
 	var applied outcome
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+	err := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := claim(tx, evt.key); err != nil {
 			return err
 		}
@@ -105,14 +125,7 @@ func (s *Syncer) Handle(ctx context.Context, channel string, raw json.RawMessage
 		applied = out
 		return nil
 	})
-	if errors.Is(err, errDuplicate) || errors.Is(err, errSkipped) {
-		return nil
-	}
-	if err != nil {
-		return err
-	}
-	realtime.Notify(ctx, s.notifier, applied.msgType, applied.projectID, applied.taskID)
-	return nil
+	return applied, err
 }
 
 func claim(tx *gorm.DB, key string) error {

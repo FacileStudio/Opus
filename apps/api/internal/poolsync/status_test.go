@@ -34,6 +34,7 @@ func TestResolveStatus(t *testing.T) {
 		{"empty is left alone", custom, "", "doing", "", false},
 		{"equivalent status is not moved", custom, "in-review", "qa", "", false},
 		{"equivalent beyond rank is not moved", custom, "in-review", "polish", "", false},
+		{"equivalent status wins over a same-named column", columns("backlog", "to-do", "in-progress", "done"), "to-do", "backlog", "", false},
 		{"no final column keeps done unmapped", columns("a", "b"), "done", "a", "", false},
 		{"two open columns clamp in-review", columns("a", "b", "done"), "in-review", "a", "b", true},
 	}

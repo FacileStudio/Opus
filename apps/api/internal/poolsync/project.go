@@ -8,11 +8,12 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/modules/project"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func findProject(tx *gorm.DB, facileID string) (*schemas.Project, error) {
 	var found []schemas.Project
-	if err := tx.Where("facile_id = ?", facileID).Limit(1).Find(&found).Error; err != nil || len(found) == 0 {
+	if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("facile_id = ?", facileID).Limit(1).Find(&found).Error; err != nil || len(found) == 0 {
 		return nil, err
 	}
 	return &found[0], nil
@@ -26,9 +27,9 @@ func (s *Syncer) applyProject(tx *gorm.DB, action string, evt inbound) (outcome,
 	switch {
 	case action == "deleted":
 		return outcome{}, deleteProject(tx, existing)
-	case existing == nil:
+	case existing == nil && action == "created":
 		return s.createProject(tx, evt)
-	case action == "created":
+	case existing == nil, action == "created":
 		return outcome{}, nil
 	default:
 		return outcome{}, updateProject(tx, existing, evt)

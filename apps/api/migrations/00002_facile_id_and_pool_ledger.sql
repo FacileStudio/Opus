@@ -2,8 +2,24 @@
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS facile_id TEXT;
 ALTER TABLE tasks ADD COLUMN IF NOT EXISTS facile_id TEXT;
 
-UPDATE projects SET facile_id = md5(random()::text || clock_timestamp()::text || id::text) WHERE facile_id IS NULL OR facile_id = '';
-UPDATE tasks SET facile_id = md5(random()::text || clock_timestamp()::text || id::text) WHERE facile_id IS NULL OR facile_id = '';
+UPDATE projects SET facile_id = NULL WHERE btrim(facile_id) = '';
+UPDATE tasks SET facile_id = NULL WHERE btrim(facile_id) = '';
+
+UPDATE projects SET facile_id = NULL WHERE id IN (
+    SELECT id FROM (
+        SELECT id, row_number() OVER (PARTITION BY facile_id ORDER BY id) AS occurrence
+        FROM projects WHERE facile_id IS NOT NULL
+    ) ranked WHERE occurrence > 1
+);
+UPDATE tasks SET facile_id = NULL WHERE id IN (
+    SELECT id FROM (
+        SELECT id, row_number() OVER (PARTITION BY facile_id ORDER BY id) AS occurrence
+        FROM tasks WHERE facile_id IS NOT NULL
+    ) ranked WHERE occurrence > 1
+);
+
+UPDATE projects SET facile_id = md5(random()::text || clock_timestamp()::text || id::text) WHERE facile_id IS NULL;
+UPDATE tasks SET facile_id = md5(random()::text || clock_timestamp()::text || id::text) WHERE facile_id IS NULL;
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_projects_facile_id ON projects (facile_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_tasks_facile_id ON tasks (facile_id);

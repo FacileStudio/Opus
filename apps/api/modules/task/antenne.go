@@ -12,15 +12,14 @@ func (service *Service) SetEmitter(emitter events.Emitter) {
 	service.emitter = emitter
 }
 
-func (service *Service) emit(ctx context.Context, userID int64, channel string, tasks ...schemas.Task) {
+func (service *Service) emit(ctx context.Context, channel string, tasks ...schemas.Task) {
 	if service.emitter == nil || len(tasks) == 0 {
 		return
 	}
-	var actorEmail string
-	service.db.WithContext(ctx).Model(&schemas.User{}).Where("id = ?", userID).Limit(1).Pluck("email", &actorEmail)
+	actorEmails := events.TaskActorEmails(ctx, service.db, tasks)
 	projectFacileIDs := service.projectFacileIDs(ctx, tasks)
 	for _, task := range tasks {
-		payload := events.NewTaskPayload(task, projectFacileIDs[task.ProjectID], actorEmail)
+		payload := events.NewTaskPayload(task, projectFacileIDs[task.ProjectID], actorEmails[task.ID])
 		service.emitter.EmitTask(ctx, channel, payload)
 	}
 }
@@ -41,7 +40,7 @@ func (service *Service) projectFacileIDs(ctx context.Context, tasks []schemas.Ta
 	return byID
 }
 
-func (service *Service) emitReloaded(ctx context.Context, userID int64, channel string, taskIDs []int64) {
+func (service *Service) emitReloaded(ctx context.Context, channel string, taskIDs []int64) {
 	if service.emitter == nil {
 		return
 	}
@@ -49,5 +48,5 @@ func (service *Service) emitReloaded(ctx context.Context, userID int64, channel 
 	if err := service.db.WithContext(ctx).Where("id IN ?", taskIDs).Find(&tasks).Error; err != nil {
 		return
 	}
-	service.emit(ctx, userID, channel, tasks...)
+	service.emit(ctx, channel, tasks...)
 }

@@ -210,9 +210,9 @@ func (service *Service) Bulk(ctx context.Context, userID int64, req *BulkUpdateR
 		return nil, err
 	}
 	if req.Operation == "delete" {
-		service.emit(ctx, userID, events.ChannelTaskDeleted, tasks...)
+		service.emit(ctx, events.ChannelTaskDeleted, tasks...)
 	} else {
-		service.emitReloaded(ctx, userID, events.ChannelTaskUpdated, taskIDs)
+		service.emitReloaded(ctx, events.ChannelTaskUpdated, taskIDs)
 	}
 	return &BulkUpdateResponse{Success: true, UpdatedCount: updatedCount}, nil
 }

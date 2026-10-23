@@ -66,3 +66,32 @@ func TestTaskEventsCarryFacileIDs(t *testing.T) {
 		t.Errorf("delete event mismatch: %+v on %v", emitter.tasks[1], emitter.channels)
 	}
 }
+
+func TestTaskEventsCarryAssigneeEmailNotEditor(t *testing.T) {
+	service, db := newTestService(t)
+	emitter := &recordingEmitter{}
+	service.SetEmitter(emitter)
+	editorID, projectID, _ := seedProject(t, db)
+	assignee := schemas.User{Email: "assignee@facile.studio", Name: "Assignee"}
+	if err := db.Create(&assignee).Error; err != nil {
+		t.Fatalf("seed assignee: %v", err)
+	}
+	ctx := context.Background()
+
+	created, err := service.controller.create(ctx, editorID, projectID, &CreateTaskRequest{Title: "Unassigned"})
+	if err != nil {
+		t.Fatalf("create: %v", err)
+	}
+	if got := emitter.tasks[0].ActorEmail; got != "" {
+		t.Errorf("unassigned task carries actor_email %q", got)
+	}
+	if err := db.Model(&schemas.Task{}).Where("id = ?", created.ID).Update("actor_id", assignee.ID).Error; err != nil {
+		t.Fatalf("assign: %v", err)
+	}
+	if _, err := service.controller.updateTitle(ctx, editorID, created.ID, "Assigned"); err != nil {
+		t.Fatalf("update title: %v", err)
+	}
+	if got := emitter.tasks[1].ActorEmail; got != assignee.Email {
+		t.Errorf("actor_email = %q, want assignee %q", got, assignee.Email)
+	}
+}
