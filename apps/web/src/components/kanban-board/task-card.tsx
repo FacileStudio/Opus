@@ -183,10 +183,10 @@ function TaskCard({ task }: TaskCardProps) {
           {/** biome-ignore lint/a11y/noStaticElementInteractions: false positive for onClick and onKeyDown */}
           <div
             onClick={handleTaskCardClick}
-            className={`group relative cursor-move rounded-lg border bg-background p-3 shadow-xs/5 transition-all duration-200 ease-out ${
+            className={`group relative rounded-lg border bg-background p-3 shadow-xs/5 transition-all duration-200 ease-out ${
               isDragging
-                ? "border-ring/40 bg-card shadow-lg"
-                : "hover:border-border/90 hover:bg-background hover:shadow-sm"
+                ? "cursor-grabbing border-ring/40 bg-card shadow-lg"
+                : "cursor-pointer hover:border-border/90 hover:bg-background hover:shadow-sm active:cursor-grabbing"
             } ${
               isTaskSelected
                 ? "border-ring/40 bg-accent/50 shadow-sm ring-1 ring-inset ring-ring/30"
