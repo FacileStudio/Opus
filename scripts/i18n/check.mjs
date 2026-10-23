@@ -24,16 +24,73 @@ if (localeFilter && filteredLocales.length === 0) {
   process.exit(1);
 }
 
+const pluralSuffix = /_(zero|one|two|few|many|other)$/u;
+
+function pluralBase(key) {
+  return key.replace(pluralSuffix, "");
+}
+
+function requiredForms(locale) {
+  const categories = new Intl.PluralRules(locale).resolvedOptions()
+    .pluralCategories;
+
+  return categories.filter(
+    (category) => category !== "many" || categories.includes("few"),
+  );
+}
+
+function groupByBase(keys) {
+  const groups = new Map();
+
+  for (const key of keys) {
+    const base = pluralBase(key);
+    groups.set(base, [...(groups.get(base) ?? []), key]);
+  }
+
+  return groups;
+}
+
+const referenceGroups = groupByBase(referenceKeys);
+
 let hasIssues = false;
 
 for (const locale of filteredLocales) {
   const localeKeys = flattenLocale(locale.data);
-  const missing = new Set(
-    [...referenceKeys].filter((key) => !localeKeys.has(key)),
-  );
-  const extra = new Set(
-    [...localeKeys].filter((key) => !referenceKeys.has(key)),
-  );
+  const localeGroups = groupByBase(localeKeys);
+  const missing = new Set();
+  const extra = new Set();
+
+  for (const [base, keys] of referenceGroups) {
+    const localKeys = localeGroups.get(base);
+    const isPlural = keys.some((key) => pluralSuffix.test(key));
+
+    if (!localKeys) {
+      for (const key of keys) {
+        missing.add(key);
+      }
+      continue;
+    }
+
+    if (isPlural && localKeys.some((key) => pluralSuffix.test(key))) {
+      for (const form of requiredForms(locale.locale)) {
+        const present =
+          localKeys.includes(`${base}_${form}`) ||
+          (form === "one" && localKeys.includes(base));
+
+        if (!present) {
+          missing.add(`${base}_${form}`);
+        }
+      }
+    }
+  }
+
+  for (const [base, keys] of localeGroups) {
+    if (!referenceGroups.has(base)) {
+      for (const key of keys) {
+        extra.add(key);
+      }
+    }
+  }
 
   if (missing.size === 0 && extra.size === 0) {
     console.log(`${locale.locale}: OK`);
@@ -48,7 +105,12 @@ for (const locale of filteredLocales) {
     for (const key of formatKeyList(missing)) {
       console.log(`    - ${key}`);
       if (shouldFix) {
-        setValueAtKey(locale.data, key, getValueAtKey(reference.data, key));
+        setValueAtKey(
+          locale.data,
+          key,
+          getValueAtKey(reference.data, key) ??
+            getValueAtKey(reference.data, `${pluralBase(key)}_other`),
+        );
       }
     }
   }

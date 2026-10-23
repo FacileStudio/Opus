@@ -23,8 +23,8 @@ describe("useTaskFiltersWithLabelsSupport", () => {
       id: "project-1",
       name: "Project",
       slug: "PROJ",
-      icon: null,
-      description: null,
+      icon: "Layout",
+      description: "",
       isPublic: false,
       createdAt: "2026-04-16T00:00:00.000Z",
       updatedAt: "2026-04-16T00:00:00.000Z",
@@ -33,6 +33,7 @@ describe("useTaskFiltersWithLabelsSupport", () => {
         {
           id: "todo",
           name: "Todo",
+          slug: "todo",
           isFinal: false,
           tasks: [
             {

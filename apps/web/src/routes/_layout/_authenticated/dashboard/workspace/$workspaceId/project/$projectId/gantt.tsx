@@ -43,7 +43,7 @@ export const Route = createFileRoute(
   }),
 });
 
-function parseTaskDate(value: string | null) {
+function parseTaskDate(value: string | null | undefined) {
   if (!value) return null;
   const parsed = parseISO(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed;

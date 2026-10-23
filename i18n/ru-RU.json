@@ -632,8 +632,10 @@
 			"toastUpdated": "Видимость обновлена",
 			"toastUpdateError": "Не удалось обновить видимость",
 			"shareLinks": {
-				"accessCount": "{{count}} view",
-				"accessCount_other": "{{count}} views",
+				"accessCount_one": "{{count}} просмотр",
+				"accessCount_few": "{{count}} просмотра",
+				"accessCount_many": "{{count}} просмотров",
+				"accessCount_other": "{{count}} просмотра",
 				"active": "Active",
 				"copyToast": "Share link copied",
 				"create": "Create Link",

@@ -299,7 +299,7 @@ export const authClient = {
       return { data: null };
     }
     const payload = result.data;
-    const raw = "user" in payload ? payload.user : payload;
+    const raw = "name" in payload ? payload : payload.user;
     if (!raw) {
       return { data: null };
     }
