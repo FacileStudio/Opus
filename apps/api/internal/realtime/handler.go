@@ -21,7 +21,7 @@ func (h *Hub) ServeWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	initiatorID := extractInitiatorID(r)
-	conn, err := h.upgrader.Upgrade(w, r, nil)
+	conn, err := h.upgrader.Upgrade(hijackableWriter(w), r, nil)
 	if err != nil {
 		h.logger.Error("websocket upgrade failed", slog.Any("error", err))
 		return
@@ -45,6 +45,20 @@ func (h *Hub) authenticateRequest(w http.ResponseWriter, r *http.Request) (int64
 	}
 	req := prepareAuthRequest(r)
 	return h.authenticator.Authenticate(w, req)
+}
+
+// hijackableWriter unwraps middleware writers until one supports Hijack.
+func hijackableWriter(w http.ResponseWriter) http.ResponseWriter {
+	for {
+		if _, ok := w.(http.Hijacker); ok {
+			return w
+		}
+		unwrapper, ok := w.(interface{ Unwrap() http.ResponseWriter })
+		if !ok {
+			return w
+		}
+		w = unwrapper.Unwrap()
+	}
 }
 
 func extractInitiatorID(r *http.Request) string {
