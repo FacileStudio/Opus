@@ -4,6 +4,13 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.14.1] - 2026-10-23
+
+### Fixed
+
+- Pages refetch stale data when you return to them, so My tasks and other lists update after you change a task without a reload.
+- A hovered board card has its own fill, different from the column. Cards are lifted in dark mode.
+
 ## [2.14.0] - 2026-10-23
 
 ### Added
