@@ -93,6 +93,7 @@ func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *sl
 		Adapter:       adapter,
 		Authenticator: wsAuth,
 		Authorizer:    realtime.NewMembershipAuthorizer(db),
+		WorkspaceOf:   realtime.NewProjectWorkspaceResolver(db),
 		Logger:        appLogger,
 	})
 	if err != nil {

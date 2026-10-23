@@ -13,6 +13,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import useGetMyTasks from "@/hooks/queries/task/use-get-my-tasks";
+import { useWorkspaceWebSocket } from "@/hooks/use-project-websocket";
 import { getColumnIcon } from "@/lib/column";
 import { getPriorityIcon } from "@/lib/priority";
 
@@ -27,6 +28,7 @@ function RouteComponent() {
   const navigate = useNavigate();
   const { workspaceId } = Route.useParams();
   const { data: tasks = [], isLoading } = useGetMyTasks(workspaceId);
+  useWorkspaceWebSocket(workspaceId);
 
   const byProject = new Map<string, typeof tasks>();
   for (const task of tasks) {

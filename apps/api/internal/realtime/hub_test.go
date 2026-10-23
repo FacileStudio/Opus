@@ -186,3 +186,23 @@ func waitForCount(fn func() int, target int) error {
 	}
 	return websocket.ErrCloseSent
 }
+
+func TestHubProjectBroadcastReachesWorkspace(t *testing.T) {
+	hub, server := newTestHub(t, nil)
+	hub.workspaceOf = func(string) string { return "ws-test" }
+
+	conn := dialWS(t, wsURL(server.URL, "/?workspace_id=ws-test&windowId=w-ws"), nil)
+	defer conn.Close()
+
+	if err := waitForCount(func() int { return hub.WorkspaceConnectionCount("ws-test") }, 1); err != nil {
+		t.Fatalf("expected workspace connection: %v", err)
+	}
+	if err := hub.BroadcastToProject("p1", BroadcastMessage{Type: TypeTaskUpdated, TaskID: "t1"}, ""); err != nil {
+		t.Fatalf("broadcast failed: %v", err)
+	}
+
+	conn.SetReadDeadline(time.Now().Add(2 * time.Second))
+	if _, _, err := conn.ReadMessage(); err != nil {
+		t.Fatalf("workspace client missed project broadcast: %v", err)
+	}
+}

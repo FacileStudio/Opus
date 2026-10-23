@@ -22,6 +22,7 @@ type Config struct {
 	Adapter       Adapter
 	Authenticator Authenticator
 	Authorizer    Authorizer
+	WorkspaceOf   func(projectID string) string
 	Logger        *slog.Logger
 	CheckOrigin   func(r *http.Request) bool
 }
@@ -34,6 +35,7 @@ type Hub struct {
 	adapter       Adapter
 	authenticator Authenticator
 	authorizer    Authorizer
+	workspaceOf   func(projectID string) string
 	upgrader      websocket.Upgrader
 	logger        *slog.Logger
 	closed        bool
@@ -55,6 +57,7 @@ func NewHub(cfg Config) (*Hub, error) {
 		adapter:       adapter,
 		authenticator: cfg.Authenticator,
 		authorizer:    cfg.Authorizer,
+		workspaceOf:   cfg.WorkspaceOf,
 		upgrader:      buildUpgrader(cfg.CheckOrigin),
 		logger:        logger,
 	}
@@ -155,6 +158,9 @@ func (h *Hub) BroadcastToProject(projectID string, msg BroadcastMessage, exclude
 		ProjectID:          projectID,
 		Message:            msg,
 		ExcludeInitiatorID: excludeInitiatorID,
+	}
+	if h.workspaceOf != nil {
+		env.WorkspaceID = h.workspaceOf(projectID)
 	}
 	return h.adapter.Publish(context.Background(), env)
 }

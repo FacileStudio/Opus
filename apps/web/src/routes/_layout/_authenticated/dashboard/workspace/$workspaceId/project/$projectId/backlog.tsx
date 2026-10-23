@@ -530,7 +530,7 @@ function RouteComponent() {
                   <DropdownMenuTrigger
                     render={
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         className="h-7 gap-2 px-2.5 text-xs font-medium text-foreground"
                       />
