@@ -1114,7 +1114,7 @@
 			"invitations": "Приглашения",
 			"more": "Ещё",
 			"backToBoard": "Back to board",
-			"myTasks": "My tasks"
+			"myTasks": "Мои задачи"
 		},
 		"projectList": {
 			"viewProject": "Открыть проект",
@@ -1237,9 +1237,9 @@
 				"contentWithoutTask": "Трекинг времени начат для задачи"
 			}
 		},
-		"deleteOne": "Delete notification",
-		"markRead": "Mark as read",
-		"markUnread": "Mark as unread"
+		"deleteOne": "Удалить уведомление",
+		"markRead": "Отметить как прочитанное",
+		"markUnread": "Отметить как непрочитанное"
 	},
 	"activity": {
 		"assignedToSelf": "назначил задачу себе",
@@ -1783,13 +1783,13 @@
 			"updateSuccess": "{{count}} tasks updated"
 		},
 		"shortLink": {
-			"loading": "Opening task...",
-			"notFound": "Task {{key}} was not found."
+			"loading": "Открываем задачу...",
+			"notFound": "Задача {{key}} не найдена."
 		},
 		"myTasks": {
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
-			"emptyTitle": "Nothing assigned to you",
-			"pageTitle": "My tasks"
+			"emptyDescription": "Задачи, назначенные вам в этом пространстве, появятся здесь.",
+			"emptyTitle": "Вам ничего не назначено",
+			"pageTitle": "Мои задачи"
 		}
 	},
 	"invitations": {

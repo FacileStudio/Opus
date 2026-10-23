@@ -1106,7 +1106,7 @@
 			"invitations": "Запрошення",
 			"more": "Більше",
 			"backToBoard": "Back to board",
-			"myTasks": "My tasks"
+			"myTasks": "Мої завдання"
 		},
 		"projectList": {
 			"viewProject": "Переглянути проєкт",
@@ -1229,9 +1229,9 @@
 				"contentWithoutTask": "Відлік часу розпочато для завдання"
 			}
 		},
-		"deleteOne": "Delete notification",
-		"markRead": "Mark as read",
-		"markUnread": "Mark as unread"
+		"deleteOne": "Видалити сповіщення",
+		"markRead": "Позначити як прочитане",
+		"markUnread": "Позначити як непрочитане"
 	},
 	"activity": {
 		"assignedToSelf": "призначив завдання собі",
@@ -1727,13 +1727,13 @@
 			"changeStatus": "Змінити статус"
 		},
 		"shortLink": {
-			"loading": "Opening task...",
-			"notFound": "Task {{key}} was not found."
+			"loading": "Відкриваємо завдання...",
+			"notFound": "Завдання {{key}} не знайдено."
 		},
 		"myTasks": {
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
-			"emptyTitle": "Nothing assigned to you",
-			"pageTitle": "My tasks"
+			"emptyDescription": "Завдання, призначені вам у цьому просторі, з’являться тут.",
+			"emptyTitle": "Вам нічого не призначено",
+			"pageTitle": "Мої завдання"
 		}
 	},
 	"invitations": {

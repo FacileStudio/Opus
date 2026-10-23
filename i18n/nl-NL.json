@@ -1104,7 +1104,7 @@
 			"invitations": "Uitnodigingen",
 			"more": "Meer",
 			"backToBoard": "Terug naar bord",
-			"myTasks": "My tasks"
+			"myTasks": "Mijn taken"
 		},
 		"projectList": {
 			"viewProject": "Project bekijken",
@@ -1225,9 +1225,9 @@
 				"contentWithoutTask": "Tijdregistratie gestart voor een taak"
 			}
 		},
-		"deleteOne": "Delete notification",
-		"markRead": "Mark as read",
-		"markUnread": "Mark as unread"
+		"deleteOne": "Melding verwijderen",
+		"markRead": "Markeren als gelezen",
+		"markUnread": "Markeren als ongelezen"
 	},
 	"activity": {
 		"assignedToSelf": "heeft de taak aan zichzelf toegewezen",
@@ -1721,13 +1721,13 @@
 			"title": "Move task"
 		},
 		"shortLink": {
-			"loading": "Opening task...",
-			"notFound": "Task {{key}} was not found."
+			"loading": "Taak openen...",
+			"notFound": "Taak {{key}} is niet gevonden."
 		},
 		"myTasks": {
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
-			"emptyTitle": "Nothing assigned to you",
-			"pageTitle": "My tasks"
+			"emptyDescription": "Taken die aan jou zijn toegewezen in deze werkruimte verschijnen hier.",
+			"emptyTitle": "Er is niets aan jou toegewezen",
+			"pageTitle": "Mijn taken"
 		}
 	},
 	"invitations": {

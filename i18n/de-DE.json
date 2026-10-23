@@ -1104,7 +1104,7 @@
 			"invitations": "Einladungen",
 			"more": "Mehr",
 			"backToBoard": "Zurück zum Board",
-			"myTasks": "My tasks"
+			"myTasks": "Meine Aufgaben"
 		},
 		"projectList": {
 			"viewProject": "Projekt ansehen",
@@ -1225,9 +1225,9 @@
 				"contentWithoutTask": "Die Zeiterfassung für eine Aufgabe wurde gestartet"
 			}
 		},
-		"deleteOne": "Delete notification",
-		"markRead": "Mark as read",
-		"markUnread": "Mark as unread"
+		"deleteOne": "Benachrichtigung löschen",
+		"markRead": "Als gelesen markieren",
+		"markUnread": "Als ungelesen markieren"
 	},
 	"activity": {
 		"assignedToSelf": "hat sich die Aufgabe selbst zugewiesen",
@@ -1721,13 +1721,13 @@
 			"changeStatus": "Status ändern"
 		},
 		"shortLink": {
-			"loading": "Opening task...",
-			"notFound": "Task {{key}} was not found."
+			"loading": "Aufgabe wird geöffnet...",
+			"notFound": "Aufgabe {{key}} wurde nicht gefunden."
 		},
 		"myTasks": {
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
-			"emptyTitle": "Nothing assigned to you",
-			"pageTitle": "My tasks"
+			"emptyDescription": "Dir zugewiesene Aufgaben in diesem Arbeitsbereich erscheinen hier.",
+			"emptyTitle": "Dir ist nichts zugewiesen",
+			"pageTitle": "Mir zugewiesen"
 		}
 	},
 	"invitations": {

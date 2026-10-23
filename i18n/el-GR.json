@@ -1104,7 +1104,7 @@
 			"invitations": "Προσκλήσεις",
 			"more": "Περισσότερα",
 			"backToBoard": "Επιστροφή στον πίνακα",
-			"myTasks": "My tasks"
+			"myTasks": "Οι εργασίες μου"
 		},
 		"projectList": {
 			"viewProject": "Προβολή έργου",
@@ -1225,9 +1225,9 @@
 				"contentWithoutTask": "Η χρονομέτρηση ξεκίνησε για μια εργασία"
 			}
 		},
-		"deleteOne": "Delete notification",
-		"markRead": "Mark as read",
-		"markUnread": "Mark as unread"
+		"deleteOne": "Διαγραφή ειδοποίησης",
+		"markRead": "Επισήμανση ως αναγνωσμένο",
+		"markUnread": "Επισήμανση ως μη αναγνωσμένο"
 	},
 	"activity": {
 		"assignedToSelf": "ανέθεσε την εργασία στον εαυτό του/της",
@@ -1721,13 +1721,13 @@
 			"changeStatus": "Αλλαγή κατάστασης"
 		},
 		"shortLink": {
-			"loading": "Opening task...",
-			"notFound": "Task {{key}} was not found."
+			"loading": "Άνοιγμα εργασίας...",
+			"notFound": "Η εργασία {{key}} δεν βρέθηκε."
 		},
 		"myTasks": {
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
-			"emptyTitle": "Nothing assigned to you",
-			"pageTitle": "My tasks"
+			"emptyDescription": "Οι εργασίες που σας ανατίθενται σε αυτόν τον χώρο θα εμφανίζονται εδώ.",
+			"emptyTitle": "Δεν σας έχει ανατεθεί τίποτα",
+			"pageTitle": "Οι εργασίες μου"
 		}
 	},
 	"invitations": {

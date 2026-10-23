@@ -1104,7 +1104,7 @@
 			"invitations": "Invitaciones",
 			"more": "Más",
 			"backToBoard": "Volver al tablero",
-			"myTasks": "My tasks"
+			"myTasks": "Mis tareas"
 		},
 		"projectList": {
 			"viewProject": "Ver Proyecto",
@@ -1225,9 +1225,9 @@
 				"contentWithoutTask": "Se ha activado el monitoreo de una tarea"
 			}
 		},
-		"deleteOne": "Delete notification",
-		"markRead": "Mark as read",
-		"markUnread": "Mark as unread"
+		"deleteOne": "Eliminar notificación",
+		"markRead": "Marcar como leída",
+		"markUnread": "Marcar como no leída"
 	},
 	"activity": {
 		"assignedToSelf": "se ha asignado la tarea a sí mismo",
@@ -1721,13 +1721,13 @@
 			"title": "Move task"
 		},
 		"shortLink": {
-			"loading": "Opening task...",
-			"notFound": "Task {{key}} was not found."
+			"loading": "Abriendo la tarea...",
+			"notFound": "No se encontró la tarea {{key}}."
 		},
 		"myTasks": {
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
-			"emptyTitle": "Nothing assigned to you",
-			"pageTitle": "My tasks"
+			"emptyDescription": "Las tareas que te asignen en este espacio aparecerán aquí.",
+			"emptyTitle": "No tienes nada asignado",
+			"pageTitle": "Mis tareas"
 		}
 	},
 	"invitations": {

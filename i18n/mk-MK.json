@@ -1104,7 +1104,7 @@
 			"invitations": "Покани",
 			"more": "Повеќе",
 			"backToBoard": "Назад на табла",
-			"myTasks": "My tasks"
+			"myTasks": "Мои задачи"
 		},
 		"projectList": {
 			"viewProject": "Погледни проект",
@@ -1225,9 +1225,9 @@
 				"contentWithoutTask": "Следењето на време е започнато на задача"
 			}
 		},
-		"deleteOne": "Delete notification",
-		"markRead": "Mark as read",
-		"markUnread": "Mark as unread"
+		"deleteOne": "Избриши известување",
+		"markRead": "Означи како прочитано",
+		"markUnread": "Означи како непрочитано"
 	},
 	"activity": {
 		"assignedToSelf": "ја додели задачата на себеси",
@@ -1721,13 +1721,13 @@
 			"changeStatus": "Промени статус"
 		},
 		"shortLink": {
-			"loading": "Opening task...",
-			"notFound": "Task {{key}} was not found."
+			"loading": "Се отвора задачата...",
+			"notFound": "Задачата {{key}} не е пронајдена."
 		},
 		"myTasks": {
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
-			"emptyTitle": "Nothing assigned to you",
-			"pageTitle": "My tasks"
+			"emptyDescription": "Задачите доделени на вас во овој простор ќе се појават тука.",
+			"emptyTitle": "Ништо не ви е доделено",
+			"pageTitle": "Мои задачи"
 		}
 	},
 	"invitations": {
