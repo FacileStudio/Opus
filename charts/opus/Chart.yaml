@@ -4,7 +4,7 @@ description: Opus - All you need. Nothing you don't. Open source project managem
 type: application
 # 0.4.0: add opus.extraEnv for arbitrary env vars on the opus container
 version: 0.4.0
-appVersion: "2.14.1"
+appVersion: "2.15.0"
 keywords:
   - project-management
   - kanban

@@ -4,6 +4,18 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.15.0] - 2026-10-23
+
+### Added
+
+- Live updates: task, comment, label and relation changes reach other open windows without a reload. The window that made the change is skipped.
+
+### Changed
+
+- WebSocket connections require membership in the project's workspace.
+- My tasks leaves out tasks from archived projects.
+- My tasks, short task links and notification actions are translated in German, Spanish, Dutch, Russian, Ukrainian, Greek and Macedonian.
+
 ## [2.14.1] - 2026-10-23
 
 ### Fixed
