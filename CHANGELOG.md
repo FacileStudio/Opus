@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.17.0] - 2026-10-23
+
+### Added
+
+- Tasks publish `task.created`, `task.updated` and `task.deleted` on the Antenne bus, with a `due_date` field (RFC3339 UTC, omitted when unset) so the Agenda can show due dates as calendar events.
+
 ## [2.16.0] - 2026-10-23
 
 ### Added
