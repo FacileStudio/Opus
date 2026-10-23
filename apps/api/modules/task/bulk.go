@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
@@ -207,6 +208,11 @@ func (service *Service) Bulk(ctx context.Context, userID int64, req *BulkUpdateR
 	}
 	if err != nil {
 		return nil, err
+	}
+	if req.Operation == "delete" {
+		service.emit(ctx, userID, events.ChannelTaskDeleted, tasks...)
+	} else {
+		service.emitReloaded(ctx, userID, events.ChannelTaskUpdated, taskIDs)
 	}
 	return &BulkUpdateResponse{Success: true, UpdatedCount: updatedCount}, nil
 }

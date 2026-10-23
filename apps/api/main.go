@@ -83,7 +83,7 @@ type serverBundle struct {
 	cleanup func()
 }
 
-func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *slog.Logger) (*realtime.Hub, func(), error) {
+func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *slog.Logger) (*realtime.Hub, events.Emitter, func(), error) {
 	eventsPub := events.New(events.LoadConfig(), events.WithLogger(appLogger))
 	eventsPub.Start(context.Background())
 
@@ -98,7 +98,7 @@ func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *sl
 	})
 	if err != nil {
 		eventsPub.Close()
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	sched := scheduler.NewScheduler(db, appLogger, 5*time.Minute)
@@ -112,7 +112,7 @@ func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *sl
 		}
 		eventsPub.Close()
 	}
-	return hub, cleanup, nil
+	return hub, eventsPub, cleanup, nil
 }
 
 func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *slog.Logger) (*serverBundle, error) {
@@ -120,7 +120,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 	if err != nil {
 		return nil, err
 	}
-	hub, cleanup, err := initServices(db, kits, appEnv, appLogger)
+	hub, emitter, cleanup, err := initServices(db, kits, appEnv, appLogger)
 	if err != nil {
 		return nil, err
 	}
@@ -131,6 +131,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		appLogger:   appLogger,
 		kits:        kits,
 		realtimeHub: hub,
+		emitter:     emitter,
 	})
 	addr := ":" + strconv.Itoa(appEnv.Port)
 	srv := &http.Server{

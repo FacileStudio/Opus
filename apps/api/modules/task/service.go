@@ -5,6 +5,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
@@ -16,6 +17,7 @@ type Service struct {
 	db         *gorm.DB
 	controller *Controller
 	publisher  realtime.Publisher
+	emitter    events.Emitter
 }
 
 // NewService constructs a new task service with its database handle.

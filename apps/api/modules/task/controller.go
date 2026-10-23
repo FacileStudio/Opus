@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/tronc/errors"
@@ -51,6 +52,7 @@ func (controller *Controller) create(ctx context.Context, userID, projectID int6
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskCreated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskCreated, record.Task)
 	return &resp, nil
 }
 
@@ -67,6 +69,7 @@ func (controller *Controller) update(ctx context.Context, userID, taskID int64, 
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskUpdated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskUpdated, record.Task)
 	return &resp, nil
 }
 
@@ -77,6 +80,7 @@ func (controller *Controller) delete(ctx context.Context, userID, taskID int64) 
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskDeleted, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskDeleted, record.Task)
 	return &resp, nil
 }
 
@@ -103,6 +107,7 @@ func (controller *Controller) updateStatus(ctx context.Context, userID, taskID i
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskUpdated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskUpdated, record.Task)
 	return &resp, nil
 }
 
@@ -116,6 +121,7 @@ func (controller *Controller) updatePriority(ctx context.Context, userID, taskID
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskUpdated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskUpdated, record.Task)
 	return &resp, nil
 }
 
@@ -133,6 +139,7 @@ func (controller *Controller) updateActor(ctx context.Context, userID, taskID in
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskUpdated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskUpdated, record.Task)
 	return &resp, nil
 }
 
@@ -147,6 +154,7 @@ func (controller *Controller) updateDueDate(ctx context.Context, userID, taskID 
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskUpdated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskUpdated, record.Task)
 	return &resp, nil
 }
 
@@ -160,6 +168,7 @@ func (controller *Controller) updateTitle(ctx context.Context, userID, taskID in
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskUpdated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskUpdated, record.Task)
 	return &resp, nil
 }
 
@@ -170,6 +179,7 @@ func (controller *Controller) updateDescription(ctx context.Context, userID, tas
 	}
 	resp := recordResponse(*record)
 	controller.service.publish(ctx, realtime.TypeTaskUpdated, resp.ProjectID, resp.ID)
+	controller.service.emit(ctx, userID, events.ChannelTaskUpdated, record.Task)
 	return &resp, nil
 }
 

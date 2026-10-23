@@ -2,6 +2,7 @@ package events
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
@@ -17,6 +18,7 @@ type TaskPayload struct {
 	Name            string `json:"name"`
 	Status          string `json:"status"`
 	Priority        string `json:"priority,omitempty"`
+	DueDate         string `json:"due_date,omitempty"`
 	ActorID         *int64 `json:"actor_id,omitempty"`
 	ActorEmail      string `json:"actor_email,omitempty"`
 }
@@ -89,6 +91,10 @@ func (w WorkspacePayload) entityID() string {
 
 // NewTaskPayload constructs a TaskPayload from a schema Task and actor email.
 func NewTaskPayload(task schemas.Task, actorEmail string) TaskPayload {
+	dueDate := ""
+	if task.DueDate != nil {
+		dueDate = task.DueDate.UTC().Format(time.RFC3339)
+	}
 	return TaskPayload{
 		ID:              task.ID,
 		FacileID:        strconv.FormatInt(task.ID, 10),
@@ -99,6 +105,7 @@ func NewTaskPayload(task schemas.Task, actorEmail string) TaskPayload {
 		Name:            task.Title,
 		Status:          task.Status,
 		Priority:        task.Priority,
+		DueDate:         dueDate,
 		ActorID:         task.ActorID,
 		ActorEmail:      actorEmail,
 	}

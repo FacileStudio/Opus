@@ -5,6 +5,7 @@ import (
 
 	documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/internal/middleware"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/internal/storage"
@@ -40,6 +41,7 @@ type routerDeps struct {
 	appLogger   *slog.Logger
 	kits        *authKits
 	realtimeHub *realtime.Hub
+	emitter     events.Emitter
 }
 
 func referenceConfig() apiref.Config {
@@ -71,7 +73,8 @@ func referenceConfig() apiref.Config {
 	}
 }
 
-func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Authenticator, appEnv *env.Config, hub *realtime.Hub) {
+func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, deps routerDeps) {
+	db, appEnv, hub := deps.db, deps.appEnv, deps.realtimeHub
 	config.RegisterRoutes(api, config.NewService(appEnv))
 	project.RegisterRoutes(api, project.NewService(db), authService)
 	column.RegisterRoutes(api, column.NewService(db), authService)
@@ -79,6 +82,7 @@ func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Au
 	if hub != nil {
 		taskService.SetPublisher(hub)
 	}
+	taskService.SetEmitter(deps.emitter)
 	task.RegisterRoutes(api, taskService, authService)
 	task.RegisterPublicRoutes(api, taskService)
 	relationService := taskrelation.NewService(db)
@@ -138,7 +142,7 @@ func buildRouter(deps routerDeps) chi.Router {
 		deps.kits.oidc.Mount(api)
 		auth.RegisterRoutes(api, authService, *deps.appEnv)
 		workspace.RegisterRoutes(api, workspaceService, authService)
-		registerDomainRoutes(api, deps.db, authService, deps.appEnv, deps.realtimeHub)
+		registerDomainRoutes(api, authService, deps)
 
 		if deps.realtimeHub != nil {
 			api.Get("/ws", deps.realtimeHub.ServeWS)

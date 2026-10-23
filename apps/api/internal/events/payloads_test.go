@@ -2,9 +2,11 @@ package events
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
@@ -84,5 +86,41 @@ func TestPublisher_Dial_Cancel(t *testing.T) {
 
 	if pub.IsConnected() {
 		t.Error("expected not connected")
+	}
+}
+
+func TestTaskPayloadDueDateJSON(t *testing.T) {
+	due := time.Date(2026, 10, 30, 0, 0, 0, 0, time.UTC)
+	task := schemas.Task{ID: 12, ProjectID: 34, WorkspaceID: 56, Title: "Task", Status: "open", DueDate: &due}
+
+	set, err := json.Marshal(NewTaskPayload(task, ""))
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	var got map[string]any
+	if err := json.Unmarshal(set, &got); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if got["due_date"] != "2026-10-30T00:00:00Z" {
+		t.Errorf("due_date = %v, want 2026-10-30T00:00:00Z", got["due_date"])
+	}
+
+	local := time.Date(2026, 10, 30, 2, 0, 0, 0, time.FixedZone("CEST", 2*3600))
+	task.DueDate = &local
+	if p := NewTaskPayload(task, ""); p.DueDate != "2026-10-30T00:00:00Z" {
+		t.Errorf("non-UTC due date = %q, want UTC", p.DueDate)
+	}
+
+	task.DueDate = nil
+	cleared, err := json.Marshal(NewTaskPayload(task, ""))
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	got = map[string]any{}
+	if err := json.Unmarshal(cleared, &got); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if _, ok := got["due_date"]; ok {
+		t.Errorf("due_date present for cleared task: %s", cleared)
 	}
 }

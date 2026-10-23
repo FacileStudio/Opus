@@ -161,6 +161,12 @@ ledger.
   `apps/api/src/nook-pool/sync.ts`.
 - Cross-app entity identity is carried as `facile_id` in the payload.
 
+Task payloads carry `due_date` as RFC3339 UTC (for example `2026-10-30T00:00:00Z`) and omit it when
+the task has none. Any change to a task, including setting, changing or clearing the due date,
+emits `task.updated`; a payload without `due_date` tells the consumer to drop the calendar event.
+`task.created` and `task.deleted` carry it too. The Go API builds the payload in
+`apps/api/internal/events/payloads.go` and emits from `apps/api/modules/task/antenne.go`.
+
 Per-event toggles are stored as JSON in `nook_pool_config.poolEvents` and default to enabled.
 
 ## Object storage
