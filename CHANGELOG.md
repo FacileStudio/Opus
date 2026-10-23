@@ -4,6 +4,20 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.13.0] - 2026-10-23
+
+### Added
+
+- Task cards and list rows show subtask progress (done of total).
+- Short task links: `/dashboard/workspace/{id}/task/SLUG-N`. "Copy task link" now copies this form.
+- Notifications can be marked unread and deleted one at a time.
+
+### Changed
+
+- Cards, columns, panels, menus, popovers and dialogs have no borders.
+- The sidebar is a floating card, shows your name in the footer, and no longer shows the version.
+- The Gantt view opens centered on today.
+
 ## [2.12.0] - 2026-10-23
 
 ### Changed
