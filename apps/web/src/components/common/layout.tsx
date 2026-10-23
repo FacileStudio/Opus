@@ -27,7 +27,7 @@ function LayoutHeader({ children, className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "mb-2 flex h-12 shrink-0 items-center gap-2 rounded-full border border-border bg-card px-4 shadow-sm",
+        "mb-2 flex h-12 shrink-0 items-center gap-2 rounded-full bg-card px-4 shadow-sm [&_button]:border-transparent",
         className,
       )}
     >

@@ -88,13 +88,13 @@ function ActiveFilterChip({
   onClear,
 }: ActiveFilterChipProps) {
   return (
-    <div className="inline-flex h-7 items-center rounded-md border border-border bg-background text-xs shadow-xs">
+    <div className="inline-flex h-7 items-center rounded-md bg-muted text-xs">
       <span className="px-2 font-medium text-foreground">{subject}</span>
-      <span className="h-full w-px bg-border" />
+      <span className="h-full w-px bg-background" />
       <span className="px-2 text-foreground/80">{operator}</span>
-      <span className="h-full w-px bg-border" />
+      <span className="h-full w-px bg-background" />
       <span className="flex px-2 text-foreground">{value}</span>
-      <span className="h-full w-px bg-border" />
+      <span className="h-full w-px bg-background" />
       <button
         className="inline-flex h-full w-7 items-center justify-center rounded-r-md text-foreground/70 hover:bg-accent/70 hover:text-foreground"
         onClick={onClear}
@@ -251,7 +251,7 @@ export default function BoardToolbar({
   };
 
   return (
-    <div className="mx-2 mb-2 rounded-3xl border border-border bg-card px-2 shadow-sm">
+    <div className="mb-2 rounded-3xl bg-card [&_button]:border-transparent px-2 shadow-sm">
       <div className="flex min-h-10 items-center px-2 py-1.5 md:px-3">
         <div className="flex w-full flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -260,7 +260,7 @@ export default function BoardToolbar({
                 render={
                   <button
                     type="button"
-                    className="inline-flex h-7 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-foreground text-xs font-medium outline-none ring-0 hover:bg-accent/60"
+                    className="inline-flex h-7 items-center gap-1.5 rounded-md bg-muted px-2.5 text-foreground text-xs font-medium outline-none ring-0 hover:bg-accent/60"
                   />
                 }
               >
