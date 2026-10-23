@@ -184,10 +184,10 @@ function TaskCard({ task }: TaskCardProps) {
           {/** biome-ignore lint/a11y/noStaticElementInteractions: false positive for onClick and onKeyDown */}
           <div
             onClick={handleTaskCardClick}
-            className={`group relative rounded-lg bg-background p-3 transition-all duration-200 ease-out ${
+            className={`group relative rounded-lg bg-background p-3 shadow-xs/10 transition-all duration-200 ease-out ${
               isDragging
                 ? "cursor-grabbing bg-card shadow-lg"
-                : "cursor-pointer hover:bg-card active:cursor-grabbing"
+                : "cursor-pointer hover:bg-muted active:cursor-grabbing"
             } ${
               isTaskSelected ? "bg-accent ring-1 ring-inset ring-ring/30" : ""
             } ${isTaskFocused ? "ring-2 ring-inset ring-ring/50" : ""}`}
