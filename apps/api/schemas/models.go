@@ -56,8 +56,9 @@ type Invitation struct {
 
 // Project is a container for tasks, columns and views within a workspace.
 type Project struct {
-	ID          int64      `gorm:"column:id;primaryKey;autoIncrement"`
-	WorkspaceID int64      `gorm:"column:workspace_id;not null;index"`
+	ID          int64 `gorm:"column:id;primaryKey;autoIncrement"`
+	WorkspaceID int64 `gorm:"column:workspace_id;not null;index"`
+	FacileRef
 	Slug        string     `gorm:"column:slug;not null"`
 	Icon        string     `gorm:"column:icon;default:Layout"`
 	Name        string     `gorm:"column:name;not null"`
@@ -83,7 +84,8 @@ type Column struct {
 
 // Task is a work unit within a project and workspace.
 type Task struct {
-	ID          int64      `gorm:"column:id;primaryKey;autoIncrement"`
+	ID int64 `gorm:"column:id;primaryKey;autoIncrement"`
+	FacileRef
 	ProjectID   int64      `gorm:"column:project_id;not null;index"`
 	WorkspaceID int64      `gorm:"column:workspace_id;not null;index"`
 	ColumnID    *int64     `gorm:"column:column_id;index"`

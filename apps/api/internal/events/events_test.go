@@ -44,6 +44,10 @@ func (f *fakeTransport) EmitNow(channel string, payload any) error {
 	return nil
 }
 
+func (f *fakeTransport) Listen(string, antenne.EventHandler) func() {
+	return func() {}
+}
+
 func (f *fakeTransport) Disconnect() {
 	f.mu.Lock()
 	defer f.mu.Unlock()

@@ -27,8 +27,12 @@ func Migrate(db *gorm.DB) error {
 		&UserNotificationWorkspaceRule{},
 		&TaskReminderSent{},
 		&Asset{},
+		&PoolProcessedEvent{},
 	}
 	if err := db.AutoMigrate(models...); err != nil {
+		return err
+	}
+	if err := BackfillFacileIDs(db); err != nil {
 		return err
 	}
 	return AdoptPorte(db)

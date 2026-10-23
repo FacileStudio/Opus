@@ -94,6 +94,7 @@ func (controller *Controller) move(ctx context.Context, userID, taskID int64, re
 	}
 	controller.service.publish(ctx, realtime.TypeTaskMoved, resp.SourceProjectID, resp.Task.ID)
 	controller.service.publish(ctx, realtime.TypeTaskMoved, resp.DestinationProjectID, resp.Task.ID)
+	controller.service.emitReloaded(ctx, userID, events.ChannelTaskUpdated, []int64{resp.Task.ID})
 	return resp, nil
 }
 

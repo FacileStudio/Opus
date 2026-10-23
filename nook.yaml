@@ -1,5 +1,5 @@
-# Documents the pool events Opus uses. The API builds its pool config
-# inline (apps/api/src/nook-pool/sync.ts) — keep this file in sync with it.
+# Documents the pool events Opus syncs with Sablier. The Go API builds its pool config
+# in apps/api/internal/events (AllChannels emit, SyncChannels listen) — keep this file in sync with it.
 app: Opus
 events:
   emit:

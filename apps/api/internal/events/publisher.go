@@ -17,6 +17,7 @@ type Transport interface {
 	EmitNow(channel string, payload any) error
 	Disconnect()
 	IsConnected() bool
+	Listen(channel string, handler antenne.EventHandler) func()
 }
 
 // Emitter defines the public contract for publishing domain events.
@@ -74,7 +75,8 @@ func New(cfg Config, opts ...Option) *Publisher {
 			Secret:     cfg.Secret,
 			InstanceID: cfg.InstanceID,
 			Events: antenne.EventConfig{
-				Emit: AllChannels(),
+				Emit:   AllChannels(),
+				Listen: SyncChannels(),
 			},
 		},
 			antenne.WithMaxReconnect(math.MaxInt32),
@@ -84,6 +86,14 @@ func New(cfg Config, opts ...Option) *Publisher {
 		)
 	}
 	return p
+}
+
+// Listen registers a handler for an inbound channel. Call it before Start.
+func (p *Publisher) Listen(channel string, handler antenne.EventHandler) {
+	if p == nil || p.transport == nil {
+		return
+	}
+	p.transport.Listen(channel, handler)
 }
 
 // Start initiates background connection to Antenne.

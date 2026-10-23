@@ -18,9 +18,27 @@ func (service *Service) emit(ctx context.Context, userID int64, channel string, 
 	}
 	var actorEmail string
 	service.db.WithContext(ctx).Model(&schemas.User{}).Where("id = ?", userID).Limit(1).Pluck("email", &actorEmail)
+	projectFacileIDs := service.projectFacileIDs(ctx, tasks)
 	for _, task := range tasks {
-		service.emitter.EmitTask(ctx, channel, events.NewTaskPayload(task, actorEmail))
+		payload := events.NewTaskPayload(task, projectFacileIDs[task.ProjectID], actorEmail)
+		service.emitter.EmitTask(ctx, channel, payload)
 	}
+}
+
+func (service *Service) projectFacileIDs(ctx context.Context, tasks []schemas.Task) map[int64]string {
+	ids := make([]int64, 0, len(tasks))
+	for _, task := range tasks {
+		ids = append(ids, task.ProjectID)
+	}
+	var projects []schemas.Project
+	service.db.WithContext(ctx).Select("id", "facile_id").Where("id IN ?", ids).Find(&projects)
+	byID := make(map[int64]string, len(projects))
+	for _, project := range projects {
+		if project.FacileID != nil {
+			byID[project.ID] = *project.FacileID
+		}
+	}
+	return byID
 }
 
 func (service *Service) emitReloaded(ctx context.Context, userID int64, channel string, taskIDs []int64) {

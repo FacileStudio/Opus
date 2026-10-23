@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 )
@@ -53,9 +54,9 @@ func (c *controller) create(ctx context.Context, userID int64, req *CreateProjec
 	}
 	slug := strings.TrimSpace(req.Slug)
 	if slug == "" {
-		slug = slugify(name)
+		slug = Slugify(name)
 	} else {
-		slug = slugify(slug)
+		slug = Slugify(slug)
 	}
 	project := schemas.Project{
 		WorkspaceID: int64(req.WorkspaceID),
@@ -67,6 +68,7 @@ func (c *controller) create(ctx context.Context, userID int64, req *CreateProjec
 	if err != nil {
 		return nil, err
 	}
+	c.service.emit(ctx, userID, events.ChannelProjectCreated, *created)
 	stats := &ProjectStatistics{}
 	return toProjectResponse(created, stats), nil
 }
@@ -101,7 +103,7 @@ func (c *controller) update(ctx context.Context, userID, projectID int64, req *U
 		updates["icon"] = strings.TrimSpace(*req.Icon)
 	}
 	if req.Slug != nil {
-		slug := slugify(*req.Slug)
+		slug := Slugify(*req.Slug)
 		if slug == "" {
 			return nil, errors.Invalid("project slug cannot be empty")
 		}
@@ -117,6 +119,7 @@ func (c *controller) update(ctx context.Context, userID, projectID int64, req *U
 	if err != nil {
 		return nil, err
 	}
+	c.service.emit(ctx, userID, events.ChannelProjectUpdated, *updated)
 	statsMap, _ := c.service.loadStatistics(ctx, []int64{projectID})
 	stat := statsMap[projectID]
 	return toProjectResponse(updated, &stat), nil
@@ -130,6 +133,7 @@ func (c *controller) delete(ctx context.Context, userID, projectID int64) (*Proj
 	if err != nil {
 		return nil, err
 	}
+	c.service.emit(ctx, userID, events.ChannelProjectDeleted, *deleted)
 	return toProjectResponse(deleted, nil), nil
 }
 
@@ -170,7 +174,8 @@ func toProjectResponse(project *schemas.Project, stats *ProjectStatistics) *Proj
 	}
 }
 
-func slugify(input string) string {
+// Slugify lowercases input into a URL-safe project slug.
+func Slugify(input string) string {
 	lower := strings.ToLower(strings.TrimSpace(input))
 	var builder strings.Builder
 	lastDash := false

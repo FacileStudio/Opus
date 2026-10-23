@@ -49,3 +49,15 @@ func AllChannels() []string {
 		ChannelWorkspaceCreated,
 	}
 }
+
+// SyncChannels returns the channels Opus listens to for Sablier project and task sync.
+func SyncChannels() []string {
+	return []string{
+		ChannelProjectCreated,
+		ChannelProjectUpdated,
+		ChannelProjectDeleted,
+		ChannelTaskCreated,
+		ChannelTaskUpdated,
+		ChannelTaskDeleted,
+	}
+}

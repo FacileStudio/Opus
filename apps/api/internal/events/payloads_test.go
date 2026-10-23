@@ -13,14 +13,20 @@ import (
 
 func TestPayloadBuilders(t *testing.T) {
 	task := schemas.Task{ID: 12, ProjectID: 34, WorkspaceID: 56, Title: "Task", Status: "open"}
-	tp := NewTaskPayload(task, "alice@facile.studio")
-	if tp.ID != 12 || tp.FacileID != "12" || tp.ActorEmail != "alice@facile.studio" {
+	tp := NewTaskPayload(task, "proj-fid", "alice@facile.studio")
+	if tp.ID != 12 || tp.FacileID != "12" || tp.ProjectFacileID != "proj-fid" || tp.ActorEmail != "alice@facile.studio" {
 		t.Errorf("unexpected task payload: %+v", tp)
 	}
 
-	proj := schemas.Project{ID: 78, Slug: "proj", Name: "Project", Description: "Desc"}
+	taskFID, projFID := "task-fid", "proj-fid"
+	stored := NewTaskPayload(schemas.Task{ID: 12, FacileRef: schemas.FacileRef{FacileID: &taskFID}}, projFID, "")
+	if stored.FacileID != "task-fid" {
+		t.Errorf("stored facile id ignored: %+v", stored)
+	}
+
+	proj := schemas.Project{ID: 78, FacileRef: schemas.FacileRef{FacileID: &projFID}, Slug: "proj", Name: "Project", Description: "Desc"}
 	pp := NewProjectPayload(proj, "bob@facile.studio")
-	if pp.FacileID != "proj" || *pp.Description != "Desc" {
+	if pp.FacileID != "proj-fid" || *pp.Description != "Desc" {
 		t.Errorf("unexpected project payload: %+v", pp)
 	}
 
@@ -93,7 +99,7 @@ func TestTaskPayloadDueDateJSON(t *testing.T) {
 	due := time.Date(2026, 10, 30, 0, 0, 0, 0, time.UTC)
 	task := schemas.Task{ID: 12, ProjectID: 34, WorkspaceID: 56, Title: "Task", Status: "open", DueDate: &due}
 
-	set, err := json.Marshal(NewTaskPayload(task, ""))
+	set, err := json.Marshal(NewTaskPayload(task, "", ""))
 	if err != nil {
 		t.Fatalf("marshal: %v", err)
 	}
@@ -107,12 +113,12 @@ func TestTaskPayloadDueDateJSON(t *testing.T) {
 
 	local := time.Date(2026, 10, 30, 2, 0, 0, 0, time.FixedZone("CEST", 2*3600))
 	task.DueDate = &local
-	if p := NewTaskPayload(task, ""); p.DueDate != "2026-10-30T00:00:00Z" {
+	if p := NewTaskPayload(task, "", ""); p.DueDate != "2026-10-30T00:00:00Z" {
 		t.Errorf("non-UTC due date = %q, want UTC", p.DueDate)
 	}
 
 	task.DueDate = nil
-	cleared, err := json.Marshal(NewTaskPayload(task, ""))
+	cleared, err := json.Marshal(NewTaskPayload(task, "", ""))
 	if err != nil {
 		t.Fatalf("marshal: %v", err)
 	}

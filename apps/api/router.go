@@ -76,7 +76,9 @@ func referenceConfig() apiref.Config {
 func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, deps routerDeps) {
 	db, appEnv, hub := deps.db, deps.appEnv, deps.realtimeHub
 	config.RegisterRoutes(api, config.NewService(appEnv))
-	project.RegisterRoutes(api, project.NewService(db), authService)
+	projectService := project.NewService(db)
+	projectService.SetEmitter(deps.emitter)
+	project.RegisterRoutes(api, projectService, authService)
 	column.RegisterRoutes(api, column.NewService(db), authService)
 	taskService := task.NewService(db)
 	if hub != nil {

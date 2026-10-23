@@ -18,6 +18,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/database"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
+	"github.com/FacileStudio/Opus/apps/api/internal/poolsync"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
@@ -84,8 +85,8 @@ type serverBundle struct {
 }
 
 func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *slog.Logger) (*realtime.Hub, events.Emitter, func(), error) {
-	eventsPub := events.New(events.LoadConfig(), events.WithLogger(appLogger))
-	eventsPub.Start(context.Background())
+	eventsCfg := events.LoadConfig()
+	eventsPub := events.New(eventsCfg, events.WithLogger(appLogger))
 
 	adapter := realtime.NewRedisAdapter(appEnv.RedisURL, appLogger)
 	wsAuth := realtime.NewSessionAuthenticator(kits.sessions)
@@ -101,6 +102,9 @@ func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *sl
 		return nil, nil, nil, err
 	}
 
+	attachPoolSync(db, eventsCfg, eventsPub, hub, appLogger)
+	eventsPub.Start(context.Background())
+
 	sched := scheduler.NewScheduler(db, appLogger, 5*time.Minute)
 	schedCtx, cancelSched := context.WithCancel(context.Background())
 	go sched.Start(schedCtx)
@@ -113,6 +117,18 @@ func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *sl
 		eventsPub.Close()
 	}
 	return hub, eventsPub, cleanup, nil
+}
+
+func attachPoolSync(db *gorm.DB, cfg events.Config, pub *events.Publisher, hub *realtime.Hub, appLogger *slog.Logger) {
+	if !cfg.Enabled() {
+		return
+	}
+	if cfg.SyncWorkspaceID == 0 {
+		appLogger.Warn("ANTENNE_SYNC_WORKSPACE_ID is not set, projects created in Sablier will not be imported")
+	}
+	syncer := poolsync.New(db, appLogger, cfg.SyncWorkspaceID, hub)
+	syncer.Prune(context.Background())
+	syncer.Register(pub)
 }
 
 func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger *slog.Logger) (*serverBundle, error) {

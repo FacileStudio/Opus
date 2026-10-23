@@ -8,6 +8,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 	"gorm.io/gorm"
@@ -17,6 +18,7 @@ import (
 type Service struct {
 	orm        *gorm.DB
 	controller *controller
+	emitter    events.Emitter
 }
 
 // NewService constructs a project Service backed by the provided database handle.
@@ -95,7 +97,7 @@ func (s *Service) Create(ctx context.Context, userID int64, project schemas.Proj
 		if err := tx.Create(&project).Error; err != nil {
 			return errors.Internal("failed to create project", err)
 		}
-		return createDefaultColumns(tx, project.ID, project.CreatedAt)
+		return CreateDefaultColumns(tx, project.ID, project.CreatedAt)
 	})
 	if err != nil {
 		return nil, err
@@ -239,7 +241,8 @@ func (s *Service) uniqueSlug(ctx context.Context, workspaceID int64, base string
 	}
 }
 
-func createDefaultColumns(tx *gorm.DB, projectID int64, now time.Time) error {
+// CreateDefaultColumns scaffolds the standard workflow columns of a new project.
+func CreateDefaultColumns(tx *gorm.DB, projectID int64, now time.Time) error {
 	columns := []schemas.Column{
 		{ProjectID: projectID, Name: "To Do", Slug: "to-do", Position: 0, IsFinal: false, CreatedAt: now, UpdatedAt: now},
 		{ProjectID: projectID, Name: "In Progress", Slug: "in-progress", Position: 1, IsFinal: false, CreatedAt: now, UpdatedAt: now},

@@ -89,17 +89,24 @@ func (w WorkspacePayload) entityID() string {
 	return strconv.FormatInt(w.ID, 10)
 }
 
-// NewTaskPayload constructs a TaskPayload from a schema Task and actor email.
-func NewTaskPayload(task schemas.Task, actorEmail string) TaskPayload {
+func facileIDOf(id *string, fallback int64) string {
+	if id != nil && *id != "" {
+		return *id
+	}
+	return strconv.FormatInt(fallback, 10)
+}
+
+// NewTaskPayload constructs a TaskPayload from a schema Task, its project facile_id and the actor email.
+func NewTaskPayload(task schemas.Task, projectFacileID, actorEmail string) TaskPayload {
 	dueDate := ""
 	if task.DueDate != nil {
 		dueDate = task.DueDate.UTC().Format(time.RFC3339)
 	}
 	return TaskPayload{
 		ID:              task.ID,
-		FacileID:        strconv.FormatInt(task.ID, 10),
+		FacileID:        facileIDOf(task.FacileID, task.ID),
 		ProjectID:       task.ProjectID,
-		ProjectFacileID: strconv.FormatInt(task.ProjectID, 10),
+		ProjectFacileID: projectFacileID,
 		WorkspaceID:     task.WorkspaceID,
 		Title:           task.Title,
 		Name:            task.Title,
@@ -113,25 +120,17 @@ func NewTaskPayload(task schemas.Task, actorEmail string) TaskPayload {
 
 // NewProjectPayload constructs a ProjectPayload from a schema Project and actor email.
 func NewProjectPayload(project schemas.Project, actorEmail string) ProjectPayload {
-	facileID := project.Slug
-	if facileID == "" {
-		facileID = strconv.FormatInt(project.ID, 10)
-	}
-	var desc *string
-	if project.Description != "" {
-		desc = &project.Description
-	}
 	var icon *string
 	if project.Icon != "" {
 		icon = &project.Icon
 	}
 	return ProjectPayload{
 		ID:          project.ID,
-		FacileID:    facileID,
+		FacileID:    facileIDOf(project.FacileID, project.ID),
 		WorkspaceID: project.WorkspaceID,
 		Name:        project.Name,
 		Slug:        project.Slug,
-		Description: desc,
+		Description: &project.Description,
 		Icon:        icon,
 		ActorEmail:  actorEmail,
 	}

@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+### Added
+
+- Projects and tasks sync with Sablier in both directions over the Antenne pool. Create, update and delete apply on the other side, replays are ignored, and Opus never re-publishes a change it received. Set `ANTENNE_SYNC_WORKSPACE_ID` to choose the workspace that receives projects created in Sablier. See `docs/sablier-sync.md`.
+- Projects publish `project.created`, `project.updated` and `project.deleted` on the Antenne bus, and moving a task publishes `task.updated`.
+
+### Changed
+
+- Projects and tasks carry a stable `facile_id`, minted at creation and backfilled for existing rows by migration `00002`. Events use it instead of the numeric id or slug.
+- Antenne events for projects now always include the description, so clearing it reaches Sablier.
+
 ## [2.17.0] - 2026-10-23
 
 ### Added

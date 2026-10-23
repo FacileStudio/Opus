@@ -80,6 +80,19 @@ Separate from GitHub sign-in. These power repository sync and webhook delivery.
 | `GITHUB_PRIVATE_KEY` | no | — | App private key, PEM |
 | `GITHUB_WEBHOOK_SECRET` | no | — | Shared secret verifying `POST /api/github-integration/webhook` |
 
+## Antenne event bus
+
+Opus publishes project and task events to Antenne and applies the ones Sablier publishes. All
+three variables are optional. With `ANTENNE_URL` or `ANTENNE_SECRET` unset, the bus is off and
+local writes are unaffected. See [Sablier sync](sablier-sync.md).
+
+| Variable | Required | Default | What it does |
+|---|---|---|---|
+| `ANTENNE_URL` | no | — | Antenne instance URL |
+| `ANTENNE_SECRET` | no | — | Shared secret of the Antenne instance |
+| `ANTENNE_INSTANCE_ID` | no | — | Distinguishes several Opus instances on one bus |
+| `ANTENNE_SYNC_WORKSPACE_ID` | no | — | Numeric id of the workspace that receives projects created in Sablier. Unset: Sablier projects are not imported, but changes to projects Opus already knows still apply |
+
 ## Email
 
 Transactional email is skipped entirely when `SMTP_HOST` or `SMTP_FROM` is unset; invitations are
