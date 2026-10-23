@@ -27,7 +27,7 @@ async function getSharedProject(token: string): Promise<ProjectWithTasks> {
       slug: column.slug,
       name: column.name,
       isFinal: column.isFinal,
-      tasks: tasks.filter((task) => task.columnId === column.id).map(toTask),
+      tasks: tasks.filter((task) => task.status === column.slug).map(toTask),
     })),
     archivedTasks: [],
     plannedTasks: [],
