@@ -4,6 +4,13 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.19.0] - 2026-10-23
+
+### Changed
+
+- The top bar is a floating pill on every page. The board, backlog and Gantt toolbars float the same way.
+- The sidebar follows the Facile suite layout: a borderless card with a 12px radius on the page background, and the content sits flat beside it.
+
 ## [2.18.0] - 2026-10-23
 
 ### Added
