@@ -93,6 +93,7 @@ func (controller *Controller) create(ctx context.Context, userID int64, req *Cre
 	if err != nil {
 		return nil, err
 	}
+	controller.service.notifyRelation(ctx, relation)
 	return toRelationResponse(relation), nil
 }
 
@@ -104,5 +105,6 @@ func (controller *Controller) delete(ctx context.Context, userID, id int64) (*Ta
 	if err != nil {
 		return nil, err
 	}
+	controller.service.notifyRelation(ctx, relation)
 	return toRelationResponse(relation), nil
 }

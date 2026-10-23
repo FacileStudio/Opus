@@ -2,8 +2,10 @@ package label
 
 import (
 	"context"
+	"strconv"
 	"strings"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 )
@@ -131,6 +133,7 @@ func (controller *Controller) assignToTask(ctx context.Context, userID, labelID 
 	if err != nil {
 		return nil, err
 	}
+	controller.service.notify(ctx, realtime.BroadcastMessage{Type: realtime.TypeTaskLabelUpdated, TaskID: strconv.FormatInt(int64(req.TaskID), 10)}, int64(req.TaskID))
 	return toResponse(label), nil
 }
 
@@ -138,9 +141,16 @@ func (controller *Controller) unassignFromTask(ctx context.Context, userID, labe
 	if labelID <= 0 {
 		return nil, errors.Invalid("invalid label id")
 	}
+	before, err := controller.service.GetLabel(ctx, userID, labelID)
+	if err != nil {
+		return nil, err
+	}
 	label, err := controller.service.UnassignLabelFromTask(ctx, userID, labelID)
 	if err != nil {
 		return nil, err
+	}
+	if before.TaskID != nil {
+		controller.service.notify(ctx, realtime.BroadcastMessage{Type: realtime.TypeTaskLabelUpdated, TaskID: strconv.FormatInt(*before.TaskID, 10)}, *before.TaskID)
 	}
 	return toResponse(label), nil
 }
@@ -152,6 +162,9 @@ func (controller *Controller) delete(ctx context.Context, userID, labelID int64)
 	label, err := controller.service.DeleteLabel(ctx, userID, labelID)
 	if err != nil {
 		return nil, err
+	}
+	if label.TaskID != nil {
+		controller.service.notify(ctx, realtime.BroadcastMessage{Type: realtime.TypeTaskLabelUpdated, TaskID: strconv.FormatInt(*label.TaskID, 10)}, *label.TaskID)
 	}
 	return toResponse(label), nil
 }

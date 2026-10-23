@@ -2,8 +2,10 @@ package comment
 
 import (
 	"context"
+	"strconv"
 	"strings"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 )
@@ -44,6 +46,7 @@ func (controller *Controller) create(ctx context.Context, userID, taskID int64, 
 	if err != nil {
 		return nil, err
 	}
+	controller.service.notify(ctx, realtime.BroadcastMessage{Type: realtime.TypeCommentUpdated, TaskID: strconv.FormatInt(comment.TaskID, 10)}, comment.TaskID)
 	return toCommentResponse(comment), nil
 }
 
@@ -59,6 +62,7 @@ func (controller *Controller) update(ctx context.Context, userID, commentID int6
 	if err != nil {
 		return nil, err
 	}
+	controller.service.notify(ctx, realtime.BroadcastMessage{Type: realtime.TypeCommentUpdated, TaskID: strconv.FormatInt(comment.TaskID, 10)}, comment.TaskID)
 	return toCommentResponse(comment), nil
 }
 
@@ -70,6 +74,7 @@ func (controller *Controller) delete(ctx context.Context, userID, commentID int6
 	if err != nil {
 		return nil, err
 	}
+	controller.service.notify(ctx, realtime.BroadcastMessage{Type: realtime.TypeCommentUpdated, TaskID: strconv.FormatInt(comment.TaskID, 10)}, comment.TaskID)
 	return toCommentResponse(comment), nil
 }
 

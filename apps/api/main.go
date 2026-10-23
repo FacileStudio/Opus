@@ -92,6 +92,7 @@ func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *sl
 	hub, err := realtime.NewHub(realtime.Config{
 		Adapter:       adapter,
 		Authenticator: wsAuth,
+		Authorizer:    realtime.NewMembershipAuthorizer(db),
 		Logger:        appLogger,
 	})
 	if err != nil {

@@ -21,6 +21,7 @@ type Broadcaster interface {
 type Config struct {
 	Adapter       Adapter
 	Authenticator Authenticator
+	Authorizer    Authorizer
 	Logger        *slog.Logger
 	CheckOrigin   func(r *http.Request) bool
 }
@@ -32,6 +33,7 @@ type Hub struct {
 	workspaces    map[string]map[*Client]struct{}
 	adapter       Adapter
 	authenticator Authenticator
+	authorizer    Authorizer
 	upgrader      websocket.Upgrader
 	logger        *slog.Logger
 	closed        bool
@@ -52,6 +54,7 @@ func NewHub(cfg Config) (*Hub, error) {
 		workspaces:    make(map[string]map[*Client]struct{}),
 		adapter:       adapter,
 		authenticator: cfg.Authenticator,
+		authorizer:    cfg.Authorizer,
 		upgrader:      buildUpgrader(cfg.CheckOrigin),
 		logger:        logger,
 	}

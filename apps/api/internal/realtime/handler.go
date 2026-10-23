@@ -20,6 +20,10 @@ func (h *Hub) ServeWS(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
+	if h.authorizer != nil && !h.authorizer(r.Context(), userID, projectID, workspaceID) {
+		http.Error(w, "forbidden", http.StatusForbidden)
+		return
+	}
 	initiatorID := extractInitiatorID(r)
 	conn, err := h.upgrader.Upgrade(hijackableWriter(w), r, nil)
 	if err != nil {

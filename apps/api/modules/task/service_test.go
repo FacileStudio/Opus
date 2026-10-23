@@ -238,4 +238,14 @@ func TestListMineExcludesDoneAndArchived(t *testing.T) {
 	if len(all) != 2 {
 		t.Fatalf("expected 2 tasks with includeDone, got %d", len(all))
 	}
+	if err := db.Model(&schemas.Project{}).Where("id = ?", projectID).Update("archived_at", time.Now()).Error; err != nil {
+		t.Fatalf("archive project: %v", err)
+	}
+	inArchived, err := service.controller.listMine(ctx, userID, project.WorkspaceID, true)
+	if err != nil {
+		t.Fatalf("list mine for archived project: %v", err)
+	}
+	if len(inArchived) != 0 {
+		t.Fatalf("expected no tasks from an archived project, got %d", len(inArchived))
+	}
 }

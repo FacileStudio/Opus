@@ -71,16 +71,27 @@ func referenceConfig() apiref.Config {
 	}
 }
 
-func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Authenticator, appEnv *env.Config) {
+func registerDomainRoutes(api chi.Router, db *gorm.DB, authService middleware.Authenticator, appEnv *env.Config, hub *realtime.Hub) {
 	config.RegisterRoutes(api, config.NewService(appEnv))
 	project.RegisterRoutes(api, project.NewService(db), authService)
 	column.RegisterRoutes(api, column.NewService(db), authService)
 	taskService := task.NewService(db)
+	if hub != nil {
+		taskService.SetPublisher(hub)
+	}
 	task.RegisterRoutes(api, taskService, authService)
 	task.RegisterPublicRoutes(api, taskService)
-	taskrelation.RegisterRoutes(api, taskrelation.NewService(db), authService)
-	label.RegisterRoutes(api, label.NewService(db), authService)
-	comment.RegisterRoutes(api, comment.NewService(db), authService)
+	relationService := taskrelation.NewService(db)
+	labelService := label.NewService(db)
+	commentService := comment.NewService(db)
+	if hub != nil {
+		relationService.SetPublisher(hub)
+		labelService.SetPublisher(hub)
+		commentService.SetPublisher(hub)
+	}
+	taskrelation.RegisterRoutes(api, relationService, authService)
+	label.RegisterRoutes(api, labelService, authService)
+	comment.RegisterRoutes(api, commentService, authService)
 	activity.RegisterRoutes(api, activity.NewService(db), authService)
 	sharelink.RegisterRoutes(api, sharelink.NewService(db), authService)
 	timeentry.RegisterRoutes(api, timeentry.NewService(db), authService)
@@ -120,13 +131,14 @@ func buildRouter(deps routerDeps) chi.Router {
 	}
 
 	router.Route("/api", func(api chi.Router) {
+		api.Use(realtime.InitiatorMiddleware)
 		health.Mount(api, deps.sqlDB.PingContext)
 		api.Head("/health", health.Live())
 		deps.kits.sessions.Mount(api)
 		deps.kits.oidc.Mount(api)
 		auth.RegisterRoutes(api, authService, *deps.appEnv)
 		workspace.RegisterRoutes(api, workspaceService, authService)
-		registerDomainRoutes(api, deps.db, authService, deps.appEnv)
+		registerDomainRoutes(api, deps.db, authService, deps.appEnv, deps.realtimeHub)
 
 		if deps.realtimeHub != nil {
 			api.Get("/ws", deps.realtimeHub.ServeWS)

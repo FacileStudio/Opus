@@ -5,6 +5,7 @@ import (
 	stderrors "errors"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 	"gorm.io/gorm"
@@ -14,6 +15,16 @@ import (
 type Service struct {
 	db         *gorm.DB
 	controller *Controller
+	publisher  realtime.Publisher
+}
+
+// SetPublisher enables live broadcasts of changes.
+func (service *Service) SetPublisher(publisher realtime.Publisher) {
+	service.publisher = publisher
+}
+
+func (service *Service) notify(ctx context.Context, msg realtime.BroadcastMessage, taskIDs ...int64) {
+	realtime.NotifyTasks(ctx, service.db, service.publisher, msg, taskIDs...)
 }
 
 // NewService wires a comment service with its database handle.

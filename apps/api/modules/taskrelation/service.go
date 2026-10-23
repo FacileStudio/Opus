@@ -3,8 +3,10 @@ package taskrelation
 import (
 	"context"
 	stderrors "errors"
+	"strconv"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
 	"gorm.io/gorm"
@@ -14,6 +16,24 @@ import (
 type Service struct {
 	db         *gorm.DB
 	controller *Controller
+	publisher  realtime.Publisher
+}
+
+// SetPublisher enables live broadcasts of changes.
+func (service *Service) SetPublisher(publisher realtime.Publisher) {
+	service.publisher = publisher
+}
+
+func (service *Service) notifyRelation(ctx context.Context, relation *schemas.TaskRelation) {
+	service.notify(ctx, realtime.BroadcastMessage{
+		Type:         realtime.TypeTaskRelationUpdated,
+		SourceTaskID: strconv.FormatInt(relation.SourceTaskID, 10),
+		TargetTaskID: strconv.FormatInt(relation.TargetTaskID, 10),
+	}, relation.SourceTaskID, relation.TargetTaskID)
+}
+
+func (service *Service) notify(ctx context.Context, msg realtime.BroadcastMessage, taskIDs ...int64) {
+	realtime.NotifyTasks(ctx, service.db, service.publisher, msg, taskIDs...)
 }
 
 // NewService wires the task relation service with its database handle.

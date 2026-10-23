@@ -63,7 +63,8 @@ func (service *Service) ListMine(ctx context.Context, userID, workspaceID int64,
 		return nil, nil, err
 	}
 	query := service.db.WithContext(ctx).
-		Where("workspace_id = ? AND actor_id = ? AND status <> ?", workspaceID, userID, "archived")
+		Where("workspace_id = ? AND actor_id = ? AND status <> ?", workspaceID, userID, "archived").
+		Where("NOT EXISTS (SELECT 1 FROM projects p WHERE p.id = tasks.project_id AND p.archived_at IS NOT NULL)")
 	if !includeDone {
 		query = query.Where(
 			"NOT EXISTS (SELECT 1 FROM columns c WHERE c.project_id = tasks.project_id AND c.slug = tasks.status AND c.is_final)",
