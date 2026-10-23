@@ -96,7 +96,7 @@ export default function ProjectLayout({
 
   return (
     <Layout>
-      <Layout.Header className="h-11 border-border/80 px-2">
+      <Layout.Header>
         <div className="flex w-full items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <TooltipProvider>
@@ -146,13 +146,13 @@ export default function ProjectLayout({
             </div>
 
             {showViewSwitcher && (
-              <div className="hidden h-8 items-center gap-0.5 rounded-lg p-0.5 sm:inline-flex">
+              <div className="hidden h-8 items-center gap-0.5 rounded-full p-0.5 sm:inline-flex">
                 <Button
                   variant={resolvedView === "backlog" ? "secondary" : "ghost"}
                   size="xs"
                   onClick={handleNavigateToBacklog}
                   className={cn(
-                    "h-6 gap-1.5 rounded-md px-2 text-xs",
+                    "h-6 gap-1.5 rounded-full px-2.5 text-xs",
                     resolvedView !== "backlog" && "text-muted-foreground",
                   )}
                 >
@@ -164,7 +164,7 @@ export default function ProjectLayout({
                   size="xs"
                   onClick={handleNavigateToBoard}
                   className={cn(
-                    "h-6 gap-1.5 rounded-md px-2 text-xs",
+                    "h-6 gap-1.5 rounded-full px-2.5 text-xs",
                     resolvedView !== "board" && "text-muted-foreground",
                   )}
                 >
@@ -176,7 +176,7 @@ export default function ProjectLayout({
                   size="xs"
                   onClick={handleNavigateToGantt}
                   className={cn(
-                    "h-6 gap-1.5 rounded-md px-2 text-xs",
+                    "h-6 gap-1.5 rounded-full px-2.5 text-xs",
                     resolvedView !== "gantt" && "text-muted-foreground",
                   )}
                 >

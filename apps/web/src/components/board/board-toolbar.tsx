@@ -251,7 +251,7 @@ export default function BoardToolbar({
   };
 
   return (
-    <div className="border-border/80 border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/70">
+    <div className="mx-2 mb-2 rounded-3xl border border-border bg-card px-2 shadow-sm">
       <div className="flex min-h-10 items-center px-2 py-1.5 md:px-3">
         <div className="flex w-full flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-1.5">

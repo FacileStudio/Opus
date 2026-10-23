@@ -27,7 +27,7 @@ function LayoutHeader({ children, className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "flex h-10 shrink-0 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-8 border-b border-border bg-card p-2",
+        "mb-2 flex h-12 shrink-0 items-center gap-2 rounded-full border border-border bg-card px-4 shadow-sm",
         className,
       )}
     >
@@ -50,7 +50,7 @@ function Layout({ children, className }: LayoutProps) {
   useUserPreferencesEffects();
 
   return (
-    <div className="flex w-full bg-sidebar">
+    <div className="flex w-full bg-background">
       <SidebarProvider
         defaultOpen={sidebarDefaultOpen}
         style={
@@ -63,7 +63,7 @@ function Layout({ children, className }: LayoutProps) {
         <AppSidebar />
         <SidebarInset
           className={cn(
-            "m-2 md:ml-0 flex flex-1 flex-col overflow-auto rounded-xl bg-background shadow-sm/10",
+            "m-2 md:ml-0 flex flex-1 flex-col overflow-auto bg-background",
             className,
           )}
         >

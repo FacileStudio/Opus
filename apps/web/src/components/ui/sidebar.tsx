@@ -262,7 +262,7 @@ function Sidebar({
         {...props}
       >
         <div
-          className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg"
+          className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-[12px]"
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
         >
