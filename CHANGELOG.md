@@ -4,6 +4,23 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.14.0] - 2026-10-23
+
+### Added
+
+- My tasks page and `GET /api/task/me`: tasks assigned to you, grouped by project.
+
+### Changed
+
+- Cards, popups and the page shell use shadows and fills for separation now that borders are gone.
+- The i18n check requires the plural forms each locale needs.
+- The web client is typed against the Go API, so the web typecheck passes.
+
+### Fixed
+
+- WebSocket connections no longer fail with a 500 behind the request logger.
+- Shared project links group tasks by status, like the board, and no longer crash.
+
 ## [2.13.0] - 2026-10-23
 
 ### Added
