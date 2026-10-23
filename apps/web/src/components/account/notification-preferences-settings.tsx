@@ -94,10 +94,7 @@ function ChannelCard({
   actions: React.ReactNode;
 }) {
   return (
-    <div
-      className="space-y-4 rounded-md border border-border bg-sidebar p-4"
-      data-channel={channel}
-    >
+    <div className="space-y-4 rounded-md bg-sidebar p-4" data-channel={channel}>
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
           <h3 className="font-medium">{title}</h3>
@@ -217,7 +214,7 @@ function WorkspaceRuleCard({
   };
 
   return (
-    <div className="space-y-4 border border-border rounded-md bg-sidebar p-4">
+    <div className="space-y-4 rounded-md bg-sidebar p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-1">
           <p className="text-sm font-medium">{workspace.name}</p>
@@ -366,7 +363,7 @@ function WorkspaceRuleCard({
         </RadioGroup>
 
         {state.projectMode === "selected" ? (
-          <div className="space-y-2 border border-dashed border-border/80 rounded-md px-3 py-3">
+          <div className="space-y-2 rounded-md px-3 py-3">
             {!projects?.length ? (
               <p className="text-sm text-muted-foreground">
                 {t("settings:notificationsPage.noProjectsInWorkspace")}

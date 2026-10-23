@@ -1,4 +1,4 @@
-import { Bell } from "@solar-icons/react";
+import { Bell, TrashBinTrash } from "@solar-icons/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,7 +26,10 @@ import {
 } from "@/components/ui/tooltip";
 import { shortcuts } from "@/constants/shortcuts";
 import useClearNotifications from "@/hooks/mutations/notification/use-clear-notifications";
+import useDeleteNotification from "@/hooks/mutations/notification/use-delete-notification";
 import useMarkAllNotificationsAsRead from "@/hooks/mutations/notification/use-mark-all-notifications-as-read";
+import useMarkNotificationAsRead from "@/hooks/mutations/notification/use-mark-notification-as-read";
+import useMarkNotificationAsUnread from "@/hooks/mutations/notification/use-mark-notification-as-unread";
 import useGetNotifications from "@/hooks/queries/notification/use-get-notifications";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { cn } from "@/lib/cn";
@@ -144,6 +147,9 @@ const NotificationDropdown = forwardRef<NotificationDropdownRef>(
 
     const { mutate: markAllAsRead } = useMarkAllNotificationsAsRead();
     const { mutate: clearAll } = useClearNotifications();
+    const { mutate: markAsRead } = useMarkNotificationAsRead();
+    const { mutate: markAsUnread } = useMarkNotificationAsUnread();
+    const { mutate: deleteOne } = useDeleteNotification();
 
     const unreadNotifications = notifications?.filter((n) => !n.isRead) || [];
     const hasNotifications = notifications && notifications.length > 0;
@@ -258,9 +264,34 @@ const NotificationDropdown = forwardRef<NotificationDropdownRef>(
                             {getNotificationContent(notification, t)}
                           </p>
                         )}
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {formatRelativeTime(notification.createdAt)}
-                        </p>
+                        <div className="mt-2 flex items-center gap-1">
+                          <p className="text-xs text-muted-foreground">
+                            {formatRelativeTime(notification.createdAt)}
+                          </p>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="ms-auto h-6 px-2 text-xs"
+                            onClick={() =>
+                              notification.isRead
+                                ? markAsUnread(String(notification.id))
+                                : markAsRead(String(notification.id))
+                            }
+                          >
+                            {notification.isRead
+                              ? t("notifications:markUnread")
+                              : t("notifications:markRead")}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-6"
+                            aria-label={t("notifications:deleteOne")}
+                            onClick={() => deleteOne(String(notification.id))}
+                          >
+                            <TrashBinTrash size={13} />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>

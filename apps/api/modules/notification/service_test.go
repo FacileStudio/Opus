@@ -87,11 +87,37 @@ func TestNotificationLifecycle(t *testing.T) {
 		t.Fatalf("mark read expected 200 got %d", w.Code)
 	}
 
+	req = httptest.NewRequest("PATCH", "/notification/"+strconv.FormatInt(created.ID, 10)+"/unread", nil)
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("mark unread expected 200 got %d", w.Code)
+	}
+	var unread NotificationResponse
+	json.Unmarshal(w.Body.Bytes(), &unread)
+	if unread.IsRead {
+		t.Fatalf("expected unread notification after mark unread")
+	}
+
 	req = httptest.NewRequest("GET", "/notification", nil)
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 	if w.Code != http.StatusOK {
 		t.Fatalf("list expected 200 got %d", w.Code)
+	}
+
+	req = httptest.NewRequest("DELETE", "/notification/"+strconv.FormatInt(created.ID, 10), nil)
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("delete expected 200 got %d", w.Code)
+	}
+
+	req = httptest.NewRequest("DELETE", "/notification/"+strconv.FormatInt(created.ID, 10), nil)
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("second delete expected 404 got %d", w.Code)
 	}
 
 	req = httptest.NewRequest("PATCH", "/notification/read-all", nil)

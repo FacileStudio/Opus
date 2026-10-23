@@ -308,7 +308,7 @@ function RouteComponent() {
                 <button
                   type="button"
                   key={project.id}
-                  className="flex cursor-pointer flex-col gap-4 rounded-xl border border-border bg-card py-4 text-left text-sm ring-1 ring-foreground/5 transition-colors hover:bg-muted/40"
+                  className="flex cursor-pointer flex-col gap-4 rounded-xl bg-card py-4 text-left text-sm transition-colors hover:bg-muted/40"
                   onClick={() => handleProjectClick(project.id)}
                   onContextMenu={(e) => handleContextMenu(e, project.id)}
                 >

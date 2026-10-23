@@ -105,7 +105,7 @@ export default function CommentCard({
 
   return (
     <TooltipProvider>
-      <div className="group relative w-full rounded-xl border border-border/80 bg-card/60">
+      <div className="group relative w-full rounded-xl bg-card/60">
         <div className="flex items-center gap-2 px-3 pt-2.5">
           <HoverCard>
             <HoverCardTrigger>

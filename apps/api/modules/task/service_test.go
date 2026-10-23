@@ -173,3 +173,31 @@ func TestDeleteTask(t *testing.T) {
 		t.Fatal("expected error getting deleted task")
 	}
 }
+
+func TestSubtaskProgress(t *testing.T) {
+	service, db := newTestService(t)
+	userID, projectID, col := seedProject(t, db)
+	ctx := context.Background()
+
+	db.Create(&schemas.Column{ProjectID: projectID, Name: "Done", Slug: "done", Position: 2, IsFinal: true, CreatedAt: time.Now(), UpdatedAt: time.Now()})
+
+	var ids []int64
+	for _, status := range []string{col.Slug, col.Slug, "done"} {
+		created, err := service.controller.create(ctx, userID, projectID, &CreateTaskRequest{Title: "t", Status: status, Priority: "low"})
+		if err != nil {
+			t.Fatalf("create task: %v", err)
+		}
+		ids = append(ids, created.ID)
+	}
+	for _, target := range ids[1:] {
+		db.Create(&schemas.TaskRelation{SourceTaskID: ids[0], TargetTaskID: target, RelationType: "subtask", CreatedAt: time.Now()})
+	}
+
+	record, err := service.Get(ctx, userID, ids[0])
+	if err != nil {
+		t.Fatalf("get task: %v", err)
+	}
+	if record.SubtaskTotal != 2 || record.SubtaskDone != 1 {
+		t.Fatalf("expected 1 of 2 subtasks done, got %d of %d", record.SubtaskDone, record.SubtaskTotal)
+	}
+}

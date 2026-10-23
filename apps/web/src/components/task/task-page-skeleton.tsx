@@ -29,7 +29,7 @@ export function TaskDetailsSkeleton({ className }: TaskDetailsSkeletonProps) {
       <div className="flex flex-col gap-4">
         <Skeleton className="h-5 w-20" />
 
-        <div className="rounded-xl border border-border/80 bg-card/70 p-3">
+        <div className="rounded-xl bg-card/70 p-3">
           <Skeleton className="h-16 w-full rounded-lg" />
           <div className="mt-3 flex justify-end">
             <Skeleton className="h-7 w-7 rounded-md" />
@@ -64,7 +64,7 @@ export function TaskPropertiesSidebarSkeleton({
         className,
       )}
     >
-      <div className="rounded-xl border border-border/80 bg-card/70 p-3">
+      <div className="rounded-xl bg-card/70 p-3">
         <div className="space-y-3">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-8 w-full rounded-md" />
@@ -73,7 +73,7 @@ export function TaskPropertiesSidebarSkeleton({
           <Skeleton className="h-24 w-full rounded-md" />
         </div>
       </div>
-      <div className="rounded-xl border border-border/80 bg-card/70 p-3">
+      <div className="rounded-xl bg-card/70 p-3">
         <div className="space-y-2">
           <Skeleton className="h-4 w-20" />
           <Skeleton className="h-6 w-full rounded-md" />

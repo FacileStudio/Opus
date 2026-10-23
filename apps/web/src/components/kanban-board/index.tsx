@@ -201,7 +201,7 @@ function KanbanBoard({ project, disableDragDrop = false }: KanbanBoardProps) {
                   // biome-ignore lint/suspicious/noArrayIndexKey: It's a skeleton
                   i
                 }`}
-                className="h-full min-w-80 w-full flex-1 rounded-xl border border-border/70 bg-card"
+                className="h-full min-w-80 w-full flex-1 rounded-xl bg-card"
               >
                 <div className="px-4 py-3 flex items-center justify-between">
                   <div className="w-24 h-5 bg-muted/50 rounded animate-pulse" />
@@ -215,7 +215,7 @@ function KanbanBoard({ project, disableDragDrop = false }: KanbanBoardProps) {
                         // biome-ignore lint/suspicious/noArrayIndexKey: It's a skeleton
                         j
                       }`}
-                      className="p-4 bg-card rounded-lg border border-border/50 animate-pulse"
+                      className="p-4 bg-card rounded-lg animate-pulse"
                     >
                       <div className="space-y-3">
                         <div className="w-2/3 h-4 bg-muted/70 rounded" />

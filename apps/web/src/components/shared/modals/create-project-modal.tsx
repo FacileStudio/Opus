@@ -196,7 +196,7 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
           </div>
 
           <div className="space-y-3 px-3">
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-muted-foreground">
                   {t("common:modals.createProject.keyLabel")}

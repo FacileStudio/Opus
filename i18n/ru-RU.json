@@ -547,7 +547,17 @@
 			"validation": {
 				"nameRequired": "Название space обязательно",
 				"nameShort": "Название space должно содержать не менее 2 символов"
-			}
+			},
+			"logoDeleted": "Logo removed",
+			"logoDeleteError": "Failed to remove logo",
+			"logoHint": "PNG, JPEG, WebP, SVG or GIF. Max 2MB.",
+			"logoLabel": "Logo",
+			"logoSubtitle": "Upload an image to represent your space.",
+			"logoTitle": "Space Logo",
+			"logoUpdated": "Logo updated successfully",
+			"logoUpload": "Upload",
+			"logoUploadError": "Failed to upload logo",
+			"logoUploading": "Uploading..."
 		},
 		"projectGeneral": {
 			"pageTitle": "Настройки проекта",
@@ -1223,7 +1233,10 @@
 				"contentWithTask": "Трекинг времени начат для задачи: {{taskTitle}}",
 				"contentWithoutTask": "Трекинг времени начат для задачи"
 			}
-		}
+		},
+		"deleteOne": "Delete notification",
+		"markRead": "Mark as read",
+		"markUnread": "Mark as unread"
 	},
 	"activity": {
 		"assignedToSelf": "назначил задачу себе",
@@ -1765,6 +1778,10 @@
 			"moveToBoardSuccess": "{{count}} tasks moved to board",
 			"selectedCount": "{{count}} selected",
 			"updateSuccess": "{{count}} tasks updated"
+		},
+		"shortLink": {
+			"loading": "Opening task...",
+			"notFound": "Task {{key}} was not found."
 		}
 	},
 	"invitations": {

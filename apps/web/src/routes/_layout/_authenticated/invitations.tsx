@@ -182,7 +182,7 @@ function InvitationsPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="rounded-lg border bg-card shadow-sm">
+              <div className="rounded-lg bg-card shadow-sm">
                 <Table>
                   <TableHeader>
                     <TableRow className="border-b">

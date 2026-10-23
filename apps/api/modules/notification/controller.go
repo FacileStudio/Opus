@@ -55,6 +55,28 @@ func (controller *Controller) markAsRead(ctx context.Context, userID, notificati
 	return &resp, nil
 }
 
+func (controller *Controller) markAsUnread(ctx context.Context, userID, notificationID int64) (*NotificationResponse, error) {
+	if notificationID <= 0 {
+		return nil, errors.Invalid("invalid notification id")
+	}
+	n, err := controller.service.MarkAsUnread(ctx, userID, notificationID)
+	if err != nil {
+		return nil, err
+	}
+	resp := toNotificationResponse(n)
+	return &resp, nil
+}
+
+func (controller *Controller) remove(ctx context.Context, userID, notificationID int64) (*BulkResultResponse, error) {
+	if notificationID <= 0 {
+		return nil, errors.Invalid("invalid notification id")
+	}
+	if err := controller.service.Delete(ctx, userID, notificationID); err != nil {
+		return nil, err
+	}
+	return &BulkResultResponse{Success: true, Count: 1}, nil
+}
+
 func (controller *Controller) markAllAsRead(ctx context.Context, userID int64) (*BulkResultResponse, error) {
 	count, err := controller.service.MarkAllAsRead(ctx, userID)
 	if err != nil {

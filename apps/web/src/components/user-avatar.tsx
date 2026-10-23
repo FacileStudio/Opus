@@ -65,23 +65,25 @@ export function UserAvatar() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="icon"
-          className="h-7 w-7 rounded-full p-0 hover:bg-sidebar-accent/70"
+          className="h-11 w-full justify-start gap-2.5 rounded-md px-2 hover:bg-sidebar-accent"
         >
-          <Avatar className="h-7 w-7">
+          <Avatar className="size-7 shrink-0">
             <AvatarImage src={user.image ?? ""} alt={user.name || ""} />
-            <AvatarFallback className="text-xs font-medium border border-border/30">
+            <AvatarFallback className="text-xs font-medium">
               {initials}
             </AvatarFallback>
           </Avatar>
+          <span className="min-w-0 flex-1 truncate text-left text-sm font-medium">
+            {user.name || user.email}
+          </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-52 p-0" side="bottom" align="start">
+      <DropdownMenuContent className="w-52 p-0" side="top" align="start">
         <div className="px-2.5 py-2">
           <div className="flex items-center gap-2 text-left text-sm">
             <Avatar className="h-7 w-7 rounded-full">
               <AvatarImage src={user.image ?? ""} alt={user.name || ""} />
-              <AvatarFallback className="rounded-full border border-border/30">
+              <AvatarFallback className="rounded-full">
                 {initials}
               </AvatarFallback>
             </Avatar>

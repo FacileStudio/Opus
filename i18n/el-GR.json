@@ -547,7 +547,17 @@
 			"validation": {
 				"nameRequired": "Το όνομα χώρου εργασίας είναι υποχρεωτικό",
 				"nameShort": "Το όνομα χώρου εργασίας πρέπει να έχει τουλάχιστον 2 χαρακτήρες"
-			}
+			},
+			"logoDeleted": "Logo removed",
+			"logoDeleteError": "Failed to remove logo",
+			"logoHint": "PNG, JPEG, WebP, SVG or GIF. Max 2MB.",
+			"logoLabel": "Logo",
+			"logoSubtitle": "Upload an image to represent your space.",
+			"logoTitle": "Space Logo",
+			"logoUpdated": "Logo updated successfully",
+			"logoUpload": "Upload",
+			"logoUploadError": "Failed to upload logo",
+			"logoUploading": "Uploading..."
 		},
 		"projectGeneral": {
 			"pageTitle": "Ρυθμίσεις έργου",
@@ -1213,7 +1223,10 @@
 				"contentWithTask": "Η χρονομέτρηση ξεκίνησε για την εργασία: {{taskTitle}}",
 				"contentWithoutTask": "Η χρονομέτρηση ξεκίνησε για μια εργασία"
 			}
-		}
+		},
+		"deleteOne": "Delete notification",
+		"markRead": "Mark as read",
+		"markUnread": "Mark as unread"
 	},
 	"activity": {
 		"assignedToSelf": "ανέθεσε την εργασία στον εαυτό του/της",
@@ -1705,6 +1718,10 @@
 			"searchActions": "Αναζήτηση ενεργειών...",
 			"noActionsFound": "Δεν βρέθηκαν ενέργειες.",
 			"changeStatus": "Αλλαγή κατάστασης"
+		},
+		"shortLink": {
+			"loading": "Opening task...",
+			"notFound": "Task {{key}} was not found."
 		}
 	},
 	"invitations": {

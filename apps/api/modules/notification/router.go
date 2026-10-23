@@ -79,6 +79,36 @@ func registerNotificationMutations(router chi.Router, service *Service) {
 		httpjson.WriteJSON(w, http.StatusOK, resp)
 	})
 
+	router.Patch("/{id}/unread", func(w http.ResponseWriter, request *http.Request) {
+		notifID, err := parseID(request, "id")
+		if err != nil {
+			httpjson.WriteError(w, errors.Invalid("invalid notification id"))
+			return
+		}
+		identity, _ := authcontext.IdentityFromContext(request.Context())
+		resp, err := service.controller.markAsUnread(request.Context(), identity.UserID, notifID)
+		if err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		httpjson.WriteJSON(w, http.StatusOK, resp)
+	})
+
+	router.Delete("/{id}", func(w http.ResponseWriter, request *http.Request) {
+		notifID, err := parseID(request, "id")
+		if err != nil {
+			httpjson.WriteError(w, errors.Invalid("invalid notification id"))
+			return
+		}
+		identity, _ := authcontext.IdentityFromContext(request.Context())
+		resp, err := service.controller.remove(request.Context(), identity.UserID, notifID)
+		if err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		httpjson.WriteJSON(w, http.StatusOK, resp)
+	})
+
 	router.Patch("/read-all", func(w http.ResponseWriter, request *http.Request) {
 		identity, _ := authcontext.IdentityFromContext(request.Context())
 		resp, err := service.controller.markAllAsRead(request.Context(), identity.UserID)

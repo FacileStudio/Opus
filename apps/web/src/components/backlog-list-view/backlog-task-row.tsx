@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { type CSSProperties, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import SubtaskProgress from "@/components/task/subtask-progress";
 import {
   AlertDialog,
   AlertDialogClose,
@@ -176,6 +177,11 @@ export default function BacklogTaskRow({ task }: BacklogTaskRowProps) {
                 )}
               </div>
             </div>
+
+            <SubtaskProgress
+              done={task.subtaskDone}
+              total={task.subtaskTotal}
+            />
 
             {showDueDates && task.dueDate && (
               <div

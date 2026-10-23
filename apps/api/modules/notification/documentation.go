@@ -40,6 +40,30 @@ func notificationCoreRoutes() []documentation.Route {
 		},
 		{
 			Method:       "PATCH",
+			Path:         "/notification/{id}/unread",
+			Summary:      "Mark notification as unread",
+			Description:  "Flag a single notification as unread.",
+			Auth:         "bearer",
+			PathParams:   []documentation.Field{{Name: "id", Type: "int64", Description: "Notification ID"}},
+			ResponseBody: `{"id":int64,"isRead":false}`,
+			Errors: []documentation.Error{
+				{Status: 404, Code: "not_found", Description: "Notification not found"},
+			},
+		},
+		{
+			Method:       "DELETE",
+			Path:         "/notification/{id}",
+			Summary:      "Delete notification",
+			Description:  "Delete a single notification.",
+			Auth:         "bearer",
+			PathParams:   []documentation.Field{{Name: "id", Type: "int64", Description: "Notification ID"}},
+			ResponseBody: `{"success":true,"count":1}`,
+			Errors: []documentation.Error{
+				{Status: 404, Code: "not_found", Description: "Notification not found"},
+			},
+		},
+		{
+			Method:       "PATCH",
 			Path:         "/notification/read-all",
 			Summary:      "Mark all notifications read",
 			Description:  "Mark all pending notifications as read.",

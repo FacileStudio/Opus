@@ -56,7 +56,7 @@ function BoardSkeleton() {
               (cardKey) => (
                 <div
                   key={cardKey}
-                  className="rounded-lg border border-border bg-card p-3 space-y-2.5"
+                  className="rounded-lg bg-card p-3 space-y-2.5"
                 >
                   <div className="h-3.5 w-4/5 rounded bg-muted animate-pulse" />
                   <div className="h-3 w-3/5 rounded bg-muted animate-pulse" />

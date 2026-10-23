@@ -403,7 +403,7 @@ function ListView({ project, disableDragDrop = false }: ListViewProps) {
 
       <DragOverlay>
         {activeTask && (
-          <div className="bg-card border border-border rounded-lg shadow-lg p-2 max-w-[200px] cursor-grabbing">
+          <div className="bg-card rounded-lg shadow-lg p-2 max-w-[200px] cursor-grabbing">
             <div className="flex items-center gap-2">
               <div className="flex-shrink-0">
                 <Flag

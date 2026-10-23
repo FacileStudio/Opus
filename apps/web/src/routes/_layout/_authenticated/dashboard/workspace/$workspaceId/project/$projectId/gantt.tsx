@@ -65,6 +65,8 @@ function RouteComponent() {
   const taskColumnWidthRem = isMobile ? 12 : 14;
   const showTaskRail = !isMobile || isTaskRailOpen;
   const timelineTrackRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const hasCenteredOnToday = useRef(false);
   const [pixelsPerDay, setPixelsPerDay] = useState(44);
 
   useEffect(() => {
@@ -172,6 +174,35 @@ function RouteComponent() {
     return () => observer.disconnect();
   }, [timeline]);
 
+  const hasTimeline = Boolean(timeline) && scheduledTasks.length > 0;
+
+  useLayoutEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || !timeline || !hasTimeline) return;
+    if (hasCenteredOnToday.current) return;
+
+    const todayIndex = timeline.days.findIndex((day) => isToday(day));
+    hasCenteredOnToday.current = true;
+    if (todayIndex < 0) return;
+
+    const railWidthPx = showTaskRail
+      ? (isMobile ? taskColumnWidthRem : 20) * 16
+      : 0;
+    const dayWidthPx = dayColumnWidthRem * 16;
+    const todayCenter = railWidthPx + (todayIndex + 0.5) * dayWidthPx;
+    container.scrollLeft = Math.max(
+      0,
+      todayCenter - (container.clientWidth + railWidthPx) / 2,
+    );
+  }, [
+    timeline,
+    hasTimeline,
+    showTaskRail,
+    isMobile,
+    taskColumnWidthRem,
+    dayColumnWidthRem,
+  ]);
+
   return (
     <ProjectLayout
       projectId={projectId}
@@ -242,7 +273,10 @@ function RouteComponent() {
             </div>
           </div>
         ) : (
-          <div className="min-h-0 flex-1 overflow-auto overscroll-x-contain [-webkit-overflow-scrolling:touch]">
+          <div
+            ref={scrollContainerRef}
+            className="min-h-0 flex-1 overflow-auto overscroll-x-contain [-webkit-overflow-scrolling:touch]"
+          >
             <div className="relative min-w-max touch-pan-x touch-pan-y">
               <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur">
                 {showTaskRail ? (

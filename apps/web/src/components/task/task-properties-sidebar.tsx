@@ -104,8 +104,12 @@ export default function TaskPropertiesSidebar({
   );
 
   const handleCopyTaskLink = () => {
+    const path =
+      projectSlug && taskNumber
+        ? `task/${projectSlug}-${taskNumber}`
+        : `project/${projectId}/task/${taskId}`;
     navigator.clipboard.writeText(
-      `${window.location.origin}/dashboard/workspace/${workspaceId}/project/${projectId}/task/${taskId}`,
+      `${window.location.origin}/dashboard/workspace/${workspaceId}/${path}`,
     );
     toast.message(t("tasks:properties.copyTaskLink"));
   };

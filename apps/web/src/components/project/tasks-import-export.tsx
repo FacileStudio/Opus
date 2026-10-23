@@ -170,7 +170,7 @@ export function TasksImportExport({ project }: TasksImportExportProps) {
 
       <Dialog open={isImportOpen} onOpenChange={resetAndCloseModal}>
         <DialogPopup className="w-full max-w-md">
-          <div className="bg-card rounded-lg shadow-xl border border-border">
+          <div className="bg-card rounded-lg shadow-xl">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <DialogTitle className="text-lg font-semibold text-foreground">
                 {t("settings:tasksImportExport.dialogTitle")}
@@ -188,7 +188,7 @@ export function TasksImportExport({ project }: TasksImportExportProps) {
                 {t("settings:tasksImportExport.dialogDescription")}
               </p>
 
-              <div className="mb-4 p-3 bg-muted rounded-md border border-border/50 font-mono text-sm">
+              <div className="mb-4 p-3 bg-muted rounded-md font-mono text-sm">
                 <p className="text-muted-foreground mb-1 text-xs">
                   {t("settings:tasksImportExport.expectedFormat")}
                 </p>

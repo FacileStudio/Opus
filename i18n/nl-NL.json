@@ -458,7 +458,17 @@
 			"validation": {
 				"nameRequired": "Spacenaam is verplicht",
 				"nameShort": "Spacenaam moet minimaal 2 tekens bevatten"
-			}
+			},
+			"logoDeleted": "Logo removed",
+			"logoDeleteError": "Failed to remove logo",
+			"logoHint": "PNG, JPEG, WebP, SVG or GIF. Max 2MB.",
+			"logoLabel": "Logo",
+			"logoSubtitle": "Upload an image to represent your space.",
+			"logoTitle": "Space Logo",
+			"logoUpdated": "Logo updated successfully",
+			"logoUpload": "Upload",
+			"logoUploadError": "Failed to upload logo",
+			"logoUploading": "Uploading..."
 		},
 		"projectGeneral": {
 			"pageTitle": "Projectinstellingen",
@@ -1213,7 +1223,10 @@
 				"contentWithTask": "Tijdregistratie gestart voor taak: {{taskTitle}}",
 				"contentWithoutTask": "Tijdregistratie gestart voor een taak"
 			}
-		}
+		},
+		"deleteOne": "Delete notification",
+		"markRead": "Mark as read",
+		"markUnread": "Mark as unread"
 	},
 	"activity": {
 		"assignedToSelf": "heeft de taak aan zichzelf toegewezen",
@@ -1705,6 +1718,10 @@
 			"statusLabel": "Destination status",
 			"success": "Task moved successfully",
 			"title": "Move task"
+		},
+		"shortLink": {
+			"loading": "Opening task...",
+			"notFound": "Task {{key}} was not found."
 		}
 	},
 	"invitations": {

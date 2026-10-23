@@ -25,7 +25,7 @@ function RouteComponent() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-border bg-background p-6 space-y-2">
+        <div className="rounded-xl bg-background p-6 space-y-2">
           <div className="flex items-center gap-2 font-medium text-sm">
             <Radio className="size-4 text-muted-foreground" />
             <span>Event Bus</span>

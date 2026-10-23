@@ -315,7 +315,7 @@ function RouteComponent() {
             <div className="space-y-2">
               <Label>{t("settings:apiKey.createdModal.yourApiKey")}</Label>
               <div className="flex items-center gap-2">
-                <code className="flex-1 overflow-x-auto rounded-md border border-border bg-sidebar px-3 py-2 font-mono text-xs">
+                <code className="flex-1 overflow-x-auto rounded-md bg-sidebar px-3 py-2 font-mono text-xs">
                   {token}
                 </code>
                 <Button
@@ -333,10 +333,10 @@ function RouteComponent() {
 
             <div className="space-y-2">
               <Label>{t("settings:apiKey.createdModal.configTitle")}</Label>
-              <pre className="overflow-x-auto rounded-md border border-border bg-sidebar px-3 py-2 font-mono text-xs">
+              <pre className="overflow-x-auto rounded-md bg-sidebar px-3 py-2 font-mono text-xs">
                 {configSnippet}
               </pre>
-              <pre className="overflow-x-auto rounded-md border border-border bg-sidebar px-3 py-2 font-mono text-xs">
+              <pre className="overflow-x-auto rounded-md bg-sidebar px-3 py-2 font-mono text-xs">
                 {envSnippet}
               </pre>
             </div>

@@ -34,6 +34,8 @@ type Task = {
   projectId: string;
   columnId?: string | null;
   labels?: TaskLabel[];
+  subtaskTotal?: number;
+  subtaskDone?: number;
   externalLinks?: TaskExternalLink[];
 };
 

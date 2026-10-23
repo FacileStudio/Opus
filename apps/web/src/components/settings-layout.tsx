@@ -189,9 +189,7 @@ export function DangerZoneSection({
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
       </div>
-      <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-6">
-        {children}
-      </div>
+      <div className="rounded-lg bg-destructive/5 p-6">{children}</div>
     </div>
   );
 }

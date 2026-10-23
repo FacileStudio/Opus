@@ -45,6 +45,8 @@ type TaskResponse struct {
 	TaskActor      `json:",inline"`
 	TaskTimestamps `json:",inline"`
 	Labels         []TaskLabelResponse `json:"labels"`
+	SubtaskTotal   int                 `json:"subtaskTotal"`
+	SubtaskDone    int                 `json:"subtaskDone"`
 }
 
 // ProjectColumnTasksResponse represents a column with its assigned tasks.
@@ -185,6 +187,9 @@ type TaskRecord struct {
 	Task   schemas.Task
 	Actor  *schemas.User
 	Labels []schemas.Label
+
+	SubtaskTotal int
+	SubtaskDone  int
 }
 
 // ListTasksResult holds the entities returned from a project task query.

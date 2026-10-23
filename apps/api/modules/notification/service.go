@@ -81,6 +81,29 @@ func (service *Service) Create(ctx context.Context, userID int64, req *CreateNot
 
 // MarkAsRead flags a notification as read if owned by the caller.
 func (service *Service) MarkAsRead(ctx context.Context, userID, notificationID int64) (*schemas.Notification, error) {
+	return service.setRead(ctx, userID, notificationID, true)
+}
+
+// MarkAsUnread flags a notification as unread if owned by the caller.
+func (service *Service) MarkAsUnread(ctx context.Context, userID, notificationID int64) (*schemas.Notification, error) {
+	return service.setRead(ctx, userID, notificationID, false)
+}
+
+// Delete removes a single notification owned by the caller.
+func (service *Service) Delete(ctx context.Context, userID, notificationID int64) error {
+	result := service.db.WithContext(ctx).
+		Where("id = ? AND user_id = ?", notificationID, userID).
+		Delete(&schemas.Notification{})
+	if result.Error != nil {
+		return errors.Internal("failed to delete notification", result.Error)
+	}
+	if result.RowsAffected == 0 {
+		return errors.NotFound("Notification not found")
+	}
+	return nil
+}
+
+func (service *Service) setRead(ctx context.Context, userID, notificationID int64, read bool) (*schemas.Notification, error) {
 	var n schemas.Notification
 	err := service.db.WithContext(ctx).First(&n, "id = ? AND user_id = ?", notificationID, userID).Error
 	if err != nil {
@@ -89,7 +112,7 @@ func (service *Service) MarkAsRead(ctx context.Context, userID, notificationID i
 		}
 		return nil, errors.Internal("failed to query notification", err)
 	}
-	n.IsRead = true
+	n.IsRead = read
 	if err := service.db.WithContext(ctx).Save(&n).Error; err != nil {
 		return nil, errors.Internal("failed to update notification", err)
 	}

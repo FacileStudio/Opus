@@ -86,7 +86,7 @@ export function PublicTaskDetailModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPopup className="w-full max-w-4xl max-h-[85vh] p-0">
-        <div className="bg-background border border-border rounded-xl flex flex-col max-h-[85vh] shadow-lg">
+        <div className="bg-background rounded-xl flex flex-col max-h-[85vh] shadow-lg">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border/70 shrink-0">
             <div className="flex items-center gap-2 min-w-0 flex-1">
               <span className="text-sm font-medium text-muted-foreground shrink-0">
@@ -194,7 +194,7 @@ export function PublicTaskDetailModal({
                           href={pr.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md border border-border/50 transition-colors group"
+                          className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md transition-colors group"
                         >
                           <div className="flex items-center gap-2.5 flex-1 min-w-0">
                             <div className="flex flex-col gap-0.5 flex-1 min-w-0">
@@ -232,7 +232,7 @@ export function PublicTaskDetailModal({
                         href={issue.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md border border-border/50 transition-colors group"
+                        className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md transition-colors group"
                       >
                         <div className="flex items-center gap-2.5 flex-1 min-w-0">
                           <BranchingPathsDown
@@ -266,7 +266,7 @@ export function PublicTaskDetailModal({
                         href={branch.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md border border-border/50 transition-colors group"
+                        className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-md transition-colors group"
                       >
                         <div className="flex items-center gap-2.5 flex-1 min-w-0">
                           <BranchingPathsDown

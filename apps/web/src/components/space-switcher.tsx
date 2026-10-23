@@ -115,7 +115,7 @@ export function SpaceSwitcher() {
             <DropdownMenuTrigger
               render={
                 <SidebarMenuButton
-                  className="group h-11 w-full rounded-md border border-sidebar-border/60 bg-sidebar-accent/50 px-3 transition-colors hover:bg-sidebar-accent"
+                  className="group h-11 w-full rounded-md bg-sidebar-accent/50 px-3 transition-colors hover:bg-sidebar-accent"
                   size="default"
                 />
               }

@@ -36,6 +36,13 @@ func toLabelResponses(labels []schemas.Label) []TaskLabelResponse {
 	return out
 }
 
+func recordResponse(rec TaskRecord) TaskResponse {
+	resp := toResponse(rec.Task, rec.Actor, toLabelResponses(rec.Labels))
+	resp.SubtaskTotal = rec.SubtaskTotal
+	resp.SubtaskDone = rec.SubtaskDone
+	return resp
+}
+
 func toResponse(task schemas.Task, actor *schemas.User, labels []TaskLabelResponse) TaskResponse {
 	resp := TaskResponse{
 		ID:          task.ID,
@@ -101,7 +108,7 @@ func toProjectTasksResponse(result *ListTasksResult, filter ListTasksFilter) Pro
 		tasks := make([]TaskResponse, 0)
 		for _, rec := range result.Tasks {
 			if rec.Task.Status == col.Slug {
-				tasks = append(tasks, toResponse(rec.Task, rec.Actor, toLabelResponses(rec.Labels)))
+				tasks = append(tasks, recordResponse(rec))
 			}
 		}
 		cols[i] = ProjectColumnTasksResponse{
@@ -116,9 +123,9 @@ func toProjectTasksResponse(result *ListTasksResult, filter ListTasksFilter) Pro
 	planned := make([]TaskResponse, 0)
 	for _, rec := range result.Tasks {
 		if rec.Task.Status == "archived" {
-			archived = append(archived, toResponse(rec.Task, rec.Actor, toLabelResponses(rec.Labels)))
+			archived = append(archived, recordResponse(rec))
 		} else if rec.Task.Status == "planned" {
-			planned = append(planned, toResponse(rec.Task, rec.Actor, toLabelResponses(rec.Labels)))
+			planned = append(planned, recordResponse(rec))
 		}
 	}
 	page, pageSize, totalPages := calculatePagination(result.Total, filter.Page, filter.Limit)
@@ -158,7 +165,7 @@ func (controller *Controller) get(ctx context.Context, userID, taskID int64) (*T
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -173,7 +180,7 @@ func (controller *Controller) create(ctx context.Context, userID, projectID int6
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -188,7 +195,7 @@ func (controller *Controller) update(ctx context.Context, userID, taskID int64, 
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -197,7 +204,7 @@ func (controller *Controller) delete(ctx context.Context, userID, taskID int64) 
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -216,7 +223,7 @@ func (controller *Controller) updateStatus(ctx context.Context, userID, taskID i
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -228,7 +235,7 @@ func (controller *Controller) updatePriority(ctx context.Context, userID, taskID
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -244,7 +251,7 @@ func (controller *Controller) updateActor(ctx context.Context, userID, taskID in
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -257,7 +264,7 @@ func (controller *Controller) updateDueDate(ctx context.Context, userID, taskID 
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -269,7 +276,7 @@ func (controller *Controller) updateTitle(ctx context.Context, userID, taskID in
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 
@@ -278,7 +285,7 @@ func (controller *Controller) updateDescription(ctx context.Context, userID, tas
 	if err != nil {
 		return nil, err
 	}
-	resp := toResponse(record.Task, record.Actor, toLabelResponses(record.Labels))
+	resp := recordResponse(*record)
 	return &resp, nil
 }
 

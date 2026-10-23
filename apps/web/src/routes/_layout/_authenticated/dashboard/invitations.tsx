@@ -177,7 +177,7 @@ function InvitationsPage() {
                 </p>
               </div>
             ) : (
-              <div className="rounded-lg border">
+              <div className="rounded-lg">
                 <Table>
                   <TableHeader>
                     <TableRow className="border-b">

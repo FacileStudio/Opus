@@ -103,8 +103,8 @@ export function NavMain() {
                       <span
                         className={
                           item.isActive
-                            ? "flex h-5 min-w-5 items-center justify-center rounded-full border border-sidebar-primary-foreground/30 px-1 text-[11px] font-medium text-sidebar-primary-foreground"
-                            : "flex h-5 min-w-5 items-center justify-center rounded-full border border-sidebar-border/60 px-1 text-[11px] font-medium text-sidebar-foreground/80"
+                            ? "flex h-5 min-w-5 items-center justify-center rounded-full bg-sidebar-primary-foreground/20 px-1 text-[11px] font-medium text-sidebar-primary-foreground"
+                            : "flex h-5 min-w-5 items-center justify-center rounded-full bg-sidebar-accent px-1 text-[11px] font-medium text-sidebar-foreground"
                         }
                       >
                         {item.badge}

@@ -261,7 +261,7 @@ func (service *Service) Move(ctx context.Context, userID, taskID int64, req *Mov
 		return nil, err
 	}
 	return &MoveTaskResponse{
-		Task:                 toResponse(updatedRecord.Task, updatedRecord.Actor, toLabelResponses(updatedRecord.Labels)),
+		Task:                 recordResponse(*updatedRecord),
 		SourceProjectID:      task.ProjectID,
 		DestinationProjectID: int64(req.DestinationProjectID),
 	}, nil

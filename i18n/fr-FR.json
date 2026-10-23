@@ -547,7 +547,17 @@
 			"validation": {
 				"nameRequired": "Le nom de l'espace est requis",
 				"nameShort": "Le nom de l'espace doit contenir au moins 2 caractères"
-			}
+			},
+			"logoDeleted": "Logo removed",
+			"logoDeleteError": "Failed to remove logo",
+			"logoHint": "PNG, JPEG, WebP, SVG or GIF. Max 2MB.",
+			"logoLabel": "Logo",
+			"logoSubtitle": "Upload an image to represent your space.",
+			"logoTitle": "Space Logo",
+			"logoUpdated": "Logo updated successfully",
+			"logoUpload": "Upload",
+			"logoUploadError": "Failed to upload logo",
+			"logoUploading": "Uploading..."
 		},
 		"projectGeneral": {
 			"pageTitle": "Paramètres du projet",
@@ -1181,6 +1191,9 @@
 	},
 	"notifications": {
 		"title": "Notifications",
+		"markRead": "Marquer comme lue",
+		"markUnread": "Marquer comme non lue",
+		"deleteOne": "Supprimer la notification",
 		"newCount_one": "{{count}} nouvelle",
 		"newCount_other": "{{count}} nouvelles",
 		"emptyTitle": "Aucune notification pour le moment",
@@ -1477,6 +1490,10 @@
 			"deleteDialogTitle": "Supprimer la tâche ?",
 			"deleteDialogDescription": "Cela supprimera définitivement la tâche et toutes ses données. Vous ne pouvez pas annuler cette action.",
 			"deleteAction": "Supprimer la tâche"
+		},
+		"shortLink": {
+			"notFound": "Tâche {{key}} introuvable.",
+			"loading": "Ouverture de la tâche..."
 		},
 		"properties": {
 			"title": "Propriétés",

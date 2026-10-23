@@ -111,7 +111,7 @@ function RouteComponent() {
             </p>
           </div>
 
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+          <div className="space-y-4 rounded-md p-4 bg-sidebar">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-sm font-medium">
@@ -250,14 +250,14 @@ function ShareLinksSection({ projectId }: { projectId: string }) {
         </p>
       </div>
 
-      <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+      <div className="space-y-4 rounded-md p-4 bg-sidebar">
         {!showForm ? (
           <Button size="sm" variant="outline" onClick={() => setShowForm(true)}>
             <LinkIcon className="h-3.5 w-3.5 mr-1.5" />
             {t("settings:projectVisibility.shareLinks.create")}
           </Button>
         ) : (
-          <div className="space-y-3 border border-border rounded-md p-3 bg-background">
+          <div className="space-y-3 rounded-md p-3 bg-background">
             <Input
               placeholder={t(
                 "settings:projectVisibility.shareLinks.labelPlaceholder",
@@ -303,7 +303,7 @@ function ShareLinksSection({ projectId }: { projectId: string }) {
               return (
                 <div
                   key={link.id}
-                  className="flex items-center justify-between gap-3 border border-border rounded-md p-3 bg-background"
+                  className="flex items-center justify-between gap-3 rounded-md p-3 bg-background"
                 >
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex items-center gap-2">

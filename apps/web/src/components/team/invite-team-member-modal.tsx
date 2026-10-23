@@ -134,7 +134,7 @@ function InviteTeamMemberModal({ open, onClose }: Props) {
                 {t("team:inviteModal.success")}
               </p>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2 flex-1 rounded-md border border-border bg-muted/50 px-3 py-2 text-sm text-muted-foreground overflow-hidden">
+                <div className="flex items-center gap-2 flex-1 rounded-md bg-muted/50 px-3 py-2 text-sm text-muted-foreground overflow-hidden">
                   <Link className="h-4 w-4 shrink-0" />
                   <span className="truncate">{inviteLink}</span>
                 </div>
