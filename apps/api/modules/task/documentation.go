@@ -20,6 +20,18 @@ func taskQueryRoutes() []documentation.Route {
 		},
 		{
 			Method:       "GET",
+			Path:         "/task/me",
+			Summary:      "List my tasks",
+			Description:  "Returns tasks assigned to the caller in the workspace given by the workspaceId query parameter. Archived tasks and tasks in final columns are excluded unless includeDone=true.",
+			Auth:         "bearer",
+			ResponseBody: `[{"id":1,"projectId":1,"projectSlug":"app","projectName":"App","projectIcon":"Layout","number":1,"title":"Task","status":"to-do","priority":"low","subtaskTotal":0,"subtaskDone":0}]`,
+			Errors: []documentation.Error{
+				{Status: 400, Code: "invalid_argument", Description: "Invalid workspace id"},
+				{Status: 403, Code: "permission_denied", Description: "Not a workspace member"},
+			},
+		},
+		{
+			Method:       "GET",
 			Path:         "/task/{id}",
 			Summary:      "Get single task",
 			Description:  "Returns task details by ID including author and labels.",

@@ -1100,6 +1100,7 @@
 		"sidebar": {
 			"overview": "Overview",
 			"projects": "Projects",
+			"myTasks": "My tasks",
 			"members": "Members",
 			"invitations": "Invitations",
 			"more": "More",
@@ -1329,6 +1330,11 @@
 		}
 	},
 	"tasks": {
+		"myTasks": {
+			"pageTitle": "My tasks",
+			"emptyTitle": "Nothing assigned to you",
+			"emptyDescription": "Tasks assigned to you in this workspace will show up here."
+		},
 		"status": {
 			"label": "Status",
 			"to-do": "To Do",

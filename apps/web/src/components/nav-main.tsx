@@ -1,5 +1,6 @@
 import {
   AltArrowRight,
+  ChecklistMinimalistic,
   Folder,
   Letter,
   UsersGroupTwoRounded,
@@ -45,6 +46,15 @@ export function NavMain() {
       icon: Folder,
       isActive:
         window.location.pathname === `/dashboard/workspace/${workspace.id}`,
+      badge: null,
+    },
+    {
+      title: t("navigation:sidebar.myTasks"),
+      url: `/dashboard/workspace/${workspace.id}/my-tasks`,
+      icon: ChecklistMinimalistic,
+      isActive:
+        window.location.pathname ===
+        `/dashboard/workspace/${workspace.id}/my-tasks`,
       badge: null,
     },
     {

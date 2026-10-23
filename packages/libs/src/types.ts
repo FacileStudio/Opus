@@ -244,6 +244,21 @@ export type NotificationRecord = {
   createdAt: Date | string;
 };
 
+export type MyTask = {
+  id: string;
+  projectId: string;
+  projectSlug: string;
+  projectName: string;
+  projectIcon: string;
+  number: number;
+  title: string;
+  status: string;
+  priority: string;
+  dueDate?: string | null;
+  subtaskTotal: number;
+  subtaskDone: number;
+};
+
 export type TasksApiResponse = {
   data: {
     id: Id;
@@ -447,6 +462,12 @@ export type AppSchema = {
         };
       },
       TaskRecord
+    >;
+  };
+  "/task/me": {
+    $get: Endpoint<
+      { query: { workspaceId: string; includeDone?: string } },
+      MyTask[]
     >;
   };
   "/task/:id": {

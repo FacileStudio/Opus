@@ -21,6 +21,7 @@ func RegisterRoutes(router chi.Router, service *Service, authService middleware.
 	router.Route("/task", func(sub chi.Router) {
 		sub.Use(middleware.RequireAuth(authService))
 		registerTaskBulkRoutes(sub, service)
+		registerTaskMeRoutes(sub, service)
 		registerTaskQueryRoutes(sub, service)
 		registerTaskMutationRoutes(sub, service)
 	})

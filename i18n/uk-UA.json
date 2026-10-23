@@ -1105,7 +1105,8 @@
 			"members": "Учасники",
 			"invitations": "Запрошення",
 			"more": "Більше",
-			"backToBoard": "Back to board"
+			"backToBoard": "Back to board",
+			"myTasks": "My tasks"
 		},
 		"projectList": {
 			"viewProject": "Переглянути проєкт",
@@ -1728,6 +1729,11 @@
 		"shortLink": {
 			"loading": "Opening task...",
 			"notFound": "Task {{key}} was not found."
+		},
+		"myTasks": {
+			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
+			"emptyTitle": "Nothing assigned to you",
+			"pageTitle": "My tasks"
 		}
 	},
 	"invitations": {
