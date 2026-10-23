@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.19.2] - 2026-10-23
+
+### Fixed
+
+- The floating top bar and the project toolbars have no border, and they now share the same width.
+
 ## [2.19.1] - 2026-10-23
 
 ### Fixed
