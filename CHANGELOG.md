@@ -4,6 +4,19 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.12.0] - 2026-10-23
+
+### Changed
+
+- The web app uses the muse theme: chroma-zero light and dark tokens.
+- Cards, board columns and task cards no longer have borders. Fills separate them.
+
+### Fixed
+
+- The task sidebar no longer requests `GET /api/task` with an empty id, which
+  returned a 404.
+- The seed page declares its language, so `biome ci` passes.
+
 ## [2.11.2] - 2026-10-23
 
 ### Fixed
