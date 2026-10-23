@@ -4,6 +4,15 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.11.1] - 2026-10-23
+
+### Fixed
+
+- Task cards on the board did not open and could not be dragged between columns.
+  The Go API returns numeric ids, the web app compares and routes on string ids,
+  so `?taskId=` was dropped and every drag lookup missed. The API client now turns
+  numeric `id`, `*Id` and `*Ids` fields in JSON responses into strings.
+
 ## [2.11.0] - 2026-10-13
 
 ### Added
