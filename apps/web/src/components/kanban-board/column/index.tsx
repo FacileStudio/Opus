@@ -13,7 +13,7 @@ function Column({ column }: ColumnProps) {
   return (
     <div
       className={`group relative flex h-full min-h-0 w-full flex-col rounded-xl transition-all duration-300 ease-out ${
-        isDropzoneOver ? "bg-accent ring-2 ring-ring/30" : "bg-muted"
+        isDropzoneOver ? "bg-accent ring-2 ring-ring/30" : "bg-card"
       }`}
     >
       <div className="shrink-0 px-3 py-2">
