@@ -39,7 +39,7 @@ import useDeleteProject from "@/hooks/mutations/project/use-delete-project";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import { toast } from "@/lib/toast";
-import type { ProjectWithTasks } from "@/types/project";
+import type { Project } from "@/types/project";
 import type { Workspace } from "@/types/workspace";
 import { navGroupLabelClassName, navRowClassName } from "./nav-main";
 import CreateProjectModal from "./shared/modals/create-project-modal";
@@ -77,7 +77,7 @@ function ProjectItem({
   onProjectClick,
   onDeleteClick,
 }: {
-  project: ProjectWithTasks;
+  project: Project;
   workspace: Workspace;
   isMobile: boolean;
   isActive: boolean;
@@ -237,7 +237,7 @@ export function NavProjects() {
     );
   };
 
-  const handleProjectClick = (project: ProjectWithTasks) => {
+  const handleProjectClick = (project: Project) => {
     navigate({
       to: "/dashboard/workspace/$workspaceId/project/$projectId/board",
       params: {
