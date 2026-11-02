@@ -69,6 +69,17 @@ Unlike the Go and `jose` apps in the suite, Opus reads none of `OIDC_ISSUER`, `O
 `OIDC_CLIENT_SECRET`. Federating to `porte.facile.studio` means filling in the `CUSTOM_OAUTH_*`
 block.
 
+### Delegated suite access
+
+The Go API verifies short-lived bearer JWTs minted by Registre for other suite services.
+
+| Variable | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `OIDC_MACHINE_AUDIENCE` | no | — | Opus's own client id. Enables offline JWT verification. Requires `OIDC_ISSUER` |
+| `OIDC_SCOPE_PREFIX` | no | — | Set to `opus`. A JWT then needs `opus.read` for GET, HEAD and OPTIONS and `opus.write` for everything else. Requires `OIDC_MACHINE_AUDIENCE` |
+
+Opaque API tokens and cookie sessions are untouched by both settings.
+
 ## GitHub App integration
 
 Separate from GitHub sign-in. These power repository sync and webhook delivery.

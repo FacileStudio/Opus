@@ -4,6 +4,17 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.20.0] - 2026-11-02
+
+### Added
+
+- The API accepts short-lived bearer JWTs minted by Registre for another suite service, such as Bulle acting for a user. Set `OIDC_MACHINE_AUDIENCE` to Opus's client id and `OIDC_SCOPE_PREFIX` to `opus`: a token then needs `opus.read` for GET, HEAD and OPTIONS and `opus.write` for any other method. Opaque API tokens and cookie sessions are unchanged.
+- The request identity carries the acting service (`Identity.Actor`) when a delegated token is used.
+
+### Changed
+
+- porte is bumped to v0.7.0.
+
 ## [2.19.3] - 2026-10-23
 
 ### Fixed

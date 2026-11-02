@@ -20,6 +20,9 @@ type OIDCConfig struct {
 	ClientSecret string
 	RedirectURL  string
 	SuccessURL   string
+
+	MachineAudience string
+	ScopePrefix     string
 }
 
 // Porte returns the shared auth kit's configuration. The environment variable
@@ -36,6 +39,9 @@ func (c Config) Porte() porte.Config {
 		RedirectURL:  c.OIDC.RedirectURL,
 		SuccessURL:   c.OIDC.SuccessURL,
 		SSOOnly:      c.SSOOnly,
+
+		MachineAudience: c.OIDC.MachineAudience,
+		ScopePrefix:     c.OIDC.ScopePrefix,
 	}
 }
 
@@ -99,6 +105,9 @@ func parseOIDCConfig(corsOrigins []string) (*OIDCConfig, error) {
 		ClientSecret: clientSecret,
 		RedirectURL:  redirectURL,
 		SuccessURL:   successURL,
+
+		MachineAudience: troncenv.String("OIDC_MACHINE_AUDIENCE", ""),
+		ScopePrefix:     troncenv.String("OIDC_SCOPE_PREFIX", ""),
 	}, nil
 }
 

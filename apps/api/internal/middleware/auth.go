@@ -37,9 +37,11 @@ func RequireAuth(auth Authenticator) func(http.Handler) http.Handler {
 				httpjson.WriteError(w, err)
 				return
 			}
+			actor, _ := porte.ActorFrom(request.Context())
 			authContext := authcontext.WithIdentity(request.Context(), authcontext.Identity{
 				UserID: userID,
 				Email:  email,
+				Actor:  actor,
 			})
 			next.ServeHTTP(w, request.WithContext(authContext))
 		})

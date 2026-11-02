@@ -10,6 +10,7 @@ import "context"
 type Identity struct {
 	UserID int64
 	Email  string
+	Actor  string
 }
 
 type contextKey struct{}
