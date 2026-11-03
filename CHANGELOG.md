@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.24.1] - 2026-11-03
+
+### Changed
+
+- Spaces use the share-circle icon.
+
 ## [2.24.0] - 2026-11-03
 
 ### Added
