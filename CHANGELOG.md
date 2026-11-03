@@ -4,6 +4,19 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.25.0] - 2026-11-03
+
+### Added
+
+- Sablier sync v2: projects follow their space both ways (Registre space id, or the owner's personal workspace), tasks carry description, due date and priority, and Sablier time entries on synced tasks are mirrored into Opus as read-only entries (409 on edit or delete).
+- A durable outbox for pool events, sent in order and retried, so nothing is lost while the pool is unreachable.
+- Reconcile at boot and on `POST /api/sync/reconcile`: same-named projects and tasks in the same space merge onto the smaller facile id, everything else is created on the other side.
+
+### Changed
+
+- `ANTENNE_SYNC_WORKSPACE_ID` is only a fallback for events that carry no space.
+- Projects use last-writer-wins on inbound updates, like tasks.
+
 ## [2.24.1] - 2026-11-03
 
 ### Changed
