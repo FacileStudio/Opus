@@ -1,8 +1,8 @@
-import { ShareCircle } from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { SpaceIcon } from "@/components/icons/space-icon";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -76,7 +76,7 @@ function RouteComponent() {
               <div className="text-center mb-8">
                 <div className="flex justify-center mb-4">
                   <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                    <ShareCircle className="h-6 w-6 text-muted-foreground" />
+                    <SpaceIcon className="h-6 w-6 text-muted-foreground" />
                   </div>
                 </div>
 

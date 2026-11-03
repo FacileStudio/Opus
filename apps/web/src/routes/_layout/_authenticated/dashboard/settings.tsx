@@ -1,7 +1,6 @@
 import {
   AltArrowLeft as ChevronLeft,
   Folder2,
-  Settings,
   User,
   UsersGroupTwoRounded,
 } from "@solar-icons/react";
@@ -13,6 +12,7 @@ import {
 } from "@tanstack/react-router";
 import type { ComponentType, SVGProps } from "react";
 import { useTranslation } from "react-i18next";
+import { SpaceIcon } from "@/components/icons/space-icon";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
@@ -70,7 +70,7 @@ function SettingsLayout() {
     {
       id: "workspace",
       label: t("navigation:page.settingsWorkspaceTab"),
-      icon: Settings,
+      icon: SpaceIcon,
       to: "/dashboard/settings/workspace/general",
       disabled: false,
     },

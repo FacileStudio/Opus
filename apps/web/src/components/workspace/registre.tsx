@@ -1,5 +1,5 @@
-import { SquareArrowRightUp } from "@solar-icons/react";
 import { useTranslation } from "react-i18next";
+import { SpaceIcon } from "@/components/icons/space-icon";
 import { buttonVariants } from "@/components/ui/button";
 import useGetConfig from "@/hooks/queries/config/use-get-config";
 import { cn } from "@/lib/cn";
@@ -46,7 +46,7 @@ export function ManageInRegistreButton({
         className,
       )}
     >
-      <SquareArrowRightUp className="w-3 h-3" />
+      <SpaceIcon className="w-3 h-3" />
       {t("workspace:registre.manage")}
     </a>
   );

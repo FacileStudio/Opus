@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { NookIcon } from "@/components/icons/nook-icon";
+import { SpaceIcon } from "@/components/icons/space-icon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,13 +48,6 @@ function RouteComponent() {
     },
   ];
   const isActivePath = (path: string) => location.pathname === path;
-  const workspaceInitials =
-    workspace?.name
-      ?.split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase())
-      .join("") || "WS";
 
   return (
     <div className="flex gap-6 h-full">
@@ -66,7 +60,7 @@ function RouteComponent() {
                 alt={workspace?.name || ""}
               />
               <AvatarFallback className="border border-sidebar-border/70 bg-sidebar-accent/70 text-[11px] font-medium text-sidebar-accent-foreground">
-                {workspaceInitials}
+                <SpaceIcon className="size-4" />
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">

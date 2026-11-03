@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { SpaceIcon } from "@/components/icons/space-icon";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -97,6 +98,7 @@ function CreateWorkspaceModal({ open, onClose }: CreateWorkspaceModalProps) {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem className="text-foreground font-medium text-sm">
+                  <SpaceIcon className="size-4" />
                   {t("common:modals.createWorkspace.title")}
                 </BreadcrumbItem>
               </BreadcrumbList>

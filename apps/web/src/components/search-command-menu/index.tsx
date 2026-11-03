@@ -4,12 +4,12 @@ import {
   Hashtag as Hash,
   ChatSquare as MessageSquare,
   Magnifier as Search,
-  UsersGroupTwoRounded as Users,
   Bolt as Zap,
 } from "@solar-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { SpaceIcon } from "@/components/icons/space-icon";
 import {
   Command,
   CommandCollection,
@@ -144,7 +144,7 @@ function SearchCommandMenu({ open, setOpen }: SearchCommandMenuProps) {
       case "project":
         return FolderKanban;
       case "workspace":
-        return Users;
+        return SpaceIcon;
       case "comment":
         return MessageSquare;
       case "activity":

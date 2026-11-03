@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
+import { SpaceIcon } from "@/components/icons/space-icon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -130,8 +131,8 @@ export function SpaceSwitcher() {
                       alt={workspace.name}
                     />
                   ) : null}
-                  <AvatarFallback className="rounded-md text-[10px]">
-                    {workspace.name?.charAt(0)?.toUpperCase()}
+                  <AvatarFallback className="rounded-md">
+                    <SpaceIcon className="size-3.5" />
                   </AvatarFallback>
                 </Avatar>
                 <span
