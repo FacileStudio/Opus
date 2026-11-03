@@ -4,6 +4,17 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.22.0] - 2026-11-03
+
+### Added
+
+- My tasks has a columns view that groups your tasks by status, next to the list view. The header toggle remembers your choice.
+
+### Changed
+
+- My tasks shows a summary line with the open, overdue and due-this-week counts, and a loading skeleton while it fetches.
+- The list view sorts each project's tasks by due date, then priority, and colors overdue and due-today dates. Rows are links, so a task opens in a new tab with a middle click.
+
 ## [2.21.0] - 2026-11-03
 
 ### Added
