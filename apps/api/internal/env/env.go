@@ -21,6 +21,11 @@ type OIDCConfig struct {
 	RedirectURL  string
 	SuccessURL   string
 
+	// CLIAudience is the client id the suite's CLIs hold their device-grant
+	// token under. Setting it mounts porte's device exchange; empty leaves
+	// the route unmounted and answering 404. It is never the machine
+	// audience, which names this app.
+	CLIAudience     string
 	MachineAudience string
 	ScopePrefix     string
 }
@@ -40,6 +45,7 @@ func (c Config) Porte() porte.Config {
 		SuccessURL:   c.OIDC.SuccessURL,
 		SSOOnly:      c.SSOOnly,
 
+		CLIAudience:     c.OIDC.CLIAudience,
 		MachineAudience: c.OIDC.MachineAudience,
 		ScopePrefix:     c.OIDC.ScopePrefix,
 	}
@@ -106,6 +112,7 @@ func parseOIDCConfig(corsOrigins []string) (*OIDCConfig, error) {
 		RedirectURL:  redirectURL,
 		SuccessURL:   successURL,
 
+		CLIAudience:     troncenv.String("OIDC_CLI_AUDIENCE", ""),
 		MachineAudience: troncenv.String("OIDC_MACHINE_AUDIENCE", ""),
 		ScopePrefix:     troncenv.String("OIDC_SCOPE_PREFIX", ""),
 	}, nil
