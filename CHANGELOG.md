@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.24.0] - 2026-11-03
+
+### Added
+
+- Every user has a personal workspace, created for existing users by migration 00004 and for a new account on its first workspace listing, so nobody has to create one first. It is listed first.
+
+### Changed
+
+- Personal workspaces are never imported into Registre or linked to a shared space by name, and cannot be shared or deleted.
+
 ## [2.23.0] - 2026-11-03
 
 ### Added
