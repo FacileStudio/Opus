@@ -20,6 +20,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  RegistreCreateNotice,
+  useRegistreSpacesUrl,
+} from "@/components/workspace/registre";
 import useCreateWorkspace from "@/hooks/queries/workspace/use-create-workspace";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/lib/toast";
@@ -44,6 +48,7 @@ export function OnboardingFlow() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutateAsync: createWorkspace, isPending } = useCreateWorkspace();
+  const registreSpacesUrl = useRegistreSpacesUrl();
   const { user } = useAuth();
 
   const workspaceSchema = useMemo(
@@ -120,60 +125,68 @@ export function OnboardingFlow() {
           </p>
         </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <div className="space-y-3">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">
-                      {t("auth:onboarding.workspaceName")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t(
-                          "auth:onboarding.workspaceNamePlaceholder",
-                        )}
-                        autoFocus
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        {registreSpacesUrl ? (
+          <RegistreCreateNotice />
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+              <div className="space-y-3">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">
+                        {t("auth:onboarding.workspaceName")}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t(
+                            "auth:onboarding.workspaceNamePlaceholder",
+                          )}
+                          autoFocus
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-muted-foreground">
-                      {t("auth:onboarding.descriptionOptional")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t(
-                          "auth:onboarding.descriptionPlaceholder",
-                        )}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-muted-foreground">
+                        {t("auth:onboarding.descriptionOptional")}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t(
+                            "auth:onboarding.descriptionPlaceholder",
+                          )}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-            <Button type="submit" disabled={isPending} className="w-full mt-4">
-              {isPending
-                ? t("auth:onboarding.creating")
-                : t("auth:onboarding.createWorkspace")}
-            </Button>
-          </form>
-        </Form>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full mt-4"
+              >
+                {isPending
+                  ? t("auth:onboarding.creating")
+                  : t("auth:onboarding.createWorkspace")}
+              </Button>
+            </form>
+          </Form>
+        )}
       </div>
     </motion.div>
   );

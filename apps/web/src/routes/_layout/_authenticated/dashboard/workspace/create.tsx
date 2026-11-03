@@ -7,6 +7,10 @@ import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  RegistreCreateNotice,
+  useRegistreSpacesUrl,
+} from "@/components/workspace/registre";
 import useCreateWorkspace from "@/hooks/queries/workspace/use-create-workspace";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/lib/toast";
@@ -25,6 +29,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { mutateAsync, isPending } = useCreateWorkspace();
+  const registreSpacesUrl = useRegistreSpacesUrl();
 
   useEffect(() => {
     if (inputRef.current) {
@@ -83,60 +88,66 @@ function RouteComponent() {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="workspace-name"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      {t("workspace:create.nameLabel")}
-                    </label>
-                    <Input
-                      ref={inputRef}
-                      id="workspace-name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder={t("workspace:create.namePlaceholder")}
-                      className="h-12 text-lg font-medium"
-                      required
-                    />
-                    {!name.trim() && (
-                      <p className="mt-1 text-destructive-foreground text-sm">
-                        {t("workspace:create.required")}
-                      </p>
-                    )}
+              {registreSpacesUrl ? (
+                <RegistreCreateNotice />
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label
+                        htmlFor="workspace-name"
+                        className="block text-sm font-medium text-foreground mb-2"
+                      >
+                        {t("workspace:create.nameLabel")}
+                      </label>
+                      <Input
+                        ref={inputRef}
+                        id="workspace-name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder={t("workspace:create.namePlaceholder")}
+                        className="h-12 text-lg font-medium"
+                        required
+                      />
+                      {!name.trim() && (
+                        <p className="mt-1 text-destructive-foreground text-sm">
+                          {t("workspace:create.required")}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="workspace-description"
+                        className="block text-sm font-medium text-foreground mb-2"
+                      >
+                        {t("workspace:create.descriptionLabel")}
+                      </label>
+                      <Input
+                        id="workspace-description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={t(
+                          "workspace:create.descriptionPlaceholder",
+                        )}
+                        className="h-10"
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="workspace-description"
-                      className="block text-sm font-medium text-foreground mb-2"
+                  <div className="pt-4">
+                    <Button
+                      type="submit"
+                      disabled={!name.trim() || isPending}
+                      className="w-full h-12 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {t("workspace:create.descriptionLabel")}
-                    </label>
-                    <Input
-                      id="workspace-description"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder={t("workspace:create.descriptionPlaceholder")}
-                      className="h-10"
-                    />
+                      {isPending
+                        ? t("workspace:create.creating")
+                        : t("workspace:create.submit")}
+                    </Button>
                   </div>
-                </div>
-
-                <div className="pt-4">
-                  <Button
-                    type="submit"
-                    disabled={!name.trim() || isPending}
-                    className="w-full h-12 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isPending
-                      ? t("workspace:create.creating")
-                      : t("workspace:create.submit")}
-                  </Button>
-                </div>
-              </form>
+                </form>
+              )}
             </CardContent>
           </Card>
         </div>

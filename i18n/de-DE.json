@@ -1809,6 +1809,12 @@
 			"submit": "Space erstellen",
 			"success": "Space erfolgreich erstellt",
 			"error": "Space konnte nicht erstellt werden"
+		},
+		"registre": {
+			"manage": "In Registre verwalten",
+			"createHint": "Arbeitsbereiche werden in Registre erstellt, dem Identitätsanbieter der Suite. Ein dort erstellter Arbeitsbereich erscheint hier innerhalb von Sekunden.",
+			"nameHint": "Der Name wird in Registre verwaltet.",
+			"deleteHint": "Dieser Arbeitsbereich wird in Registre verwaltet. Name und Mitglieder ändern sich dort."
 		}
 	},
 	"team": {

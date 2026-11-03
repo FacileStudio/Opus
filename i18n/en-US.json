@@ -1809,6 +1809,12 @@
 			"submit": "Create space",
 			"success": "Space created successfully",
 			"error": "Failed to create space"
+		},
+		"registre": {
+			"manage": "Manage in Registre",
+			"createHint": "Workspaces are created in Registre, the suite's identity provider. A workspace you create there appears here within seconds.",
+			"nameHint": "The name is managed in Registre.",
+			"deleteHint": "This workspace is managed in Registre. Its name and members change there."
 		}
 	},
 	"team": {

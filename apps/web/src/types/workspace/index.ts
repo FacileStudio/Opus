@@ -7,6 +7,7 @@ export type Workspace = {
   logo: string | null;
   description: string | null;
   createdAt: string;
+  registreSpaceId: string | null;
 };
 
 export type FullWorkspace = Workspace & {

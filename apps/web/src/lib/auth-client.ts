@@ -40,6 +40,7 @@ export type Workspace = {
   logo: string | null;
   description: string | null;
   createdAt: string;
+  registreSpaceId: string | null;
 };
 
 export type WorkspaceMember = {
@@ -201,6 +202,7 @@ function mapWorkspace(workspace: {
   logo?: string | null;
   description?: string | null;
   createdAt?: string;
+  registreSpaceId?: string | null;
 }): Workspace {
   return {
     id: toStr(workspace.id),
@@ -209,6 +211,7 @@ function mapWorkspace(workspace: {
     logo: workspace.logo ?? null,
     description: workspace.description ?? null,
     createdAt: workspace.createdAt ?? "",
+    registreSpaceId: workspace.registreSpaceId ?? null,
   };
 }
 
@@ -413,6 +416,7 @@ export const authClient = {
             logo?: string | null;
             description?: string | null;
             createdAt?: string;
+            registreSpaceId?: string | null;
           }>
         >("/workspace");
       if (result.error) {
@@ -465,6 +469,7 @@ export const authClient = {
           logo?: string | null;
           description?: string | null;
           createdAt?: string;
+          registreSpaceId?: string | null;
         };
         members: Array<{
           id: number | string;

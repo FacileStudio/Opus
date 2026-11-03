@@ -14,6 +14,7 @@ import PageTitle from "@/components/page-title";
 import InviteTeamMemberModal from "@/components/team/invite-team-member-modal";
 import MembersTable from "@/components/team/members-table";
 import { Button } from "@/components/ui/button";
+import { ManageInRegistreButton } from "@/components/workspace/registre";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import useGetFullWorkspace from "@/hooks/queries/workspace/use-get-full-workspace";
 
@@ -66,6 +67,7 @@ function WorkspaceMembersSection({
       <MembersTable
         users={workspace?.members ?? []}
         invitations={workspace?.invitations ?? []}
+        readOnly={!!workspace?.organization?.registreSpaceId}
       />
       <InviteTeamMemberModal open={isInviteOpen} onClose={onCloseInvite} />
     </>
@@ -89,6 +91,7 @@ function RouteComponent() {
   const { data: activeWorkspace, isLoading } = useActiveWorkspace();
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const workspaceId = activeWorkspace?.id;
+  const registreSpaceId = activeWorkspace?.registreSpaceId;
 
   return (
     <>
@@ -98,7 +101,13 @@ function RouteComponent() {
           <h1 className="text-xl font-semibold">
             {t("team:members.pageTitle")}
           </h1>
-          {!!workspaceId && !isLoading && (
+          {!!workspaceId && !isLoading && registreSpaceId && (
+            <ManageInRegistreButton
+              spaceId={registreSpaceId}
+              className="gap-1 w-full md:w-auto"
+            />
+          )}
+          {!!workspaceId && !isLoading && !registreSpaceId && (
             <Button
               onClick={() => setIsInviteOpen(true)}
               variant="outline"

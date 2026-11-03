@@ -1809,6 +1809,12 @@
 			"submit": "Space maken",
 			"success": "Space succesvol aangemaakt",
 			"error": "Aanmaken space mislukt"
+		},
+		"registre": {
+			"manage": "Beheren in Registre",
+			"createHint": "Werkruimtes worden aangemaakt in Registre, de identiteitsprovider van de suite. Een werkruimte die je daar aanmaakt, verschijnt hier binnen enkele seconden.",
+			"nameHint": "De naam wordt beheerd in Registre.",
+			"deleteHint": "Deze werkruimte wordt beheerd in Registre. Naam en leden wijzig je daar."
 		}
 	},
 	"team": {

@@ -1810,6 +1810,12 @@
 			"submit": "Créer un space",
 			"success": "Space créé avec succès",
 			"error": "Échec de la création du space"
+		},
+		"registre": {
+			"manage": "Gérer dans Registre",
+			"createHint": "Les espaces de travail se créent dans Registre, le fournisseur d'identité de la suite. Un espace créé là-bas apparaît ici en quelques secondes.",
+			"nameHint": "Le nom se gère dans Registre.",
+			"deleteHint": "Cet espace de travail est géré dans Registre. Son nom et ses membres se modifient là-bas."
 		}
 	},
 	"team": {

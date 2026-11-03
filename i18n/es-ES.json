@@ -1810,6 +1810,12 @@
 			"submit": "Crear espacio",
 			"success": "Espacio creado correctamente",
 			"error": "Error al crear espacio"
+		},
+		"registre": {
+			"manage": "Gestionar en Registre",
+			"createHint": "Los espacios de trabajo se crean en Registre, el proveedor de identidad de la suite. Un espacio creado allí aparece aquí en segundos.",
+			"nameHint": "El nombre se gestiona en Registre.",
+			"deleteHint": "Este espacio de trabajo se gestiona en Registre. Su nombre y sus miembros se cambian allí."
 		}
 	},
 	"team": {

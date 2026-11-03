@@ -7,6 +7,7 @@ import PageTitle from "@/components/page-title";
 import InviteTeamMemberModal from "@/components/team/invite-team-member-modal";
 import MembersTable from "@/components/team/members-table";
 import { Button } from "@/components/ui/button";
+import { ManageInRegistreButton } from "@/components/workspace/registre";
 import useGetFullWorkspace from "@/hooks/queries/workspace/use-get-full-workspace";
 
 export const Route = createFileRoute(
@@ -25,6 +26,7 @@ function RouteComponent() {
 
   const users = workspace?.members;
   const userInvitations = workspace?.invitations;
+  const registreSpaceId = workspace?.organization?.registreSpaceId;
 
   return (
     <>
@@ -32,18 +34,29 @@ function RouteComponent() {
       <WorkspaceLayout
         title={t("team:members.pageTitle")}
         headerActions={
-          <Button
-            onClick={() => setIsInviteTeamMemberModalOpen(true)}
-            variant="outline"
-            size="xs"
-            className="gap-1 w-full md:w-auto"
-          >
-            <UserPlus className="w-3 h-3" />
-            {t("team:members.inviteMember")}
-          </Button>
+          registreSpaceId ? (
+            <ManageInRegistreButton
+              spaceId={registreSpaceId}
+              className="gap-1 w-full md:w-auto"
+            />
+          ) : (
+            <Button
+              onClick={() => setIsInviteTeamMemberModalOpen(true)}
+              variant="outline"
+              size="xs"
+              className="gap-1 w-full md:w-auto"
+            >
+              <UserPlus className="w-3 h-3" />
+              {t("team:members.inviteMember")}
+            </Button>
+          )
         }
       >
-        <MembersTable users={users ?? []} invitations={userInvitations ?? []} />
+        <MembersTable
+          users={users ?? []}
+          invitations={userInvitations ?? []}
+          readOnly={!!registreSpaceId}
+        />
 
         <InviteTeamMemberModal
           open={isInviteTeamMemberModalOpen}

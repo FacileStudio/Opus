@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ManageInRegistreButton } from "@/components/workspace/registre";
 import { getApiUrl } from "@/fetchers/get-api-url";
 import {
   deleteWorkspaceLogo,
@@ -296,9 +297,15 @@ function RouteComponent() {
                         placeholder={t(
                           "settings:workspaceGeneral.namePlaceholder",
                         )}
+                        disabled={!!workspace?.registreSpaceId}
                         {...field}
                       />
                     </FormControl>
+                    {workspace?.registreSpaceId && (
+                      <p className="text-xs text-muted-foreground">
+                        {t("workspace:registre.nameHint")}
+                      </p>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -453,17 +460,26 @@ function RouteComponent() {
 
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              {t("settings:workspaceGeneral.deleteWorkspaceDescription")}
+              {workspace?.registreSpaceId
+                ? t("workspace:registre.deleteHint")
+                : t("settings:workspaceGeneral.deleteWorkspaceDescription")}
             </p>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="shrink-0 ml-4 text-destructive hover:text-destructive transition-colors"
-              type="button"
-              onClick={() => setIsDeleteModalOpen(true)}
-            >
-              {t("settings:workspaceGeneral.deleteWorkspace")}
-            </Button>
+            {workspace?.registreSpaceId ? (
+              <ManageInRegistreButton
+                spaceId={workspace.registreSpaceId}
+                className="shrink-0 ml-4 gap-1"
+              />
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="shrink-0 ml-4 text-destructive hover:text-destructive transition-colors"
+                type="button"
+                onClick={() => setIsDeleteModalOpen(true)}
+              >
+                {t("settings:workspaceGeneral.deleteWorkspace")}
+              </Button>
+            )}
           </div>
         </section>
 

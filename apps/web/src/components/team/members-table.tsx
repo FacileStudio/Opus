@@ -35,12 +35,18 @@ import {
   TableRow,
 } from "../ui/table";
 
+/**
+ * Lists a workspace's members and pending invitations. A read-only table, for
+ * a workspace Registre owns, shows the members alone with no actions.
+ */
 function MembersTable({
   invitations,
   users,
+  readOnly = false,
 }: {
   invitations: WorkspaceUserInvitation[];
   users: WorkspaceUser[];
+  readOnly?: boolean;
 }) {
   const [memberToDelete, setMemberToDelete] = useState<WorkspaceUser | null>(
     null,
@@ -138,15 +144,18 @@ function MembersTable({
             <TableHead className="text-muted-foreground text-xs">
               {t("team:membersTable.columns.joined")}
             </TableHead>
-            <TableHead className="text-muted-foreground text-xs pr-6 text-right">
-              {t("team:membersTable.columns.actions")}
-            </TableHead>
+            {!readOnly && (
+              <TableHead className="text-muted-foreground text-xs pr-6 text-right">
+                {t("team:membersTable.columns.actions")}
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
           {invitations
             .filter(
               (invitation) =>
+                !readOnly &&
                 invitation.status !== "accepted" &&
                 invitation.status !== "canceled",
             )
@@ -238,22 +247,24 @@ function MembersTable({
               <TableCell className="py-3">
                 <span className="text-sm text-muted-foreground">—</span>
               </TableCell>
-              <TableCell className="py-3 pr-6 text-right">
-                {currentUser?.id !== member.userId && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setMemberToDelete(member);
-                    }}
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                    aria-label={t("team:membersTable.ariaRemoveMember")}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </TableCell>
+              {!readOnly && (
+                <TableCell className="py-3 pr-6 text-right">
+                  {currentUser?.id !== member.userId && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMemberToDelete(member);
+                      }}
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      aria-label={t("team:membersTable.ariaRemoveMember")}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
