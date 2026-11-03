@@ -4,6 +4,20 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.23.0] - 2026-11-03
+
+### Added
+
+- Registre owns workspaces. When OIDC is configured, Opus imports its workspaces into Registre once, retrying with backoff until Registre accepts, then keeps them equal to Registre's shared spaces: at boot, every 5 minutes, and about 2 seconds after Registre posts to `POST /api/registre/sync`. A space links to the workspace with the same name, ignoring case, or creates one.
+- People added in Registre are provisioned in Opus before their first sign-in, with their name and picture. People removed in Registre lose the workspace. Local password accounts are never removed by a sync.
+- Migration `00003` adds `workspaces.registre_space_id`.
+
+### Changed
+
+- A workspace linked to Registre shows its members read-only with a "Manage in Registre" link. The API refuses rename, delete, invitations and member changes on it with 409 and the Registre link.
+- Once Registre owns workspaces, creating a workspace in Opus points to Registre, and `POST /api/workspace` answers 409. `GET /api/config` reports `registreSpacesUrl`.
+- Pending invitations to linked workspaces are canceled. Add people in Registre instead.
+
 ## [2.22.0] - 2026-11-03
 
 ### Added
