@@ -102,7 +102,7 @@ local writes are unaffected. See [Sablier sync](sablier-sync.md).
 | `ANTENNE_URL` | no | — | Antenne instance URL |
 | `ANTENNE_SECRET` | no | — | Shared secret of the Antenne instance |
 | `ANTENNE_INSTANCE_ID` | no | — | Distinguishes several Opus instances on one bus |
-| `ANTENNE_SYNC_WORKSPACE_ID` | no | — | Numeric id of the workspace that receives projects created in Sablier. Unset: Sablier projects are not imported, but changes to projects Opus already knows still apply |
+| `ANTENNE_SYNC_WORKSPACE_ID` | no | — | Fallback workspace for projects from old Sablier versions whose events carry no `space`. Current Sablier projects land in their Registre or personal workspace |
 
 ## Email
 
