@@ -120,7 +120,7 @@ func (service *Service) importSpaces(ctx context.Context, issuer string) ([]dire
 		Joins("JOIN workspace_members ON workspace_members.workspace_id = workspaces.id").
 		Joins("JOIN users ON users.id = workspace_members.user_id").
 		Joins("LEFT JOIN porte_identities ON porte_identities.user_id = users.id AND porte_identities.provider = ?", issuer).
-		Where("workspaces.registre_space_id IS NULL").
+		Where("workspaces.registre_space_id IS NULL AND workspaces.personal_owner_id IS NULL").
 		Order("workspaces.id").
 		Scan(&rows).Error
 	if err != nil {

@@ -28,7 +28,7 @@ func (service *Service) InviteMember(ctx context.Context, callerID, workspaceID 
 	if err := service.requireRole(ctx, callerID, workspaceID, "owner", "admin"); err != nil {
 		return nil, err
 	}
-	if err := service.requireLocal(ctx, workspaceID); err != nil {
+	if err := service.requireShareable(ctx, workspaceID); err != nil {
 		return nil, err
 	}
 	email := strings.ToLower(strings.TrimSpace(req.Email))

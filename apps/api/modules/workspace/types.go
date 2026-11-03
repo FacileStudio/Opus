@@ -13,6 +13,7 @@ type WorkspaceResponse struct {
 	Description     string    `json:"description"`
 	CreatedAt       time.Time `json:"createdAt"`
 	RegistreSpaceID *string   `json:"registreSpaceId"`
+	Personal        bool      `json:"personal"`
 }
 
 // MemberResponse is one row of GET /{workspaceId}/members. ID is the member

@@ -119,7 +119,7 @@ func (service *Service) Delete(ctx context.Context, userID, workspaceID int64) (
 	if err := service.requireRole(ctx, userID, workspaceID, "owner"); err != nil {
 		return nil, err
 	}
-	if err := service.requireLocal(ctx, workspaceID); err != nil {
+	if err := service.requireShareable(ctx, workspaceID); err != nil {
 		return nil, err
 	}
 	err := service.orm.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
@@ -229,6 +229,7 @@ func workspaceResponse(workspace schemas.Workspace) *WorkspaceResponse {
 		Description:     workspace.Description,
 		CreatedAt:       workspace.CreatedAt,
 		RegistreSpaceID: workspace.RegistreSpaceID,
+		Personal:        workspace.PersonalOwnerID != nil,
 	}
 }
 

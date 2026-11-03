@@ -56,8 +56,8 @@ func TestListForUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListForUser: %v", err)
 	}
-	if len(workspaces) != 1 || workspaces[0].ID != workspaceID {
-		t.Fatalf("ListForUser = %+v, want one workspace %d", workspaces, workspaceID)
+	if len(workspaces) != 2 || !workspaces[0].Personal || workspaces[1].ID != workspaceID {
+		t.Fatalf("ListForUser = %+v, want the personal workspace then %d", workspaces, workspaceID)
 	}
 
 	other, err := service.ListForUser(context.Background(), userID+1000)

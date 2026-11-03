@@ -32,6 +32,7 @@ type Workspace struct {
 	Description     string    `gorm:"column:description"`
 	CreatedAt       time.Time `gorm:"column:created_at;not null"`
 	RegistreSpaceID *string   `gorm:"column:registre_space_id;uniqueIndex"`
+	PersonalOwnerID *int64    `gorm:"column:personal_owner_id;uniqueIndex"`
 }
 
 // WorkspaceMember is one human's membership in one workspace.

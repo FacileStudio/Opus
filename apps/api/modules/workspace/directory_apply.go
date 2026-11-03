@@ -73,7 +73,7 @@ func (d *Directory) linkSpace(tx *gorm.DB, space directory.Space) (int64, error)
 	var workspace schemas.Workspace
 	found := tx.Where("registre_space_id = ?", space.ID).Limit(1).Find(&workspace)
 	if found.Error == nil && found.RowsAffected == 0 {
-		found = tx.Where("registre_space_id IS NULL AND lower(name) = lower(?)", space.Name).
+		found = tx.Where("registre_space_id IS NULL AND personal_owner_id IS NULL AND lower(name) = lower(?)", space.Name).
 			Order("id").Limit(1).Find(&workspace)
 	}
 	if found.Error != nil {

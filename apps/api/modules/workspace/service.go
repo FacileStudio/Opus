@@ -35,6 +35,9 @@ func NewService(orm *gorm.DB, uploadDir string) *Service {
 // ListForUser returns every workspace the user is a member of, ordered by
 // name for a stable list. Response fields match the legacy select exactly.
 func (service *Service) ListForUser(ctx context.Context, userID int64) ([]WorkspaceResponse, error) {
+	if err := service.ensurePersonal(ctx, userID); err != nil {
+		return nil, errors.Internal("failed to create the personal workspace", err)
+	}
 	rows := []struct {
 		ID              int64
 		Name            string
@@ -43,14 +46,15 @@ func (service *Service) ListForUser(ctx context.Context, userID int64) ([]Worksp
 		Description     string
 		CreatedAt       time.Time
 		RegistreSpaceID *string
+		PersonalOwnerID *int64
 	}{}
 	err := service.orm.WithContext(ctx).
 		Table("workspaces").
 		Select("workspaces.id, workspaces.name, workspaces.slug, workspaces.logo, workspaces.description, workspaces.created_at, "+
-			"workspaces.registre_space_id").
+			"workspaces.registre_space_id, workspaces.personal_owner_id").
 		Joins("JOIN workspace_members ON workspace_members.workspace_id = workspaces.id").
 		Where("workspace_members.user_id = ?", userID).
-		Order("workspaces.name asc").
+		Order("workspaces.personal_owner_id IS NULL, workspaces.name asc").
 		Scan(&rows).Error
 	if err != nil {
 		return nil, errors.Internal("failed to list workspaces", err)
@@ -66,6 +70,7 @@ func (service *Service) ListForUser(ctx context.Context, userID int64) ([]Worksp
 			Description:     row.Description,
 			CreatedAt:       row.CreatedAt,
 			RegistreSpaceID: row.RegistreSpaceID,
+			Personal:        row.PersonalOwnerID != nil,
 		})
 	}
 	return out, nil
