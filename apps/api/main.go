@@ -50,6 +50,7 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	store := portepg.New(sqlDB)
 	users := auth.NewUserStore(db)
 	cfg := appEnv.Porte()
+	backfillPictures(ctx, users, cfg.Issuer, appLogger)
 
 	sessions, err := session.New(cfg, session.Deps{Sessions: store.Sessions(), Logger: appLogger})
 	if err != nil {
@@ -76,6 +77,21 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 		return nil, err
 	}
 	return &authKits{sessions: sessions, passwords: passwords, oidc: kit}, nil
+}
+
+// backfillPictures fills the Registre picture URL for accounts that have not
+// signed in since Opus started storing it. A failure only costs pictures until
+// the next sign-in, so it is logged and boot goes on.
+func backfillPictures(ctx context.Context, users *auth.UserStore, issuer string, appLogger *slog.Logger) {
+	if issuer == "" {
+		return
+	}
+	updated, err := users.BackfillPictures(ctx, issuer)
+	if err != nil {
+		appLogger.Warn("picture backfill failed", slog.Any("error", err))
+		return
+	}
+	appLogger.Info("picture backfill applied", slog.Int64("updated", updated))
 }
 
 type serverBundle struct {

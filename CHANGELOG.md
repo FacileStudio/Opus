@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.21.0] - 2026-11-03
+
+### Added
+
+- Opus stores the Registre profile picture URL (the `picture` claim) on every sign-in and profile sync, so the user menu, assignees, comment and activity authors, workspace members and time entries show the picture set in Registre, with initials when there is none. A change in Registre shows on the next page load.
+- At boot, Opus backfills the picture URL (`<OIDC_ISSUER>/avatars/<subject>`) for every account with a Registre identity, so users see their picture without signing in again. It also replaces stale image URLs left by earlier providers.
 ## [2.20.0] - 2026-11-02
 
 ### Added
