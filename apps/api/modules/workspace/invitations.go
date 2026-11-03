@@ -22,9 +22,13 @@ type invitationRow struct {
 	InviterName   string
 }
 
-// InviteMember addresses a pending invitation.
+// InviteMember addresses a pending invitation, unless Registre owns the
+// workspace and adding people is done there.
 func (service *Service) InviteMember(ctx context.Context, callerID, workspaceID int64, req InviteMemberRequest) (*InvitationResponse, error) {
 	if err := service.requireRole(ctx, callerID, workspaceID, "owner", "admin"); err != nil {
+		return nil, err
+	}
+	if err := service.requireLocal(ctx, workspaceID); err != nil {
 		return nil, err
 	}
 	email := strings.ToLower(strings.TrimSpace(req.Email))

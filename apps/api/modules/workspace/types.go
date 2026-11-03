@@ -3,14 +3,16 @@ package workspace
 import "time"
 
 // WorkspaceResponse is the workspace shape GET / returns. Fields match the
-// legacy controller's select, ids int64 on the wire.
+// legacy controller's select, ids int64 on the wire. RegistreSpaceID is set
+// when Registre owns the workspace's name and members.
 type WorkspaceResponse struct {
-	ID          int64     `json:"id"`
-	Name        string    `json:"name"`
-	Slug        string    `json:"slug"`
-	Logo        string    `json:"logo"`
-	Description string    `json:"description"`
-	CreatedAt   time.Time `json:"createdAt"`
+	ID              int64     `json:"id"`
+	Name            string    `json:"name"`
+	Slug            string    `json:"slug"`
+	Logo            string    `json:"logo"`
+	Description     string    `json:"description"`
+	CreatedAt       time.Time `json:"createdAt"`
+	RegistreSpaceID *string   `json:"registreSpaceId"`
 }
 
 // MemberResponse is one row of GET /{workspaceId}/members. ID is the member

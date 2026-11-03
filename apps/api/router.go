@@ -2,6 +2,7 @@ package main
 
 import (
 	"log/slog"
+	"strings"
 
 	documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
@@ -25,6 +26,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/modules/timeentry"
 	"github.com/FacileStudio/Opus/apps/api/modules/workflowrule"
 	"github.com/FacileStudio/Opus/apps/api/modules/workspace"
+	"github.com/FacileStudio/porte/directory"
 	"github.com/FacileStudio/tronc/apiref"
 	"github.com/FacileStudio/tronc/health"
 	"github.com/FacileStudio/tronc/httpx"
@@ -42,6 +44,8 @@ type routerDeps struct {
 	kits        *authKits
 	realtimeHub *realtime.Hub
 	emitter     events.Emitter
+	workspaces  *workspace.Service
+	directory   *workspace.Directory
 }
 
 func referenceConfig() apiref.Config {
@@ -75,7 +79,9 @@ func referenceConfig() apiref.Config {
 
 func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, deps routerDeps) {
 	db, appEnv, hub := deps.db, deps.appEnv, deps.realtimeHub
-	config.RegisterRoutes(api, config.NewService(appEnv))
+	configService := config.NewService(appEnv)
+	configService.SetSpacesURL(deps.workspaces.SpacesURL)
+	config.RegisterRoutes(api, configService)
 	projectService := project.NewService(db)
 	projectService.SetEmitter(deps.emitter)
 	project.RegisterRoutes(api, projectService, authService)
@@ -110,7 +116,6 @@ func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, 
 
 func buildRouter(deps routerDeps) chi.Router {
 	authService := auth.NewService(deps.db, deps.kits.sessions, deps.kits.passwords, deps.appLogger)
-	workspaceService := workspace.NewService(deps.db, deps.appEnv.UploadDir)
 
 	router := httpx.NewRouter(httpx.Config{
 		TrustedProxies: deps.appEnv.TrustedProxies,
@@ -143,7 +148,10 @@ func buildRouter(deps routerDeps) chi.Router {
 		deps.kits.sessions.Mount(api)
 		deps.kits.oidc.Mount(api)
 		auth.RegisterRoutes(api, authService, *deps.appEnv)
-		workspace.RegisterRoutes(api, workspaceService, authService)
+		workspace.RegisterRoutes(api, deps.workspaces, authService)
+		if deps.directory != nil {
+			api.Handle(strings.TrimPrefix(directory.SyncPath, "/api"), deps.directory.Handler())
+		}
 		registerDomainRoutes(api, authService, deps)
 
 		if deps.realtimeHub != nil {

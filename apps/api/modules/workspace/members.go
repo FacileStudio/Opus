@@ -17,9 +17,12 @@ func (service *Service) MemberMe(ctx context.Context, userID, workspaceID int64)
 	return service.memberByUserID(ctx, workspaceID, userID)
 }
 
-// UpdateMemberRole changes one member's role.
+// UpdateMemberRole changes one member's role, unless Registre owns the workspace.
 func (service *Service) UpdateMemberRole(ctx context.Context, callerID, workspaceID, targetUserID int64, role string) (*MemberResponse, error) {
 	if err := service.requireRole(ctx, callerID, workspaceID, "owner"); err != nil {
+		return nil, err
+	}
+	if err := service.requireLocal(ctx, workspaceID); err != nil {
 		return nil, err
 	}
 	if !validRole(role) {
@@ -50,9 +53,12 @@ func (service *Service) UpdateMemberRole(ctx context.Context, callerID, workspac
 	return member, nil
 }
 
-// RemoveMember deletes a membership.
+// RemoveMember deletes a membership, unless Registre owns the workspace.
 func (service *Service) RemoveMember(ctx context.Context, callerID, workspaceID int64, target string) (*MessageResponse, error) {
 	if err := service.requireRole(ctx, callerID, workspaceID, "owner", "admin"); err != nil {
+		return nil, err
+	}
+	if err := service.requireLocal(ctx, workspaceID); err != nil {
 		return nil, err
 	}
 	targetUserID, err := service.memberUserID(ctx, workspaceID, target)

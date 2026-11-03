@@ -22,13 +22,16 @@ type User struct {
 }
 
 // Workspace is a tenant: one team's projects, columns and tasks.
+// RegistreSpaceID links it to the Registre shared space it mirrors; a linked
+// workspace's name and members belong to Registre.
 type Workspace struct {
-	ID          int64     `gorm:"column:id;primaryKey;autoIncrement"`
-	Name        string    `gorm:"column:name;not null"`
-	Slug        string    `gorm:"column:slug;uniqueIndex;not null"`
-	Logo        string    `gorm:"column:logo"`
-	Description string    `gorm:"column:description"`
-	CreatedAt   time.Time `gorm:"column:created_at;not null"`
+	ID              int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	Name            string    `gorm:"column:name;not null"`
+	Slug            string    `gorm:"column:slug;uniqueIndex;not null"`
+	Logo            string    `gorm:"column:logo"`
+	Description     string    `gorm:"column:description"`
+	CreatedAt       time.Time `gorm:"column:created_at;not null"`
+	RegistreSpaceID *string   `gorm:"column:registre_space_id;uniqueIndex"`
 }
 
 // WorkspaceMember is one human's membership in one workspace.

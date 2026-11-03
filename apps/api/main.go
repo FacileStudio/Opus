@@ -155,6 +155,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 	if err != nil {
 		return nil, err
 	}
+	workspaces, spaces, stopSpaces := startWorkspaces(db, appEnv, appLogger)
 	router := buildRouter(routerDeps{
 		db:          db,
 		sqlDB:       sqlDB,
@@ -163,6 +164,8 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		kits:        kits,
 		realtimeHub: hub,
 		emitter:     emitter,
+		workspaces:  workspaces,
+		directory:   spaces,
 	})
 	addr := ":" + strconv.Itoa(appEnv.Port)
 	srv := &http.Server{
@@ -173,7 +176,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		WriteTimeout:      15 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
-	return &serverBundle{server: srv, cleanup: cleanup}, nil
+	return &serverBundle{server: srv, cleanup: func() { stopSpaces(); cleanup() }}, nil
 }
 
 func main() {

@@ -26,6 +26,9 @@ func (service *Service) AcceptInvitation(ctx context.Context, callerID int64, ca
 	if !strings.EqualFold(strings.TrimSpace(invitation.Email), strings.TrimSpace(callerEmail)) {
 		return nil, errors.Forbidden("This invitation was not sent to you")
 	}
+	if err := service.requireLocal(ctx, invitation.WorkspaceID); err != nil {
+		return nil, err
+	}
 	var memberCount int64
 	err = service.orm.WithContext(ctx).Model(&schemas.WorkspaceMember{}).
 		Where("workspace_id = ? AND user_id = ?", invitation.WorkspaceID, callerID).

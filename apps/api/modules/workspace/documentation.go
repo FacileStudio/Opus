@@ -10,7 +10,7 @@ func workspaceCrudRoutes() []documentation.Route {
 			Summary:      "List the caller's workspaces",
 			Description:  "Every workspace the authenticated user is a member of, ordered by name.",
 			Auth:         "bearer",
-			ResponseBody: `[{"id":int64,"name":string,"slug":string,"logo":string,"description":string,"createdAt":string}]`,
+			ResponseBody: `[{"id":int64,"name":string,"slug":string,"logo":string,"description":string,"createdAt":string,"registreSpaceId":string?}]`,
 		},
 		{
 			Method:       "POST",
@@ -19,7 +19,7 @@ func workspaceCrudRoutes() []documentation.Route {
 			Description:  "The caller becomes the owner member in the same transaction. The slug defaults to a normalized form of the name and is made unique with a numeric suffix when taken.",
 			Auth:         "bearer",
 			RequestBody:  `{"name":string,"slug":string?,"description":string?}`,
-			ResponseBody: `{"id":int64,"name":string,"slug":string,"logo":string,"description":string,"createdAt":string}`,
+			ResponseBody: `{"id":int64,"name":string,"slug":string,"logo":string,"description":string,"createdAt":string,"registreSpaceId":string?}`,
 		},
 		{
 			Method:      "PATCH",
@@ -149,7 +149,20 @@ func workspaceLogoRoutes() []documentation.Route {
 func Documentation() documentation.Module {
 	return documentation.Module{
 		Name:        "workspace",
-		Description: "Workspaces are the tenant boundary: a team's projects, columns and tasks live under one, and a user's membership in one is what the workspace-scoped access checks gate on.",
-		Routes:      append(workspaceCrudRoutes(), append(workspaceMemberRoutes(), workspaceLogoRoutes()...)...),
+		Description: "Workspaces are the tenant boundary: a team's projects, columns and tasks live under one, and a user's membership in one is what the workspace-scoped access checks gate on. When OIDC is configured, Registre owns them: its shared spaces are imported once and then synced, a linked workspace (registreSpaceId set) refuses rename, delete, invitations and member changes with 409 and a link to its Registre page, and creating a workspace is refused once the import has succeeded.",
+		Routes: append(workspaceCrudRoutes(), append(workspaceMemberRoutes(),
+			append(workspaceLogoRoutes(), registreSyncRoute())...)...),
+	}
+}
+
+// registreSyncRoute documents the nudge Registre posts after any change to a
+// shared space.
+func registreSyncRoute() documentation.Route {
+	return documentation.Route{
+		Method:      "POST",
+		Path:        "/registre/sync",
+		Summary:     "Nudge a Registre directory sync",
+		Description: "Registre posts an empty body after any shared space change. Opus answers 202 and pulls the authenticated snapshot about two seconds later; the nudge itself is not trusted. Mounted only when OIDC is configured.",
+		Auth:        "public",
 	}
 }

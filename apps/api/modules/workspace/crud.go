@@ -14,8 +14,12 @@ import (
 )
 
 // Create makes a workspace and grants its creator the owner membership in one
-// transaction, so a workspace can never exist without an owner.
+// transaction, so a workspace can never exist without an owner. Once Registre
+// owns workspaces, it refuses and points to Registre instead.
 func (service *Service) Create(ctx context.Context, userID int64, req CreateWorkspaceRequest) (*WorkspaceResponse, error) {
+	if spaces := service.SpacesURL(); spaces != "" {
+		return nil, errors.Conflict("Workspaces are created in Registre: " + spaces)
+	}
 	name := strings.TrimSpace(req.Name)
 	if name == "" {
 		return nil, errors.Invalid("Workspace name is required")
@@ -24,7 +28,7 @@ func (service *Service) Create(ctx context.Context, userID int64, req CreateWork
 	if strings.TrimSpace(req.Slug) != "" {
 		slug = slugify(req.Slug)
 	}
-	unique, err := service.uniqueSlug(ctx, slug)
+	unique, err := uniqueSlug(service.orm.WithContext(ctx), slug)
 	if err != nil {
 		return nil, err
 	}
@@ -68,10 +72,16 @@ func (service *Service) resolveUpdateSlug(ctx context.Context, rawSlug string, w
 	return slug, nil
 }
 
-// Update writes the present keys of a workspace patch.
+// Update writes the present keys of a workspace patch. A linked workspace
+// takes its name from Registre, so renaming one is refused.
 func (service *Service) Update(ctx context.Context, userID, workspaceID int64, req UpdateWorkspaceRequest) (*WorkspaceResponse, error) {
 	if err := service.requireRole(ctx, userID, workspaceID, "owner", "admin"); err != nil {
 		return nil, err
+	}
+	if req.Name != nil {
+		if err := service.requireLocal(ctx, workspaceID); err != nil {
+			return nil, err
+		}
 	}
 	if _, err := service.workspaceByID(ctx, workspaceID); err != nil {
 		return nil, err
@@ -103,9 +113,13 @@ func (service *Service) Update(ctx context.Context, userID, workspaceID int64, r
 	return service.workspaceByID(ctx, workspaceID)
 }
 
-// Delete removes a workspace and its memberships and invitations.
+// Delete removes a workspace and its memberships and invitations. A linked
+// workspace would come back on the next sync, so deleting one is refused.
 func (service *Service) Delete(ctx context.Context, userID, workspaceID int64) (*MessageResponse, error) {
 	if err := service.requireRole(ctx, userID, workspaceID, "owner"); err != nil {
+		return nil, err
+	}
+	if err := service.requireLocal(ctx, workspaceID); err != nil {
 		return nil, err
 	}
 	err := service.orm.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
@@ -158,11 +172,12 @@ func (service *Service) workspaceByID(ctx context.Context, workspaceID int64) (*
 	return workspaceResponse(workspace), nil
 }
 
-func (service *Service) uniqueSlug(ctx context.Context, base string) (string, error) {
+// uniqueSlug is base, or base with the first free numeric suffix.
+func uniqueSlug(db *gorm.DB, base string) (string, error) {
 	candidate := base
 	for suffix := 2; ; suffix++ {
 		var count int64
-		if err := service.orm.WithContext(ctx).Model(&schemas.Workspace{}).
+		if err := db.Model(&schemas.Workspace{}).
 			Where("slug = ?", candidate).Count(&count).Error; err != nil {
 			return "", errors.Internal("failed to check the slug", err)
 		}
@@ -207,12 +222,13 @@ func slugify(input string) string {
 
 func workspaceResponse(workspace schemas.Workspace) *WorkspaceResponse {
 	return &WorkspaceResponse{
-		ID:          workspace.ID,
-		Name:        workspace.Name,
-		Slug:        workspace.Slug,
-		Logo:        workspace.Logo,
-		Description: workspace.Description,
-		CreatedAt:   workspace.CreatedAt,
+		ID:              workspace.ID,
+		Name:            workspace.Name,
+		Slug:            workspace.Slug,
+		Logo:            workspace.Logo,
+		Description:     workspace.Description,
+		CreatedAt:       workspace.CreatedAt,
+		RegistreSpaceID: workspace.RegistreSpaceID,
 	}
 }
 

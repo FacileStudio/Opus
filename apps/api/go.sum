@@ -6,6 +6,8 @@ github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee h1:xEfz6
 github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee/go.mod h1:OxizkzJhMaBPcuHVba9z1wem5oROgwaEPikYowDQbmo=
 github.com/FacileStudio/porte v0.7.0 h1:aDZCMbqlVEYx4YGI+D7+rfyuwnzEj28BluXaUbCQdxw=
 github.com/FacileStudio/porte v0.7.0/go.mod h1:iLtV3iaFheNiZWt+wfBF2FKB0XRLxve5GrhmJ6h3X0I=
+github.com/FacileStudio/porte/directory v0.1.0 h1:ZdqSbGw+0GMaSUHHAHRQV7WHm8ZhsfRryIRJUsuxSsQ=
+github.com/FacileStudio/porte/directory v0.1.0/go.mod h1:i7UxoAqCgqAq4ny9/bbuqT/Z69xD7GYG1w3fpH6EhTw=
 github.com/FacileStudio/tronc v0.13.0 h1:dEJusg7TJQaOR1Kb0CTCMP7eV5AWAlExzp8kg+vIVho=
 github.com/FacileStudio/tronc v0.13.0/go.mod h1:n+msHH6RQLvhcIQfFzeWaAgwqL8UkNuLPTqbu+C02so=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=

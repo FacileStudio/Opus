@@ -3,6 +3,7 @@ package workspace
 import (
 	"context"
 	"strconv"
+	"sync/atomic"
 	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/storage"
@@ -13,10 +14,14 @@ import (
 )
 
 // Service owns the workspace reads and the logo file operations.
+// registreSpaces is Registre's space page once a Directory is wired, and
+// managed turns true once Registre owns workspace management.
 type Service struct {
-	orm        *gorm.DB
-	uploadDir  string
-	controller *Controller
+	orm            *gorm.DB
+	uploadDir      string
+	controller     *Controller
+	registreSpaces string
+	managed        atomic.Bool
 }
 
 // NewService wires the workspace service with its database handle and the
@@ -31,16 +36,18 @@ func NewService(orm *gorm.DB, uploadDir string) *Service {
 // name for a stable list. Response fields match the legacy select exactly.
 func (service *Service) ListForUser(ctx context.Context, userID int64) ([]WorkspaceResponse, error) {
 	rows := []struct {
-		ID          int64
-		Name        string
-		Slug        string
-		Logo        string
-		Description string
-		CreatedAt   time.Time
+		ID              int64
+		Name            string
+		Slug            string
+		Logo            string
+		Description     string
+		CreatedAt       time.Time
+		RegistreSpaceID *string
 	}{}
 	err := service.orm.WithContext(ctx).
 		Table("workspaces").
-		Select("workspaces.id, workspaces.name, workspaces.slug, workspaces.logo, workspaces.description, workspaces.created_at").
+		Select("workspaces.id, workspaces.name, workspaces.slug, workspaces.logo, workspaces.description, workspaces.created_at, "+
+			"workspaces.registre_space_id").
 		Joins("JOIN workspace_members ON workspace_members.workspace_id = workspaces.id").
 		Where("workspace_members.user_id = ?", userID).
 		Order("workspaces.name asc").
@@ -52,12 +59,13 @@ func (service *Service) ListForUser(ctx context.Context, userID int64) ([]Worksp
 	out := make([]WorkspaceResponse, 0, len(rows))
 	for _, row := range rows {
 		out = append(out, WorkspaceResponse{
-			ID:          row.ID,
-			Name:        row.Name,
-			Slug:        row.Slug,
-			Logo:        row.Logo,
-			Description: row.Description,
-			CreatedAt:   row.CreatedAt,
+			ID:              row.ID,
+			Name:            row.Name,
+			Slug:            row.Slug,
+			Logo:            row.Logo,
+			Description:     row.Description,
+			CreatedAt:       row.CreatedAt,
+			RegistreSpaceID: row.RegistreSpaceID,
 		})
 	}
 	return out, nil
