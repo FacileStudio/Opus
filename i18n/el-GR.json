@@ -1727,7 +1727,16 @@
 		"myTasks": {
 			"emptyDescription": "Οι εργασίες που σας ανατίθενται σε αυτόν τον χώρο θα εμφανίζονται εδώ.",
 			"emptyTitle": "Δεν σας έχει ανατεθεί τίποτα",
-			"pageTitle": "Οι εργασίες μου"
+			"pageTitle": "Οι εργασίες μου",
+			"summary_one": "{{count}} ανοιχτή εργασία",
+			"summary_other": "{{count}} ανοιχτές εργασίες",
+			"overdueCount": "{{count}} εκπρόθεσμες",
+			"dueSoonCount": "{{count}} λήγουν αυτή την εβδομάδα",
+			"dueToday": "Σήμερα",
+			"dueTomorrow": "Αύριο",
+			"viewLabel": "Προβολή",
+			"viewList": "Λίστα",
+			"viewColumns": "Στήλες"
 		}
 	},
 	"invitations": {

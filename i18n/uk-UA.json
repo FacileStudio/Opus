@@ -1733,7 +1733,18 @@
 		"myTasks": {
 			"emptyDescription": "Завдання, призначені вам у цьому просторі, з’являться тут.",
 			"emptyTitle": "Вам нічого не призначено",
-			"pageTitle": "Мої завдання"
+			"pageTitle": "Мої завдання",
+			"summary_one": "{{count}} відкрите завдання",
+			"summary_few": "{{count}} відкриті завдання",
+			"summary_many": "{{count}} відкритих завдань",
+			"summary_other": "{{count}} відкритого завдання",
+			"overdueCount": "прострочено: {{count}}",
+			"dueSoonCount": "цього тижня: {{count}}",
+			"dueToday": "Сьогодні",
+			"dueTomorrow": "Завтра",
+			"viewLabel": "Вигляд",
+			"viewList": "Список",
+			"viewColumns": "Колонки"
 		}
 	},
 	"invitations": {

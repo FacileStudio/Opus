@@ -1727,7 +1727,16 @@
 		"myTasks": {
 			"emptyDescription": "Taken die aan jou zijn toegewezen in deze werkruimte verschijnen hier.",
 			"emptyTitle": "Er is niets aan jou toegewezen",
-			"pageTitle": "Mijn taken"
+			"pageTitle": "Mijn taken",
+			"summary_one": "{{count}} openstaande taak",
+			"summary_other": "{{count}} openstaande taken",
+			"overdueCount": "{{count}} te laat",
+			"dueSoonCount": "{{count}} deze week",
+			"dueToday": "Vandaag",
+			"dueTomorrow": "Morgen",
+			"viewLabel": "Weergave",
+			"viewList": "Lijst",
+			"viewColumns": "Kolommen"
 		}
 	},
 	"invitations": {

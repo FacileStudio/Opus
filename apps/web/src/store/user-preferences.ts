@@ -34,6 +34,9 @@ type UserPreferencesStore = {
   projectListView: "card" | "list";
   setProjectListView: (view: "card" | "list") => void;
 
+  myTasksView: "list" | "columns";
+  setMyTasksView: (view: "list" | "columns") => void;
+
   sidebarDefaultOpen: boolean;
   setSidebarDefaultOpen: (open: boolean) => void;
 
@@ -107,6 +110,9 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
 
       projectListView: "card",
       setProjectListView: (view) => set({ projectListView: view }),
+
+      myTasksView: "list",
+      setMyTasksView: (view) => set({ myTasksView: view }),
 
       sidebarDefaultOpen: true,
       setSidebarDefaultOpen: (open) => set({ sidebarDefaultOpen: open }),

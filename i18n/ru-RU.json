@@ -1789,7 +1789,18 @@
 		"myTasks": {
 			"emptyDescription": "Задачи, назначенные вам в этом пространстве, появятся здесь.",
 			"emptyTitle": "Вам ничего не назначено",
-			"pageTitle": "Мои задачи"
+			"pageTitle": "Мои задачи",
+			"summary_one": "{{count}} открытая задача",
+			"summary_few": "{{count}} открытые задачи",
+			"summary_many": "{{count}} открытых задач",
+			"summary_other": "{{count}} открытой задачи",
+			"overdueCount": "просрочено: {{count}}",
+			"dueSoonCount": "на этой неделе: {{count}}",
+			"dueToday": "Сегодня",
+			"dueTomorrow": "Завтра",
+			"viewLabel": "Вид",
+			"viewList": "Список",
+			"viewColumns": "Колонки"
 		}
 	},
 	"invitations": {

@@ -1333,7 +1333,16 @@
 		"myTasks": {
 			"pageTitle": "My tasks",
 			"emptyTitle": "Nothing assigned to you",
-			"emptyDescription": "Tasks assigned to you in this workspace will show up here."
+			"emptyDescription": "Tasks assigned to you in this workspace will show up here.",
+			"summary_one": "{{count}} open task",
+			"summary_other": "{{count}} open tasks",
+			"overdueCount": "{{count}} overdue",
+			"dueSoonCount": "{{count}} due this week",
+			"dueToday": "Today",
+			"dueTomorrow": "Tomorrow",
+			"viewLabel": "View",
+			"viewList": "List",
+			"viewColumns": "Columns"
 		},
 		"status": {
 			"label": "Status",

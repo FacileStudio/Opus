@@ -1727,7 +1727,17 @@
 		"myTasks": {
 			"emptyDescription": "Las tareas que te asignen en este espacio aparecerán aquí.",
 			"emptyTitle": "No tienes nada asignado",
-			"pageTitle": "Mis tareas"
+			"pageTitle": "Mis tareas",
+			"summary_one": "{{count}} tarea abierta",
+			"summary_many": "{{count}} tareas abiertas",
+			"summary_other": "{{count}} tareas abiertas",
+			"overdueCount": "{{count}} vencidas",
+			"dueSoonCount": "{{count}} vencen esta semana",
+			"dueToday": "Hoy",
+			"dueTomorrow": "Mañana",
+			"viewLabel": "Vista",
+			"viewList": "Lista",
+			"viewColumns": "Columnas"
 		}
 	},
 	"invitations": {

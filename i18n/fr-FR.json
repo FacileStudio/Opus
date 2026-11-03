@@ -1333,7 +1333,17 @@
 		"myTasks": {
 			"pageTitle": "Mes tâches",
 			"emptyTitle": "Rien ne vous est assigné",
-			"emptyDescription": "Les tâches qui vous sont assignées dans cet espace de travail apparaîtront ici."
+			"emptyDescription": "Les tâches qui vous sont assignées dans cet espace de travail apparaîtront ici.",
+			"summary_one": "{{count}} tâche ouverte",
+			"summary_many": "{{count}} tâches ouvertes",
+			"summary_other": "{{count}} tâches ouvertes",
+			"overdueCount": "{{count}} en retard",
+			"dueSoonCount": "{{count}} à rendre cette semaine",
+			"dueToday": "Aujourd'hui",
+			"dueTomorrow": "Demain",
+			"viewLabel": "Affichage",
+			"viewList": "Liste",
+			"viewColumns": "Colonnes"
 		},
 		"status": {
 			"label": "Statut",

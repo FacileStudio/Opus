@@ -1727,7 +1727,16 @@
 		"myTasks": {
 			"emptyDescription": "Dir zugewiesene Aufgaben in diesem Arbeitsbereich erscheinen hier.",
 			"emptyTitle": "Dir ist nichts zugewiesen",
-			"pageTitle": "Mir zugewiesen"
+			"pageTitle": "Mir zugewiesen",
+			"summary_one": "{{count}} offene Aufgabe",
+			"summary_other": "{{count}} offene Aufgaben",
+			"overdueCount": "{{count}} überfällig",
+			"dueSoonCount": "{{count}} fällig diese Woche",
+			"dueToday": "Heute",
+			"dueTomorrow": "Morgen",
+			"viewLabel": "Ansicht",
+			"viewList": "Liste",
+			"viewColumns": "Spalten"
 		}
 	},
 	"invitations": {

@@ -1727,7 +1727,16 @@
 		"myTasks": {
 			"emptyDescription": "Задачите доделени на вас во овој простор ќе се појават тука.",
 			"emptyTitle": "Ништо не ви е доделено",
-			"pageTitle": "Мои задачи"
+			"pageTitle": "Мои задачи",
+			"summary_one": "{{count}} отворена задача",
+			"summary_other": "{{count}} отворени задачи",
+			"overdueCount": "{{count}} задоцнети",
+			"dueSoonCount": "{{count}} со рок оваа недела",
+			"dueToday": "Денес",
+			"dueTomorrow": "Утре",
+			"viewLabel": "Приказ",
+			"viewList": "Листа",
+			"viewColumns": "Колони"
 		}
 	},
 	"invitations": {
