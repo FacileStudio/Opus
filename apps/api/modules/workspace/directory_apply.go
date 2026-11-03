@@ -45,6 +45,7 @@ func (d *Directory) Apply(ctx context.Context, snapshot directory.Snapshot) erro
 		return err
 	}
 	d.logMissing(ctx, listed)
+	d.notifySynced(ctx)
 	return nil
 }
 

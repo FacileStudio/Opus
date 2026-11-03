@@ -218,3 +218,28 @@ func TestTimeEntryValidationTable(t *testing.T) {
 		})
 	}
 }
+
+func TestMirroredTimeEntryIsReadOnly(t *testing.T) {
+	db := newTestDB(t)
+	userID, _, taskID := seedFixture(t, db)
+	facileID := "te-1"
+	mirror := schemas.TimeEntry{TaskID: taskID, UserID: &userID, StartTime: time.Now(), FacileID: &facileID,
+		Source: schemas.TimeEntrySourceSablier}
+	db.Create(&mirror)
+	router := chi.NewRouter()
+	RegisterRoutes(router, NewService(db), &testAuth{userID: userID, email: "user@facile.studio"})
+	path := "/time-entry/" + strconv.FormatInt(mirror.ID, 10)
+	for _, method := range []string{http.MethodPut, http.MethodDelete} {
+		req := httptest.NewRequest(method, path, bytes.NewReader([]byte(`{"description":"edited"}`)))
+		req.Header.Set("Content-Type", "application/json")
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+		if w.Code != http.StatusConflict {
+			t.Errorf("%s mirrored entry = %d, want 409", method, w.Code)
+		}
+	}
+	var kept schemas.TimeEntry
+	if err := db.First(&kept, mirror.ID).Error; err != nil || kept.Description != "" {
+		t.Errorf("mirrored entry changed: %+v %v", kept, err)
+	}
+}

@@ -99,9 +99,12 @@ type serverBundle struct {
 	cleanup func()
 }
 
-func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *slog.Logger) (*realtime.Hub, events.Emitter, func(), error) {
+func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *slog.Logger) (*realtime.Hub, *events.Publisher, func(), error) {
 	eventsCfg := events.LoadConfig()
-	eventsPub := events.New(eventsCfg, events.WithLogger(appLogger))
+	if appEnv.OIDC != nil {
+		eventsCfg.Issuer = appEnv.OIDC.Issuer
+	}
+	eventsPub := events.New(eventsCfg, events.WithLogger(appLogger), events.WithStore(db))
 
 	adapter := realtime.NewRedisAdapter(appEnv.RedisURL, appLogger)
 	wsAuth := realtime.NewSessionAuthenticator(kits.sessions)
@@ -138,10 +141,9 @@ func attachPoolSync(db *gorm.DB, cfg events.Config, pub *events.Publisher, hub *
 	if !cfg.Enabled() {
 		return
 	}
-	if cfg.SyncWorkspaceID == 0 {
-		appLogger.Warn("ANTENNE_SYNC_WORKSPACE_ID is not set, projects created in Sablier will not be imported")
-	}
 	syncer := poolsync.New(db, appLogger, cfg.SyncWorkspaceID, hub)
+	syncer.SetIssuer(cfg.Issuer)
+	syncer.OnAdopted(pub.ReemitTasks)
 	syncer.Prune(context.Background())
 	syncer.Register(pub)
 }
@@ -151,11 +153,12 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 	if err != nil {
 		return nil, err
 	}
-	hub, emitter, cleanup, err := initServices(db, kits, appEnv, appLogger)
+	hub, publisher, cleanup, err := initServices(db, kits, appEnv, appLogger)
 	if err != nil {
 		return nil, err
 	}
-	workspaces, spaces, stopSpaces := startWorkspaces(db, appEnv, appLogger)
+	reconcile := reconcileJob(publisher, appLogger)
+	workspaces, spaces, stopSpaces := startWorkspaces(db, appEnv, appLogger, reconcile)
 	router := buildRouter(routerDeps{
 		db:          db,
 		sqlDB:       sqlDB,
@@ -163,7 +166,8 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		appLogger:   appLogger,
 		kits:        kits,
 		realtimeHub: hub,
-		emitter:     emitter,
+		emitter:     publisher,
+		reconcile:   reconcile,
 		workspaces:  workspaces,
 		directory:   spaces,
 	})

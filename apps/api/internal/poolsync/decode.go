@@ -7,15 +7,41 @@ import (
 	"time"
 )
 
+type spaceBody struct {
+	RegistreSpaceID string `json:"registre_space_id"`
+	Personal        bool   `json:"personal"`
+	OwnerSubject    string `json:"owner_subject"`
+	OwnerEmail      string `json:"owner_email"`
+}
+
+type taskBody struct {
+	ProjectFacileID string          `json:"project_facile_id"`
+	Status          string          `json:"status"`
+	Priority        *string         `json:"priority"`
+	DueDate         json.RawMessage `json:"due_date"`
+	ActorEmail      string          `json:"actor_email"`
+	ActorSubject    string          `json:"actor_subject"`
+}
+
+type timeBody struct {
+	TaskFacileID     string  `json:"task_facile_id"`
+	UserEmail        string  `json:"user_email"`
+	UserSubject      string  `json:"user_subject"`
+	StartedAt        string  `json:"started_at"`
+	StoppedAt        *string `json:"stopped_at"`
+	PausedDurationMS int64   `json:"paused_duration_ms"`
+}
+
 type body struct {
-	FacileID        string  `json:"facile_id"`
-	ProjectFacileID string  `json:"project_facile_id"`
-	Name            string  `json:"name"`
-	Title           string  `json:"title"`
-	Description     *string `json:"description"`
-	Icon            *string `json:"icon"`
-	Status          string  `json:"status"`
-	ActorEmail      string  `json:"actor_email"`
+	FacileID    string     `json:"facile_id"`
+	Name        string     `json:"name"`
+	Title       string     `json:"title"`
+	Description *string    `json:"description"`
+	Icon        *string    `json:"icon"`
+	Space       *spaceBody `json:"space"`
+	UpdatedAt   string     `json:"updated_at"`
+	taskBody
+	timeBody
 }
 
 type wrapped struct {
@@ -32,6 +58,7 @@ type inbound struct {
 	key      string
 	facileID string
 	at       time.Time
+	updated  time.Time
 }
 
 func decode(raw json.RawMessage) (inbound, error) {
@@ -57,7 +84,36 @@ func decode(raw json.RawMessage) (inbound, error) {
 	}
 	evt.Name = strings.TrimSpace(evt.Name)
 	evt.Status = strings.ToLower(strings.TrimSpace(evt.Status))
+	evt.updated = evt.at
+	if updated, err := time.Parse(time.RFC3339Nano, evt.UpdatedAt); err == nil {
+		evt.updated = updated
+	}
 	return evt, nil
+}
+
+// dueDate reports the due date the payload sets, nil to clear it, and false
+// when the payload carries none, which leaves the stored one alone.
+func (b taskBody) dueDate() (*time.Time, bool) {
+	raw := strings.TrimSpace(string(b.DueDate))
+	if raw == "" {
+		return nil, false
+	}
+	if raw == "null" {
+		return nil, true
+	}
+	var text string
+	if err := json.Unmarshal(b.DueDate, &text); err != nil {
+		return nil, false
+	}
+	if text = strings.TrimSpace(text); text == "" {
+		return nil, true
+	}
+	for _, layout := range []string{time.DateOnly, time.RFC3339} {
+		if day, err := time.Parse(layout, text); err == nil {
+			return &day, true
+		}
+	}
+	return nil, false
 }
 
 func isLegacyID(id string) bool {

@@ -38,20 +38,35 @@ type Syncer struct {
 	db          *gorm.DB
 	logger      *slog.Logger
 	workspaceID int64
+	issuer      string
 	notifier    realtime.Publisher
+	adopted     func(ctx context.Context, projectID int64)
 }
 
 type outcome struct {
 	skipped   bool
+	adopted   bool
 	msgType   string
 	projectID int64
 	taskID    int64
 }
 
-// New builds a Syncer. workspaceID receives projects created by Sablier; zero
-// disables project creation from the pool.
+// New builds a Syncer. workspaceID receives projects from old Sablier
+// payloads that carry no space; zero skips them.
 func New(db *gorm.DB, logger *slog.Logger, workspaceID int64, notifier realtime.Publisher) *Syncer {
 	return &Syncer{db: db, logger: logger, workspaceID: workspaceID, notifier: notifier}
+}
+
+// OnAdopted runs fn after a project took over the facile_id of its Sablier
+// twin, so its tasks can be published again under the new project id.
+func (s *Syncer) OnAdopted(fn func(ctx context.Context, projectID int64)) {
+	s.adopted = fn
+}
+
+// SetIssuer names the OIDC issuer whose porte identities resolve owner and
+// user subjects. Empty matches by email only.
+func (s *Syncer) SetIssuer(issuer string) {
+	s.issuer = issuer
 }
 
 // Register subscribes the syncer to every sync channel.
@@ -106,6 +121,9 @@ func (s *Syncer) Handle(ctx context.Context, channel string, raw json.RawMessage
 		return err
 	}
 	realtime.Notify(ctx, s.notifier, applied.msgType, applied.projectID, applied.taskID)
+	if applied.adopted && s.adopted != nil {
+		s.adopted(ctx, applied.projectID)
+	}
 	return nil
 }
 
@@ -148,6 +166,8 @@ func (s *Syncer) dispatch(tx *gorm.DB, object, action string, evt inbound) (outc
 		return s.applyProject(tx, action, evt)
 	case string(enveloppe.ObjectTask):
 		return s.applyTask(tx, action, evt)
+	case string(enveloppe.ObjectTimeEntry):
+		return s.applyTimeEntry(tx, action, evt)
 	default:
 		return outcome{skipped: true}, nil
 	}

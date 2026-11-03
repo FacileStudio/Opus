@@ -1,8 +1,9 @@
 package poolsync
 
 import (
-	"log/slog"
+	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"gorm.io/gorm"
@@ -31,12 +32,12 @@ func (s *Syncer) applyTask(tx *gorm.DB, action string, evt inbound) (outcome, er
 	switch {
 	case action == "deleted":
 		return deleteTask(tx, existing)
-	case existing == nil && action == "created":
+	case existing != nil:
+		return s.updateTask(tx, existing, evt)
+	case action == "created":
 		return s.createTask(tx, evt)
-	case existing == nil:
-		return outcome{}, nil
 	default:
-		return updateTask(tx, existing, evt)
+		return outcome{}, nil
 	}
 }
 
@@ -56,9 +57,15 @@ func (s *Syncer) createTask(tx *gorm.DB, evt inbound) (outcome, error) {
 		return outcome{}, err
 	}
 	if parent == nil || evt.Name == "" {
-		s.logger.Warn("pool sync: task dropped, unknown project or no name",
-			slog.String("task", evt.facileID), slog.String("project", evt.ProjectFacileID))
-		return outcome{skipped: true}, nil
+		return s.unplaced(evt, "task has an unknown project or no name")
+	}
+	var twins []schemas.Task
+	if err := tx.Where("project_id = ? AND lower(title) = lower(?) AND facile_id <> ? AND synced_at IS NULL",
+		parent.ID, evt.Name, evt.facileID).Order("id").Limit(1).Find(&twins).Error; err != nil {
+		return outcome{}, err
+	}
+	if len(twins) > 0 {
+		return s.mergeTask(tx, &twins[0], evt)
 	}
 	columns, err := projectColumns(tx, parent.ID)
 	if err != nil {
@@ -68,7 +75,7 @@ func (s *Syncer) createTask(tx *gorm.DB, evt inbound) (outcome, error) {
 	if !found {
 		place = defaultStatus(columns)
 	}
-	record, err := buildTask(tx, parent, evt, place)
+	record, err := s.buildTask(tx, parent, evt, place)
 	if err != nil {
 		return outcome{}, err
 	}
@@ -78,87 +85,105 @@ func (s *Syncer) createTask(tx *gorm.DB, evt inbound) (outcome, error) {
 	return outcome{msgType: realtime.TypeTaskCreated, projectID: parent.ID, taskID: record.ID}, nil
 }
 
-func buildTask(tx *gorm.DB, parent *schemas.Project, evt inbound, place target) (schemas.Task, error) {
-	var number, position int
-	if err := tx.Model(&schemas.Task{}).Where("project_id = ?", parent.ID).
-		Select("COALESCE(MAX(number), 0)").Scan(&number).Error; err != nil {
-		return schemas.Task{}, err
+// mergeTask links an unlinked local twin to the incoming task, keeping the
+// smaller facile_id on both sides like mergeProject.
+func (s *Syncer) mergeTask(tx *gorm.DB, twin *schemas.Task, evt inbound) (outcome, error) {
+	if twin.FacileID != nil && evt.facileID >= *twin.FacileID {
+		return outcome{}, nil
 	}
-	slot := tx.Model(&schemas.Task{}).Where("project_id = ?", parent.ID)
+	if err := tx.Model(&schemas.Task{}).Where("id = ?", twin.ID).
+		Updates(map[string]any{"facile_id": evt.facileID, "updated_at": twin.UpdatedAt, "synced_at": time.Now()}).Error; err != nil {
+		return outcome{}, err
+	}
+	twin.FacileID = &evt.facileID
+	return s.updateTask(tx, twin, evt)
+}
+
+func nextSlot(tx *gorm.DB, projectID int64, place target) (int, int, error) {
+	var number, position int
+	if err := tx.Model(&schemas.Task{}).Where("project_id = ?", projectID).
+		Select("COALESCE(MAX(number), 0)").Scan(&number).Error; err != nil {
+		return 0, 0, err
+	}
+	slot := tx.Model(&schemas.Task{}).Where("project_id = ?", projectID)
 	if place.columnID != nil {
 		slot = slot.Where("column_id = ?", *place.columnID)
 	} else {
 		slot = slot.Where("status = ?", place.slug)
 	}
 	if err := slot.Select("COALESCE(MAX(position), 0)").Scan(&position).Error; err != nil {
-		return schemas.Task{}, err
+		return 0, 0, err
 	}
-	actorID, err := resolveActor(tx, parent.WorkspaceID, evt.ActorEmail)
+	return number + 1, position + 1, nil
+}
+
+func (s *Syncer) buildTask(tx *gorm.DB, parent *schemas.Project, evt inbound, place target) (schemas.Task, error) {
+	number, position, err := nextSlot(tx, parent.ID, place)
 	if err != nil {
 		return schemas.Task{}, err
 	}
-	facileID := evt.facileID
-	now := evt.at
-	return schemas.Task{
+	actorID, err := s.resolveActor(tx, parent.WorkspaceID, evt)
+	if err != nil {
+		return schemas.Task{}, err
+	}
+	facileID, now := evt.facileID, time.Now()
+	record := schemas.Task{
 		FacileRef:   schemas.FacileRef{FacileID: &facileID},
 		ProjectID:   parent.ID,
 		WorkspaceID: parent.WorkspaceID,
 		ColumnID:    place.columnID,
 		ActorID:     actorID,
-		Number:      number + 1,
-		Position:    position + 1,
+		Number:      number,
+		Position:    position,
 		Title:       evt.Name,
 		Status:      place.slug,
 		Priority:    "low",
-		CreatedAt:   now,
-		UpdatedAt:   now,
-	}, nil
+		CreatedAt:   evt.at,
+		UpdatedAt:   evt.updated,
+		SyncedAt:    &now,
+	}
+	fields := taskFields(evt)
+	if description, ok := fields["description"].(string); ok {
+		record.Description = description
+	}
+	if priority, ok := fields["priority"].(string); ok {
+		record.Priority = priority
+	}
+	if due, ok := fields["due_date"].(*time.Time); ok {
+		record.DueDate = due
+	}
+	return record, nil
 }
 
-func updateTask(tx *gorm.DB, existing *schemas.Task, evt inbound) (outcome, error) {
-	if evt.at.Before(existing.UpdatedAt) {
-		return outcome{}, nil
+// taskFields collects the description, priority and due date an event sets.
+// A field the event does not carry is left out, so it never clears anything.
+func taskFields(evt inbound) map[string]any {
+	fields := map[string]any{}
+	if evt.Description != nil {
+		fields["description"] = *evt.Description
 	}
-	updates := map[string]any{}
-	if evt.Name != "" && evt.Name != existing.Title {
-		updates["title"] = evt.Name
+	if evt.Priority != nil {
+		if priority, ok := events.LocalPriority(*evt.Priority); ok {
+			fields["priority"] = priority
+		}
 	}
-	columns, err := projectColumns(tx, existing.ProjectID)
-	if err != nil {
-		return outcome{}, err
+	if due, ok := evt.dueDate(); ok && due != nil {
+		fields["due_date"] = due
+	} else if ok {
+		fields["due_date"] = nil
 	}
-	if place, found := resolveStatus(columns, evt.Status, existing.Status); found && place.slug != existing.Status {
-		updates["status"] = place.slug
-		updates["column_id"] = place.columnID
-	}
-	actorID, err := resolveActor(tx, existing.WorkspaceID, evt.ActorEmail)
-	if err != nil {
-		return outcome{}, err
-	}
-	if actorID != nil && (existing.ActorID == nil || *existing.ActorID != *actorID) {
-		updates["actor_id"] = *actorID
-	}
-	if len(updates) == 0 {
-		return outcome{}, nil
-	}
-	updates["updated_at"] = evt.at
-	if err := tx.Model(&schemas.Task{}).Where("id = ?", existing.ID).Updates(updates).Error; err != nil {
-		return outcome{}, err
-	}
-	return outcome{msgType: realtime.TypeTaskUpdated, projectID: existing.ProjectID, taskID: existing.ID}, nil
+	return fields
 }
 
-func resolveActor(tx *gorm.DB, workspaceID int64, email string) (*int64, error) {
-	if email == "" {
-		return nil, nil
-	}
-	var ids []int64
-	err := tx.Model(&schemas.User{}).
-		Where("lower(email) = lower(?)", email).
-		Where("id IN (?)", tx.Model(&schemas.WorkspaceMember{}).Select("user_id").Where("workspace_id = ?", workspaceID)).
-		Limit(1).Pluck("id", &ids).Error
-	if err != nil || len(ids) == 0 {
+func (s *Syncer) resolveActor(tx *gorm.DB, workspaceID int64, evt inbound) (*int64, error) {
+	userID, err := s.resolveUser(tx, evt.ActorSubject, evt.ActorEmail)
+	if err != nil || userID == 0 {
 		return nil, err
 	}
-	return &ids[0], nil
+	var count int64
+	err = tx.Model(&schemas.WorkspaceMember{}).Where("workspace_id = ? AND user_id = ?", workspaceID, userID).Count(&count).Error
+	if err != nil || count == 0 {
+		return nil, err
+	}
+	return &userID, nil
 }

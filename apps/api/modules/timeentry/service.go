@@ -53,6 +53,15 @@ func (service *Service) verifyTaskAccess(ctx context.Context, userID, taskID int
 	return service.RequireMember(ctx, userID, task.WorkspaceID)
 }
 
+// requireNative refuses to change a time entry mirrored from Sablier, where
+// it belongs.
+func requireNative(entry *schemas.TimeEntry) error {
+	if entry.Source == schemas.TimeEntrySourceSablier {
+		return errors.Conflict("This time entry comes from Sablier and can only be changed there")
+	}
+	return nil
+}
+
 func (service *Service) verifyTimeEntryAccess(ctx context.Context, userID, entryID int64) (*schemas.TimeEntry, error) {
 	var entry schemas.TimeEntry
 	err := service.db.WithContext(ctx).First(&entry, "id = ?", entryID).Error
@@ -77,6 +86,7 @@ type timeEntryRow struct {
 	EndTime     *time.Time
 	Duration    int
 	CreatedAt   time.Time
+	Source      string
 	UserName    string
 	UserImage   string
 }
@@ -159,6 +169,9 @@ func (service *Service) Update(ctx context.Context, userID, entryID int64, req *
 	if err != nil {
 		return nil, err
 	}
+	if err := requireNative(entry); err != nil {
+		return nil, err
+	}
 	if req.StartTime != nil {
 		entry.StartTime = *req.StartTime
 	}
@@ -181,6 +194,9 @@ func (service *Service) Delete(ctx context.Context, userID, entryID int64) (*sch
 	if err != nil {
 		return nil, err
 	}
+	if err := requireNative(entry); err != nil {
+		return nil, err
+	}
 	if err := service.db.WithContext(ctx).Delete(entry).Error; err != nil {
 		return nil, errors.Internal("failed to delete time entry", err)
 	}
@@ -198,6 +214,7 @@ func toRecord(row timeEntryRow) TimeEntryRecord {
 			EndTime:     row.EndTime,
 			Duration:    row.Duration,
 			CreatedAt:   row.CreatedAt,
+			Source:      row.Source,
 		},
 		UserName:  row.UserName,
 		UserImage: row.UserImage,

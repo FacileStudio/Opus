@@ -110,5 +110,6 @@ func toModelResponse(entry *schemas.TimeEntry) TimeEntryResponse {
 		EndTime:     entry.EndTime,
 		Duration:    entry.Duration,
 		CreatedAt:   entry.CreatedAt,
+		Source:      entry.Source,
 	}
 }

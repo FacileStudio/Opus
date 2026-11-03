@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
@@ -27,6 +28,22 @@ type Directory struct {
 	syncer     *directory.Syncer
 	logger     *slog.Logger
 	retryDelay time.Duration
+	synced     sync.Once
+	onSynced   func(context.Context)
+}
+
+// OnFirstSync runs fn once, in the background, after the first Registre
+// snapshot has been applied, when every shared workspace carries its
+// Registre space id. Call it before Run.
+func (d *Directory) OnFirstSync(fn func(context.Context)) {
+	d.onSynced = fn
+}
+
+func (d *Directory) notifySynced(ctx context.Context) {
+	if d.onSynced == nil {
+		return
+	}
+	d.synced.Do(func() { go d.onSynced(context.WithoutCancel(ctx)) })
 }
 
 // NewDirectory wires the Registre directory sync for the workspace service.

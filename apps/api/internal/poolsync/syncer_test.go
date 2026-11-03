@@ -32,8 +32,11 @@ func newSyncer(t *testing.T) (*Syncer, *gorm.DB, *notifyRecorder) {
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxOpenConns(1)
 	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}, &schemas.Project{}, &schemas.Column{},
-		&schemas.Task{}, &schemas.PoolProcessedEvent{}); err != nil {
+		&schemas.Task{}, &schemas.TimeEntry{}, &schemas.PoolProcessedEvent{}); err != nil {
 		t.Fatalf("migrate: %v", err)
+	}
+	if err := db.Exec("CREATE TABLE porte_identities (user_id INTEGER, provider TEXT, subject TEXT)").Error; err != nil {
+		t.Fatalf("identities: %v", err)
 	}
 	workspace := schemas.Workspace{Name: "WS", Slug: "ws", CreatedAt: time.Now()}
 	if err := db.Create(&workspace).Error; err != nil {

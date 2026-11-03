@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"strings"
 
@@ -44,6 +45,7 @@ type routerDeps struct {
 	kits        *authKits
 	realtimeHub *realtime.Hub
 	emitter     events.Emitter
+	reconcile   func(context.Context)
 	workspaces  *workspace.Service
 	directory   *workspace.Directory
 }
@@ -153,6 +155,9 @@ func buildRouter(deps routerDeps) chi.Router {
 			api.Handle(strings.TrimPrefix(directory.SyncPath, "/api"), deps.directory.Handler())
 		}
 		registerDomainRoutes(api, authService, deps)
+		if deps.reconcile != nil {
+			mountReconcile(api, deps.db, authService, deps.reconcile)
+		}
 
 		if deps.realtimeHub != nil {
 			api.Get("/ws", deps.realtimeHub.ServeWS)

@@ -7,4 +7,5 @@ export type TimeEntry = {
   taskId: string;
   startTime: string;
   endTime: string | null;
+  source?: "opus" | "sablier";
 };

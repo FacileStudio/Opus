@@ -23,6 +23,7 @@ type TimeEntryResponse struct {
 	EndTime     *time.Time             `json:"endTime,omitempty"`
 	Duration    int                    `json:"duration"`
 	CreatedAt   time.Time              `json:"createdAt"`
+	Source      string                 `json:"source"`
 	User        *TimeEntryUserResponse `json:"user,omitempty"`
 }
 
