@@ -9,19 +9,22 @@ import (
 
 // TaskPayload represents the wire payload for task domain events.
 type TaskPayload struct {
-	ID              int64  `json:"id"`
-	FacileID        string `json:"facile_id"`
-	ProjectID       int64  `json:"project_id"`
-	ProjectFacileID string `json:"project_facile_id"`
-	WorkspaceID     int64  `json:"workspace_id"`
-	Title           string `json:"title"`
-	Name            string `json:"name"`
-	Status          string `json:"status"`
-	Priority        string `json:"priority,omitempty"`
-	DueDate         string `json:"due_date,omitempty"`
-	ActorID         *int64 `json:"actor_id,omitempty"`
-	ActorEmail      string `json:"actor_email,omitempty"`
-	OwnerEmail      string `json:"owner_email,omitempty"`
+	ID              int64   `json:"id"`
+	FacileID        string  `json:"facile_id"`
+	ProjectID       int64   `json:"project_id"`
+	ProjectFacileID string  `json:"project_facile_id"`
+	WorkspaceID     int64   `json:"workspace_id"`
+	Title           string  `json:"title"`
+	Name            string  `json:"name"`
+	Status          string  `json:"status"`
+	Description     string  `json:"description"`
+	Priority        string  `json:"priority"`
+	DueDate         *string `json:"due_date"`
+	ActorID         *int64  `json:"actor_id,omitempty"`
+	ActorEmail      string  `json:"actor_email,omitempty"`
+	ActorSubject    string  `json:"actor_subject,omitempty"`
+	OwnerEmail      string  `json:"owner_email,omitempty"`
+	UpdatedAt       string  `json:"updated_at,omitempty"`
 }
 
 func (t TaskPayload) entityID() string {
@@ -31,16 +34,27 @@ func (t TaskPayload) entityID() string {
 	return strconv.FormatInt(t.ID, 10)
 }
 
+// SpacePayload tells the receiver where a project lives: a Registre shared
+// space, or its owner's personal space.
+type SpacePayload struct {
+	RegistreSpaceID string `json:"registre_space_id"`
+	Personal        bool   `json:"personal"`
+	OwnerSubject    string `json:"owner_subject"`
+	OwnerEmail      string `json:"owner_email"`
+}
+
 // ProjectPayload represents the wire payload for project domain events.
 type ProjectPayload struct {
-	ID          int64   `json:"id"`
-	FacileID    string  `json:"facile_id"`
-	WorkspaceID int64   `json:"workspace_id"`
-	Name        string  `json:"name"`
-	Slug        string  `json:"slug"`
-	Description *string `json:"description,omitempty"`
-	Icon        *string `json:"icon,omitempty"`
-	ActorEmail  string  `json:"actor_email,omitempty"`
+	ID          int64         `json:"id"`
+	FacileID    string        `json:"facile_id"`
+	WorkspaceID int64         `json:"workspace_id"`
+	Name        string        `json:"name"`
+	Slug        string        `json:"slug"`
+	Description *string       `json:"description,omitempty"`
+	Icon        *string       `json:"icon"`
+	ActorEmail  string        `json:"actor_email,omitempty"`
+	Space       *SpacePayload `json:"space,omitempty"`
+	UpdatedAt   string        `json:"updated_at,omitempty"`
 }
 
 func (pr ProjectPayload) entityID() string {
@@ -90,32 +104,70 @@ func (w WorkspacePayload) entityID() string {
 	return strconv.FormatInt(w.ID, 10)
 }
 
-func facileIDOf(id *string, fallback int64) string {
-	if id != nil && *id != "" {
+func facileIDOf(id *string) string {
+	if id != nil {
 		return *id
 	}
-	return strconv.FormatInt(fallback, 10)
+	return ""
+}
+
+// WirePriority maps an Opus priority onto the contract's none, low, medium,
+// high and urgent.
+func WirePriority(priority string) string {
+	switch priority {
+	case "low", "medium", "high", "urgent":
+		return priority
+	default:
+		return "none"
+	}
+}
+
+// LocalPriority maps a wire priority onto Opus's values, reading normal as
+// medium and critical as urgent. It reports false for any other value.
+func LocalPriority(wire string) (string, bool) {
+	switch wire {
+	case "low", "medium", "high", "urgent":
+		return wire, true
+	case "normal":
+		return "medium", true
+	case "critical":
+		return "urgent", true
+	case "none":
+		return "no-priority", true
+	default:
+		return "", false
+	}
+}
+
+func stamp(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+	return t.UTC().Format(time.RFC3339Nano)
 }
 
 // NewTaskPayload constructs a TaskPayload from a schema Task, its project facile_id and the actor email.
 func NewTaskPayload(task schemas.Task, projectFacileID, actorEmail string) TaskPayload {
-	dueDate := ""
+	var dueDate *string
 	if task.DueDate != nil {
-		dueDate = task.DueDate.UTC().Format(time.RFC3339)
+		day := task.DueDate.UTC().Format(time.DateOnly)
+		dueDate = &day
 	}
 	return TaskPayload{
 		ID:              task.ID,
-		FacileID:        facileIDOf(task.FacileID, task.ID),
+		FacileID:        facileIDOf(task.FacileID),
 		ProjectID:       task.ProjectID,
 		ProjectFacileID: projectFacileID,
 		WorkspaceID:     task.WorkspaceID,
 		Title:           task.Title,
 		Name:            task.Title,
 		Status:          task.Status,
-		Priority:        task.Priority,
+		Description:     task.Description,
+		Priority:        WirePriority(task.Priority),
 		DueDate:         dueDate,
 		ActorID:         task.ActorID,
 		ActorEmail:      actorEmail,
+		UpdatedAt:       stamp(task.UpdatedAt),
 	}
 }
 
@@ -127,13 +179,14 @@ func NewProjectPayload(project schemas.Project, actorEmail string) ProjectPayloa
 	}
 	return ProjectPayload{
 		ID:          project.ID,
-		FacileID:    facileIDOf(project.FacileID, project.ID),
+		FacileID:    facileIDOf(project.FacileID),
 		WorkspaceID: project.WorkspaceID,
 		Name:        project.Name,
 		Slug:        project.Slug,
 		Description: &project.Description,
 		Icon:        icon,
 		ActorEmail:  actorEmail,
+		UpdatedAt:   stamp(project.UpdatedAt),
 	}
 }
 

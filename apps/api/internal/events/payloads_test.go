@@ -14,7 +14,7 @@ import (
 func TestPayloadBuilders(t *testing.T) {
 	task := schemas.Task{ID: 12, ProjectID: 34, WorkspaceID: 56, Title: "Task", Status: "open"}
 	tp := NewTaskPayload(task, "proj-fid", "alice@facile.studio")
-	if tp.ID != 12 || tp.FacileID != "12" || tp.ProjectFacileID != "proj-fid" || tp.ActorEmail != "alice@facile.studio" {
+	if tp.ID != 12 || tp.FacileID != "" || tp.Priority != "none" || tp.ProjectFacileID != "proj-fid" || tp.ActorEmail != "alice@facile.studio" {
 		t.Errorf("unexpected task payload: %+v", tp)
 	}
 
@@ -107,14 +107,14 @@ func TestTaskPayloadDueDateJSON(t *testing.T) {
 	if err := json.Unmarshal(set, &got); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if got["due_date"] != "2026-10-30T00:00:00Z" {
-		t.Errorf("due_date = %v, want 2026-10-30T00:00:00Z", got["due_date"])
+	if got["due_date"] != "2026-10-30" {
+		t.Errorf("due_date = %v, want 2026-10-30", got["due_date"])
 	}
 
 	local := time.Date(2026, 10, 30, 2, 0, 0, 0, time.FixedZone("CEST", 2*3600))
 	task.DueDate = &local
-	if p := NewTaskPayload(task, "", ""); p.DueDate != "2026-10-30T00:00:00Z" {
-		t.Errorf("non-UTC due date = %q, want UTC", p.DueDate)
+	if p := NewTaskPayload(task, "", ""); p.DueDate == nil || *p.DueDate != "2026-10-30" {
+		t.Errorf("non-UTC due date = %v, want the UTC day", p.DueDate)
 	}
 
 	task.DueDate = nil
@@ -126,7 +126,7 @@ func TestTaskPayloadDueDateJSON(t *testing.T) {
 	if err := json.Unmarshal(cleared, &got); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if _, ok := got["due_date"]; ok {
-		t.Errorf("due_date present for cleared task: %s", cleared)
+	if due, ok := got["due_date"]; !ok || due != nil {
+		t.Errorf("cleared due_date must be an explicit null: %s", cleared)
 	}
 }

@@ -7,11 +7,14 @@ import (
 	"time"
 
 	enveloppe "github.com/FacileStudio/enveloppe/go"
+
+	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
 
-// IdempotencyKey builds an idempotency key from an entity ID and timestamp.
-func IdempotencyKey(entityID string, t time.Time) string {
-	return fmt.Sprintf("%s:%d", entityID, t.UTC().UnixMilli())
+// IdempotencyKey builds the contract key <object>.<action>:<facile_id>:<unixnano>,
+// where the channel already is <object>.<action>.
+func IdempotencyKey(channel, entityID string, t time.Time) string {
+	return fmt.Sprintf("%s:%s:%d", channel, entityID, t.UTC().UnixNano())
 }
 
 // ActionForChannel maps an event channel name to its canonical enveloppe action.
@@ -36,7 +39,7 @@ func BuildEnvelope[T any](channel string, entityID string, objType enveloppe.Obj
 		FacileID:       entityID,
 		Payload:        payload,
 		Timestamp:      now.UTC().Format(time.RFC3339),
-		IdempotencyKey: IdempotencyKey(entityID, now),
+		IdempotencyKey: IdempotencyKey(channel, entityID, now),
 	}
 }
 
@@ -51,15 +54,22 @@ func (p *Publisher) recordResult(err error) {
 	p.lastError = err.Error()
 }
 
-func (p *Publisher) emit(channel string, entityID string, objType enveloppe.ObjectType, payload any) error {
-	if p == nil || !p.config.Enabled() || p.transport == nil {
+func (p *Publisher) active() bool {
+	return p != nil && p.config.Enabled() && p.transport != nil
+}
+
+func (p *Publisher) emit(ctx context.Context, channel string, entityID string, objType enveloppe.ObjectType, payload any) error {
+	if !p.active() {
 		if p != nil && p.logger != nil {
 			p.logger.Debug("antenne disabled, skipping event", slog.String("channel", channel))
 		}
 		return nil
 	}
-	now := time.Now().UTC()
-	event := BuildEnvelope(channel, entityID, objType, payload, now)
+	event := BuildEnvelope(channel, entityID, objType, payload, time.Now().UTC())
+	if p.db != nil {
+		p.enqueue(ctx, channel, event)
+		return nil
+	}
 	err := p.transport.EmitNow(channel, event)
 	p.recordResult(err)
 	if err != nil {
@@ -68,24 +78,48 @@ func (p *Publisher) emit(channel string, entityID string, objType enveloppe.Obje
 	return nil
 }
 
-// EmitTask publishes a task event to the given channel.
-func (p *Publisher) EmitTask(_ context.Context, channel string, payload TaskPayload) error {
-	return p.emit(channel, payload.entityID(), enveloppe.ObjectTask, payload)
+// EmitTask publishes a task event to the given channel. A task whose
+// workspace Sablier cannot place is not published. A published task counts as
+// linked to Sablier, so it is never merged with a twin.
+func (p *Publisher) EmitTask(ctx context.Context, channel string, payload TaskPayload) error {
+	return p.emitTask(ctx, channel, payload, true)
 }
 
-// EmitProject publishes a project event to the given channel.
-func (p *Publisher) EmitProject(_ context.Context, channel string, payload ProjectPayload) error {
-	return p.emit(channel, payload.entityID(), enveloppe.ObjectProject, payload)
+func (p *Publisher) emitTask(ctx context.Context, channel string, payload TaskPayload, link bool) error {
+	if !p.active() || !p.prepareTask(ctx, &payload) {
+		return nil
+	}
+	if link {
+		p.link(ctx, &schemas.Task{}, payload.ID)
+	}
+	return p.emit(ctx, channel, payload.entityID(), enveloppe.ObjectTask, payload)
+}
+
+// EmitProject publishes a project event to the given channel. A project in
+// a workspace that is neither linked to Registre nor personal is not
+// published. A published project counts as linked to Sablier.
+func (p *Publisher) EmitProject(ctx context.Context, channel string, payload ProjectPayload) error {
+	return p.emitProject(ctx, channel, payload, true)
+}
+
+func (p *Publisher) emitProject(ctx context.Context, channel string, payload ProjectPayload, link bool) error {
+	if !p.active() || !p.prepareProject(ctx, &payload) {
+		return nil
+	}
+	if link {
+		p.link(ctx, &schemas.Project{}, payload.ID)
+	}
+	return p.emit(ctx, channel, payload.entityID(), enveloppe.ObjectProject, payload)
 }
 
 // EmitComment publishes a comment event to the given channel.
-func (p *Publisher) EmitComment(_ context.Context, channel string, payload CommentPayload) error {
-	return p.emit(channel, payload.entityID(), ObjectComment, payload)
+func (p *Publisher) EmitComment(ctx context.Context, channel string, payload CommentPayload) error {
+	return p.emit(ctx, channel, payload.entityID(), ObjectComment, payload)
 }
 
 // EmitWorkspace publishes a workspace event to the given channel.
-func (p *Publisher) EmitWorkspace(_ context.Context, channel string, payload WorkspacePayload) error {
-	return p.emit(channel, payload.entityID(), ObjectWorkspace, payload)
+func (p *Publisher) EmitWorkspace(ctx context.Context, channel string, payload WorkspacePayload) error {
+	return p.emit(ctx, channel, payload.entityID(), ObjectWorkspace, payload)
 }
 
 // EmitTaskCreated emits a task.created event.

@@ -6,13 +6,16 @@ import (
 	"strings"
 )
 
-// Config carries Antenne client connection settings.
+// Config carries Antenne client connection settings. SyncWorkspaceID only
+// places projects from old Sablier payloads that carry no space. Issuer is
+// the OIDC issuer whose porte identities give owner and actor subjects.
 type Config struct {
 	URL        string
 	Secret     string
 	InstanceID string
 
 	SyncWorkspaceID int64
+	Issuer          string
 }
 
 // LoadConfig reads Antenne configuration from standard environment variables.

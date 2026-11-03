@@ -70,6 +70,8 @@ type Project struct {
 	IsPublic    bool       `gorm:"column:is_public;default:false"`
 	ArchivedAt  *time.Time `gorm:"column:archived_at"`
 	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
+	UpdatedAt   time.Time  `gorm:"column:updated_at;not null"`
+	SyncedAt    *time.Time `gorm:"column:synced_at"`
 }
 
 // Column is a stage in a project's workflow board.
@@ -104,6 +106,7 @@ type Task struct {
 	DueDate     *time.Time `gorm:"column:due_date;index"`
 	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
 	UpdatedAt   time.Time  `gorm:"column:updated_at;not null"`
+	SyncedAt    *time.Time `gorm:"column:synced_at"`
 }
 
 // Label tags tasks within a workspace or specific task.
@@ -163,7 +166,8 @@ type ShareLink struct {
 	UpdatedAt      time.Time  `gorm:"column:updated_at;not null"`
 }
 
-// TimeEntry logs work duration against a task.
+// TimeEntry logs work duration against a task. Source is "opus" for native
+// entries and "sablier" for read-only mirrors keyed by FacileID.
 type TimeEntry struct {
 	ID          int64      `gorm:"column:id;primaryKey;autoIncrement"`
 	TaskID      int64      `gorm:"column:task_id;not null;index"`
@@ -173,6 +177,9 @@ type TimeEntry struct {
 	EndTime     *time.Time `gorm:"column:end_time"`
 	Duration    int        `gorm:"column:duration;not null;default:0"`
 	CreatedAt   time.Time  `gorm:"column:created_at;not null"`
+	UpdatedAt   time.Time  `gorm:"column:updated_at;not null"`
+	FacileID    *string    `gorm:"column:facile_id;uniqueIndex"`
+	Source      string     `gorm:"column:source;not null;default:opus"`
 }
 
 // WorkflowRule triggers automated task actions based on integration events.

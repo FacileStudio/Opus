@@ -22,6 +22,13 @@ const (
 	// ChannelProjectDeleted carries project deletion events.
 	ChannelProjectDeleted = "project.deleted"
 
+	// ChannelTimeEntryCreated carries Sablier time entry creation events.
+	ChannelTimeEntryCreated = "time_entry.created"
+	// ChannelTimeEntryUpdated carries Sablier time entry update events.
+	ChannelTimeEntryUpdated = "time_entry.updated"
+	// ChannelTimeEntryDeleted carries Sablier time entry deletion events.
+	ChannelTimeEntryDeleted = "time_entry.deleted"
+
 	// ChannelCommentCreated carries new task comment events.
 	ChannelCommentCreated = "comment.created"
 
@@ -50,7 +57,8 @@ func AllChannels() []string {
 	}
 }
 
-// SyncChannels returns the channels Opus listens to for Sablier project and task sync.
+// SyncChannels returns the channels Opus listens to for Sablier project, task
+// and time entry sync.
 func SyncChannels() []string {
 	return []string{
 		ChannelProjectCreated,
@@ -59,5 +67,8 @@ func SyncChannels() []string {
 		ChannelTaskCreated,
 		ChannelTaskUpdated,
 		ChannelTaskDeleted,
+		ChannelTimeEntryCreated,
+		ChannelTimeEntryUpdated,
+		ChannelTimeEntryDeleted,
 	}
 }

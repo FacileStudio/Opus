@@ -9,6 +9,7 @@ import (
 
 	antenne "github.com/FacileStudio/antenne-client/go"
 	enveloppe "github.com/FacileStudio/enveloppe/go"
+	"gorm.io/gorm"
 )
 
 // Transport defines the underlying event bus transport methods used by Publisher.
@@ -46,11 +47,20 @@ func WithLogger(l *slog.Logger) Option {
 	}
 }
 
+// WithStore queues events in the antenne_outbox table of db instead of
+// sending them directly, and lets the publisher describe each project's space.
+func WithStore(db *gorm.DB) Option {
+	return func(p *Publisher) {
+		p.db = db
+	}
+}
+
 // Publisher publishes Opus domain events to Antenne.
 type Publisher struct {
 	config    Config
 	transport Transport
 	logger    *slog.Logger
+	db        *gorm.DB
 	mu        sync.Mutex
 	dialed    bool
 	published int64
@@ -96,12 +106,16 @@ func (p *Publisher) Listen(channel string, handler antenne.EventHandler) {
 	p.transport.Listen(channel, handler)
 }
 
-// Start initiates background connection to Antenne.
+// Start initiates background connection to Antenne and, with a store, the
+// outbox worker.
 func (p *Publisher) Start(ctx context.Context) {
-	if p == nil || !p.config.Enabled() || p.transport == nil {
+	if !p.active() {
 		return
 	}
 	go p.dial(ctx)
+	if p.db != nil {
+		go p.runOutbox(ctx, outboxInterval)
+	}
 }
 
 func (p *Publisher) dial(ctx context.Context) {

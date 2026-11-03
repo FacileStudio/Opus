@@ -34,3 +34,21 @@ type PoolProcessedEvent struct {
 
 // TableName pins the ledger table name.
 func (PoolProcessedEvent) TableName() string { return "pool_processed_events" }
+
+// TimeEntrySourceSablier marks a time entry mirrored from Sablier, which Opus
+// serves read-only.
+const TimeEntrySourceSablier = "sablier"
+
+// AntenneOutbox is one outbound pool event waiting for delivery. The worker
+// sends rows in id order and deletes each once the pool accepted it.
+type AntenneOutbox struct {
+	ID        int64     `gorm:"column:id;primaryKey;autoIncrement"`
+	Channel   string    `gorm:"column:channel;not null"`
+	Payload   string    `gorm:"column:payload;not null"`
+	Attempts  int       `gorm:"column:attempts;not null;default:0"`
+	LastError string    `gorm:"column:last_error;not null;default:''"`
+	CreatedAt time.Time `gorm:"column:created_at;not null;autoCreateTime"`
+}
+
+// TableName pins the outbox table name.
+func (AntenneOutbox) TableName() string { return "antenne_outbox" }
