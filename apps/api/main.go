@@ -23,7 +23,6 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
 	"github.com/FacileStudio/porte/oidc"
-	portepg "github.com/FacileStudio/porte/pg"
 	"github.com/FacileStudio/porte/session"
 	"github.com/FacileStudio/tronc/healthcheck"
 	"github.com/FacileStudio/tronc/logger"
@@ -45,7 +44,11 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	if err != nil {
 		return nil, err
 	}
-	store := portepg.New(sqlDB)
+	store, err := newPorteStore(sqlDB)
+	if err != nil {
+		return nil, err
+	}
+	resealInBackground(ctx, store, appLogger)
 	users := auth.NewUserStore(db)
 	cfg := appEnv.Porte()
 	backfillPictures(ctx, users, cfg.Issuer, appLogger)
