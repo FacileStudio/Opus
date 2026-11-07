@@ -6,8 +6,8 @@ require (
 	github.com/FacileStudio/Journal/sdk/journal v0.0.0-20260811165717-babb9d5d0e15
 	github.com/FacileStudio/antenne-client/go v0.0.0-20260824150250-7681849d44f9
 	github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee
-	github.com/FacileStudio/porte v0.7.0
-	github.com/FacileStudio/tronc v0.13.0
+	github.com/FacileStudio/porte v0.12.0
+	github.com/FacileStudio/tronc v0.17.1
 	github.com/go-chi/chi/v5 v5.3.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/joho/godotenv v1.5.1
@@ -19,7 +19,7 @@ require (
 )
 
 require (
-	github.com/FacileStudio/porte/directory v0.1.0 // indirect
+	github.com/FacileStudio/porte/directory v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/coreos/go-oidc/v3 v3.20.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect

@@ -28,18 +28,14 @@ func (s *Service) Get() ConfigResponse {
 	if s.appEnv != nil && s.appEnv.OIDC != nil {
 		hasOIDC = true
 	}
-	ssoOnly := false
-	if s.appEnv != nil {
-		ssoOnly = s.appEnv.SSOOnly
-	}
 	registreSpacesURL := ""
 	if s.spacesURL != nil {
 		registreSpacesURL = s.spacesURL()
 	}
 	return ConfigResponse{
-		SSOOnly:                     ssoOnly,
-		DisableRegistration:         false,
-		DisablePasswordRegistration: ssoOnly,
+		SSOOnly:                     hasOIDC,
+		DisableRegistration:         true,
+		DisablePasswordRegistration: true,
 		IsDemoMode:                  false,
 		HasSMTP:                     false,
 		HasGithubSignIn:             false,

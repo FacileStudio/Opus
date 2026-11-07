@@ -39,7 +39,7 @@ func oidcRoutes() []documentation.Route {
 			Method:      "GET",
 			Path:        "/auth/config",
 			Summary:     "Describe the auth methods on offer",
-			Description: "Returns sso_only and oidc_enabled, so the client knows whether to show the password form.",
+			Description: "Returns sso_only and oidc_enabled. With an issuer configured sso_only is always true: there is no password sign-in.",
 			Auth:        "public",
 		},
 	}
@@ -63,48 +63,6 @@ func profileRoutes() []documentation.Route {
 			Auth:         "bearer",
 			RequestBody:  `{"name":string?,"color":string?,"locale":string?}`,
 			ResponseBody: `{"token":string,"user":{...}}`,
-		},
-		{
-			Method:      "POST",
-			Path:        "/auth/change-password",
-			Summary:     "Verify the current password and set a new one",
-			Description: "porte verifies the current password, replaces the hash, revokes every other session and rotates the caller's own session. A cookie-authenticated mutation must carry X-Facile-CSRF.",
-			Auth:        "bearer",
-			RequestBody: `{"currentPassword":string,"newPassword":string}`,
-			Errors: []documentation.Error{
-				{Status: 401, Code: "unauthenticated", Description: "The current password is wrong"},
-				{Status: 400, Code: "invalid_argument", Description: "The account has no password, or the new one is too short"},
-			},
-		},
-	}
-}
-
-func credentialRoutes() []documentation.Route {
-	return []documentation.Route{
-		{
-			Method:       "POST",
-			Path:         "/auth/register",
-			Summary:      "Create a local account and sign in",
-			Description:  "Registered only when SSO_ONLY is false. porte hashes the password, sets the session cookie and returns a bearer token with the profile.",
-			Auth:         "public",
-			RequestBody:  `{"email":string,"name":string,"password":string}`,
-			ResponseBody: `{"token":string,"user":{...}}`,
-			Errors: []documentation.Error{
-				{Status: 409, Code: "already_exists", Description: "An account with this email already exists"},
-				{Status: 422, Code: "failed_precondition", Description: "Registration is disabled, the password is too short, or the email is invalid"},
-			},
-		},
-		{
-			Method:       "POST",
-			Path:         "/auth/login",
-			Summary:      "Sign in with a local password",
-			Description:  "Verified by porte's local kit at suite parameters. Wrong password and unknown address both answer unauthorized, so the endpoint is not an enumeration oracle.",
-			Auth:         "public",
-			RequestBody:  `{"email":string,"password":string}`,
-			ResponseBody: `{"token":string,"user":{...}}`,
-			Errors: []documentation.Error{
-				{Status: 401, Code: "unauthenticated", Description: "Invalid email or password"},
-			},
 		},
 	}
 }
@@ -148,7 +106,6 @@ func Documentation() documentation.Module {
 	routes := make([]documentation.Route, 0)
 	routes = append(routes, oidcRoutes()...)
 	routes = append(routes, profileRoutes()...)
-	routes = append(routes, credentialRoutes()...)
 	routes = append(routes, tokenRoutes()...)
 	return documentation.Module{
 		Name:        "auth",

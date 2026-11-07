@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/FacileStudio/tronc/health"
@@ -74,5 +75,16 @@ func TestReferenceConfig(t *testing.T) {
 		if !found {
 			t.Errorf("expected module %s was not found in documentation registry", name)
 		}
+	}
+}
+
+func TestVersionReportsTheBuild(t *testing.T) {
+	router := chi.NewRouter()
+	router.Get("/version", versionHandler)
+
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/version", nil))
+	if recorder.Code != http.StatusOK || !strings.Contains(recorder.Body.String(), version) {
+		t.Fatalf("GET /version = %d %q, want 200 carrying %q", recorder.Code, recorder.Body.String(), version)
 	}
 }

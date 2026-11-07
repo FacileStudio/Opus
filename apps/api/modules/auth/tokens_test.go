@@ -121,7 +121,7 @@ func newTokenService(t *testing.T) (*Service, *session.Manager) {
 	if err != nil {
 		t.Fatalf("session manager: %v", err)
 	}
-	return NewService(db, manager, nil, slog.New(slog.DiscardHandler)), manager
+	return NewService(db, manager, slog.New(slog.DiscardHandler)), manager
 }
 
 func TestIssuedTokenAuthenticatesAsBearer(t *testing.T) {

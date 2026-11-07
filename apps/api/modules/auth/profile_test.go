@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
-	"github.com/FacileStudio/tronc/errors"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -22,7 +21,7 @@ func newProfileService(t *testing.T) *Service {
 	if err := db.AutoMigrate(&schemas.User{}); err != nil {
 		t.Fatalf("migrate user: %v", err)
 	}
-	return NewService(db, nil, nil, slog.New(slog.DiscardHandler))
+	return NewService(db, nil, slog.New(slog.DiscardHandler))
 }
 
 func seedProfileUser(t *testing.T, service *Service) int64 {
@@ -80,19 +79,5 @@ func TestControllerUpdateProfileEchoesBearer(t *testing.T) {
 	}
 	if resp.User == nil || resp.User.Locale != "en" {
 		t.Fatalf("user = %+v, want locale en", resp.User)
-	}
-}
-
-func TestControllerChangePasswordValidatesBody(t *testing.T) {
-	service := newProfileService(t)
-	request := httptest.NewRequest("POST", "/api/auth/change-password", nil)
-
-	_, err := service.controller.changePassword(httptest.NewRecorder(), request, 1, &ChangePasswordRequest{CurrentPassword: "", NewPassword: "new"})
-	if errors.Status(err) != 400 {
-		t.Fatalf("empty currentPassword status = %d, want 400", errors.Status(err))
-	}
-	_, err = service.controller.changePassword(httptest.NewRecorder(), request, 1, &ChangePasswordRequest{CurrentPassword: "old", NewPassword: ""})
-	if errors.Status(err) != 400 {
-		t.Fatalf("empty newPassword status = %d, want 400", errors.Status(err))
 	}
 }

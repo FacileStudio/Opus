@@ -40,18 +40,6 @@ func (controller *Controller) updateProfile(w http.ResponseWriter, r *http.Reque
 	return &AuthResponse{Token: bearerToken(r), User: toUserResponse(user)}, nil
 }
 
-// changePassword verifies the current password, sets a new one and rotates the
-// session in one porte call.
-func (controller *Controller) changePassword(w http.ResponseWriter, r *http.Request, userID int64, req *ChangePasswordRequest) (*ChangePasswordResponse, error) {
-	if req.CurrentPassword == "" || req.NewPassword == "" {
-		return nil, errors.Invalid("currentPassword and newPassword are required")
-	}
-	if err := controller.service.ChangePassword(w, r, userID, req.CurrentPassword, req.NewPassword); err != nil {
-		return nil, err
-	}
-	return &ChangePasswordResponse{Message: "Password changed successfully"}, nil
-}
-
 // bearerToken extracts the Authorization bearer the current request carried,
 // or an empty string when it authenticated some other way.
 func bearerToken(r *http.Request) string {
@@ -61,33 +49,6 @@ func bearerToken(r *http.Request) string {
 		return strings.TrimSpace(header[len(prefix):])
 	}
 	return ""
-}
-
-// register creates an account through porte/local and signs it in, keeping the
-// frontend's {token, user} response shape. porte exports the service rather
-// than only the routes for exactly this reason.
-func (controller *Controller) register(w http.ResponseWriter, r *http.Request, req *RegisterRequest) (*AuthResponse, error) {
-	email := strings.TrimSpace(strings.ToLower(req.Email))
-	if email == "" {
-		return nil, errors.Invalid("invalid email")
-	}
-	user, token, err := controller.service.Register(w, r, email, strings.TrimSpace(req.Name), req.Password)
-	if err != nil {
-		return nil, err
-	}
-	return &AuthResponse{Token: token, User: toUserResponse(user)}, nil
-}
-
-func (controller *Controller) login(w http.ResponseWriter, r *http.Request, req *LoginRequest) (*AuthResponse, error) {
-	email := strings.TrimSpace(strings.ToLower(req.Email))
-	if email == "" || req.Password == "" {
-		return nil, errors.Invalid("email and password required")
-	}
-	user, token, err := controller.service.Login(r.Context(), w, r, email, req.Password)
-	if err != nil {
-		return nil, err
-	}
-	return &AuthResponse{Token: token, User: toUserResponse(user)}, nil
 }
 
 // createToken mints a personal API token and answers it once, in plaintext.
