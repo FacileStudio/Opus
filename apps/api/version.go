@@ -6,8 +6,8 @@ import (
 	"github.com/FacileStudio/tronc/httpjson"
 )
 
-// version is the build's release, set by the APP_VERSION build arg through
-// -ldflags "-X main.version=...".
+// version is the build's release: the Dockerfile reads the root package.json through
+// scripts/version.sh and sets it with -ldflags "-X main.version=...".
 var version = "dev"
 
 func versionHandler(w http.ResponseWriter, _ *http.Request) {

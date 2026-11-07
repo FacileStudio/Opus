@@ -28,16 +28,17 @@ RUN apk add --no-cache git ca-certificates
 
 ARG TARGETOS=linux
 ARG TARGETARCH
-ARG APP_VERSION=dev
 
 WORKDIR /repo/apps/api
 
 COPY apps/api/go.mod apps/api/go.sum ./
 RUN go mod download
 COPY apps/api/ ./
+COPY package.json /repo/package.json
+COPY scripts/version.sh /repo/scripts/version.sh
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH:-amd64} \
-    go build -trimpath -ldflags="-s -w -X main.version=${APP_VERSION}" -o bin/api .
+    go build -trimpath -ldflags="-s -w -X main.version=$(sh /repo/scripts/version.sh /repo/package.json)" -o bin/api .
 
 # Stage 3: Runtime container (single Go binary serving API and SPA)
 FROM alpine:3.21 AS runtime

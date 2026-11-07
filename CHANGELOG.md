@@ -2,6 +2,14 @@
 
 All notable changes to Opus are documented here.
 
+## [Unreleased]
+
+### Changed
+
+- `GET /version` serves the version from the root `package.json`, baked into the binary at build time by
+  `scripts/version.sh`. The `APP_VERSION` build arg and its Dokploy env key no longer play any part, so the
+  endpoint can no longer lag behind the deployed release.
+
 ## [2.29.2] - 2026-11-07
 
 ### Fixed

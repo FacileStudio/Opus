@@ -19,8 +19,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        APP_VERSION: ${APP_VERSION:-dev}
     image: ghcr.io/facilestudio/opus:latest
     env_file:
       - .env
