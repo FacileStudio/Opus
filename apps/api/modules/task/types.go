@@ -33,6 +33,7 @@ type TaskTimestamps struct {
 // TaskResponse is the JSON wire shape for a task.
 type TaskResponse struct {
 	ID             int64  `json:"id"`
+	FacileID       string `json:"facile_id,omitempty"`
 	ProjectID      int64  `json:"projectId"`
 	WorkspaceID    int64  `json:"workspaceId"`
 	ColumnID       *int64 `json:"columnId,omitempty"`

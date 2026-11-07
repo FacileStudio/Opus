@@ -52,6 +52,9 @@ func toResponse(task schemas.Task, actor *schemas.User, labels []TaskLabelRespon
 		},
 		Labels: labels,
 	}
+	if task.FacileID != nil {
+		resp.FacileID = *task.FacileID
+	}
 	if labels == nil {
 		resp.Labels = []TaskLabelResponse{}
 	}
