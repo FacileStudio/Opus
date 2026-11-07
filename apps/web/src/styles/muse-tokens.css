@@ -1,0 +1,37 @@
+@theme {
+  --color-fc-page: oklch(1 0 0);
+  --color-fc-bg: oklch(1 0 0);
+  --color-fc-surface: oklch(0.95 0 0);
+  --color-fc-component: oklch(0.975 0 0);
+  --color-fc-fg: oklch(0.145 0 0);
+  --color-fc-fg-muted: oklch(0.5 0 0);
+  --color-fc-accent: oklch(0.145 0 0);
+  --color-fc-accent-fg: oklch(1 0 0);
+  --color-fc-field: oklch(0.91 0 0);
+  --color-fc-ring: oklch(0.4 0 0);
+  --color-fc-danger: oklch(0.54 0.22 29);
+  --radius-fc-md: 8px;
+  --radius-fc-lg: 12px;
+  --radius-fc-pill: 999px;
+  --text-fc-xs: 0.75rem;
+  --text-fc-xs--line-height: 1rem;
+  --text-fc-sm: 0.875rem;
+  --text-fc-sm--line-height: 1.25rem;
+  --text-fc-md: 1rem;
+  --text-fc-md--line-height: 1.5rem;
+  --spacing-fc-nav-item: 44px;
+}
+
+:root.dark {
+  --color-fc-page: oklch(0.09 0 0);
+  --color-fc-bg: oklch(0.09 0 0);
+  --color-fc-surface: oklch(0.21 0 0);
+  --color-fc-component: oklch(0.16 0 0);
+  --color-fc-fg: oklch(0.985 0 0);
+  --color-fc-fg-muted: oklch(0.64 0 0);
+  --color-fc-accent: oklch(0.985 0 0);
+  --color-fc-accent-fg: oklch(0.09 0 0);
+  --color-fc-field: oklch(0.26 0 0);
+  --color-fc-ring: oklch(0.6 0 0);
+  --color-fc-danger: oklch(0.65 0.22 29);
+}
