@@ -11,9 +11,7 @@ import (
 )
 
 func TestConfigGet(t *testing.T) {
-	appEnv := &env.Config{
-		SSOOnly: false,
-	}
+	appEnv := &env.Config{OIDC: &env.OIDCConfig{Issuer: "https://sso.test"}}
 	service := NewService(appEnv)
 	r := chi.NewRouter()
 	RegisterRoutes(r, service)
@@ -31,8 +29,8 @@ func TestConfigGet(t *testing.T) {
 		t.Fatalf("failed to decode response: %v", err)
 	}
 
-	if resp.SSOOnly {
-		t.Fatal("expected SSOOnly to be false")
+	if !resp.SSOOnly || !resp.DisableRegistration {
+		t.Fatal("expected an issuer to close local sign-in and registration")
 	}
 	if !resp.HasGuestAccess {
 		t.Fatal("expected HasGuestAccess to be true")

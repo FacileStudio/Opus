@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"log/slog"
+	"net/http"
+	"slices"
 	"strings"
 
 	documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
@@ -47,7 +49,7 @@ type routerDeps struct {
 	emitter     events.Emitter
 	reconcile   func(context.Context)
 	workspaces  *workspace.Service
-	directory   *workspace.Directory
+	registre    registreFollowers
 }
 
 func referenceConfig() apiref.Config {
@@ -117,8 +119,9 @@ func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, 
 }
 
 func buildRouter(deps routerDeps) chi.Router {
-	authService := auth.NewService(deps.db, deps.kits.sessions, deps.kits.passwords, deps.appLogger)
+	authService := auth.NewService(deps.db, deps.kits.sessions, deps.appLogger)
 
+	clientDir := spa.DirFromEnv()
 	router := httpx.NewRouter(httpx.Config{
 		TrustedProxies: deps.appEnv.TrustedProxies,
 		CDNProxies:     deps.appEnv.CDNProxies,
@@ -127,13 +130,14 @@ func buildRouter(deps routerDeps) chi.Router {
 		CORS: troncmiddleware.CORSConfig{
 			AllowedOrigins:   deps.appEnv.CORSAllowedOrigins,
 			AllowCredentials: true,
-			AllowedHeaders: []string{
-				"Accept", "Authorization", "Content-Type", "X-Facile-CSRF", "X-Opus-Window-Id",
-			},
+			AllowedHeaders: append(slices.Clone(troncmiddleware.DefaultAllowedHeaders),
+				"X-Facile-CSRF", "X-Opus-Window-Id"),
 		},
+		Security: securityConfig(clientDir, storage.LoadS3Config(), deps.appLogger),
 	})
 
 	health.Mount(router, deps.sqlDB.PingContext)
+	router.Get("/version", versionHandler)
 	router.Head("/health", health.Live())
 	router.Head("/api/health", health.Live())
 	apiref.Mount(router, referenceConfig())
@@ -149,10 +153,11 @@ func buildRouter(deps routerDeps) chi.Router {
 		api.Head("/health", health.Live())
 		deps.kits.sessions.Mount(api)
 		deps.kits.oidc.Mount(api)
-		auth.RegisterRoutes(api, authService, *deps.appEnv)
+		auth.RegisterRoutes(api, authService)
 		workspace.RegisterRoutes(api, deps.workspaces, authService)
-		if deps.directory != nil {
-			api.Handle(strings.TrimPrefix(directory.SyncPath, "/api"), deps.directory.Handler())
+		if deps.registre.spaces != nil && deps.registre.deletions != nil {
+			api.Handle(strings.TrimPrefix(directory.SyncPath, "/api"), deps.registre.spaces.Handler())
+			api.Method(http.MethodPost, strings.TrimPrefix(directory.DeletionsPath, "/api"), deps.registre.deletions.Handler())
 		}
 		registerDomainRoutes(api, authService, deps)
 		if deps.reconcile != nil {
@@ -165,7 +170,6 @@ func buildRouter(deps routerDeps) chi.Router {
 		}
 	})
 
-	clientDir := spa.DirFromEnv()
 	if spa.Available(clientDir) {
 		router.Handle("/*", spa.Handler(spa.Config{Dir: clientDir}))
 		deps.appLogger.Info("serving client", slog.String("dir", clientDir))

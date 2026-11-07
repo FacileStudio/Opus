@@ -2,11 +2,11 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
+	tronc "github.com/FacileStudio/tronc/errors"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -27,32 +27,74 @@ func newTestUserStore(t *testing.T) *UserStore {
 	return NewUserStore(db)
 }
 
-func TestUserStoreCreateAndFind(t *testing.T) {
+func createUser(t *testing.T, store *UserStore, email, name string) int64 {
+	t.Helper()
+	user, err := store.create(context.Background(), email, name, "")
+	if err != nil {
+		t.Fatalf("create %s: %v", email, err)
+	}
+	return user.ID
+}
+
+func TestUserStoreLinksOnlyByVerifiedEmail(t *testing.T) {
 	store := newTestUserStore(t)
 	ctx := context.Background()
+	existing := createUser(t, store, "ines@facile.studio", "Ines")
+	claims := porte.Claims{Provider: "https://sso.facile.studio", Subject: "sub-ines", Email: "Ines@Facile.Studio"}
 
-	id, err := store.CreateFromPassword(ctx, "camille@facile.studio", "Camille")
-	if err != nil {
-		t.Fatalf("CreateFromPassword: %v", err)
-	}
-	if id == 0 {
-		t.Fatal("CreateFromPassword returned id 0")
+	if _, err := store.UpsertFromOIDC(ctx, claims); tronc.Status(err) != 409 {
+		t.Fatalf("unverified email status = %d (%v), want 409", tronc.Status(err), err)
 	}
 
-	got, err := store.FindByEmail(ctx, "camille@facile.studio")
+	claims.EmailVerified = true
+	linked, err := store.UpsertFromOIDC(ctx, claims)
 	if err != nil {
-		t.Fatalf("FindByEmail: %v", err)
+		t.Fatalf("verified email: %v", err)
 	}
-	if got != id {
-		t.Fatalf("FindByEmail = %d, want %d", got, id)
+	if linked != existing {
+		t.Fatalf("verified email linked to %d, want %d", linked, existing)
 	}
 }
 
-func TestUserStoreFindByEmailMissing(t *testing.T) {
+func TestUserStoreRefusesASecondSubjectOfTheSameIssuer(t *testing.T) {
 	store := newTestUserStore(t)
-	_, err := store.FindByEmail(context.Background(), "nobody@facile.studio")
-	if !errors.Is(err, porte.ErrNotFound) {
-		t.Fatalf("FindByEmail on missing account = %v, want porte.ErrNotFound", err)
+	ctx := context.Background()
+	const issuer = "https://sso.facile.studio"
+	owner := createUser(t, store, "noe@facile.studio", "Noe")
+	if err := store.orm.Exec("INSERT INTO porte_identities (user_id, provider, subject) VALUES (?, ?, 'sub-owner')", owner, issuer).Error; err != nil {
+		t.Fatalf("seed identity: %v", err)
+	}
+
+	_, err := store.UpsertFromOIDC(ctx, porte.Claims{Provider: issuer, Subject: "sub-newcomer", Email: "noe@facile.studio", EmailVerified: true})
+	if tronc.Status(err) != 409 {
+		t.Fatalf("second subject status = %d (%v), want 409", tronc.Status(err), err)
+	}
+
+	other, err := store.UpsertFromOIDC(ctx, porte.Claims{Provider: "https://elsewhere.example", Subject: "sub-x", Email: "noe@facile.studio", EmailVerified: true})
+	if err != nil || other != owner {
+		t.Fatalf("another issuer = %d, %v, want link to %d", other, err, owner)
+	}
+}
+
+func TestUserStoreStoresTheLocaleClaim(t *testing.T) {
+	store := newTestUserStore(t)
+	ctx := context.Background()
+	claims := porte.Claims{Provider: "https://sso.facile.studio", Subject: "sub-loc", Email: "loc@facile.studio", EmailVerified: true, Locale: "de"}
+
+	id, err := store.UpsertFromOIDC(ctx, claims)
+	if err != nil {
+		t.Fatalf("first sign-in: %v", err)
+	}
+	claims.Locale = "es"
+	if _, err := store.UpsertFromOIDC(ctx, claims); err != nil {
+		t.Fatalf("second sign-in: %v", err)
+	}
+	var user schemas.User
+	if err := store.orm.First(&user, id).Error; err != nil {
+		t.Fatalf("load user: %v", err)
+	}
+	if user.Locale != "es" {
+		t.Fatalf("locale = %q, want es", user.Locale)
 	}
 }
 
@@ -101,6 +143,7 @@ func TestUserStoreUpsertFromOIDC(t *testing.T) {
 		t.Fatalf("upsert via identity = %d, want %d", direct, id)
 	}
 }
+
 func TestUserStoreStoresPictureClaim(t *testing.T) {
 	store := newTestUserStore(t)
 	ctx := context.Background()
@@ -143,18 +186,9 @@ func TestUserStoreBackfillPictures(t *testing.T) {
 	ctx := context.Background()
 	const issuer = "https://sso.facile.studio/"
 
-	stale, err := store.CreateFromPassword(ctx, "stale@facile.studio", "Stale")
-	if err != nil {
-		t.Fatalf("create stale: %v", err)
-	}
-	other, err := store.CreateFromPassword(ctx, "other@facile.studio", "Other")
-	if err != nil {
-		t.Fatalf("create other: %v", err)
-	}
-	local, err := store.CreateFromPassword(ctx, "local@facile.studio", "Local")
-	if err != nil {
-		t.Fatalf("create local: %v", err)
-	}
+	stale := createUser(t, store, "stale@facile.studio", "Stale")
+	other := createUser(t, store, "other@facile.studio", "Other")
+	local := createUser(t, store, "local@facile.studio", "Local")
 	if err := store.orm.Exec("UPDATE users SET image = 'https://porte.facile.studio/media/old.png' WHERE id = ?", stale).Error; err != nil {
 		t.Fatalf("seed stale image: %v", err)
 	}

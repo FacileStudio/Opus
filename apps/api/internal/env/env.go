@@ -35,7 +35,7 @@ type OIDCConfig struct {
 // Load already read.
 func (c Config) Porte() porte.Config {
 	if c.OIDC == nil {
-		return porte.Config{SSOOnly: c.SSOOnly}
+		return porte.Config{}
 	}
 	return porte.Config{
 		Issuer:       c.OIDC.Issuer,
@@ -43,7 +43,6 @@ func (c Config) Porte() porte.Config {
 		ClientSecret: c.OIDC.ClientSecret,
 		RedirectURL:  c.OIDC.RedirectURL,
 		SuccessURL:   c.OIDC.SuccessURL,
-		SSOOnly:      c.SSOOnly,
 
 		CLIAudience:     c.OIDC.CLIAudience,
 		MachineAudience: c.OIDC.MachineAudience,
@@ -73,9 +72,8 @@ type Config struct {
 	// RedisURL configures the Redis pub/sub broker for realtime broadcasts.
 	RedisURL string
 
-	// OIDC and SSOOnly shape the porte auth kit.
-	OIDC    *OIDCConfig
-	SSOOnly bool
+	// OIDC shapes the porte auth kit. Sign-in goes through Registre only.
+	OIDC *OIDCConfig
 }
 
 func parseLegacyAPI() (*url.URL, error) {
@@ -138,10 +136,6 @@ func Load() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
-	ssoOnly, err := troncenv.Bool("SSO_ONLY", false)
-	if err != nil {
-		return Config{}, err
-	}
 	oidcConfig, err := parseOIDCConfig(core.CORSAllowedOrigins)
 	if err != nil {
 		return Config{}, err
@@ -152,7 +146,6 @@ func Load() (Config, error) {
 		UploadDir:        troncenv.String("UPLOAD_DIR", "./data/uploads"),
 		AuthBridgeSecret: troncenv.String("AUTH_BRIDGE_SECRET", ""),
 		RedisURL:         troncenv.String("REDIS_URL", ""),
-		SSOOnly:          ssoOnly,
 		OIDC:             oidcConfig,
 	}, nil
 }

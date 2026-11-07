@@ -2,22 +2,9 @@ package auth
 
 import "time"
 
-// RegisterRequest is the body for a local registration.
-type RegisterRequest struct {
-	Email    string `json:"email"`
-	Name     string `json:"name,omitempty"`
-	Password string `json:"password"`
-}
-
-// LoginRequest is the body for a local login.
-type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-// AuthResponse is the {token, user} shape register, login and PATCH /auth/me
-// answer with. GET /auth/me answers the bare UserResponse. The frontend was
-// better-auth shaped, whose session is exactly the pair; the re-plumb keeps it.
+// AuthResponse is the {token, user} shape PATCH /auth/me answers with. GET
+// /auth/me answers the bare UserResponse. The frontend was better-auth shaped,
+// whose session is exactly the pair; the re-plumb keeps it.
 type AuthResponse struct {
 	Token string        `json:"token"`
 	User  *UserResponse `json:"user"`
@@ -29,17 +16,6 @@ type UpdateProfileRequest struct {
 	Name   *string `json:"name,omitempty"`
 	Color  *string `json:"color,omitempty"`
 	Locale *string `json:"locale,omitempty"`
-}
-
-// ChangePasswordRequest is the body of POST /auth/change-password.
-type ChangePasswordRequest struct {
-	CurrentPassword string `json:"currentPassword"`
-	NewPassword     string `json:"newPassword"`
-}
-
-// ChangePasswordResponse is what POST /auth/change-password answers.
-type ChangePasswordResponse struct {
-	Message string `json:"message"`
 }
 
 // CreateTokenRequest is the body of POST /auth/api-tokens. The name is what

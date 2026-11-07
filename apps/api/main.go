@@ -22,7 +22,6 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
-	"github.com/FacileStudio/porte/local"
 	"github.com/FacileStudio/porte/oidc"
 	portepg "github.com/FacileStudio/porte/pg"
 	"github.com/FacileStudio/porte/session"
@@ -37,9 +36,8 @@ type sqlPinger interface {
 }
 
 type authKits struct {
-	sessions  *session.Manager
-	passwords *local.Kit
-	oidc      *oidc.Kit
+	sessions *session.Manager
+	oidc     *oidc.Kit
 }
 
 func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger) (*authKits, error) {
@@ -66,17 +64,7 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	if err != nil {
 		return nil, err
 	}
-	passwords, err := local.New(local.Config{AllowRegistration: !appEnv.SSOOnly, MinPasswordLength: 12}, local.Deps{
-		Users:      users,
-		Identities: store.Identities(),
-		Sessions:   sessions,
-		Logger:     appLogger,
-		Count:      users.CountUsers,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &authKits{sessions: sessions, passwords: passwords, oidc: kit}, nil
+	return &authKits{sessions: sessions, oidc: kit}, nil
 }
 
 // backfillPictures fills the Registre picture URL for accounts that have not
@@ -158,7 +146,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		return nil, err
 	}
 	reconcile := reconcileJob(publisher, appLogger)
-	workspaces, spaces, stopSpaces := startWorkspaces(db, appEnv, appLogger, reconcile)
+	workspaces, followers, stopSpaces := startWorkspaces(db, appEnv, appLogger, reconcile)
 	router := buildRouter(routerDeps{
 		db:          db,
 		sqlDB:       sqlDB,
@@ -169,7 +157,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		emitter:     publisher,
 		reconcile:   reconcile,
 		workspaces:  workspaces,
-		directory:   spaces,
+		registre:    followers,
 	})
 	addr := ":" + strconv.Itoa(appEnv.Port)
 	srv := &http.Server{
