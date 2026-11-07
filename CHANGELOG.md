@@ -2,6 +2,13 @@
 
 All notable changes to Opus are documented here.
 
+## [2.29.0] - 2026-11-07
+
+### Added
+
+- Task responses carry `facile_id`, the suite-wide id Sablier keys its task mirror on. Bulle reads it from
+  the Opus tools so the time an agent spends on a task lands on that task in Sablier.
+
 ## [2.28.1] - 2026-11-07
 
 ### Security
