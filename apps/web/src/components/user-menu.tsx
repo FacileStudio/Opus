@@ -75,12 +75,12 @@ export function UserMenu() {
     return () => document.removeEventListener("pointerdown", away);
   }, [open, close]);
 
-  useEffect(() => {
-    if (!open) return;
-    menu.current
+  const mountMenu = useCallback((node: HTMLDivElement | null) => {
+    menu.current = node;
+    node
       ?.querySelector<HTMLElement>('[role^="menuitem"][tabindex="0"]')
       ?.focus();
-  }, [open, view]);
+  }, []);
 
   if (!user) return null;
 
@@ -290,7 +290,8 @@ export function UserMenu() {
       </button>
       {open && (
         <div
-          ref={menu}
+          key={view}
+          ref={mountMenu}
           id={menuId}
           role="menu"
           aria-label={name}
