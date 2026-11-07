@@ -2,6 +2,14 @@
 
 All notable changes to Opus are documented here.
 
+## [2.29.1] - 2026-11-07
+
+### Fixed
+
+- The project icon picker in project settings has padding again, so the search field is no longer cut at the
+  edges. Both pickers (new project and settings) share one grid of fixed-size cells that fills the popover
+  width, so icons no longer overlap, including on touch screens.
+
 ## [2.29.0] - 2026-11-07
 
 ### Added
