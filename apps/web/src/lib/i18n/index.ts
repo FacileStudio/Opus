@@ -35,7 +35,19 @@ export function resolveLocale(
   return defaultLocale;
 }
 
+export const LOCALE_STORAGE_KEY = "opus.locale";
+
+function getStoredLocale(): string | null {
+  try {
+    return localStorage.getItem(LOCALE_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export function getBrowserLocale(): string | null {
+  const stored = getStoredLocale();
+  if (stored) return stored;
   if (typeof navigator === "undefined") return null;
   return navigator.language || navigator.languages?.[0] || null;
 }

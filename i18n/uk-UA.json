@@ -46,7 +46,8 @@
 		},
 		"people": {
 			"someone": "Хтось",
-			"unknown": "Невідомо"
+			"unknown": "Невідомо",
+			"deleted": "Deleted user"
 		},
 		"error": {
 			"title": "Щось пішло не так",
@@ -134,100 +135,13 @@
 			"subtitle": "Введіть ваші облікові дані для доступу до space",
 			"invitationSubtitle": "Увійдіть, щоб прийняти запрошення",
 			"invitationAlert": "Після входу ви зможете прийняти запрошення до space.",
-			"signingIn": "Вхід...",
-			"continueWithGoogle": "Продовжити з Google",
-			"continueWithGithub": "Продовжити з GitHub",
-			"continueWithDiscord": "Продовжити з Discord",
-			"continueWithOidc": "Продовжити з OIDC",
-			"lastUsed": "Останній використаний",
-			"registrationDisabled": "Публічну реєстрацію вимкнено. Використовуйте запрошення для створення облікового запису.",
-			"passwordRegistrationDisabled": "Реєстрацію за допомогою пароля вимкнено. Використовуйте налаштований метод входу через соціальну мережу або OIDC.",
-			"toggleMessage": "Не маєте облікового запису?",
-			"toggleLink": "Створити обліковий запис",
-			"guestSuccess": "Вхід як гість виконано",
-			"guestError": "Не вдалося увійти як гість",
 			"oidcError": "Не вдалося увійти через OIDC",
-			"googleError": "Не вдалося увійти через Google",
-			"githubError": "Не вдалося увійти через GitHub",
-			"discordError": "Не вдалося увійти через Discord",
-			"ssoOnlyMessage": "Увійдіть через налаштованого провайдера SSO вище."
-		},
-		"providers": {
-			"google": "Google",
-			"discord": "Discord"
-		},
-		"forms": {
-			"or": "або",
-			"email": "Електронна пошта",
-			"password": "Пароль",
-			"emailPlaceholder": "me@example.com",
-			"passwordPlaceholder": "••••••••",
-			"showPassword": "Показати пароль",
-			"hidePassword": "Сховати пароль"
-		},
-		"checkEmail": {
-			"pageTitle": "Перевірте пошту",
-			"title": "Перевірте вашу пошту",
-			"inboxMessage": "Ми надіслали вам тимчасове посилання для входу. Перевірте вхідні за адресою <email>{{email}}</email>.",
-			"emailFallback": "вашу адресу електронної пошти",
-			"backToLogin": "Повернутися до входу"
-		},
-		"signUp": {
-			"pageTitle": "Створення облікового запису",
-			"title": "Створити обліковий запис",
-			"subtitleInvitation": "Створіть обліковий запис, щоб прийняти запрошення",
-			"subtitleRegistrationDisabled": "Для реєстрації потрібне запрошення",
-			"subtitlePasswordDisabled": "Використовуйте вхід через соціальну мережу або OIDC для створення облікового запису",
-			"subtitleDefault": "Почніть роботу з вашим робочим простором",
-			"invitationAlert": "Після створення облікового запису ви зможете прийняти запрошення до space.",
-			"registrationDisabledAlert": "Реєстрацію наразі вимкнено. Якщо вас запросили, введіть адресу електронної пошти, на яку було надіслано запрошення.",
-			"passwordDisabledAlert": "Створення облікового запису за допомогою пароля вимкнено. Використовуйте налаштований метод входу через соціальну мережу або OIDC на сторінці входу.",
-			"signingIn": "Вхід...",
-			"continueAsGuest": "Продовжити як гість",
-			"toggleMessage": "Вже маєте обліковий запис?",
-			"toggleLink": "Увійти"
-		},
-		"verifyOtp": {
-			"pageTitle": "Підтвердження коду",
-			"title": "Введіть код підтвердження",
-			"subtitle": "Використовуйте 6-значний код, надісланий на вашу пошту, щоб продовжити",
-			"codeSentTo": "Код надіслано на {{email}}",
-			"verificationCodeLabel": "Код підтвердження",
-			"verifying": "Перевірка...",
-			"verifyAndSignIn": "Підтвердити та увійти",
-			"changeEmail": "Змінити пошту",
-			"resend": "Надіслати повторно",
-			"validation": {
-				"codeLength": "Код має містити 6 цифр"
-			},
-			"toast": {
-				"invalidCode": "Невірний код підтвердження",
-				"signedInSuccess": "Вхід виконано успішно!",
-				"verifyFailed": "Не вдалося підтвердити код",
-				"resendFailed": "Не вдалося надіслати код повторно",
-				"resendSuccess": "Новий код підтвердження надіслано!"
-			}
-		},
-		"otpSignIn": {
-			"sendFailed": "Не вдалося надіслати код підтвердження",
-			"codeSent": "Код підтвердження надіслано! Перевірте вашу пошту.",
-			"sending": "Надсилання...",
-			"sendVerificationCode": "Надіслати код підтвердження"
-		},
-		"signInForm": {
-			"failedSignIn": "Не вдалося увійти",
-			"signedInSuccess": "Вхід виконано успішно",
-			"signingIn": "Вхід...",
-			"signIn": "Увійти"
-		},
-		"signUpForm": {
-			"fullName": "Повне ім'я",
-			"namePlaceholder": "Іван Петренко",
-			"failedSignUp": "Не вдалося зареєструватися",
-			"accountCreated": "Обліковий запис успішно створено",
-			"passwordTooShort": "Пароль занадто короткий",
-			"creatingAccount": "Створення облікового запису...",
-			"createAccount": "Створити обліковий запис"
+			"createAccount": "Create your account",
+			"label": "Sign in with Facile",
+			"language": "Language",
+			"loading": "Signing in…",
+			"newHere": "New to Facile?",
+			"tagline": "Self-hosted project management for teams that keep their own data."
 		},
 		"invitation": {
 			"pageTitleAccept": "Прийняти запрошення",
@@ -295,6 +209,17 @@
 				"nameRequired": "Ім'я є обов'язковим",
 				"nameShort": "Ім'я має містити щонайменше 2 символи"
 			}
+		},
+		"legal": {
+			"cgu": "Terms of use",
+			"cgv": "Terms of sale",
+			"legalNotice": "Legal notice",
+			"nav": "Legal",
+			"privacy": "Privacy"
+		},
+		"layout": {
+			"headline": "Your projects.",
+			"headlineEnd": "Your server."
 		}
 	},
 	"settings": {
@@ -1917,5 +1842,39 @@
 		},
 		"pageTitle": "Shared View",
 		"readOnly": "Read-only"
+	},
+	"landing": {
+		"copyright": "© {{year}} Opus by Facile.",
+		"features": {
+			"realtime": {
+				"body": "Comments, labels and task moves land in every open tab the moment somebody makes them.",
+				"title": "Realtime collaboration"
+			},
+			"rules": {
+				"body": "Status transitions, assignments and due-date reminders run on the server instead of in your head.",
+				"title": "Workflow rules"
+			},
+			"selfHosted": {
+				"body": "One container, your Postgres, your storage. Nothing you plan leaves the server it runs on.",
+				"title": "Self-hosted by default"
+			},
+			"time": {
+				"body": "Log time against tasks and read it back per project when the review starts.",
+				"title": "Time tracking"
+			},
+			"views": {
+				"body": "Board, list, gantt and backlog over the same tasks. Switch per project without moving a thing.",
+				"title": "Four views, one backlog"
+			},
+			"workspaces": {
+				"body": "Invite a team, keep projects private or shared, and let owner, admin and member decide who edits what.",
+				"title": "Workspaces and roles"
+			}
+		},
+		"footerTagline": "Self-hosted project management.",
+		"heroBody": "Opus keeps tasks, boards and timelines on your own server. Your team plans where your data already lives.",
+		"heroTitle": "Project management you host yourself",
+		"pageTitle": "Self-hosted project management",
+		"sectionTitle": "Everything a project needs, nothing it does not"
 	}
 }

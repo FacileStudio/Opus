@@ -46,7 +46,8 @@
 		},
 		"people": {
 			"someone": "Некој",
-			"unknown": "Непознат"
+			"unknown": "Непознат",
+			"deleted": "Deleted user"
 		},
 		"error": {
 			"title": "Нешто тргна наопаку",
@@ -134,100 +135,13 @@
 			"subtitle": "Внеси ги твоите податоци за да пристапиш до space",
 			"invitationSubtitle": "Најави се за да ја прифатиш поканата",
 			"invitationAlert": "По најавувањето, ќе можеш да ја прифатиш поканата за space.",
-			"signingIn": "Се најавува...",
-			"continueWithGoogle": "Продолжи со Google",
-			"continueWithGithub": "Продолжи со GitHub",
-			"continueWithDiscord": "Продолжи со Discord",
-			"continueWithOidc": "Продолжи со OIDC",
-			"lastUsed": "Последно користено",
-			"registrationDisabled": "Јавната регистрација е оневозможена. Користи покана за да креираш сметка.",
-			"passwordRegistrationDisabled": "Регистрацијата со лозинка е оневозможена. Користи социјална или OIDC метода за најава за да креираш сметка.",
-			"toggleMessage": "Немаш сметка?",
-			"toggleLink": "Креирај сметка",
-			"guestSuccess": "Најавен како гостин",
-			"guestError": "Неуспешна најава како гостин",
 			"oidcError": "Неуспешна најава со OIDC",
-			"googleError": "Неуспешна најава со Google",
-			"githubError": "Неуспешна најава со GitHub",
-			"discordError": "Неуспешна најава со Discord",
-			"ssoOnlyMessage": "Најавете се со конфигуриран SSO провајдер погоре."
-		},
-		"providers": {
-			"google": "Google",
-			"discord": "Discord"
-		},
-		"forms": {
-			"or": "или",
-			"email": "Е-пошта",
-			"password": "Лозинка",
-			"emailPlaceholder": "me@example.com",
-			"passwordPlaceholder": "••••••••",
-			"showPassword": "Прикажи лозинка",
-			"hidePassword": "Сокриј лозинка"
-		},
-		"checkEmail": {
-			"pageTitle": "Провери ја е-поштата",
-			"title": "Провери ја е-поштата",
-			"inboxMessage": "Ти испративме привремен линк за најава. Провери го сандачето на <email>{{email}}</email>.",
-			"emailFallback": "твојата е-пошта",
-			"backToLogin": "Назад кон најава"
-		},
-		"signUp": {
-			"pageTitle": "Креирај сметка",
-			"title": "Креирај сметка",
-			"subtitleInvitation": "Креирај сметка за да ја прифатиш поканата",
-			"subtitleRegistrationDisabled": "Регистрацијата бара покана",
-			"subtitlePasswordDisabled": "Користи социјална или OIDC најава за да креираш сметка",
-			"subtitleDefault": "Започни со твојот space",
-			"invitationAlert": "По креирањето на сметката, ќе можеш да ја прифатиш поканата за space.",
-			"registrationDisabledAlert": "Регистрацијата е моментално оневозможена. Ако си поканет, внеси ја е-поштата на која ја доби поканата за да ја креираш сметката.",
-			"passwordDisabledAlert": "Креирањето сметка со лозинка е оневозможено. Користи социјална или OIDC метода за најава од страницата за најава.",
-			"signingIn": "Се најавува...",
-			"continueAsGuest": "Продолжи како гостин",
-			"toggleMessage": "Веќе имаш сметка?",
-			"toggleLink": "Најави се"
-		},
-		"verifyOtp": {
-			"pageTitle": "Потврди код",
-			"title": "Внеси го кодот за потврда",
-			"subtitle": "Користи го 6-цифрениот код испратен на твојата е-пошта за да продолжиш",
-			"codeSentTo": "Кодот е испратен на {{email}}",
-			"verificationCodeLabel": "Код за потврда",
-			"verifying": "Се потврдува...",
-			"verifyAndSignIn": "Потврди и најави се",
-			"changeEmail": "Промени е-пошта",
-			"resend": "Испрати повторно",
-			"validation": {
-				"codeLength": "Кодот мора да има 6 цифри"
-			},
-			"toast": {
-				"invalidCode": "Невалиден код за потврда",
-				"signedInSuccess": "Успешно најавен!",
-				"verifyFailed": "Неуспешна потврда на кодот",
-				"resendFailed": "Неуспешно повторно испраќање на кодот",
-				"resendSuccess": "Нов код за потврда е испратен!"
-			}
-		},
-		"otpSignIn": {
-			"sendFailed": "Неуспешно испраќање на кодот за потврда",
-			"codeSent": "Кодот за потврда е испратен! Провери ја е-поштата.",
-			"sending": "Се испраќа...",
-			"sendVerificationCode": "Испрати код за потврда"
-		},
-		"signInForm": {
-			"failedSignIn": "Неуспешна најава",
-			"signedInSuccess": "Успешно најавен",
-			"signingIn": "Се најавува...",
-			"signIn": "Најави се"
-		},
-		"signUpForm": {
-			"fullName": "Целосно име",
-			"namePlaceholder": "Петар Петровски",
-			"failedSignUp": "Неуспешна регистрација",
-			"accountCreated": "Сметката е успешно креирана",
-			"passwordTooShort": "Лозинката е прекратка",
-			"creatingAccount": "Се креира сметка...",
-			"createAccount": "Креирај сметка"
+			"createAccount": "Create your account",
+			"label": "Sign in with Facile",
+			"language": "Language",
+			"loading": "Signing in…",
+			"newHere": "New to Facile?",
+			"tagline": "Self-hosted project management for teams that keep their own data."
 		},
 		"invitation": {
 			"pageTitleAccept": "Прифати покана",
@@ -295,6 +209,17 @@
 				"nameRequired": "Името е задолжително",
 				"nameShort": "Името мора да има најмалку 2 знаци"
 			}
+		},
+		"legal": {
+			"cgu": "Terms of use",
+			"cgv": "Terms of sale",
+			"legalNotice": "Legal notice",
+			"nav": "Legal",
+			"privacy": "Privacy"
+		},
+		"layout": {
+			"headline": "Your projects.",
+			"headlineEnd": "Your server."
 		}
 	},
 	"settings": {
@@ -1907,5 +1832,39 @@
 		},
 		"pageTitle": "Shared View",
 		"readOnly": "Read-only"
+	},
+	"landing": {
+		"copyright": "© {{year}} Opus by Facile.",
+		"features": {
+			"realtime": {
+				"body": "Comments, labels and task moves land in every open tab the moment somebody makes them.",
+				"title": "Realtime collaboration"
+			},
+			"rules": {
+				"body": "Status transitions, assignments and due-date reminders run on the server instead of in your head.",
+				"title": "Workflow rules"
+			},
+			"selfHosted": {
+				"body": "One container, your Postgres, your storage. Nothing you plan leaves the server it runs on.",
+				"title": "Self-hosted by default"
+			},
+			"time": {
+				"body": "Log time against tasks and read it back per project when the review starts.",
+				"title": "Time tracking"
+			},
+			"views": {
+				"body": "Board, list, gantt and backlog over the same tasks. Switch per project without moving a thing.",
+				"title": "Four views, one backlog"
+			},
+			"workspaces": {
+				"body": "Invite a team, keep projects private or shared, and let owner, admin and member decide who edits what.",
+				"title": "Workspaces and roles"
+			}
+		},
+		"footerTagline": "Self-hosted project management.",
+		"heroBody": "Opus keeps tasks, boards and timelines on your own server. Your team plans where your data already lives.",
+		"heroTitle": "Project management you host yourself",
+		"pageTitle": "Self-hosted project management",
+		"sectionTitle": "Everything a project needs, nothing it does not"
 	}
 }

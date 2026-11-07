@@ -16,8 +16,8 @@ Live at [opus.facile.studio](https://opus.facile.studio).
 - Projects with kanban columns, task priorities, due dates, labels and task relations
 - Rich task descriptions, threaded comments, activity history and full-text search
 - Per-task time entries and per-project time reporting
-- Email/password, magic link, email OTP, GitHub, Google, Discord and generic OIDC sign-in,
-  with `SSO_ONLY` to disable local passwords
+- Sign-in through Facile (Registre) only: no local passwords or sign-up. CLI and API tokens
+  keep working
 - Live collaboration over WebSockets, optionally fanned out across replicas through Redis
 - Outbound integrations for GitHub, Gitea, Discord, Slack, Telegram and generic webhooks
 - Two-way project and task sync with other suite apps through the Nook pool
@@ -77,7 +77,8 @@ generates it (Settings → Account → Developer).
 | `DATABASE_URL` | Postgres connection string; derived from the `POSTGRES_*` variables if unset |
 | `POSTGRES_PASSWORD` | Password for the Postgres container, also used to derive `DATABASE_URL` |
 | `AUTH_SECRET` | `better-auth` signing key, 32 characters or more; a random one is generated if unset |
-| `SSO_ONLY` | Set to `true` to reject every local sign-in path and force a configured SSO provider |
+| `OIDC_ISSUER` | Registre. With an issuer set, Opus mounts no password or sign-up route |
+| `APP_VERSION` | Build arg, served at `GET /version` |
 | `NOOK_POOL_URL` | Default Nook pool URL used when a workspace has no explicit one |
 
 Full reference: [docs/configuration.md](docs/configuration.md).

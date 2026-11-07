@@ -46,7 +46,8 @@
 		},
 		"people": {
 			"someone": "Quelqu'un",
-			"unknown": "Inconnu"
+			"unknown": "Inconnu",
+			"deleted": "Utilisateur supprimé"
 		},
 		"error": {
 			"title": "Quelque chose s'est mal passé",
@@ -131,103 +132,16 @@
 		"signIn": {
 			"pageTitle": "Connexion",
 			"title": "Content de te revoir",
-			"subtitle": "Entrez vos identifiants pour accéder à votre espace",
+			"subtitle": "Connectez-vous avec votre compte Facile",
 			"invitationSubtitle": "Connectez-vous pour accepter votre invitation",
 			"invitationAlert": "Après vous être connecté, vous pourrez accepter votre invitation à l'espace.",
-			"signingIn": "Connexion...",
-			"continueWithGoogle": "Continuer avec Google",
-			"continueWithGithub": "Continuer avec GitHub",
-			"continueWithDiscord": "Continuer avec Discord",
-			"continueWithOidc": "Continuer avec OIDC",
-			"lastUsed": "Dernière utilisation",
-			"registrationDisabled": "Inscription publique désactivée. Utilisez une invitation pour créer un compte.",
-			"passwordRegistrationDisabled": "Inscription par mot de passe désactivée. Utilisez une méthode de connexion sociale ou OIDC configurée pour créer un compte.",
-			"toggleMessage": "Vous n'avez pas de compte ?",
-			"toggleLink": "Créer un compte",
-			"guestSuccess": "Connecté en tant qu'invité",
-			"guestError": "Échec de la connexion en tant qu'invité",
-			"oidcError": "Échec de la connexion avec OIDC",
-			"googleError": "Échec de la connexion avec Google",
-			"githubError": "Échec de la connexion avec GitHub",
-			"discordError": "Échec de la connexion avec Discord",
-			"ssoOnlyMessage": "Connectez-vous avec un fournisseur SSO configuré ci-dessus."
-		},
-		"providers": {
-			"google": "Google",
-			"discord": "Discord"
-		},
-		"forms": {
-			"or": "ou",
-			"email": "Email",
-			"password": "Mot de passe",
-			"emailPlaceholder": "moi@exemple.fr",
-			"passwordPlaceholder": "••••••••",
-			"showPassword": "Afficher le mot de passe",
-			"hidePassword": "Masquer le mot de passe"
-		},
-		"checkEmail": {
-			"pageTitle": "Vérifier vos mails",
-			"title": "Vérifier vos mails",
-			"inboxMessage": "Nous vous avons envoyé un lien de connexion temporaire. Veuillez vérifier votre boîte de réception à l'adresse <email>{{email}}</email>.",
-			"emailFallback": "votre adresse email",
-			"backToLogin": "Retour à la connexion"
-		},
-		"signUp": {
-			"pageTitle": "Créer un compte",
-			"title": "Créer un compte",
-			"subtitleInvitation": "Créer un compte pour accepter votre invitation",
-			"subtitleRegistrationDisabled": "L'inscription nécessite une invitation",
-			"subtitlePasswordDisabled": "Utilisez la connexion sociale ou OIDC pour créer un compte",
-			"subtitleDefault": "Commencez avec votre espace",
-			"invitationAlert": "Après avoir créé votre compte, vous pourrez accepter votre invitation à l'espace.",
-			"registrationDisabledAlert": "L'inscription est actuellement désactivée. Si vous avez été invité, entrez l'adresse e-mail qui a reçu l'invitation pour créer votre compte.",
-			"passwordDisabledAlert": "La création de compte par mot de passe est désactivée. Utilisez une méthode de connexion sociale ou OIDC configurée depuis la page de connexion.",
-			"signingIn": "Connexion...",
-			"continueAsGuest": "Continuer en tant qu'invité",
-			"toggleMessage": "Vous avez déjà un compte?",
-			"toggleLink": "Se connecter"
-		},
-		"verifyOtp": {
-			"pageTitle": "Vérifier le code",
-			"title": "Entrez le code de vérification",
-			"subtitle": "Utilisez le code à 6 chiffres envoyé à votre e-mail pour continuer",
-			"codeSentTo": "Code envoyé à {{email}}",
-			"verificationCodeLabel": "Code de vérification",
-			"verifying": "Vérification...",
-			"verifyAndSignIn": "Vérifier et se connecter",
-			"changeEmail": "Changer l'email",
-			"resend": "Renvoyer",
-			"validation": {
-				"codeLength": "Le code doit contenir 6 chiffres"
-			},
-			"toast": {
-				"invalidCode": "Code de vérification invalide",
-				"signedInSuccess": "Connecté avec succès!",
-				"verifyFailed": "Échec de la vérification du code",
-				"resendFailed": "Échec de l'envoi du code",
-				"resendSuccess": "Nouveau code de vérification envoyé!"
-			}
-		},
-		"otpSignIn": {
-			"sendFailed": "Échec de l'envoi du code de vérification",
-			"codeSent": "Code de vérification envoyé! Vérifiez votre e-mail.",
-			"sending": "Envoi...",
-			"sendVerificationCode": "Envoyer le code de vérification"
-		},
-		"signInForm": {
-			"failedSignIn": "Échec de la connexion",
-			"signedInSuccess": "Connexion réussie",
-			"signingIn": "Connexion...",
-			"signIn": "Se connecter"
-		},
-		"signUpForm": {
-			"fullName": "Nom complet",
-			"namePlaceholder": "John Doe",
-			"failedSignUp": "Échec de l'inscription",
-			"accountCreated": "Compte créé avec succès",
-			"passwordTooShort": "Le mot de passe est trop court",
-			"creatingAccount": "Création du compte...",
-			"createAccount": "Créer un compte"
+			"oidcError": "Échec de la connexion",
+			"label": "Se connecter avec Facile",
+			"loading": "Connexion…",
+			"tagline": "Gestion de projet auto-hébergée pour les équipes qui gardent leurs données.",
+			"newHere": "Nouveau sur Facile ?",
+			"createAccount": "Créer votre compte",
+			"language": "Langue"
 		},
 		"invitation": {
 			"pageTitleAccept": "Accepter l'invitation",
@@ -295,6 +209,17 @@
 				"nameRequired": "Le nom est requis",
 				"nameShort": "Le nom doit contenir au moins 2 caractères"
 			}
+		},
+		"legal": {
+			"nav": "Informations légales",
+			"cgu": "Conditions générales d'utilisation",
+			"cgv": "Conditions générales de vente",
+			"privacy": "Confidentialité",
+			"legalNotice": "Mentions légales"
+		},
+		"layout": {
+			"headline": "Vos projets.",
+			"headlineEnd": "Votre serveur."
 		}
 	},
 	"settings": {
@@ -1908,5 +1833,39 @@
 		},
 		"pageTitle": "Shared View",
 		"readOnly": "Read-only"
+	},
+	"landing": {
+		"pageTitle": "Gestion de projet auto-hébergée",
+		"heroTitle": "La gestion de projet que vous hébergez vous-même",
+		"heroBody": "Opus garde tâches, tableaux et calendriers sur votre propre serveur. Votre équipe planifie là où vivent déjà vos données.",
+		"sectionTitle": "Tout ce qu’il faut à un projet, rien de plus",
+		"features": {
+			"views": {
+				"title": "Quatre vues, un seul backlog",
+				"body": "Tableau, liste, gantt et backlog sur les mêmes tâches. Changez de vue par projet sans rien déplacer."
+			},
+			"realtime": {
+				"title": "Collaboration en temps réel",
+				"body": "Commentaires, étiquettes et déplacements de tâches arrivent dans chaque onglet ouvert à l’instant où quelqu’un les fait."
+			},
+			"rules": {
+				"title": "Règles de workflow",
+				"body": "Changements de statut, assignations et rappels d’échéance tournent sur le serveur plutôt que dans votre tête."
+			},
+			"time": {
+				"title": "Suivi du temps",
+				"body": "Enregistrez le temps passé sur les tâches et relisez-le par projet au moment du bilan."
+			},
+			"workspaces": {
+				"title": "Espaces et rôles",
+				"body": "Invitez une équipe, gardez les projets privés ou partagés, et laissez propriétaire, admin et membre décider qui modifie quoi."
+			},
+			"selfHosted": {
+				"title": "Auto-hébergé par défaut",
+				"body": "Un conteneur, votre Postgres, votre stockage. Rien de ce que vous planifiez ne quitte le serveur qui l’héberge."
+			}
+		},
+		"copyright": "© {{year}} Opus par Facile.",
+		"footerTagline": "Gestion de projet auto-hébergée."
 	}
 }

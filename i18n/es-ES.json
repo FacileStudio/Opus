@@ -46,7 +46,8 @@
 		},
 		"people": {
 			"someone": "Alguien",
-			"unknown": "Desconocido"
+			"unknown": "Desconocido",
+			"deleted": "Usuario eliminado"
 		},
 		"error": {
 			"title": "Algo ha ido mal",
@@ -131,103 +132,16 @@
 		"signIn": {
 			"pageTitle": "Iniciar sesión",
 			"title": "Bienvenido",
-			"subtitle": "Introduce tus credenciales para acceder a tu espacio",
+			"subtitle": "Inicia sesión con tu cuenta de Facile",
 			"invitationSubtitle": "Inicia sesión para aceptar la invitación",
 			"invitationAlert": "Al iniciar sesión, podrás aceptar la invitación al espacio.",
-			"signingIn": "Iniciando sesión...",
-			"continueWithGoogle": "Continuar con Google",
-			"continueWithGithub": "Continuar con GitHub",
-			"continueWithDiscord": "Continuar con Discord",
-			"continueWithOidc": "Continuar con OIDC",
-			"lastUsed": "Usado por última vez",
-			"registrationDisabled": "El registro está deshabilitado. Usa una invitación para crearte una cuenta.",
-			"passwordRegistrationDisabled": "El registro con contraseña está deshabilitado. Usa algún proveedor social o OIDC para crear una cuenta.",
-			"toggleMessage": "¿No tienes cuenta?",
-			"toggleLink": "Crear cuenta",
-			"guestSuccess": "Sesión iniciada como invitado",
-			"guestError": "Error al iniciar sesión como invitado",
-			"oidcError": "Error al iniciar sesión con OIDC",
-			"googleError": "Error al iniciar sesión con Google",
-			"githubError": "Error al iniciar sesión con GitHub",
-			"discordError": "Error al iniciar sesión con Discord",
-			"ssoOnlyMessage": "Inicia sesión con un proveedor SSO configurado arriba."
-		},
-		"providers": {
-			"google": "Google",
-			"discord": "Discord"
-		},
-		"forms": {
-			"or": "o",
-			"email": "Email",
-			"password": "Contraseña",
-			"emailPlaceholder": "yo@ejemplo.com",
-			"passwordPlaceholder": "••••••••",
-			"showPassword": "Mostrar contraseña",
-			"hidePassword": "Ocultar contraseña"
-		},
-		"checkEmail": {
-			"pageTitle": "Verifica tu email",
-			"title": "Verifica tu email",
-			"inboxMessage": "Te hemos enviado un enlace temporal. Por favor, comprueba tu bandeja de entrada en <email>{{email}}</email>.",
-			"emailFallback": "tu dirección de correo electrónico",
-			"backToLogin": "Volver a login"
-		},
-		"signUp": {
-			"pageTitle": "Crear Cuenta",
-			"title": "Crear cuenta",
-			"subtitleInvitation": "Crea una cuenta para aceptar tu invitación",
-			"subtitleRegistrationDisabled": "El registro requiere una invitación",
-			"subtitlePasswordDisabled": "Usa un proveedor social o OIDC para crear una cuenta",
-			"subtitleDefault": "Comienza con tu espacio",
-			"invitationAlert": "Al crear tu cuenta podrás aceptar la invitación al espacio.",
-			"registrationDisabledAlert": "El registro está actualmente deshabilitado. Si has sido invitado, introduce la dirección de correo electrónico en la que has recibido la invitación para crear tu cuenta.",
-			"passwordDisabledAlert": "El registro con contraseña está deshabilitado. Usa un proveedor social o OIDC desde la página de registro.",
-			"signingIn": "Iniciando sesión...",
-			"continueAsGuest": "Continuar como invitado",
-			"toggleMessage": "¿Ya tienes cuenta?",
-			"toggleLink": "Iniciar sesión"
-		},
-		"verifyOtp": {
-			"pageTitle": "Verificar Código",
-			"title": "Introduce tu código de verificación",
-			"subtitle": "Usa el código de 6 dígitos enviado a tu email para continuar",
-			"codeSentTo": "Código de verificación enviado a {{email}}",
-			"verificationCodeLabel": "Código de Verificación",
-			"verifying": "Verificando...",
-			"verifyAndSignIn": "Verificar e iniciar sesión",
-			"changeEmail": "Cambiar dirección de correo electrónico",
-			"resend": "Volver a enviar",
-			"validation": {
-				"codeLength": "El código debe contener 6 dígitos"
-			},
-			"toast": {
-				"invalidCode": "El código de verificación no es válido",
-				"signedInSuccess": "¡Has iniciado sesión correctamente!",
-				"verifyFailed": "Fallo al verificar el código",
-				"resendFailed": "Error al reenviar el código",
-				"resendSuccess": "¡Nuevo código de verificación enviado!"
-			}
-		},
-		"otpSignIn": {
-			"sendFailed": "Error al enviar el código de verificación",
-			"codeSent": "¡Código de verificación enviado! Revisa tu correo electrónico.",
-			"sending": "Enviando...",
-			"sendVerificationCode": "Enviar código de verificación"
-		},
-		"signInForm": {
-			"failedSignIn": "Error al iniciar sesión",
-			"signedInSuccess": "¡Has iniciado sesión correctamente!",
-			"signingIn": "Iniciando sesión...",
-			"signIn": "Iniciar sesión"
-		},
-		"signUpForm": {
-			"fullName": "Nombre completo",
-			"namePlaceholder": "Pepe Pérez",
-			"failedSignUp": "Error al registrarse",
-			"accountCreated": "Cuenta creada satisfactoriamente",
-			"passwordTooShort": "La contraseña es demasiado corta",
-			"creatingAccount": "Creando cuenta...",
-			"createAccount": "Crear cuenta"
+			"oidcError": "Error al iniciar sesión",
+			"label": "Iniciar sesión con Facile",
+			"loading": "Iniciando sesión…",
+			"tagline": "Gestión de proyectos autoalojada para equipos que conservan sus propios datos.",
+			"newHere": "¿Nuevo en Facile?",
+			"createAccount": "Crea tu cuenta",
+			"language": "Idioma"
 		},
 		"invitation": {
 			"pageTitleAccept": "Aceptar Invitación",
@@ -295,6 +209,17 @@
 				"nameRequired": "El nombre es obligatorio",
 				"nameShort": "Tu nombre debe tener al menos 2 caracteres"
 			}
+		},
+		"legal": {
+			"nav": "Información legal",
+			"cgu": "Condiciones de uso",
+			"cgv": "Condiciones de venta",
+			"privacy": "Privacidad",
+			"legalNotice": "Aviso legal"
+		},
+		"layout": {
+			"headline": "Tus proyectos.",
+			"headlineEnd": "Tu servidor."
 		}
 	},
 	"settings": {
@@ -1908,5 +1833,39 @@
 		},
 		"pageTitle": "Shared View",
 		"readOnly": "Read-only"
+	},
+	"landing": {
+		"pageTitle": "Gestión de proyectos autoalojada",
+		"heroTitle": "La gestión de proyectos que alojas tú mismo",
+		"heroBody": "Opus guarda tareas, tableros y cronogramas en tu propio servidor. Tu equipo planifica donde ya viven tus datos.",
+		"sectionTitle": "Todo lo que un proyecto necesita, nada más",
+		"features": {
+			"views": {
+				"title": "Cuatro vistas, un solo backlog",
+				"body": "Tablero, lista, gantt y backlog sobre las mismas tareas. Cambia de vista por proyecto sin mover nada."
+			},
+			"realtime": {
+				"title": "Colaboración en tiempo real",
+				"body": "Comentarios, etiquetas y movimientos de tareas llegan a cada pestaña abierta en el momento en que alguien los hace."
+			},
+			"rules": {
+				"title": "Reglas de flujo de trabajo",
+				"body": "Las transiciones de estado, las asignaciones y los recordatorios de vencimiento corren en el servidor y no en tu cabeza."
+			},
+			"time": {
+				"title": "Control del tiempo",
+				"body": "Registra el tiempo en las tareas y consúltalo por proyecto cuando empiece la revisión."
+			},
+			"workspaces": {
+				"title": "Espacios y roles",
+				"body": "Invita a un equipo, mantén los proyectos privados o compartidos y deja que propietario, administrador y miembro decidan quién edita qué."
+			},
+			"selfHosted": {
+				"title": "Autoalojado por defecto",
+				"body": "Un contenedor, tu Postgres, tu almacenamiento. Nada de lo que planificas sale del servidor donde se ejecuta."
+			}
+		},
+		"copyright": "© {{year}} Opus de Facile.",
+		"footerTagline": "Gestión de proyectos autoalojada."
 	}
 }

@@ -4,6 +4,25 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+### Added
+
+- GDPR deletion receiver. Opus polls Registre's deletion list with its OIDC client credentials and accepts Registre's signed push on `POST /api/registre/deletions`. An erased person loses their account, personal workspace (projects, tasks, files), memberships, notifications, tokens and invitations sent to their address. What they wrote in shared workspaces stays without an author (comments, share links, time entries, activity), shown as a deleted user. Replays are no-ops; the cursor lives in `directory_deletion_state`.
+- `GET /version`, from the `APP_VERSION` build arg.
+- The login page matches the suite's auth screen: the "Sign in with Facile" pill with the canonical label, Registre sign-up and legal links, and a language switch. The landing page and the sign-in screens are translated in fr, en, es and de (es and de need native review).
+- CI: API (vet, race tests against Postgres), web (i18n, typecheck, biome, tests, build) and filet.
+
+### Changed
+
+- porte v0.7.0 to v0.12.0, `porte/directory` v0.1.0 to v0.3.0, tronc v0.13.0 to v0.17.1. tronc's security headers are on: enforced anti-framing and a report-only CSP that allows the client's inline scripts, YouTube embeds and the S3 origin.
+- Sign-in links an existing account by email only when Registre verified the address, and refuses when the account already holds another subject of the same issuer.
+- The Registre `locale` claim is stored on the account at every sign-in.
+- Migration `00006_launch_floor.sql`: `porte_login_codes.provider` and `.subject`, `directory_deletion_state`, and `comments.user_id` and `share_links.created_by` become nullable with `ON DELETE SET NULL`.
+
+### Removed
+
+- Local sign-up and password sign-in: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/change-password`, the sign-up page and the password form. Clients that signed in with the account password must use an API token (`/api/auth/api-tokens`) or `opus login`.
+- The `SSO_ONLY` setting. With an issuer set, Opus never mounts password routes.
+
 ## [2.26.0] - 2026-11-03
 
 ### Added

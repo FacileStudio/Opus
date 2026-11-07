@@ -46,7 +46,8 @@
 		},
 		"people": {
 			"someone": "Кто-то",
-			"unknown": "Неизвестно"
+			"unknown": "Неизвестно",
+			"deleted": "Deleted user"
 		},
 		"error": {
 			"title": "Что-то пошло не так",
@@ -134,100 +135,13 @@
 			"subtitle": "Введите свои учётные данные для доступа к space",
 			"invitationSubtitle": "Войдите, чтобы принять приглашение",
 			"invitationAlert": "После входа вы сможете принять приглашение в space.",
-			"signingIn": "Вход...",
-			"continueWithGoogle": "Продолжить с Google",
-			"continueWithGithub": "Продолжить с GitHub",
-			"continueWithDiscord": "Продолжить с Discord",
-			"continueWithOidc": "Продолжить с OIDC",
-			"lastUsed": "Использовался последним",
-			"registrationDisabled": "Публичная регистрация отключена. Используйте приглашение для создания аккаунта.",
-			"passwordRegistrationDisabled": "Регистрация по паролю отключена. Используйте настроенный метод входа через социальные сети или OIDC для создания аккаунта.",
-			"toggleMessage": "Нет аккаунта?",
-			"toggleLink": "Создать аккаунт",
-			"guestSuccess": "Вход выполнен как гость",
-			"guestError": "Не удалось войти как гость",
 			"oidcError": "Не удалось войти через OIDC",
-			"googleError": "Не удалось войти через Google",
-			"githubError": "Не удалось войти через GitHub",
-			"discordError": "Не удалось войти через Discord",
-			"ssoOnlyMessage": "Войдите через настроенного провайдера SSO выше."
-		},
-		"providers": {
-			"google": "Google",
-			"discord": "Discord"
-		},
-		"forms": {
-			"or": "или",
-			"email": "Электронная почта",
-			"password": "Пароль",
-			"emailPlaceholder": "me@example.com",
-			"passwordPlaceholder": "••••••••",
-			"showPassword": "Показать пароль",
-			"hidePassword": "Скрыть пароль"
-		},
-		"checkEmail": {
-			"pageTitle": "Проверьте почту",
-			"title": "Проверьте свою почту",
-			"inboxMessage": "Мы отправили вам временную ссылку для входа. Пожалуйста, проверьте свой почтовый ящик по адресу <email>{{email}}</email>.",
-			"emailFallback": "ваш адрес электронной почты",
-			"backToLogin": "Вернуться к входу"
-		},
-		"signUp": {
-			"pageTitle": "Создание аккаунта",
-			"title": "Создать аккаунт",
-			"subtitleInvitation": "Создайте аккаунт, чтобы принять приглашение",
-			"subtitleRegistrationDisabled": "Для регистрации требуется приглашение",
-			"subtitlePasswordDisabled": "Используйте вход через социальные сети или OIDC для создания аккаунта",
-			"subtitleDefault": "Начните работу с space",
-			"invitationAlert": "После создания аккаунта вы сможете принять приглашение в space.",
-			"registrationDisabledAlert": "Регистрация в данный момент отключена. Если вы получили приглашение, введите адрес электронной почты, на который оно было отправлено.",
-			"passwordDisabledAlert": "Создание аккаунта по паролю отключено. Используйте настроенный метод входа через социальные сети или OIDC на странице входа.",
-			"signingIn": "Вход...",
-			"continueAsGuest": "Продолжить как гость",
-			"toggleMessage": "Уже есть аккаунт?",
-			"toggleLink": "Войти"
-		},
-		"verifyOtp": {
-			"pageTitle": "Проверка кода",
-			"title": "Введите код подтверждения",
-			"subtitle": "Используйте 6-значный код, отправленный на вашу почту",
-			"codeSentTo": "Код отправлен на {{email}}",
-			"verificationCodeLabel": "Код подтверждения",
-			"verifying": "Проверка...",
-			"verifyAndSignIn": "Подтвердить и войти",
-			"changeEmail": "Изменить адрес",
-			"resend": "Отправить повторно",
-			"validation": {
-				"codeLength": "Код должен содержать 6 цифр"
-			},
-			"toast": {
-				"invalidCode": "Неверный код подтверждения",
-				"signedInSuccess": "Вход выполнен успешно!",
-				"verifyFailed": "Не удалось проверить код",
-				"resendFailed": "Не удалось отправить код повторно",
-				"resendSuccess": "Новый код подтверждения отправлен!"
-			}
-		},
-		"otpSignIn": {
-			"sendFailed": "Не удалось отправить код подтверждения",
-			"codeSent": "Код подтверждения отправлен! Проверьте почту.",
-			"sending": "Отправка...",
-			"sendVerificationCode": "Отправить код подтверждения"
-		},
-		"signInForm": {
-			"failedSignIn": "Не удалось войти",
-			"signedInSuccess": "Вход выполнен успешно",
-			"signingIn": "Вход...",
-			"signIn": "Войти"
-		},
-		"signUpForm": {
-			"fullName": "Полное имя",
-			"namePlaceholder": "Иван Иванов",
-			"failedSignUp": "Не удалось зарегистрироваться",
-			"accountCreated": "Аккаунт успешно создан",
-			"passwordTooShort": "Пароль слишком короткий",
-			"creatingAccount": "Создание аккаунта...",
-			"createAccount": "Создать аккаунт"
+			"createAccount": "Create your account",
+			"label": "Sign in with Facile",
+			"language": "Language",
+			"loading": "Signing in…",
+			"newHere": "New to Facile?",
+			"tagline": "Self-hosted project management for teams that keep their own data."
 		},
 		"invitation": {
 			"pageTitleAccept": "Принять приглашение",
@@ -295,6 +209,17 @@
 				"nameRequired": "Имя обязательно",
 				"nameShort": "Имя должно содержать не менее 2 символов"
 			}
+		},
+		"legal": {
+			"cgu": "Terms of use",
+			"cgv": "Terms of sale",
+			"legalNotice": "Legal notice",
+			"nav": "Legal",
+			"privacy": "Privacy"
+		},
+		"layout": {
+			"headline": "Your projects.",
+			"headlineEnd": "Your server."
 		}
 	},
 	"settings": {
@@ -1973,5 +1898,39 @@
 		},
 		"pageTitle": "Shared View",
 		"readOnly": "Read-only"
+	},
+	"landing": {
+		"copyright": "© {{year}} Opus by Facile.",
+		"features": {
+			"realtime": {
+				"body": "Comments, labels and task moves land in every open tab the moment somebody makes them.",
+				"title": "Realtime collaboration"
+			},
+			"rules": {
+				"body": "Status transitions, assignments and due-date reminders run on the server instead of in your head.",
+				"title": "Workflow rules"
+			},
+			"selfHosted": {
+				"body": "One container, your Postgres, your storage. Nothing you plan leaves the server it runs on.",
+				"title": "Self-hosted by default"
+			},
+			"time": {
+				"body": "Log time against tasks and read it back per project when the review starts.",
+				"title": "Time tracking"
+			},
+			"views": {
+				"body": "Board, list, gantt and backlog over the same tasks. Switch per project without moving a thing.",
+				"title": "Four views, one backlog"
+			},
+			"workspaces": {
+				"body": "Invite a team, keep projects private or shared, and let owner, admin and member decide who edits what.",
+				"title": "Workspaces and roles"
+			}
+		},
+		"footerTagline": "Self-hosted project management.",
+		"heroBody": "Opus keeps tasks, boards and timelines on your own server. Your team plans where your data already lives.",
+		"heroTitle": "Project management you host yourself",
+		"pageTitle": "Self-hosted project management",
+		"sectionTitle": "Everything a project needs, nothing it does not"
 	}
 }

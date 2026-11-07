@@ -46,7 +46,8 @@
 		},
 		"people": {
 			"someone": "Someone",
-			"unknown": "Unknown"
+			"unknown": "Unknown",
+			"deleted": "Deleted user"
 		},
 		"error": {
 			"title": "Something went wrong",
@@ -131,103 +132,16 @@
 		"signIn": {
 			"pageTitle": "Sign In",
 			"title": "Welcome back",
-			"subtitle": "Enter your credentials to access your space",
+			"subtitle": "Sign in with your Facile account",
 			"invitationSubtitle": "Sign in to accept your invitation",
 			"invitationAlert": "After signing in, you'll be able to accept your space invitation.",
-			"signingIn": "Signing in...",
-			"continueWithGoogle": "Continue with Google",
-			"continueWithGithub": "Continue with GitHub",
-			"continueWithDiscord": "Continue with Discord",
-			"continueWithOidc": "Continue with OIDC",
-			"lastUsed": "Last used",
-			"registrationDisabled": "Public registration is disabled. Use an invitation to create an account.",
-			"passwordRegistrationDisabled": "Password registration is disabled. Use a configured social or OIDC sign-in method to create an account.",
-			"toggleMessage": "Don't have an account?",
-			"toggleLink": "Create account",
-			"guestSuccess": "Signed in as guest",
-			"guestError": "Failed to sign in as guest",
-			"oidcError": "Failed to sign in with OIDC",
-			"googleError": "Failed to sign in with Google",
-			"githubError": "Failed to sign in with GitHub",
-			"discordError": "Failed to sign in with Discord",
-			"ssoOnlyMessage": "Sign in using a configured SSO provider above."
-		},
-		"providers": {
-			"google": "Google",
-			"discord": "Discord"
-		},
-		"forms": {
-			"or": "or",
-			"email": "Email",
-			"password": "Password",
-			"emailPlaceholder": "me@example.com",
-			"passwordPlaceholder": "••••••••",
-			"showPassword": "Show password",
-			"hidePassword": "Hide password"
-		},
-		"checkEmail": {
-			"pageTitle": "Check Your Email",
-			"title": "Check your email",
-			"inboxMessage": "We've sent you a temporary login link. Please check your inbox at <email>{{email}}</email>.",
-			"emailFallback": "your email address",
-			"backToLogin": "Back to login"
-		},
-		"signUp": {
-			"pageTitle": "Create Account",
-			"title": "Create account",
-			"subtitleInvitation": "Create an account to accept your invitation",
-			"subtitleRegistrationDisabled": "Registration requires an invitation",
-			"subtitlePasswordDisabled": "Use social or OIDC sign-in to create an account",
-			"subtitleDefault": "Get started with your space",
-			"invitationAlert": "After creating your account, you'll be able to accept your space invitation.",
-			"registrationDisabledAlert": "Registration is currently disabled. If you were invited, enter the email address that received the invitation to create your account.",
-			"passwordDisabledAlert": "Password-based account creation is disabled. Use a configured social or OIDC sign-in method from the sign-in page.",
-			"signingIn": "Signing in...",
-			"continueAsGuest": "Continue as guest",
-			"toggleMessage": "Already have an account?",
-			"toggleLink": "Sign in"
-		},
-		"verifyOtp": {
-			"pageTitle": "Verify Code",
-			"title": "Enter verification code",
-			"subtitle": "Use the 6-digit code sent to your email to continue",
-			"codeSentTo": "Code sent to {{email}}",
-			"verificationCodeLabel": "Verification Code",
-			"verifying": "Verifying...",
-			"verifyAndSignIn": "Verify & Sign In",
-			"changeEmail": "Change email",
-			"resend": "Resend",
-			"validation": {
-				"codeLength": "Code must be 6 digits"
-			},
-			"toast": {
-				"invalidCode": "Invalid verification code",
-				"signedInSuccess": "Signed in successfully!",
-				"verifyFailed": "Failed to verify code",
-				"resendFailed": "Failed to resend code",
-				"resendSuccess": "New verification code sent!"
-			}
-		},
-		"otpSignIn": {
-			"sendFailed": "Failed to send verification code",
-			"codeSent": "Verification code sent! Check your email.",
-			"sending": "Sending...",
-			"sendVerificationCode": "Send Verification Code"
-		},
-		"signInForm": {
-			"failedSignIn": "Failed to sign in",
-			"signedInSuccess": "Signed in successfully",
-			"signingIn": "Signing In...",
-			"signIn": "Sign In"
-		},
-		"signUpForm": {
-			"fullName": "Full Name",
-			"namePlaceholder": "John Doe",
-			"failedSignUp": "Failed to sign up",
-			"accountCreated": "Account created successfully",
-			"passwordTooShort": "Password is too short",
-			"creatingAccount": "Creating Account...",
-			"createAccount": "Create Account"
+			"oidcError": "Sign-in failed",
+			"label": "Sign in with Facile",
+			"loading": "Signing in…",
+			"tagline": "Self-hosted project management for teams that keep their own data.",
+			"newHere": "New to Facile?",
+			"createAccount": "Create your account",
+			"language": "Language"
 		},
 		"invitation": {
 			"pageTitleAccept": "Accept Invitation",
@@ -295,6 +209,17 @@
 				"nameRequired": "Name is required",
 				"nameShort": "Name must be at least 2 characters"
 			}
+		},
+		"legal": {
+			"nav": "Legal",
+			"cgu": "Terms of use",
+			"cgv": "Terms of sale",
+			"privacy": "Privacy",
+			"legalNotice": "Legal notice"
+		},
+		"layout": {
+			"headline": "Your projects.",
+			"headlineEnd": "Your server."
 		}
 	},
 	"settings": {
@@ -1907,5 +1832,39 @@
 			"title": "Link Not Found",
 			"description": "This share link doesn't exist, has been revoked, or has expired."
 		}
+	},
+	"landing": {
+		"pageTitle": "Self-hosted project management",
+		"heroTitle": "Project management you host yourself",
+		"heroBody": "Opus keeps tasks, boards and timelines on your own server. Your team plans where your data already lives.",
+		"sectionTitle": "Everything a project needs, nothing it does not",
+		"features": {
+			"views": {
+				"title": "Four views, one backlog",
+				"body": "Board, list, gantt and backlog over the same tasks. Switch per project without moving a thing."
+			},
+			"realtime": {
+				"title": "Realtime collaboration",
+				"body": "Comments, labels and task moves land in every open tab the moment somebody makes them."
+			},
+			"rules": {
+				"title": "Workflow rules",
+				"body": "Status transitions, assignments and due-date reminders run on the server instead of in your head."
+			},
+			"time": {
+				"title": "Time tracking",
+				"body": "Log time against tasks and read it back per project when the review starts."
+			},
+			"workspaces": {
+				"title": "Workspaces and roles",
+				"body": "Invite a team, keep projects private or shared, and let owner, admin and member decide who edits what."
+			},
+			"selfHosted": {
+				"title": "Self-hosted by default",
+				"body": "One container, your Postgres, your storage. Nothing you plan leaves the server it runs on."
+			}
+		},
+		"copyright": "© {{year}} Opus by Facile.",
+		"footerTagline": "Self-hosted project management."
 	}
 }

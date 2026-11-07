@@ -35,7 +35,7 @@ The entrypoint URL-encodes the user and password before assembling `DATABASE_URL
 | Variable | Required | Default | What it does |
 |---|---|---|---|
 | `AUTH_SECRET` | yes | random per boot | `better-auth` signing key. A value under 32 characters exits 1. When unset the container generates one, so sessions do not survive a restart |
-| `SSO_ONLY` | no | `false` | `true` rejects email sign-in and sign-up, magic links, email OTP and anonymous sign-in |
+| `OIDC_ISSUER` | no | none | Registre. Sign-in goes through it only: Opus mounts no password, sign-up or magic-link route |
 | `DISABLE_REGISTRATION` | no | `false` | `true` allows sign-up only with a valid invitation |
 | `DISABLE_PASSWORD_REGISTRATION` | no | `false` | `true` rejects `/sign-up/email` but leaves other methods open |
 | `DISABLE_GUEST_ACCESS` | no | `false` | `true` removes the `anonymous` plugin |

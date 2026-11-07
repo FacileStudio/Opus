@@ -1,0 +1,254 @@
+.fc-auth,
+.fc-signin {
+  --fc-page: oklch(1 0 0);
+  --fc-component: oklch(0.975 0 0);
+  --fc-surface: oklch(0.95 0 0);
+  --fc-field: oklch(0.91 0 0);
+  --fc-fg: oklch(0.145 0 0);
+  --fc-fg-muted: oklch(0.5 0 0);
+  --fc-accent: oklch(0.145 0 0);
+  --fc-accent-fg: oklch(1 0 0);
+  --fc-ring: oklch(0.4 0 0);
+  --fc-danger: oklch(0.54 0.22 29);
+  --fc-radius-xs: 4px;
+  --fc-radius-lg: 12px;
+  --fc-radius-pill: 999px;
+  --fc-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.fc-auth {
+  display: flex;
+  min-height: 100dvh;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+  padding: 2.5rem 1rem;
+  background: var(--fc-page);
+  color: var(--fc-fg);
+  font-family: var(--fc-font);
+}
+
+.dark .fc-auth,
+.dark .fc-signin {
+  color-scheme: dark;
+  --fc-page: oklch(0.09 0 0);
+  --fc-component: oklch(0.16 0 0);
+  --fc-surface: oklch(0.21 0 0);
+  --fc-field: oklch(0.25 0 0);
+  --fc-fg: oklch(0.985 0 0);
+  --fc-fg-muted: oklch(0.64 0 0);
+  --fc-accent: oklch(0.985 0 0);
+  --fc-accent-fg: oklch(0.09 0 0);
+  --fc-ring: oklch(0.6 0 0);
+}
+
+.fc-auth__card {
+  display: flex;
+  width: 100%;
+  max-width: 360px;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: var(--fc-radius-lg);
+  background: var(--fc-component);
+  text-align: center;
+}
+
+.fc-auth__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fc-auth__title {
+  margin: 0;
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+.fc-auth__tagline {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--fc-fg-muted);
+}
+
+.fc-auth__notice {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: var(--fc-radius-lg);
+  background: var(--fc-surface);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  text-align: left;
+}
+
+.fc-auth__notice--error {
+  color: var(--fc-danger);
+}
+
+.fc-auth__more {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--fc-fg-muted);
+}
+
+.fc-auth__link {
+  border-radius: var(--fc-radius-xs);
+  color: var(--fc-fg);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.fc-auth__foot {
+  display: flex;
+  width: 100%;
+  max-width: 48rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--fc-fg-muted);
+}
+
+@media (min-width: 640px) {
+  .fc-auth__foot {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.fc-auth__legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fc-auth__legal a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  border-radius: var(--fc-radius-xs);
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+.fc-auth__legal a:hover {
+  color: var(--fc-fg);
+  text-decoration: underline;
+}
+
+.fc-auth__locale {
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: var(--fc-radius-pill);
+  background: var(--fc-field);
+  color: var(--fc-fg);
+  font: inherit;
+}
+
+.fc-auth a:focus-visible,
+.fc-auth select:focus-visible,
+.fc-signin:focus-visible {
+  outline: 2px solid var(--fc-ring);
+  outline-offset: 2px;
+}
+
+.fc-signin {
+  --h: 2.75rem;
+  --m: 18px;
+  display: inline-flex;
+  height: var(--h);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding-inline-start: calc((var(--h) - var(--m)) / 2);
+  padding-inline-end: calc(var(--h) - var(--m));
+  border: 0;
+  border-radius: var(--fc-radius-pill);
+  background: var(--fc-accent);
+  color: var(--fc-accent-fg);
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 150ms;
+}
+
+.fc-signin:hover {
+  opacity: 0.9;
+}
+
+.fc-signin[aria-busy="true"] {
+  cursor: progress;
+  opacity: 0.8;
+}
+
+.fc-signin--sm {
+  --h: 2.5rem;
+  --m: 16px;
+  gap: 0.5rem;
+}
+
+.fc-signin--lg {
+  --h: 3rem;
+  --m: 20px;
+  gap: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.fc-signin--full {
+  width: 100%;
+}
+
+.fc-signin svg {
+  display: block;
+  flex-shrink: 0;
+  width: var(--m);
+  height: var(--m);
+}
+
+.fc-signin__spin {
+  animation: fc-spin 0.8s linear infinite;
+}
+
+.fc-signin__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes fc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-signin__spin {
+    animation: none;
+  }
+}
