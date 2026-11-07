@@ -1,7 +1,19 @@
+import {
+  AltArrowLeft,
+  AltArrowRight,
+  Global,
+  Logout2,
+  Palette2,
+  QuestionCircle,
+  Settings,
+  UserCircle,
+} from "@solar-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import {
+  type ComponentType,
   type ReactNode,
+  type SVGProps,
   useCallback,
   useEffect,
   useId,
@@ -38,6 +50,7 @@ type Row = {
   checked?: boolean;
   kind: "item" | "radio" | "submenu" | "back";
   tone?: "danger";
+  icon?: ComponentType<SVGProps<SVGSVGElement>>;
   run?: () => void;
 };
 
@@ -119,6 +132,7 @@ export function UserMenu() {
           id: "back",
           kind: "back",
           label: t("navigation:userMenu.language"),
+          icon: AltArrowLeft,
         },
         ...LOCALES.map(([code, label]) => ({
           id: code,
@@ -131,7 +145,12 @@ export function UserMenu() {
     }
     if (view === "theme") {
       return [
-        { id: "back", kind: "back", label: t("navigation:userMenu.theme") },
+        {
+          id: "back",
+          kind: "back",
+          label: t("navigation:userMenu.theme"),
+          icon: AltArrowLeft,
+        },
         ...THEMES.map((value) => ({
           id: value,
           kind: "radio" as const,
@@ -146,36 +165,42 @@ export function UserMenu() {
         id: "account",
         kind: "item",
         label: t("navigation:userMenu.account"),
+        icon: UserCircle,
         href: ACCOUNT_URL,
       },
       {
         id: "settings",
         kind: "item",
         label: t("navigation:userMenu.settings"),
+        icon: Settings,
         run: () => navigate({ to: "/dashboard/settings/account/information" }),
       },
       {
         id: "language",
         kind: "submenu",
         label: t("navigation:userMenu.language"),
+        icon: Global,
         detail: localeLabel,
       },
       {
         id: "theme",
         kind: "submenu",
         label: t("navigation:userMenu.theme"),
+        icon: Palette2,
         detail: themeLabel(theme),
       },
       {
         id: "help",
         kind: "item",
         label: t("navigation:userMenu.help"),
+        icon: QuestionCircle,
         href: HELP_URL,
       },
       {
         id: "signout",
         kind: "item",
         label: t("navigation:userMenu.logOut"),
+        icon: Logout2,
         tone: "danger",
         run: () => void handleSignOut(),
       },
@@ -232,6 +257,9 @@ export function UserMenu() {
 
   const content = (row: Row): ReactNode => (
     <>
+      {row.icon && (
+        <row.icon aria-hidden="true" className="size-4 shrink-0 opacity-80" />
+      )}
       <span
         className={cn(
           "min-w-0 flex-1 truncate",
@@ -245,7 +273,12 @@ export function UserMenu() {
           {row.detail}
         </span>
       )}
-      {row.kind === "submenu" && <span aria-hidden="true">›</span>}
+      {row.kind === "submenu" && (
+        <AltArrowRight
+          aria-hidden="true"
+          className="size-4 shrink-0 text-fc-fg-muted"
+        />
+      )}
       {row.checked && <span aria-hidden="true">✓</span>}
       {row.href && (
         <span className="sr-only">{t("navigation:userMenu.opensNewTab")}</span>
