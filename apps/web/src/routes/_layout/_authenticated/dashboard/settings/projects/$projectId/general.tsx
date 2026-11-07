@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import PageTitle from "@/components/page-title";
 import { TasksImportExport } from "@/components/project/tasks-import-export.tsx";
+import ProjectIconGrid from "@/components/shared/project-icon-grid";
 import {
   AlertDialog,
   AlertDialogClose,
@@ -41,7 +42,6 @@ import useDeleteProject from "@/hooks/mutations/project/use-delete-project";
 import useUpdateProject from "@/hooks/mutations/project/use-update-project";
 import { useGetTasks } from "@/hooks/queries/task/use-get-tasks";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
-import { cn } from "@/lib/cn";
 import { toast } from "@/lib/toast";
 import useProjectStore from "@/store/project.ts";
 
@@ -106,7 +106,6 @@ function RouteComponent() {
   const lastSavedRef = useRef<NormalizedProjectValues | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [iconPopoverOpen, setIconPopoverOpen] = useState(false);
-  const [iconSearch, setIconSearch] = useState("");
 
   const { data: workspace } = useActiveWorkspace();
   const { projectId: rawProjectId } = useParams({ strict: false });
@@ -351,10 +350,7 @@ function RouteComponent() {
               <div className="flex items-center gap-3">
                 <Popover
                   open={iconPopoverOpen}
-                  onOpenChange={(open) => {
-                    setIconPopoverOpen(open);
-                    if (!open) setIconSearch("");
-                  }}
+                  onOpenChange={setIconPopoverOpen}
                   modal={true}
                 >
                   <PopoverTrigger asChild>
@@ -377,55 +373,20 @@ function RouteComponent() {
                       </span>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-80" align="end">
-                    <div className="space-y-2">
-                      <Input
-                        value={iconSearch}
-                        onChange={(e) => setIconSearch(e.target.value)}
-                        placeholder={t(
-                          "settings:projectGeneral.searchIconsPlaceholder",
-                        )}
-                        className="h-8 text-xs"
-                      />
-                      <div className="max-h-[280px] overflow-y-auto pr-1">
-                        <div className="grid grid-cols-6 gap-1.5">
-                          {Object.entries(icons)
-                            .filter(([iconName]) =>
-                              iconName
-                                .toLowerCase()
-                                .includes(iconSearch.trim().toLowerCase()),
-                            )
-                            .map(([iconName, Icon]) => {
-                              const isSelected =
-                                projectForm.getValues("icon") === iconName;
-                              return (
-                                <Button
-                                  key={iconName}
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    projectForm.setValue("icon", iconName, {
-                                      shouldDirty: true,
-                                      shouldValidate: true,
-                                    });
-                                    setIconPopoverOpen(false);
-                                    setIconSearch("");
-                                  }}
-                                  className={cn(
-                                    "h-10 items-center justify-center rounded-md p-0",
-                                    isSelected &&
-                                      "bg-sidebar-accent text-sidebar-accent-foreground",
-                                  )}
-                                  title={iconName}
-                                >
-                                  <Icon className="h-4 w-4" />
-                                </Button>
-                              );
-                            })}
-                        </div>
-                      </div>
-                    </div>
+                  <PopoverContent className="w-72 p-1" align="end">
+                    <ProjectIconGrid
+                      value={projectForm.getValues("icon") || "Layout"}
+                      placeholder={t(
+                        "settings:projectGeneral.searchIconsPlaceholder",
+                      )}
+                      onPick={(icon) => {
+                        projectForm.setValue("icon", icon, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setIconPopoverOpen(false);
+                      }}
+                    />
                   </PopoverContent>
                 </Popover>
               </div>

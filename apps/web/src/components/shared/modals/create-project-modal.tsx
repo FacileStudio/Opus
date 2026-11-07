@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import ProjectIconGrid from "@/components/shared/project-icon-grid";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,7 +27,6 @@ import {
 import icons from "@/constants/project-icons";
 import useCreateProject from "@/hooks/mutations/project/use-create-project";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
-import { cn } from "@/lib/cn";
 import generateProjectSlug from "@/lib/generate-project-id";
 import { toast } from "@/lib/toast";
 
@@ -41,7 +41,6 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
   const [slug, setSlug] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("Layout");
   const [iconPopoverOpen, setIconPopoverOpen] = useState(false);
-  const [iconSearch, setIconSearch] = useState("");
   const queryClient = useQueryClient();
   const { data: workspace } = useActiveWorkspace();
   const { mutateAsync } = useCreateProject({
@@ -52,9 +51,6 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
   });
   const SelectedIcon =
     icons[selectedIcon as keyof typeof icons] || icons.Layout;
-  const filteredIcons = Object.entries(icons).filter(([iconName]) =>
-    iconName.toLowerCase().includes(iconSearch.trim().toLowerCase()),
-  );
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -62,7 +58,6 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
     setSlug("");
     setSelectedIcon("Layout");
     setIconPopoverOpen(false);
-    setIconSearch("");
     onClose();
   };
 
@@ -127,10 +122,7 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
           <div className="space-y-6 px-3 pt-2">
             <Popover
               open={iconPopoverOpen}
-              onOpenChange={(open) => {
-                setIconPopoverOpen(open);
-                if (!open) setIconSearch("");
-              }}
+              onOpenChange={setIconPopoverOpen}
               modal={true}
             >
               <PopoverTrigger asChild>
@@ -144,43 +136,15 @@ function CreateProjectModal({ open, onClose }: CreateProjectModalProps) {
                   <SelectedIcon className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 p-2" align="start">
-                <div className="space-y-2">
-                  <Input
-                    value={iconSearch}
-                    onChange={(e) => setIconSearch(e.target.value)}
-                    placeholder={t("common:modals.createProject.searchIcons")}
-                    className="h-8 text-xs"
-                  />
-                  <div className="max-h-[280px] overflow-y-auto pr-1">
-                    <div className="grid grid-cols-6 gap-1.5">
-                      {filteredIcons.map(([iconName, Icon]) => {
-                        const isSelected = selectedIcon === iconName;
-                        return (
-                          <Button
-                            key={iconName}
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedIcon(iconName);
-                              setIconPopoverOpen(false);
-                              setIconSearch("");
-                            }}
-                            className={cn(
-                              "h-10 items-center justify-center rounded-md p-0",
-                              isSelected &&
-                                "bg-sidebar-accent text-sidebar-accent-foreground",
-                            )}
-                            title={iconName}
-                          >
-                            <Icon className="h-4 w-4" />
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
+              <PopoverContent className="w-72 p-1" align="start">
+                <ProjectIconGrid
+                  value={selectedIcon}
+                  placeholder={t("common:modals.createProject.searchIcons")}
+                  onPick={(icon) => {
+                    setSelectedIcon(icon);
+                    setIconPopoverOpen(false);
+                  }}
+                />
               </PopoverContent>
             </Popover>
 
