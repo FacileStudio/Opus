@@ -13,7 +13,7 @@ All notable changes to Opus are documented here.
 
 ### Changed
 
-- porte v0.7.0 to v0.12.0, `porte/directory` v0.1.0 to v0.3.0, tronc v0.13.0 to v0.17.1. tronc's security headers are on: enforced anti-framing and a report-only CSP that allows the client's inline scripts, YouTube embeds and the S3 origin.
+- porte v0.7.0 to v0.12.1, `porte/directory` v0.1.0 to v0.3.0, tronc v0.13.0 to v0.17.1. tronc's security headers are on: enforced anti-framing and a report-only CSP that allows the client's inline scripts, YouTube embeds and the S3 origin.
 - Sign-in links an existing account by email only when Registre verified the address, and refuses when the account already holds another subject of the same issuer.
 - The Registre `locale` claim is stored on the account at every sign-in.
 - Migration `00006_launch_floor.sql`: `porte_login_codes.provider` and `.subject`, `directory_deletion_state`, and `comments.user_id` and `share_links.created_by` become nullable with `ON DELETE SET NULL`.

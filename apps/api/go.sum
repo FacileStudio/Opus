@@ -4,16 +4,10 @@ github.com/FacileStudio/antenne-client/go v0.0.0-20260824150250-7681849d44f9 h1:
 github.com/FacileStudio/antenne-client/go v0.0.0-20260824150250-7681849d44f9/go.mod h1:NOjvg9/8LYsdw7bcNGccqfN4kAWss690I8FqvMX3eT4=
 github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee h1:xEfz6XsCHem0XaQWhTSjgBlEspvmYDAf8n4pDCCwzAY=
 github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee/go.mod h1:OxizkzJhMaBPcuHVba9z1wem5oROgwaEPikYowDQbmo=
-github.com/FacileStudio/porte v0.7.0 h1:aDZCMbqlVEYx4YGI+D7+rfyuwnzEj28BluXaUbCQdxw=
-github.com/FacileStudio/porte v0.7.0/go.mod h1:iLtV3iaFheNiZWt+wfBF2FKB0XRLxve5GrhmJ6h3X0I=
-github.com/FacileStudio/porte v0.12.0 h1:3/Fw9jnp5cssY0PA3MyexHBRqr+W0r2XStaKwWmk2zc=
-github.com/FacileStudio/porte v0.12.0/go.mod h1:iLtV3iaFheNiZWt+wfBF2FKB0XRLxve5GrhmJ6h3X0I=
-github.com/FacileStudio/porte/directory v0.1.0 h1:ZdqSbGw+0GMaSUHHAHRQV7WHm8ZhsfRryIRJUsuxSsQ=
-github.com/FacileStudio/porte/directory v0.1.0/go.mod h1:i7UxoAqCgqAq4ny9/bbuqT/Z69xD7GYG1w3fpH6EhTw=
+github.com/FacileStudio/porte v0.12.1 h1:O5qWol7P37F+aWYJO7QyxdoiffZ2bke05avXBsBXBZg=
+github.com/FacileStudio/porte v0.12.1/go.mod h1:iLtV3iaFheNiZWt+wfBF2FKB0XRLxve5GrhmJ6h3X0I=
 github.com/FacileStudio/porte/directory v0.3.0 h1:BtdaNK7kbbv5s5whX4VyIHK0cJ4dC8f+timjyecnEfE=
 github.com/FacileStudio/porte/directory v0.3.0/go.mod h1:i7UxoAqCgqAq4ny9/bbuqT/Z69xD7GYG1w3fpH6EhTw=
-github.com/FacileStudio/tronc v0.13.0 h1:dEJusg7TJQaOR1Kb0CTCMP7eV5AWAlExzp8kg+vIVho=
-github.com/FacileStudio/tronc v0.13.0/go.mod h1:n+msHH6RQLvhcIQfFzeWaAgwqL8UkNuLPTqbu+C02so=
 github.com/FacileStudio/tronc v0.17.1 h1:lrk2gzV5fXPeWcNI+5vADa1WTb23obyvvrh6DwQhnXM=
 github.com/FacileStudio/tronc v0.17.1/go.mod h1:tybAMjHeRg+NfnMtcNc0qR1UbREcWka4nZKyGcYEsWg=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=
@@ -87,8 +81,6 @@ github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
 go.uber.org/multierr v1.11.0 h1:blXXJkSxSSfBVBlC76pxqeO+LN3aDfLQo+309xJstO0=
 go.uber.org/multierr v1.11.0/go.mod h1:20+QtiLqy0Nd6FdQB9TLXag12DsQkrbs3htMFfDN80Y=
-golang.org/x/crypto v0.54.0 h1:YLIA59K4fiNzHzjnZt2tUJQjQtUWfWbeHBqKtk3eScw=
-golang.org/x/crypto v0.54.0/go.mod h1:KWL8ny2AZdGR2cWmzeHrp2azQPGogOv+HeQaVEXC2dk=
 golang.org/x/oauth2 v0.36.0 h1:peZ/1z27fi9hUOFCAZaHyrpWG5lwe0RJEEEeH0ThlIs=
 golang.org/x/oauth2 v0.36.0/go.mod h1:YDBUJMTkDnJS+A4BP4eZBjCqtokkg1hODuPjwiGPO7Q=
 golang.org/x/sync v0.22.0 h1:SZjpbeLmrCk4xhRSZFNZW5gFUeCeFgjekvI/+gfScek=
