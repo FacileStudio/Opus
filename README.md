@@ -78,7 +78,6 @@ generates it (Settings → Account → Developer).
 | `POSTGRES_PASSWORD` | Password for the Postgres container, also used to derive `DATABASE_URL` |
 | `AUTH_SECRET` | `better-auth` signing key, 32 characters or more; a random one is generated if unset |
 | `OIDC_ISSUER` | Registre. With an issuer set, Opus mounts no password or sign-up route |
-| `APP_VERSION` | Build arg, served at `GET /version` |
 | `NOOK_POOL_URL` | Default Nook pool URL used when a workspace has no explicit one |
 
 Full reference: [docs/configuration.md](docs/configuration.md).
