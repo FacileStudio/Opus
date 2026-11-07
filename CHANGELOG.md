@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+### Changed
+
+- The sidebar footer is the Facile user card with a borderless menu: Facile account, Settings, Language, Theme (system, light, dark), Help and Sign out. It replaces the avatar dropdown and the theme switch.
+- Settings use the Facile layout: a section list on the left from 64rem, a drill-in list with a back link on a phone. Order: Profile, Preferences, Notifications, Workspace, Members, Workspace notifications, Nook Pool, Projects, API keys. The section routes and the API key and CLI token calls are unchanged.
+- The muse colour, radius and text tokens are now available app-wide (`styles/muse-tokens.css`), not only on the sign-in screen.
+
 ## [2.27.0] - 2026-11-07
 
 ### Added

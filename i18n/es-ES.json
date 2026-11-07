@@ -997,7 +997,8 @@
 			"urlPlaceholder": "https://example.com/webhook",
 			"webhooksSubtitle": "Manage webhook endpoints that receive event notifications.",
 			"webhooksTitle": "Webhooks"
-		}
+		},
+		"sectionProfile": "Perfil"
 	},
 	"navigation": {
 		"commandPalette": {
@@ -1059,7 +1060,9 @@
 		},
 		"settingsLayout": {
 			"toggleSidebar": "Mostrar barra lateral",
-			"back": "Atrás"
+			"back": "Atrás",
+			"sections": "Secciones de ajustes",
+			"allSettings": "Todos los ajustes"
 		},
 		"userMenu": {
 			"signedOutSuccess": "Sesión cerrada correctamente",
@@ -1067,7 +1070,16 @@
 			"unnamedUser": "Usuario",
 			"settings": "Ajustes",
 			"signingOut": "Cerrando sesión...",
-			"logOut": "Cerrar sesión"
+			"logOut": "Cerrar sesión",
+			"account": "Gestionar mi cuenta de Facile",
+			"language": "Idioma",
+			"theme": "Tema",
+			"help": "Ayuda",
+			"opensNewTab": "(se abre en una pestaña nueva)",
+			"open": "{{name}}: menú de la cuenta",
+			"theme_system": "Sistema",
+			"theme_light": "Claro",
+			"theme_dark": "Oscuro"
 		},
 		"workspaceSwitcher": {
 			"workspaces": "Espacios",

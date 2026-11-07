@@ -999,7 +999,8 @@
 			"urlPlaceholder": "https://example.com/webhook",
 			"webhooksSubtitle": "Manage webhook endpoints that receive event notifications.",
 			"webhooksTitle": "Webhooks"
-		}
+		},
+		"sectionProfile": "Profile"
 	},
 	"navigation": {
 		"commandPalette": {
@@ -1061,7 +1062,9 @@
 		},
 		"settingsLayout": {
 			"toggleSidebar": "Перемикач бічної панелі",
-			"back": "Назад"
+			"back": "Назад",
+			"sections": "Settings sections",
+			"allSettings": "All settings"
 		},
 		"userMenu": {
 			"signedOutSuccess": "Вихід виконано успішно",
@@ -1069,7 +1072,16 @@
 			"unnamedUser": "Користувач",
 			"settings": "Налаштування",
 			"signingOut": "Вихід...",
-			"logOut": "Вийти"
+			"logOut": "Вийти",
+			"account": "Manage my Facile account",
+			"language": "Language",
+			"theme": "Theme",
+			"help": "Help",
+			"opensNewTab": "(opens in a new tab)",
+			"open": "{{name}}: account menu",
+			"theme_system": "System",
+			"theme_light": "Light",
+			"theme_dark": "Dark"
 		},
 		"workspaceSwitcher": {
 			"workspaces": "Робочі простори",

@@ -997,7 +997,8 @@
 			"testSuccess": "Webhook test successful (status {{statusCode}})",
 			"testFailed": "Webhook test failed",
 			"emptyState": "No webhooks configured yet. Add one to start receiving notifications."
-		}
+		},
+		"sectionProfile": "Profile"
 	},
 	"navigation": {
 		"commandPalette": {
@@ -1059,7 +1060,9 @@
 		},
 		"settingsLayout": {
 			"toggleSidebar": "Toggle sidebar",
-			"back": "Back"
+			"back": "Back",
+			"sections": "Settings sections",
+			"allSettings": "All settings"
 		},
 		"userMenu": {
 			"signedOutSuccess": "Signed out successfully",
@@ -1067,7 +1070,16 @@
 			"unnamedUser": "User",
 			"settings": "Settings",
 			"signingOut": "Signing out...",
-			"logOut": "Log out"
+			"logOut": "Log out",
+			"account": "Manage my Facile account",
+			"language": "Language",
+			"theme": "Theme",
+			"help": "Help",
+			"opensNewTab": "(opens in a new tab)",
+			"open": "{{name}}: account menu",
+			"theme_system": "System",
+			"theme_light": "Light",
+			"theme_dark": "Dark"
 		},
 		"workspaceSwitcher": {
 			"workspaces": "Spaces",

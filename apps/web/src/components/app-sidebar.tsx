@@ -3,7 +3,6 @@ import type * as React from "react";
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { SpaceSwitcher } from "@/components/space-switcher";
-import { ThemeToggleDropdown } from "@/components/theme-toggle-dropdown";
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { UserAvatar } from "@/components/user-avatar";
+import { UserMenu } from "@/components/user-menu";
 import { shortcuts } from "@/constants/shortcuts";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import Search from "./search";
@@ -38,12 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects />
       </SidebarContent>
       <SidebarFooter className="px-3 pt-3 pb-4">
-        <div className="flex items-center gap-1">
-          <div className="min-w-0 flex-1">
-            <UserAvatar />
-          </div>
-          <ThemeToggleDropdown />
-        </div>
+        <UserMenu />
       </SidebarFooter>
     </Sidebar>
   );
