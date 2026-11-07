@@ -6,9 +6,10 @@ All notable changes to Opus are documented here.
 
 ### Added
 
-- GDPR deletion receiver. Opus polls Registre's deletion list with its OIDC client credentials and accepts Registre's signed push on `POST /api/registre/deletions`. An erased person loses their account, personal workspace (projects, tasks, files), memberships, notifications, tokens and invitations sent to their address. What they wrote in shared workspaces stays without an author (comments, share links, time entries, activity), shown as a deleted user. Replays are no-ops; the cursor lives in `directory_deletion_state`.
+- GDPR deletion receiver. Opus polls Registre's deletion list with its OIDC client credentials and accepts Registre's signed push on `POST /api/registre/deletions`. An erased person loses their account, personal workspace (projects, tasks, files), memberships, notifications, tokens and invitations sent to their address. What they wrote in shared workspaces stays without an author (comments, share links, time entries, activity), shown as a deleted user. The objects of the personal workspace (uploads and attachments, on local disk or S3) are deleted before the rows, so a storage failure leaves the account in place and the retry finishes the job; a missing object counts as deleted. Replays are no-ops; the cursor lives in `directory_deletion_state`.
 - `GET /version`, from the `APP_VERSION` build arg.
 - The login page matches the suite's auth screen: the "Sign in with Facile" pill with the canonical label, Registre sign-up and legal links, and a language switch. The landing page and the sign-in screens are translated in fr, en, es and de (es and de need native review).
+- `AssetStorage.Delete`, a batched, idempotent removal of stored objects (S3 `DELETE` or local file).
 - CI: API (vet, race tests against Postgres), web (i18n, typecheck, biome, tests, build) and filet.
 
 ### Changed

@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
+	"github.com/FacileStudio/Opus/apps/api/internal/storage"
 	"github.com/FacileStudio/Opus/apps/api/modules/workspace"
 	"github.com/FacileStudio/porte/directory"
 	portepg "github.com/FacileStudio/porte/pg"
@@ -47,7 +48,8 @@ func startWorkspaces(db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger, on
 	}
 	spaces := workspace.NewDirectory(workspaces, client, appLogger)
 	spaces.OnFirstSync(onSynced)
-	deletions := workspace.NewDeletions(workspaces, client, portepg.New(sqlDB).EraseIdentity, appLogger)
+	deletions := workspace.NewDeletions(workspaces, client, portepg.New(sqlDB).EraseIdentity,
+		storage.NewAssetStorage(appEnv.UploadDir, storage.LoadS3Config()), appLogger)
 	ctx, cancel := context.WithCancel(context.Background())
 	go spaces.Run(ctx)
 	go deletions.Run(ctx)

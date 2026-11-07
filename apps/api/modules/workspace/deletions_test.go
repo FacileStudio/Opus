@@ -2,12 +2,15 @@ package workspace
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/storage"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte/directory"
 
@@ -94,7 +97,8 @@ func TestErasePersonKeepsOthersAndIsIdempotent(t *testing.T) {
 	service, db := newPostgresService(t)
 	ctx := context.Background()
 	f := seedErasure(t, service, db)
-	deletions := NewDeletions(service, directoryClient(), func(context.Context, string, string) error { return nil }, nopLogger())
+	assets := &fakeAssets{}
+	deletions := NewDeletions(service, directoryClient(), func(context.Context, string, string) error { return nil }, assets, nopLogger())
 
 	for range 2 {
 		if err := deletions.ErasePerson(ctx, testIssuer, "sub-alice"); err != nil {
@@ -162,7 +166,8 @@ func TestErasePersonRemovesPersonalAssetFiles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("seed asset: %v", err)
 	}
-	deletions := NewDeletions(service, directoryClient(), func(context.Context, string, string) error { return nil }, nopLogger())
+	assets := storage.NewAssetStorage(service.uploadDir, nil)
+	deletions := NewDeletions(service, directoryClient(), func(context.Context, string, string) error { return nil }, assets, nopLogger())
 	if err := deletions.ErasePerson(context.Background(), testIssuer, "sub-alice"); err != nil {
 		t.Fatalf("ErasePerson: %v", err)
 	}
@@ -192,3 +197,77 @@ func TestDeletionStateRoundTrips(t *testing.T) {
 func nopLogger() *slog.Logger { return slog.New(slog.DiscardHandler) }
 
 func directoryClient() directory.Client { return directory.Client{Issuer: testIssuer} }
+
+type fakeAssets struct {
+	deleted []string
+	fail    error
+}
+
+func (f *fakeAssets) Delete(_ context.Context, keys []string) error {
+	if f.fail != nil {
+		return f.fail
+	}
+	f.deleted = append(f.deleted, keys...)
+	return nil
+}
+
+type assetSeed struct {
+	id, key                     string
+	workspaceID, taskID, author int64
+}
+
+func seedAsset(t *testing.T, db *gorm.DB, a assetSeed) {
+	t.Helper()
+	err := db.Exec(`INSERT INTO asset (id, workspace_id, project_id, task_id, object_key, filename, mime_type, size, created_by)
+		SELECT ?, ?, project_id, id, ?, 'file.png', 'image/png', 1, ? FROM tasks WHERE id = ?`,
+		a.id, a.workspaceID, a.key, a.author, a.taskID).Error
+	if err != nil {
+		t.Fatalf("seed asset: %v", err)
+	}
+}
+
+func TestErasePersonDeletesPersonalObjectsOnly(t *testing.T) {
+	service, db := newPostgresService(t)
+	f := seedErasure(t, service, db)
+	seedAsset(t, db, assetSeed{"a1", "workspace/personal/one.png", f.alicePersonal, f.aliceTaskN, f.alice})
+	seedAsset(t, db, assetSeed{"a2", "workspace/personal/two.png", f.alicePersonal, f.aliceTaskN, f.alice})
+	seedAsset(t, db, assetSeed{"a3", "workspace/shared/three.png", f.shared, f.sharedTask, f.alice})
+	assets := &fakeAssets{}
+	deletions := NewDeletions(service, directoryClient(), func(context.Context, string, string) error { return nil }, assets, nopLogger())
+
+	for range 2 {
+		if err := deletions.ErasePerson(context.Background(), testIssuer, "sub-alice"); err != nil {
+			t.Fatalf("ErasePerson: %v", err)
+		}
+	}
+	slices.Sort(assets.deleted)
+	want := []string{"workspace/personal/one.png", "workspace/personal/two.png"}
+	if !slices.Equal(assets.deleted, want) {
+		t.Fatalf("deleted objects = %v, want %v", assets.deleted, want)
+	}
+	if n := count(t, db, "SELECT count(*) FROM asset WHERE id = 'a3'"); n != 1 {
+		t.Fatalf("shared asset rows = %d, want 1", n)
+	}
+}
+
+func TestErasePersonKeepsAccountWhenStorageFailsThenRetries(t *testing.T) {
+	service, db := newPostgresService(t)
+	f := seedErasure(t, service, db)
+	seedAsset(t, db, assetSeed{"a1", "workspace/personal/one.png", f.alicePersonal, f.aliceTaskN, f.alice})
+	assets := &fakeAssets{fail: errors.New("bucket unreachable")}
+	deletions := NewDeletions(service, directoryClient(), func(context.Context, string, string) error { return nil }, assets, nopLogger())
+
+	if err := deletions.ErasePerson(context.Background(), testIssuer, "sub-alice"); err == nil {
+		t.Fatal("a storage failure must fail the erasure")
+	}
+	if n := count(t, db, "SELECT count(*) FROM users WHERE id = ?", f.alice); n != 1 {
+		t.Fatalf("account rows after a failed erasure = %d, want 1", n)
+	}
+	assets.fail = nil
+	if err := deletions.ErasePerson(context.Background(), testIssuer, "sub-alice"); err != nil {
+		t.Fatalf("retry: %v", err)
+	}
+	if n := count(t, db, "SELECT count(*) FROM users WHERE id = ?", f.alice); n != 0 || len(assets.deleted) != 1 {
+		t.Fatalf("after the retry: %d accounts, %d objects deleted", n, len(assets.deleted))
+	}
+}

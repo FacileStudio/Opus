@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/FacileStudio/tronc/errors"
@@ -246,4 +247,46 @@ func (s *AssetStorage) Open(ctx context.Context, key string) (*ObjectStream, err
 		return FetchS3Object(ctx, s.s3Config, key)
 	}
 	return ReadLocalAsset(s.uploadDir, key)
+}
+
+const deleteBatchSize = 16
+
+// Delete removes the objects behind keys from S3 or local disk, a batch at a
+// time. A missing object is not an error, so the call can be repeated. Every
+// key is attempted and the first failure is returned.
+func (s *AssetStorage) Delete(ctx context.Context, keys []string) error {
+	var first error
+	for start := 0; start < len(keys); start += deleteBatchSize {
+		end := min(start+deleteBatchSize, len(keys))
+		errs := make([]error, end-start)
+		var wg sync.WaitGroup
+		for i, key := range keys[start:end] {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				errs[i] = s.deleteOne(ctx, key)
+			}()
+		}
+		wg.Wait()
+		for _, err := range errs {
+			if err != nil && first == nil {
+				first = err
+			}
+		}
+	}
+	return first
+}
+
+func (s *AssetStorage) deleteOne(ctx context.Context, key string) error {
+	if s.IsS3() {
+		return DeleteS3Object(ctx, s.s3Config, key)
+	}
+	cleanKey, err := sanitizeStorageKey(key)
+	if err != nil {
+		return err
+	}
+	if err := os.Remove(filepath.Join(s.uploadDir, "assets", cleanKey)); err != nil && !os.IsNotExist(err) {
+		return errors.Internal("failed to remove asset file", err)
+	}
+	return nil
 }

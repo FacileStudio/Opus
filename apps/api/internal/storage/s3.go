@@ -197,3 +197,25 @@ func FetchS3Object(ctx context.Context, cfg *S3Config, objectKey string) (*Objec
 		LastModified:  lastModified,
 	}, nil
 }
+
+// DeleteS3Object removes one object with a presigned DELETE request. An object
+// that is already gone counts as deleted, so a retry is harmless.
+func DeleteS3Object(ctx context.Context, cfg *S3Config, objectKey string) error {
+	presignedURL, err := PresignURL(cfg, http.MethodDelete, objectKey, "", 300)
+	if err != nil {
+		return errors.Internal("failed to presign s3 delete url", err)
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, presignedURL, nil)
+	if err != nil {
+		return errors.Internal("failed to create s3 delete request", err)
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return errors.Internal("failed to execute s3 delete request", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusNotFound || (resp.StatusCode >= 200 && resp.StatusCode < 300) {
+		return nil
+	}
+	return errors.Internal(fmt.Sprintf("s3 delete request failed with status %d", resp.StatusCode), nil)
+}
