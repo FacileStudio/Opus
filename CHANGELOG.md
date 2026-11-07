@@ -4,6 +4,8 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.27.0] - 2026-11-07
+
 ### Added
 
 - GDPR deletion receiver. Opus polls Registre's deletion list with its OIDC client credentials and accepts Registre's signed push on `POST /api/registre/deletions`. An erased person loses their account, personal workspace (projects, tasks, files), memberships, notifications, tokens and invitations sent to their address. What they wrote in shared workspaces stays without an author (comments, share links, time entries, activity), shown as a deleted user. The objects of the personal workspace (uploads and attachments, on local disk or S3) are deleted before the rows, so a storage failure leaves the account in place and the retry finishes the job; a missing object counts as deleted. Replays are no-ops; the cursor lives in `directory_deletion_state`.
