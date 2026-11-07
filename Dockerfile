@@ -36,9 +36,10 @@ RUN go mod download
 COPY apps/api/ ./
 COPY package.json /repo/package.json
 COPY scripts/version.sh /repo/scripts/version.sh
+RUN sh /repo/scripts/version.sh /repo/package.json > /repo/VERSION
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH:-amd64} \
-    go build -trimpath -ldflags="-s -w -X main.version=$(sh /repo/scripts/version.sh /repo/package.json)" -o bin/api .
+    go build -trimpath -ldflags="-s -w -X main.version=$(cat /repo/VERSION)" -o bin/api .
 
 # Stage 3: Runtime container (single Go binary serving API and SPA)
 FROM alpine:3.21 AS runtime
