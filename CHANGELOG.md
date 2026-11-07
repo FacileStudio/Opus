@@ -4,6 +4,7 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.28.0] - 2026-11-07
 ### Changed
 
 - The sidebar footer is the Facile user card with a borderless menu: Facile account, Settings, Language, Theme (system, light, dark), Help and Sign out. It replaces the avatar dropdown and the theme switch.
