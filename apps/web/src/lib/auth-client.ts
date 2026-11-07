@@ -309,49 +309,6 @@ export const authClient = {
     return { data: { user: mapSessionUser(raw) } };
   },
 
-  async signInEmail(input: {
-    email: string;
-    password: string;
-  }): Promise<{ data: Session | null; error: ApiError | null }> {
-    const result = await request<{ token: string; user: User }>(
-      "/auth/login",
-      {
-        method: "POST",
-        body: JSON.stringify(input),
-      },
-      { mutation: true },
-    );
-    if (result.error) {
-      return { data: null, error: result.error };
-    }
-    localStorage.setItem("opus.access_token", result.data.token);
-    const user = mapSessionUser(result.data.user);
-    setSessionState({ user, isPending: false });
-    return { data: { user }, error: null };
-  },
-
-  async signUpEmail(input: {
-    email: string;
-    password: string;
-    name: string;
-  }): Promise<{ data: Session | null; error: ApiError | null }> {
-    const result = await request<{ token: string; user: User }>(
-      "/auth/register",
-      {
-        method: "POST",
-        body: JSON.stringify(input),
-      },
-      { mutation: true },
-    );
-    if (result.error) {
-      return { data: null, error: result.error };
-    }
-    localStorage.setItem("opus.access_token", result.data.token);
-    const user = mapSessionUser(result.data.user);
-    setSessionState({ user, isPending: false });
-    return { data: { user }, error: null };
-  },
-
   async signOut(): Promise<{ data: null; error: ApiError | null }> {
     const result = await request<{ loggedOut: boolean }>(
       "/auth/logout",
@@ -385,25 +342,6 @@ export const authClient = {
     setSessionState({ user, isPending: false });
     return { data: { user }, error: null };
   },
-
-  async changePassword(input: {
-    currentPassword: string;
-    newPassword: string;
-  }): Promise<{ data: null; error: ApiError | null }> {
-    const result = await request<{ message: string }>(
-      "/auth/change-password",
-      {
-        method: "POST",
-        body: JSON.stringify(input),
-      },
-      { mutation: true },
-    );
-    return { data: null, error: result.error };
-  },
-
-  getLastUsedLoginMethod: (): "oidc" | "password" | null =>
-    (localStorage.getItem("opus.last_login_method") as "oidc" | "password") ||
-    null,
 
   organization: {
     async list(): ApiResult<Workspace[]> {

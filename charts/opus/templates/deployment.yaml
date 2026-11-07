@@ -71,8 +71,6 @@ spec:
               {{- else }}
               value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ include "opus.fullname" . }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.postgresql.auth.database }}"
               {{- end }}
-            - name: SSO_ONLY
-              value: {{ .Values.opus.env.ssoOnly | quote }}
             - name: DISABLE_REGISTRATION
               value: {{ .Values.opus.env.disableRegistration | quote }}
             - name: DISABLE_PASSWORD_REGISTRATION

@@ -46,7 +46,8 @@
 		},
 		"people": {
 			"someone": "Iemand",
-			"unknown": "Onbekend"
+			"unknown": "Onbekend",
+			"deleted": "Deleted user"
 		},
 		"error": {
 			"title": "Er is iets misgegaan",
@@ -134,100 +135,13 @@
 			"subtitle": "Voer je gegevens in om toegang te krijgen tot je space",
 			"invitationSubtitle": "Log in om je uitnodiging te accepteren",
 			"invitationAlert": "Na het inloggen kun je de uitnodiging voor de space accepteren.",
-			"signingIn": "Inloggen...",
-			"continueWithGoogle": "Doorgaan met Google",
-			"continueWithGithub": "Doorgaan met GitHub",
-			"continueWithDiscord": "Doorgaan met Discord",
-			"continueWithOidc": "Doorgaan met OIDC",
-			"lastUsed": "Laatst gebruikt",
-			"registrationDisabled": "Publieke registratie is uitgeschakeld. Gebruik een uitnodiging om een account aan te maken.",
-			"passwordRegistrationDisabled": "Registratie met wachtwoord is uitgeschakeld. Gebruik een geconfigureerde sociale of OIDC-aanmeldmethode om een account aan te maken.",
-			"toggleMessage": "Nog geen account?",
-			"toggleLink": "Account aanmaken",
-			"guestSuccess": "Ingelogd als gast",
-			"guestError": "Inloggen als gast mislukt",
 			"oidcError": "Inloggen met OIDC mislukt",
-			"googleError": "Inloggen met Google mislukt",
-			"githubError": "Inloggen met GitHub mislukt",
-			"discordError": "Inloggen met Discord mislukt",
-			"ssoOnlyMessage": "Log in met een geconfigureerde SSO-provider hierboven."
-		},
-		"providers": {
-			"google": "Google",
-			"discord": "Discord"
-		},
-		"forms": {
-			"or": "of",
-			"email": "E-mailadres",
-			"password": "Wachtwoord",
-			"emailPlaceholder": "naam@voorbeeld.nl",
-			"passwordPlaceholder": "••••••••",
-			"showPassword": "Wachtwoord weergeven",
-			"hidePassword": "Wachtwoord verbergen"
-		},
-		"checkEmail": {
-			"pageTitle": "Controleer je e-mail",
-			"title": "Controleer je mailbox",
-			"inboxMessage": "We hebben je een tijdelijke inloglink gestuurd. Controleer je inbox op <email>{{email}}</email>.",
-			"emailFallback": "je e-mailadres",
-			"backToLogin": "Terug naar inloggen"
-		},
-		"signUp": {
-			"pageTitle": "Account aanmaken",
-			"title": "Maak account aan",
-			"subtitleInvitation": "Maak een account aan om je uitnodiging te accepteren",
-			"subtitleRegistrationDisabled": "Registratie vereist een uitnodiging",
-			"subtitlePasswordDisabled": "Gebruik sociale media of OIDC om een account aan te maken",
-			"subtitleDefault": "Aan de slag met je space",
-			"invitationAlert": "Na het aanmaken van je account kun je de uitnodiging accepteren.",
-			"registrationDisabledAlert": "Registratie is momenteel uitgeschakeld. Als je bent uitgenodigd, voer dan het e-mailadres in waarop je de uitnodiging hebt ontvangen.",
-			"passwordDisabledAlert": "Account aanmaken met wachtwoord is uitgeschakeld. Gebruik een sociale of OIDC-methode.",
-			"signingIn": "Inloggen...",
-			"continueAsGuest": "Doorgaan als gast",
-			"toggleMessage": "Heb je al een account?",
-			"toggleLink": "Inloggen"
-		},
-		"verifyOtp": {
-			"pageTitle": "Code verifiëren",
-			"title": "Voer verificatiecode in",
-			"subtitle": "Gebruik de 6-cijferige code die naar je e-mail is gestuurd om door te gaan",
-			"codeSentTo": "Code gestuurd naar {{email}}",
-			"verificationCodeLabel": "Verificatiecode",
-			"verifying": "Verifiëren...",
-			"verifyAndSignIn": "Verifiëren & Inloggen",
-			"changeEmail": "E-mail wijzigen",
-			"resend": "Opnieuw versturen",
-			"validation": {
-				"codeLength": "Code moet uit 6 cijfers bestaan"
-			},
-			"toast": {
-				"invalidCode": "Ongeldige verificatiecode",
-				"signedInSuccess": "Succesvol ingelogd!",
-				"verifyFailed": "Verificatie mislukt",
-				"resendFailed": "Opnieuw versturen mislukt",
-				"resendSuccess": "Nieuwe verificatiecode verzonden!"
-			}
-		},
-		"otpSignIn": {
-			"sendFailed": "Versturen verificatiecode mislukt",
-			"codeSent": "Verificatiecode verzonden! Check je e-mail.",
-			"sending": "Versturen...",
-			"sendVerificationCode": "Verstuur verificatiecode"
-		},
-		"signInForm": {
-			"failedSignIn": "Inloggen mislukt",
-			"signedInSuccess": "Succesvol ingelogd",
-			"signingIn": "Inloggen...",
-			"signIn": "Inloggen"
-		},
-		"signUpForm": {
-			"fullName": "Volledige naam",
-			"namePlaceholder": "Jan Janssen",
-			"failedSignUp": "Registratie mislukt",
-			"accountCreated": "Account succesvol aangemaakt",
-			"passwordTooShort": "Wachtwoord is te kort",
-			"creatingAccount": "Account aanmaken...",
-			"createAccount": "Account aanmaken"
+			"createAccount": "Create your account",
+			"label": "Sign in with Facile",
+			"language": "Language",
+			"loading": "Signing in…",
+			"newHere": "New to Facile?",
+			"tagline": "Self-hosted project management for teams that keep their own data."
 		},
 		"invitation": {
 			"pageTitleAccept": "Uitnodiging accepteren",
@@ -295,6 +209,17 @@
 				"nameRequired": "Naam is verplicht",
 				"nameShort": "Naam moet minimaal 2 tekens bevatten"
 			}
+		},
+		"legal": {
+			"cgu": "Terms of use",
+			"cgv": "Terms of sale",
+			"legalNotice": "Legal notice",
+			"nav": "Legal",
+			"privacy": "Privacy"
+		},
+		"layout": {
+			"headline": "Your projects.",
+			"headlineEnd": "Your server."
 		}
 	},
 	"settings": {
@@ -1907,5 +1832,39 @@
 		},
 		"pageTitle": "Shared View",
 		"readOnly": "Read-only"
+	},
+	"landing": {
+		"copyright": "© {{year}} Opus by Facile.",
+		"features": {
+			"realtime": {
+				"body": "Comments, labels and task moves land in every open tab the moment somebody makes them.",
+				"title": "Realtime collaboration"
+			},
+			"rules": {
+				"body": "Status transitions, assignments and due-date reminders run on the server instead of in your head.",
+				"title": "Workflow rules"
+			},
+			"selfHosted": {
+				"body": "One container, your Postgres, your storage. Nothing you plan leaves the server it runs on.",
+				"title": "Self-hosted by default"
+			},
+			"time": {
+				"body": "Log time against tasks and read it back per project when the review starts.",
+				"title": "Time tracking"
+			},
+			"views": {
+				"body": "Board, list, gantt and backlog over the same tasks. Switch per project without moving a thing.",
+				"title": "Four views, one backlog"
+			},
+			"workspaces": {
+				"body": "Invite a team, keep projects private or shared, and let owner, admin and member decide who edits what.",
+				"title": "Workspaces and roles"
+			}
+		},
+		"footerTagline": "Self-hosted project management.",
+		"heroBody": "Opus keeps tasks, boards and timelines on your own server. Your team plans where your data already lives.",
+		"heroTitle": "Project management you host yourself",
+		"pageTitle": "Self-hosted project management",
+		"sectionTitle": "Everything a project needs, nothing it does not"
 	}
 }

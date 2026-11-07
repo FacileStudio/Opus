@@ -117,7 +117,7 @@ export default function CommentCard({
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-sm font-medium text-foreground/92 hover:text-foreground transition-colors">
-                  {user?.name}
+                  {user?.name || t("common:people.deleted")}
                 </span>
               </div>
             </HoverCardTrigger>

@@ -16,7 +16,6 @@ import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SharedTokenRouteImport } from './routes/shared.$token'
 import { Route as PublicProjectProjectIdRouteImport } from './routes/public-project.$projectId'
-import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as LayoutAuthenticatedRouteImport } from './routes/_layout/_authenticated'
 import { Route as InvitationAcceptInviteIdRouteImport } from './routes/invitation/accept.$inviteId'
@@ -88,11 +87,6 @@ const PublicProjectProjectIdRoute = PublicProjectProjectIdRouteImport.update({
   id: '/public-project/$projectId',
   path: '/public-project/$projectId',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthSignUpRoute = AuthSignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => AuthRoute,
 } as any)
 const AuthSignInRoute = AuthSignInRouteImport.update({
   id: '/sign-in',
@@ -343,7 +337,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/test-error': typeof TestErrorRoute
   '/auth/sign-in': typeof AuthSignInRoute
-  '/auth/sign-up': typeof AuthSignUpRoute
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
   '/shared/$token': typeof SharedTokenRoute
   '/dashboard': typeof LayoutAuthenticatedDashboardRouteWithChildren
@@ -388,7 +381,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/test-error': typeof TestErrorRoute
   '/auth/sign-in': typeof AuthSignInRoute
-  '/auth/sign-up': typeof AuthSignUpRoute
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
   '/shared/$token': typeof SharedTokenRoute
   '/invitations': typeof LayoutAuthenticatedInvitationsRoute
@@ -434,7 +426,6 @@ export interface FileRoutesById {
   '/test-error': typeof TestErrorRoute
   '/_layout/_authenticated': typeof LayoutAuthenticatedRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
-  '/auth/sign-up': typeof AuthSignUpRoute
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
   '/shared/$token': typeof SharedTokenRoute
   '/_layout/_authenticated/dashboard': typeof LayoutAuthenticatedDashboardRouteWithChildren
@@ -481,7 +472,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/test-error'
     | '/auth/sign-in'
-    | '/auth/sign-up'
     | '/public-project/$projectId'
     | '/shared/$token'
     | '/dashboard'
@@ -526,7 +516,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/test-error'
     | '/auth/sign-in'
-    | '/auth/sign-up'
     | '/public-project/$projectId'
     | '/shared/$token'
     | '/invitations'
@@ -571,7 +560,6 @@ export interface FileRouteTypes {
     | '/test-error'
     | '/_layout/_authenticated'
     | '/auth/sign-in'
-    | '/auth/sign-up'
     | '/public-project/$projectId'
     | '/shared/$token'
     | '/_layout/_authenticated/dashboard'
@@ -672,13 +660,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/public-project/$projectId'
       preLoaderRoute: typeof PublicProjectProjectIdRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/auth/sign-up': {
-      id: '/auth/sign-up'
-      path: '/sign-up'
-      fullPath: '/auth/sign-up'
-      preLoaderRoute: typeof AuthSignUpRouteImport
-      parentRoute: typeof AuthRoute
     }
     '/auth/sign-in': {
       id: '/auth/sign-in'
@@ -1135,12 +1116,10 @@ const LayoutRouteWithChildren =
 
 interface AuthRouteChildren {
   AuthSignInRoute: typeof AuthSignInRoute
-  AuthSignUpRoute: typeof AuthSignUpRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthSignInRoute: AuthSignInRoute,
-  AuthSignUpRoute: AuthSignUpRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
