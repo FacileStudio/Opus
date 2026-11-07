@@ -2,6 +2,14 @@
 
 All notable changes to Opus are documented here.
 
+## [2.29.2] - 2026-11-07
+
+### Fixed
+
+- The user menu that opens from the sidebar user card shows a Solar icon beside every option (account,
+  settings, language, theme, help, sign out) and on the back row of its submenus. Submenus point right with
+  an arrow icon instead of a text chevron.
+
 ## [2.29.1] - 2026-11-07
 
 ### Fixed
