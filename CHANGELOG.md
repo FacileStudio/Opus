@@ -2,7 +2,7 @@
 
 All notable changes to Opus are documented here.
 
-## [Unreleased]
+## [2.28.1] - 2026-11-07
 
 ### Security
 
