@@ -2,6 +2,16 @@
 
 All notable changes to Opus are documented here.
 
+## [2.30.0] - 2026-11-09
+
+### Added
+
+- Native GitHub integration with webhook receiver at `/api/integrations/github/webhook`.
+- Pull request and branch linking to tasks based on `{slug}-{number}` convention.
+- Automated task workflow state transitions on PR draft/open (`in-progress`), ready for review (`in-review`), and merge (`done`).
+- Automatic user attribution on PR actions using Registre's `connections.github` identity claim.
+- Linked pull requests display in task sidebar with real-time status badges.
+
 ## [2.29.3] - 2026-11-07
 
 ### Changed
