@@ -35,6 +35,11 @@ const (
 	// ChannelWorkspaceCreated carries workspace creation events.
 	ChannelWorkspaceCreated = "workspace.created"
 
+	// ChannelGitPullRequest carries pull request events forwarded by Antenne.
+	ChannelGitPullRequest = "git.pull_request"
+	// ChannelGitPush carries push events forwarded by Antenne.
+	ChannelGitPush = "git.push"
+
 	// ObjectComment is the wire object type for comment events.
 	ObjectComment enveloppe.ObjectType = "comment"
 	// ObjectWorkspace is the wire object type for workspace events.
@@ -71,4 +76,17 @@ func SyncChannels() []string {
 		ChannelTimeEntryUpdated,
 		ChannelTimeEntryDeleted,
 	}
+}
+
+// GitChannels returns the channels Opus listens to for git forge events.
+func GitChannels() []string {
+	return []string{
+		ChannelGitPullRequest,
+		ChannelGitPush,
+	}
+}
+
+// InboundChannels returns all channels Opus registers with the Antenne pool.
+func InboundChannels() []string {
+	return append(SyncChannels(), GitChannels()...)
 }

@@ -86,7 +86,7 @@ func New(cfg Config, opts ...Option) *Publisher {
 			InstanceID: cfg.InstanceID,
 			Events: antenne.EventConfig{
 				Emit:   AllChannels(),
-				Listen: SyncChannels(),
+				Listen: InboundChannels(),
 			},
 		},
 			antenne.WithMaxReconnect(math.MaxInt32),

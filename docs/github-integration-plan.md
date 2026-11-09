@@ -173,6 +173,11 @@ if raw, ok := claims.Extra["connections"]; ok && len(raw) > 0 {
 
 ---
 
+### Antenne Event Bus Integration (Suite-Native Ingress)
+In addition to direct GitHub webhooks, Opus registers with the Antenne Pool WebSocket bus for `git.pull_request` and `git.push` channels. When GitHub fires webhooks to Antenne (`https://antenne.facile.studio/webhook/git`), Antenne fans out the event across the pool bus to connected subscribers, eliminating duplicate webhook configuration in GitHub across suite apps.
+
+---
+
 ## File Inventory
 
 | Path | Action | Role |

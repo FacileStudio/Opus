@@ -112,6 +112,7 @@ func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *sl
 	}
 
 	attachPoolSync(db, eventsCfg, eventsPub, hub, appLogger)
+	attachGitSync(db, appEnv, eventsPub, appLogger)
 	eventsPub.Start(context.Background())
 
 	sched := scheduler.NewScheduler(db, appLogger, 5*time.Minute)
