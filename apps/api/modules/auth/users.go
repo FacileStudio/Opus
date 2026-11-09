@@ -5,6 +5,7 @@ package auth
 
 import (
 	"context"
+	"encoding/json"
 	stderrors "errors"
 	"strings"
 
@@ -61,10 +62,30 @@ func (s *UserStore) UpsertFromOIDC(ctx context.Context, claims porte.Claims) (in
 	if claims.Locale != "" {
 		updates["locale"] = claims.Locale
 	}
+	if githubID := extractGitHubID(claims.Extra); githubID != "" {
+		updates["github_id"] = githubID
+	}
 	if err := s.orm.WithContext(ctx).Model(&schemas.User{}).Where("id = ?", user.ID).Updates(updates).Error; err != nil {
 		return 0, errors.Internal("failed to update the account", err)
 	}
 	return user.ID, nil
+}
+
+func extractGitHubID(extra map[string]json.RawMessage) string {
+	if extra == nil {
+		return ""
+	}
+	raw, ok := extra["connections"]
+	if !ok || len(raw) == 0 {
+		return ""
+	}
+	var connections struct {
+		GitHub string `json:"github"`
+	}
+	if err := json.Unmarshal(raw, &connections); err != nil {
+		return ""
+	}
+	return strings.TrimSpace(connections.GitHub)
 }
 
 // resolve finds the account a sign-in belongs to: by (provider, subject), then

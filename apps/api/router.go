@@ -19,6 +19,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/modules/column"
 	"github.com/FacileStudio/Opus/apps/api/modules/comment"
 	"github.com/FacileStudio/Opus/apps/api/modules/config"
+	"github.com/FacileStudio/Opus/apps/api/modules/github"
 	"github.com/FacileStudio/Opus/apps/api/modules/label"
 	"github.com/FacileStudio/Opus/apps/api/modules/notification"
 	"github.com/FacileStudio/Opus/apps/api/modules/project"
@@ -76,6 +77,7 @@ func referenceConfig() apiref.Config {
 				search.Documentation(),
 				asset.Documentation(),
 				config.Documentation(),
+				github.Documentation(),
 			},
 		},
 	}
@@ -116,6 +118,7 @@ func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, 
 	search.RegisterRoutes(api, search.NewService(db), authService)
 	assetStorage := storage.NewAssetStorage(appEnv.UploadDir, storage.LoadS3Config())
 	asset.RegisterRoutes(api, asset.NewService(db, assetStorage), authService)
+	github.RegisterRoutes(api, github.NewService(db, appEnv.GitHubWebhookSecret), authService)
 }
 
 func buildRouter(deps routerDeps) chi.Router {

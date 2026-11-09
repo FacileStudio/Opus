@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/tooltip";
 import labelColors from "@/constants/label-colors";
 import { useGetColumns } from "@/hooks/queries/column/use-get-columns";
+import { useGetTaskPullRequests } from "@/hooks/queries/github/use-get-task-pull-requests";
 import useGetLabelsByTask from "@/hooks/queries/label/use-get-labels-by-task";
 import useGetProject from "@/hooks/queries/project/use-get-project";
 import useGetProjects from "@/hooks/queries/project/use-get-projects";
@@ -84,6 +85,10 @@ export default function TaskPropertiesSidebar({
   const { data: workspaceUsers } = useGetActiveWorkspaceUsers(workspaceId);
   const { data: taskLabels = [] } = useGetLabelsByTask(taskId ?? "");
   const { data: workspaceProjects = [] } = useGetProjects({ workspaceId });
+  const { data: pullRequests = [] } = useGetTaskPullRequests(
+    projectId,
+    taskId ?? "",
+  );
   const canMoveTask =
     Boolean(task) && workspaceProjects.some((p) => p.id !== task?.projectId);
   const statusColumn = columns.find(
@@ -790,6 +795,51 @@ export default function TaskPropertiesSidebar({
               )}
             </div>
           </div>
+
+          {pullRequests.length > 0 && (
+            <div className="flex flex-col gap-1 border-t border-border/40 pt-2">
+              <span className="text-xs font-medium text-foreground/70 px-2">
+                Pull Requests
+              </span>
+              <div className="flex flex-col gap-1 px-2">
+                {pullRequests.map((pr) => (
+                  <a
+                    key={pr.id}
+                    href={pr.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-between gap-2 p-1.5 rounded-md hover:bg-accent/50 transition-colors text-xs text-foreground group"
+                  >
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <GitBranch
+                        size={14}
+                        className="text-muted-foreground flex-shrink-0"
+                      />
+                      <span className="truncate font-medium group-hover:underline">
+                        #{pr.prNumber} {pr.title}
+                      </span>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "text-[10px] px-1.5 py-0 capitalize flex-shrink-0 font-medium",
+                        pr.state === "merged" &&
+                          "bg-purple-500/10 text-purple-600 border-purple-500/20",
+                        pr.state === "open" &&
+                          "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+                        pr.state === "draft" &&
+                          "bg-muted text-muted-foreground border-border",
+                        pr.state === "closed" &&
+                          "bg-rose-500/10 text-rose-600 border-rose-500/20",
+                      )}
+                    >
+                      {pr.state}
+                    </Badge>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

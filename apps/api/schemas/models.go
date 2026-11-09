@@ -17,6 +17,7 @@ type User struct {
 	Image         string    `gorm:"column:image"`
 	Color         string    `gorm:"column:color"`
 	Locale        string    `gorm:"column:locale"`
+	GitHubID      *string   `gorm:"column:github_id;index"`
 	CreatedAt     time.Time `gorm:"column:created_at;not null"`
 	UpdatedAt     time.Time `gorm:"column:updated_at;not null"`
 }

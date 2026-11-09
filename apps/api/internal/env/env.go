@@ -47,6 +47,7 @@ func (c Config) Porte() porte.Config {
 		CLIAudience:     c.OIDC.CLIAudience,
 		MachineAudience: c.OIDC.MachineAudience,
 		ScopePrefix:     c.OIDC.ScopePrefix,
+		ExtraClaims:     []string{"connections"},
 	}
 }
 
@@ -71,6 +72,9 @@ type Config struct {
 
 	// RedisURL configures the Redis pub/sub broker for realtime broadcasts.
 	RedisURL string
+
+	// GitHubWebhookSecret validates incoming GitHub webhooks.
+	GitHubWebhookSecret string
 
 	// OIDC shapes the porte auth kit. Sign-in goes through Registre only.
 	OIDC *OIDCConfig
@@ -144,9 +148,10 @@ func Load() (Config, error) {
 		Core:             core,
 		LegacyAPI:        legacyAPI,
 		UploadDir:        troncenv.String("UPLOAD_DIR", "./data/uploads"),
-		AuthBridgeSecret: troncenv.String("AUTH_BRIDGE_SECRET", ""),
-		RedisURL:         troncenv.String("REDIS_URL", ""),
-		OIDC:             oidcConfig,
+		AuthBridgeSecret:    troncenv.String("AUTH_BRIDGE_SECRET", ""),
+		RedisURL:            troncenv.String("REDIS_URL", ""),
+		GitHubWebhookSecret: troncenv.String("GITHUB_WEBHOOK_SECRET", ""),
+		OIDC:                oidcConfig,
 	}, nil
 }
 

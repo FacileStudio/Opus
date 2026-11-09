@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
@@ -95,6 +96,32 @@ func TestUserStoreStoresTheLocaleClaim(t *testing.T) {
 	}
 	if user.Locale != "es" {
 		t.Fatalf("locale = %q, want es", user.Locale)
+	}
+}
+
+func TestUserStoreStoresGitHubIDClaim(t *testing.T) {
+	store := newTestUserStore(t)
+	ctx := context.Background()
+	claims := porte.Claims{
+		Provider:      "https://sso.facile.studio",
+		Subject:       "sub-gh",
+		Email:         "gh@facile.studio",
+		EmailVerified: true,
+		Extra: map[string]json.RawMessage{
+			"connections": json.RawMessage(`{"github":"987654"}`),
+		},
+	}
+
+	id, err := store.UpsertFromOIDC(ctx, claims)
+	if err != nil {
+		t.Fatalf("upsert from oidc: %v", err)
+	}
+	var user schemas.User
+	if err := store.orm.First(&user, id).Error; err != nil {
+		t.Fatalf("load user: %v", err)
+	}
+	if user.GitHubID == nil || *user.GitHubID != "987654" {
+		t.Fatalf("github_id = %v, want 987654", user.GitHubID)
 	}
 }
 
