@@ -2,6 +2,12 @@
 
 All notable changes to Opus are documented here.
 
+## [2.31.0] - 2026-11-09
+
+### Added
+
+- Antenne Pool bus consumer for `git.pull_request` and `git.push` channels, enabling single-funnel GitHub webhook routing through Antenne.
+
 ## [2.30.0] - 2026-11-09
 
 ### Added
