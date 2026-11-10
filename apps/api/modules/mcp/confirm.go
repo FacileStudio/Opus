@@ -114,5 +114,12 @@ func taskQuestion(tk task.TaskResponse, key string) string {
 
 // projectQuestion is what the client asks before deleting a project.
 func projectQuestion(p project.ProjectResponse) string {
-	return fmt.Sprintf("Delete the project %q and its %d tasks for good?", p.Name, taskCount(p))
+	switch n := taskCount(p); n {
+	case 0:
+		return fmt.Sprintf("Delete the project %q for good?", p.Name)
+	case 1:
+		return fmt.Sprintf("Delete the project %q and its 1 task for good?", p.Name)
+	default:
+		return fmt.Sprintf("Delete the project %q and its %d tasks for good?", p.Name, n)
+	}
 }
