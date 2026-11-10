@@ -53,7 +53,7 @@ func newTestIdeas(t *testing.T) (*ideas, *gorm.DB, chi.Router) {
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)
 	}
-	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}); err != nil {
+	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}, &schemas.ForfaitState{}); err != nil {
 		t.Fatalf("migrate: %v", err)
 	}
 	exchanger, err := exchange.New(exchange.Config{Issuer: "https://sso.test", ClientID: "c", ClientSecret: "s", Identities: noIdentities{}})
@@ -139,7 +139,7 @@ func TestIdeasPassTheActiveSpace(t *testing.T) {
 func TestFreePlanGetsPaymentRequired(t *testing.T) {
 	i, db, router := newTestIdeas(t)
 	userID, workspaceID := seedSharedWorkspace(t, db, "spc_team")
-	i.plans.Apply(directory.Snapshot{
+	i.apply(directory.Snapshot{
 		EntitlementsRevision: 1,
 		Spaces: []directory.Space{{
 			ID:           "spc_team",
@@ -157,5 +157,56 @@ func TestFreePlanGetsPaymentRequired(t *testing.T) {
 	list := serve(router, http.MethodGet, "/api/ideas?workspaceId="+strconv.FormatInt(workspaceID, 10), userID)
 	if list.Code != http.StatusOK || !strings.Contains(list.Body.String(), `"ai_access":false`) {
 		t.Fatalf("list on a free plan = %d %s, want ai_access false", list.Code, list.Body.String())
+	}
+}
+
+func paidSpace(revision int64) directory.Snapshot {
+	return directory.Snapshot{
+		EntitlementsRevision: revision,
+		Spaces: []directory.Space{{
+			ID:           "spc_team",
+			Entitlements: map[string]json.RawMessage{aiAccessKey: json.RawMessage("true")},
+		}},
+	}
+}
+
+func spaceRequest(userID, workspaceID int64) *http.Request {
+	req := httptest.NewRequest(http.MethodGet, "/api/ideas?workspaceId="+strconv.FormatInt(workspaceID, 10), nil)
+	return req.WithContext(porte.WithIdentity(req.Context(), porte.Identity{UserID: userID}))
+}
+
+func TestAIAccessFailsClosedBeforeEntitlements(t *testing.T) {
+	i, db, _ := newTestIdeas(t)
+	userID, workspaceID := seedSharedWorkspace(t, db, "spc_team")
+	if i.aiAccess(spaceRequest(userID, workspaceID)) {
+		t.Fatal("ai.access must be off before Registre delivers entitlements")
+	}
+	i.apply(paidSpace(0))
+	if i.aiAccess(spaceRequest(userID, workspaceID)) {
+		t.Fatal("a snapshot without an entitlements revision must not turn ai.access on")
+	}
+	i.apply(paidSpace(1))
+	if !i.aiAccess(spaceRequest(userID, workspaceID)) {
+		t.Fatal("a paid space must have ai.access once entitlements arrived")
+	}
+}
+
+func TestPlansSurviveARestart(t *testing.T) {
+	i, db, _ := newTestIdeas(t)
+	userID, workspaceID := seedSharedWorkspace(t, db, "spc_team")
+	i.apply(paidSpace(3))
+	restarted := &ideas{
+		db:     db,
+		env:    i.env,
+		logger: i.logger,
+		plans:  forfait.NewStore(forfait.Feature{Key: aiAccessKey, Kind: forfait.Bool, Default: []byte("false")}),
+	}
+	restarted.loadPlans(context.Background())
+	if !restarted.aiAccess(spaceRequest(userID, workspaceID)) {
+		t.Fatal("the saved plans must apply after a restart, before Registre answers")
+	}
+	restarted.apply(paidSpace(2))
+	if !restarted.aiAccess(spaceRequest(userID, workspaceID)) {
+		t.Fatal("an older snapshot must not replace the restored plans")
 	}
 }

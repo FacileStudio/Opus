@@ -3,6 +3,7 @@ import {
   countNewIdeas,
   IDEAS_ICON,
   type Idea,
+  ideasScope,
   ideasView,
   isSafeHref,
 } from "./ideas";
@@ -50,5 +51,17 @@ describe("ideas helpers", () => {
     expect(ideasView({ ...base, generating: true })).toBe("busy");
     expect(ideasView(base)).toBe("empty");
     expect(ideasView({ ...base, count: 2, error: "x" })).toBe("list");
+  });
+
+  it("falls back to the personal scope once workspaces are known", () => {
+    expect(ideasScope(undefined, false)).toEqual({
+      ready: false,
+      workspaceId: undefined,
+    });
+    expect(ideasScope(undefined, true)).toEqual({
+      ready: true,
+      workspaceId: undefined,
+    });
+    expect(ideasScope("42", false)).toEqual({ ready: true, workspaceId: "42" });
   });
 });

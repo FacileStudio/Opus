@@ -23,6 +23,7 @@ import { apiRequest } from "@/lib/auth-client";
 import {
   type Idea,
   type IdeaRun,
+  ideasScope,
   ideasView,
   loadRunIds,
   type RunApproval,
@@ -96,11 +97,12 @@ function IdeaCardContainer({ idea, runId, onRun, onDismiss }: CardProps) {
 function IdeasPageRoute() {
   const { t, i18n } = useTranslation("ideas");
   const queryClient = useQueryClient();
-  const { data: workspace } = useActiveWorkspace();
-  const workspaceId = workspace?.id;
+  const { data: workspace, isSettled } = useActiveWorkspace();
+  const scope = ideasScope(workspace?.id, isSettled);
+  const workspaceId = scope.workspaceId;
   const { data, isLoading, error, refetch } = useIdeas(
     workspaceId,
-    !!workspace,
+    scope.ready,
   );
   const [runIds, setRunIds] = useState<Record<string, string>>(loadRunIds);
   const [generateError, setGenerateError] = useState<string | null>(null);
@@ -112,7 +114,7 @@ function IdeasPageRoute() {
   const ideas = data?.ideas ?? [];
   const view = ideasView({
     count: ideas.length,
-    loading: isLoading || !workspace,
+    loading: isLoading || !scope.ready,
     generating,
     error: errorMessage,
   });

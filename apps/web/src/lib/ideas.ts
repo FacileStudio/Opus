@@ -104,6 +104,13 @@ export function isRunSettled(state: RunState | undefined): boolean {
 
 export type IdeasView = "loading" | "error" | "busy" | "empty" | "list";
 
+export function ideasScope(
+  workspaceId: string | undefined,
+  workspacesSettled: boolean,
+): { ready: boolean; workspaceId: string | undefined } {
+  return { ready: !!workspaceId || workspacesSettled, workspaceId };
+}
+
 export function ideasView(input: {
   count: number;
   loading: boolean;
