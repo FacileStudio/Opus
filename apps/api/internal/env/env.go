@@ -145,9 +145,9 @@ func Load() (Config, error) {
 		return Config{}, err
 	}
 	return Config{
-		Core:             core,
-		LegacyAPI:        legacyAPI,
-		UploadDir:        troncenv.String("UPLOAD_DIR", "./data/uploads"),
+		Core:                core,
+		LegacyAPI:           legacyAPI,
+		UploadDir:           troncenv.String("UPLOAD_DIR", "./data/uploads"),
 		AuthBridgeSecret:    troncenv.String("AUTH_BRIDGE_SECRET", ""),
 		RedisURL:            troncenv.String("REDIS_URL", ""),
 		GitHubWebhookSecret: troncenv.String("GITHUB_WEBHOOK_SECRET", ""),
