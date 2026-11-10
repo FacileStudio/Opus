@@ -2,6 +2,23 @@
 
 All notable changes to Opus are documented here.
 
+## [Unreleased]
+
+### Added
+
+- A remote MCP server at `/mcp` (Streamable HTTP, stateless, spec 2026-07-28) on tronc/mcp v0.20.0, behind Registre tokens bound to `MCP_RESOURCE` with the scopes `opus.read` and `opus.write`. Eleven tools: list workspaces, list projects, search tasks, read a task with its comments, create and update a task (status, assignee, dates, labels, project), comment on a task, create and update a project (including archive), and delete a task or a project. Tools go through the same module calls as the HTTP routes, so they see exactly what the person sees and their writes broadcast and sync like the web app's. A first MCP call creates the Opus account (porte/mcpauth v0.2.0 provisioning). MCP is free on every plan.
+- Deleting a task or a project asks the person first: an MRTR confirmation in clients that can elicit, otherwise a pending action and a link to the new `/pending` page, where they confirm or dismiss it (fr, en, es, de). Pending actions live in `mcp_actions` (migration 00008).
+
+### Fixed
+
+- The Ideas page spun forever, and its sidebar entry stayed hidden, for a person who never opened a workspace. Both now fall back to the personal scope once the workspace list is known.
+- The Ideas plan store forgot the plans on every restart and, until Registre answered, let every request through. It now saves the plans in `forfait_state` (migration 00008) and restores them at boot, and AI stays off until entitlements were received once.
+- The docs advertised a stdio MCP package and an `/api/mcp` endpoint that the Go API never served. The README and `docs/` now describe the real `/mcp`.
+
+### Changed
+
+- tronc v0.20.0, porte v0.16.0 and porte/mcpauth v0.2.0, with go-sdk v1.8.0.
+
 ## [2.32.0] - 2026-11-10
 
 ### Added

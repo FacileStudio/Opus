@@ -44,8 +44,8 @@ tears the other one down and exits with the first non-zero status.
    `/shared-project/:token`, `/invitation/public/:id`, `/asset/:id`, `/workspace/:id/logo`, the
    integration webhook receivers, `/openapi`, and the whole `/auth/*` surface handled by
    `better-auth`.
-4. A catch-all middleware then runs `authenticateApiRequest` on every remaining route, skipping
-   `/api/mcp` and `/api/.well-known/`. It resolves either a `better-auth` session cookie, a bearer
+4. A catch-all middleware then runs `authenticateApiRequest` on every remaining route, skipping the
+   well-known documents. It resolves either a `better-auth` session cookie, a bearer
    token, or an `x-api-key` API key, and sets `userId`, `user`, `session` and `userEmail` on the
    context.
 5. The same middleware opens an `eventContext` async-local scope carrying an `initiatorId` built
@@ -113,8 +113,8 @@ Cookie attributes adapt to the deployment: when the API and client hostnames dif
 HTTPS, cookies are issued `SameSite=None; Secure; Partitioned`, otherwise `SameSite=Lax`.
 `COOKIE_DOMAIN` overrides the domain explicitly.
 
-The device authorization flow backs `opus-cli` and `opus-mcp` (override the accepted client ids
-with `DEVICE_AUTH_CLIENT_IDS`). `GET /api/auth/device` redirects real browser navigations to
+The device authorization flow backs `opus-cli`. MCP clients sign in through Registre instead,
+with tokens bound to `MCP_RESOURCE` (see the README's MCP section). `GET /api/auth/device` redirects real browser navigations to
 `<OPUS_CLIENT_URL>/device` and returns JSON to everything else.
 
 ## Real-time

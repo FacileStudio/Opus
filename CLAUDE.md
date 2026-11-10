@@ -55,12 +55,8 @@ opus/
         components/   #   UI components
         hooks/        #   queries/, mutations/
         fetchers/     #   API client functions by feature
-    docs/             # Fumadocs documentation site
-    site/             # Marketing/landing site (Next.js)
   packages/
-    email/            # Email utilities
     libs/             # Shared libraries (@opus/libs)
-    mcp/              # MCP server
     typescript-config/ # Shared tsconfig
   charts/             # Kubernetes Helm charts
   i18n/               # Translation JSON files
