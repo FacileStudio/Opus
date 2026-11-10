@@ -2,6 +2,16 @@
 
 All notable changes to Opus are documented here.
 
+## [2.31.1] - 2026-11-10
+
+### Added
+
+- An MIT `LICENSE` at the repository root.
+
+### Removed
+
+- The unused marketing site (`apps/site`), documentation site (`apps/docs`), local MCP package (`packages/mcp`) and email package (`packages/email`). None was built into the image or deployed. The API's own `/api/mcp` endpoint is unchanged.
+
 ## [2.31.0] - 2026-11-09
 
 ### Added
