@@ -1,5 +1,6 @@
 import type * as React from "react";
 
+import { NavIdeas } from "@/components/nav-ideas";
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { SpaceSwitcher } from "@/components/space-switcher";
@@ -33,6 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent className="overflow-hidden gap-1 px-1 py-1">
         <Search />
+        <NavIdeas />
         <NavMain />
         <NavProjects />
       </SidebarContent>

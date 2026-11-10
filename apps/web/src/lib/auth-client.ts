@@ -158,6 +158,8 @@ async function request<T>(
   return { data, error: null };
 }
 
+export { request as apiRequest };
+
 function toStr(value: number | string | undefined | null): string {
   return value === undefined || value === null ? "" : String(value);
 }

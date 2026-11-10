@@ -2,6 +2,17 @@
 
 All notable changes to Opus are documented here.
 
+## [Unreleased]
+
+### Added
+
+- An Ideas page and sidebar entry (lightbulb icon, first in the sidebar, badge with the count of new ideas). Bulle generates ideas for Opus, runs them in place with approval cards, and links to the result and to the conversation in Bulle. Free plans see an upsell with the upgrade link. Available in fr, en, es and de.
+- `/api/ideas` routes in the API, proxied to Bulle with a Registre token exchange (audience `bulle`). They need `BULLE_URL`; without it the routes are not mounted. The active workspace's Registre space is passed through, and a plan without `ai.access` gets 402 or `ai_access: false`.
+
+### Changed
+
+- porte v0.15.1 and tronc v0.18.0.
+
 ## [2.31.1] - 2026-11-10
 
 ### Added

@@ -51,6 +51,7 @@ type routerDeps struct {
 	reconcile   func(context.Context)
 	workspaces  *workspace.Service
 	registre    registreFollowers
+	ideas       *ideas
 }
 
 func referenceConfig() apiref.Config {
@@ -163,6 +164,7 @@ func buildRouter(deps routerDeps) chi.Router {
 			api.Method(http.MethodPost, strings.TrimPrefix(directory.DeletionsPath, "/api"), deps.registre.deletions.Handler())
 		}
 		registerDomainRoutes(api, authService, deps)
+		deps.ideas.mount(api, authService)
 		if deps.reconcile != nil {
 			mountReconcile(api, deps.db, authService, deps.reconcile)
 		}

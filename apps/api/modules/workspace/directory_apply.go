@@ -25,6 +25,9 @@ import (
 // missing from the snapshot are left alone. Pending invitations to linked
 // workspaces are canceled, since adding people is Registre's job now.
 func (d *Directory) Apply(ctx context.Context, snapshot directory.Snapshot) error {
+	if d.onSnapshot != nil {
+		d.onSnapshot(snapshot)
+	}
 	listed := []string{}
 	err := d.service.orm.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		for _, space := range snapshot.Spaces {

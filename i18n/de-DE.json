@@ -1030,7 +1030,8 @@
 			"invitations": "Einladungen",
 			"more": "Mehr",
 			"backToBoard": "Zurück zum Board",
-			"myTasks": "Meine Aufgaben"
+			"myTasks": "Meine Aufgaben",
+			"ideas": "Ideen"
 		},
 		"projectList": {
 			"viewProject": "Projekt ansehen",
@@ -1878,5 +1879,85 @@
 		},
 		"copyright": "© {{year}} Opus von Facile.",
 		"footerTagline": "Selbst gehostetes Projektmanagement."
+	},
+	"ideas": {
+		"newCount_one": "{{count}} neue Idee",
+		"newCount_other": "{{count}} neue Ideen",
+		"title": "Ideen",
+		"description": "Vorschläge, die dein Assistent für dich vorbereitet hat.",
+		"generate": "Generieren",
+		"generating": "Wird generiert",
+		"lastGenerated": "Zuletzt generiert: {{time}}",
+		"neverGenerated": "Noch nicht generiert",
+		"layoutLabel": "Darstellung",
+		"layout": {
+			"grid": "Raster",
+			"list": "Liste"
+		},
+		"list": "Ideen",
+		"loading": "Ideen werden geladen",
+		"empty": {
+			"title": "Noch keine Ideen",
+			"description": "Starte eine Runde, und dein Assistent schlägt vor, was als Nächstes ansteht."
+		},
+		"busy": {
+			"title": "Suche nach Ideen",
+			"description": "Das dauert eine Minute. Du kannst diese Seite verlassen."
+		},
+		"error": {
+			"title": "Die Ideen konnten nicht geladen werden",
+			"retry": "Erneut versuchen"
+		},
+		"kind": {
+			"mail": "E-Mail",
+			"task": "Aufgabe",
+			"event": "Termin",
+			"follow_up": "Nachfassen",
+			"research": "Recherche",
+			"other": "Idee"
+		},
+		"state": {
+			"running": "Läuft",
+			"needs_approval": "Braucht deine Freigabe",
+			"done": "Erledigt",
+			"failed": "Fehlgeschlagen"
+		},
+		"card": {
+			"run": "Ausführen",
+			"retry": "Erneut versuchen",
+			"dismiss": "Verwerfen",
+			"sources": "Quellen",
+			"draft": "Entwurf",
+			"outputs": "Ergebnis",
+			"failed": "Die Ausführung ist fehlgeschlagen.",
+			"continue": "In Bulle fortsetzen"
+		},
+		"approval": {
+			"heading": "Freigabe nötig",
+			"approve": "Freigeben",
+			"decline": "Ablehnen",
+			"args": "Argumente",
+			"busy": "Deine Antwort wird gesendet"
+		},
+		"upsell": {
+			"title": "Ideen gibt es mit einem KI-Tarif",
+			"description": "Dein Assistent liest deine Daten, erkennt, was ansteht, und bereitet es für dich vor. Du gibst frei, bevor etwas gesendet wird.",
+			"example": "Beispiel",
+			"examples": "Beispiele für Ideen",
+			"cta": "Tarife ansehen",
+			"mail": {
+				"title": "Claire zum Angebot antworten",
+				"why": "Ihre E-Mail wartet seit drei Tagen. Ein Antwortentwurf liegt bereit."
+			},
+			"task": {
+				"title": "Aus den Meetingnotizen Aufgaben machen",
+				"why": "Aus dem Gespräch am Dienstag sind fünf To-dos entstanden."
+			},
+			"follow_up": {
+				"title": "Bei einem stillen Kontakt nachfassen",
+				"why": "Seit zwei Wochen keine Antwort. Eine kurze Erinnerung wirkt meist."
+			}
+		},
+		"nav": "Ideen"
 	}
 }

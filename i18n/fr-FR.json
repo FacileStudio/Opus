@@ -1030,7 +1030,8 @@
 			"members": "Membres",
 			"invitations": "Invitations",
 			"more": "Plus",
-			"backToBoard": "Retour au tableau"
+			"backToBoard": "Retour au tableau",
+			"ideas": "Idées"
 		},
 		"projectList": {
 			"viewProject": "Voir le projet",
@@ -1879,5 +1880,85 @@
 		},
 		"copyright": "© {{year}} Opus par Facile.",
 		"footerTagline": "Gestion de projet auto-hébergée."
+	},
+	"ideas": {
+		"newCount_one": "{{count}} nouvelle idée",
+		"newCount_other": "{{count}} nouvelles idées",
+		"title": "Idées",
+		"description": "Les suggestions que votre assistant a préparées pour vous.",
+		"generate": "Générer",
+		"generating": "Génération en cours",
+		"lastGenerated": "Dernière génération : {{time}}",
+		"neverGenerated": "Pas encore générées",
+		"layoutLabel": "Disposition",
+		"layout": {
+			"grid": "Grille",
+			"list": "Liste"
+		},
+		"list": "Idées",
+		"loading": "Chargement des idées",
+		"empty": {
+			"title": "Pas encore d'idées",
+			"description": "Lancez une génération et votre assistant suggère la suite."
+		},
+		"busy": {
+			"title": "Recherche d'idées",
+			"description": "Cela prend une minute. Vous pouvez quitter cette page."
+		},
+		"error": {
+			"title": "Les idées n'ont pas chargé",
+			"retry": "Réessayer"
+		},
+		"kind": {
+			"mail": "E-mail",
+			"task": "Tâche",
+			"event": "Événement",
+			"follow_up": "Relance",
+			"research": "Recherche",
+			"other": "Idée"
+		},
+		"state": {
+			"running": "En cours",
+			"needs_approval": "Attend votre accord",
+			"done": "Terminé",
+			"failed": "Échec"
+		},
+		"card": {
+			"run": "Lancer",
+			"retry": "Réessayer",
+			"dismiss": "Écarter",
+			"sources": "Sources",
+			"draft": "Brouillon",
+			"outputs": "Résultat",
+			"failed": "L'exécution a échoué.",
+			"continue": "Continuer dans Bulle"
+		},
+		"approval": {
+			"heading": "Accord nécessaire",
+			"approve": "Approuver",
+			"decline": "Refuser",
+			"args": "Arguments",
+			"busy": "Envoi de votre réponse"
+		},
+		"upsell": {
+			"title": "Les idées font partie d'un forfait IA",
+			"description": "Votre assistant lit vos données, repère ce qui doit être fait et le prépare pour vous. Vous validez avant tout envoi.",
+			"example": "Exemple",
+			"examples": "Exemples d'idées",
+			"cta": "Voir les forfaits",
+			"mail": {
+				"title": "Répondre à Claire sur le devis",
+				"why": "Son e-mail attend depuis trois jours. Un brouillon de réponse est prêt."
+			},
+			"task": {
+				"title": "Transformer les notes de réunion en tâches",
+				"why": "Cinq actions sont ressorties de l'appel de mardi."
+			},
+			"follow_up": {
+				"title": "Relancer un prospect silencieux",
+				"why": "Pas de réponse depuis deux semaines. Une courte relance suffit souvent."
+			}
+		},
+		"nav": "Idées"
 	}
 }
