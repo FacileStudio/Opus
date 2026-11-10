@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
+	"sync/atomic"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/middleware"
@@ -33,6 +35,7 @@ type ideas struct {
 	plans      *forfait.Store
 	exchanger  *exchange.Exchanger
 	configured bool
+	synced     atomic.Bool
 }
 
 func newIdeas(db *gorm.DB, kits *authKits, appEnv *env.Config, logger *slog.Logger) *ideas {
@@ -42,6 +45,8 @@ func newIdeas(db *gorm.DB, kits *authKits, appEnv *env.Config, logger *slog.Logg
 	}
 	i.plans = forfait.NewStore(forfait.Feature{Key: aiAccessKey, Kind: forfait.Bool, Default: []byte("false")})
 	i.plans.Issuer = appEnv.OIDC.Issuer
+	i.plans.Logger = logger
+	i.loadPlans(context.Background())
 	exchanger, err := exchange.New(exchange.Config{
 		Issuer:       appEnv.OIDC.Issuer,
 		ClientID:     appEnv.OIDC.ClientID,
@@ -60,7 +65,7 @@ func newIdeas(db *gorm.DB, kits *authKits, appEnv *env.Config, logger *slog.Logg
 
 func (i *ideas) apply(snapshot directory.Snapshot) {
 	if i.plans != nil {
-		i.plans.Apply(snapshot)
+		i.savePlans(snapshot)
 	}
 }
 
@@ -112,7 +117,13 @@ func (i *ideas) space(r *http.Request) string {
 	return *spaceID
 }
 
+// aiAccess reports whether the active space's plan, or the person's own,
+// includes ai.access. It fails closed: until Registre has delivered
+// entitlements once, AI is off, even though forfait itself fails open.
 func (i *ideas) aiAccess(r *http.Request) bool {
+	if !i.synced.Load() {
+		return false
+	}
 	if spaceID := i.space(r); spaceID != "" {
 		return i.plans.Enabled(forfait.Scope{SpaceID: spaceID}, aiAccessKey)
 	}

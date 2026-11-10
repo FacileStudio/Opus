@@ -41,6 +41,7 @@ function useActiveWorkspace() {
     error,
     isLoading,
     isError: !!error,
+    isSettled: !isPending,
   };
 }
 

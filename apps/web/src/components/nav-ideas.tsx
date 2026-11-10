@@ -11,15 +11,16 @@ import {
 } from "@/components/ui/sidebar";
 import { useIdeas } from "@/hooks/queries/ideas/use-ideas";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
-import { countNewIdeas } from "@/lib/ideas";
+import { countNewIdeas, ideasScope } from "@/lib/ideas";
 
 export function NavIdeas() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: workspace } = useActiveWorkspace();
-  const { data } = useIdeas(workspace?.id, !!workspace);
+  const { data: workspace, isSettled } = useActiveWorkspace();
+  const scope = ideasScope(workspace?.id, isSettled);
+  const { data } = useIdeas(scope.workspaceId, scope.ready);
 
-  if (!workspace) return null;
+  if (!scope.ready) return null;
 
   const isActive = window.location.pathname === "/ideas";
   const count = data?.ai_access ? countNewIdeas(data.ideas) : 0;
