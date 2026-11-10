@@ -147,6 +147,13 @@ docs/        Architecture, configuration, development, deployment, API
 | [Deployment](docs/deployment.md) | Docker Compose, the single container, Helm, Traefik routing |
 | [API](docs/api.md) | HTTP endpoints and payloads |
 
+## License
+
+Opus is licensed under [AGPL-3.0-only](LICENSE). It is derived from
+[Kaneo](https://github.com/usekaneo/kaneo), whose MIT notice is kept in
+[LICENSE-MIT](LICENSE-MIT); see [NOTICE](NOTICE). A commercial licence is available
+from Facile Studio for use that cannot meet the AGPL's terms.
+
 ---
 
 Part of the [Facile Suite](https://facile.studio) — self-hosted tools for creative studios

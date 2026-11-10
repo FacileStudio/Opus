@@ -1,0 +1,17 @@
+Opus
+Copyright (c) 2026 Facile Studio
+
+Opus is licensed under the GNU Affero General Public License v3.0 only
+(AGPL-3.0-only). The full text is in LICENSE.
+
+Opus is derived from Kaneo (https://github.com/usekaneo/kaneo),
+Copyright (c) 2024 Andrej Acevski, used under the MIT licence reproduced in
+LICENSE-MIT. The Kaneo-derived parts are chiefly under apps/web, i18n and
+tests, with smaller parts in charts, scripts and .cursor.
+
+The components in apps/web/src/components/ui were added with the shadcn/ui
+CLI (apps/web/components.json) from the coss ui registry
+(https://coss.com/ui), following shadcn/ui (https://ui.shadcn.com), which is
+licensed under the MIT licence.
+
+Third-party components keep their own licences.

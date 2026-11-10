@@ -2,6 +2,12 @@
 
 All notable changes to Opus are documented here.
 
+## [Unreleased]
+
+### Changed
+
+- The licence changes from MIT to AGPL-3.0-only. Releases up to and including v2.33.0 remain under MIT; the next release is the first under AGPL-3.0-only. The Kaneo-derived parts keep their MIT notice in `LICENSE-MIT`, and `NOTICE` records the derivation. A commercial licence is available from Facile Studio.
+
 ## [2.33.0] - 2026-11-10
 
 ### Added
