@@ -1,4 +1,7 @@
-import type { EmailResult } from "../../../packages/email/src/send-email";
+type EmailResult = {
+  success: boolean;
+  reason?: "SMTP_NOT_CONFIGURED";
+};
 
 export async function sendMagicLinkEmail(
   _to: string,

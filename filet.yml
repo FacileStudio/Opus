@@ -22,8 +22,6 @@ ignore:
   - testdata
   - coverage
   - apps/web # React frontend, linted by biome
-  - apps/docs # Fumadocs site, linted by biome
-  - apps/site # marketing site, linted by biome
 
 extensions: [.go]
 

@@ -32,11 +32,7 @@ tears the other one down and exits with the first non-zero status.
 |---|---|---|
 | API | `apps/api` | Hono app, one directory per feature, controllers under `<feature>/controllers/` |
 | Web client | `apps/web` | React 19 SPA, TanStack Router file-based routes, TanStack Query for server state |
-| Marketing site | `apps/site` | Next.js, deployed separately |
-| Product docs site | `apps/docs` | Standalone documentation site, deployed separately |
-| Email | `packages/email` | Templates and SMTP transport for magic links, OTPs and invitations |
 | Shared libs | `packages/libs` | Types and helpers imported by both `api` and `web` |
-| MCP server | `packages/mcp` | Model Context Protocol server that authenticates through the device flow |
 
 ## Request lifecycle
 

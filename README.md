@@ -88,12 +88,8 @@ Full reference: [docs/configuration.md](docs/configuration.md).
 apps/
   api/       Hono backend — one directory per feature, drizzle/ holds SQL migrations
   web/       React 19 client — TanStack Router pages, fetchers, query and mutation hooks
-  site/      Next.js marketing site
-  docs/      Standalone product documentation site
 packages/
-  email/     Transactional email templates and the SMTP transport
   libs/      Types and helpers shared between api and web
-  mcp/       MCP server exposing Opus to agents
 charts/      Helm chart for Kubernetes deployments
 i18n/        Translation files and the scripts that validate them
 tests/       API unit tests and API integration tests

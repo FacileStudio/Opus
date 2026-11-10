@@ -9,10 +9,6 @@ Self-hosted project management platform. Simplicity and performance first -- fea
 | Monorepo | pnpm 10.32 + TurboRepo |
 | Backend | Hono, Node/tsx, PostgreSQL, Drizzle ORM, Better Auth, Valibot, OpenAPI |
 | Frontend | React 19, Vite, TanStack Router (file-based) + Query, Tailwind CSS v4, Zustand, Radix UI, Tiptap editor |
-| Docs | Fumadocs (Next.js) at `apps/docs/` |
-| Marketing site | Next.js at `apps/site/` |
-| MCP server | `packages/mcp/` |
-| Email | `packages/email/` |
 | Shared libs | `packages/libs/` |
 | Linting | Biome (spaces for JS/TS, tabs elsewhere, double quotes, semicolons required) |
 | Commits | Conventional Commits + gitmoji enforced by shared lefthook config (`FacileStudio/hooks`) |

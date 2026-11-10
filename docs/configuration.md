@@ -188,12 +188,3 @@ the emitted JavaScript.
 Any other `OPUS_`-prefixed variable present in the container environment is also substituted into
 the built assets by `env.sh`.
 
-## MCP server
-
-Read by `packages/mcp` when it runs as a client-side process, not by the API.
-
-| Variable | Required | Default | What it does |
-|---|---|---|---|
-| `OPUS_MCP_CLIENT_ID` | no | `opus-mcp` | Device-flow client id. Must appear in `DEVICE_AUTH_CLIENT_IDS` on the server |
-| `XDG_CONFIG_HOME` | no | `~/.config` | Where the MCP token store writes credentials |
-| `APPDATA` | no | — | Windows equivalent, used to resolve the Claude Desktop config path |
