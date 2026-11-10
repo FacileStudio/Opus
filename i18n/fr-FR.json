@@ -1960,5 +1960,36 @@
 			}
 		},
 		"nav": "Idées"
+	},
+	"pending": {
+		"title": "Actions en attente",
+		"description": "Un assistant IA les a demandées sans pouvoir vous demander lui-même. Rien ne se passe tant que vous ne confirmez pas.",
+		"list": "Actions en attente",
+		"requestedBy": "Demandé par {{client}}",
+		"confirm": "Confirmer",
+		"dismiss": "Ignorer",
+		"tasks_one": "{{count}} tâche",
+		"tasks_other": "{{count}} tâches",
+		"state": {
+			"ready": "En attente de vous",
+			"changed": "Modifié depuis",
+			"missing": "Supprimé"
+		},
+		"stateHelp": {
+			"changed": "Il a été modifié après la demande, il ne peut donc pas être confirmé. Ignorez-la et redemandez.",
+			"missing": "Il n'existe plus. Ignorez cette demande."
+		},
+		"done": {
+			"deleted": "C'est fait, c'est supprimé.",
+			"dismissed": "Ignoré. Rien n'a été supprimé."
+		},
+		"empty": {
+			"title": "Rien à confirmer",
+			"description": "Quand un assistant veut supprimer une tâche ou un projet sans pouvoir vous demander lui-même, la demande attend ici."
+		},
+		"error": {
+			"title": "Les demandes n'ont pas pu être chargées",
+			"retry": "Réessayer"
+		}
 	}
 }

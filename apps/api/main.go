@@ -154,6 +154,13 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 	reconcile := reconcileJob(publisher, appLogger)
 	ideas := newIdeas(db, kits, appEnv, appLogger)
 	workspaces, followers, stopSpaces := startWorkspaces(db, appEnv, appLogger, reconcile, ideas.apply)
+	shared := newDomain(db, hub, publisher)
+	mcpService, err := newMCP(context.Background(), kits, appEnv, mcpDomain(db, workspaces, shared), appLogger)
+	if err != nil {
+		stopSpaces()
+		cleanup()
+		return nil, err
+	}
 	router := buildRouter(routerDeps{
 		db:          db,
 		sqlDB:       sqlDB,
@@ -166,6 +173,8 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		workspaces:  workspaces,
 		registre:    followers,
 		ideas:       ideas,
+		domain:      shared,
+		mcp:         mcpService,
 	})
 	addr := ":" + strconv.Itoa(appEnv.Port)
 	srv := &http.Server{

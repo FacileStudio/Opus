@@ -20,6 +20,7 @@ import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as LayoutAuthenticatedRouteImport } from './routes/_layout/_authenticated'
 import { Route as InvitationAcceptInviteIdRouteImport } from './routes/invitation/accept.$inviteId'
 import { Route as LayoutAuthenticatedProfileSetupRouteImport } from './routes/_layout/_authenticated/profile-setup'
+import { Route as LayoutAuthenticatedPendingRouteImport } from './routes/_layout/_authenticated/pending'
 import { Route as LayoutAuthenticatedOnboardingRouteImport } from './routes/_layout/_authenticated/onboarding'
 import { Route as LayoutAuthenticatedInvitationsRouteImport } from './routes/_layout/_authenticated/invitations'
 import { Route as LayoutAuthenticatedIdeasRouteImport } from './routes/_layout/_authenticated/ideas'
@@ -108,6 +109,12 @@ const LayoutAuthenticatedProfileSetupRoute =
   LayoutAuthenticatedProfileSetupRouteImport.update({
     id: '/profile-setup',
     path: '/profile-setup',
+    getParentRoute: () => LayoutAuthenticatedRoute,
+  } as any)
+const LayoutAuthenticatedPendingRoute =
+  LayoutAuthenticatedPendingRouteImport.update({
+    id: '/pending',
+    path: '/pending',
     getParentRoute: () => LayoutAuthenticatedRoute,
   } as any)
 const LayoutAuthenticatedOnboardingRoute =
@@ -350,6 +357,7 @@ export interface FileRoutesByFullPath {
   '/ideas': typeof LayoutAuthenticatedIdeasRoute
   '/invitations': typeof LayoutAuthenticatedInvitationsRoute
   '/onboarding': typeof LayoutAuthenticatedOnboardingRoute
+  '/pending': typeof LayoutAuthenticatedPendingRoute
   '/profile-setup': typeof LayoutAuthenticatedProfileSetupRoute
   '/invitation/accept/$inviteId': typeof InvitationAcceptInviteIdRoute
   '/dashboard/invitations': typeof LayoutAuthenticatedDashboardInvitationsRoute
@@ -394,6 +402,7 @@ export interface FileRoutesByTo {
   '/ideas': typeof LayoutAuthenticatedIdeasRoute
   '/invitations': typeof LayoutAuthenticatedInvitationsRoute
   '/onboarding': typeof LayoutAuthenticatedOnboardingRoute
+  '/pending': typeof LayoutAuthenticatedPendingRoute
   '/profile-setup': typeof LayoutAuthenticatedProfileSetupRoute
   '/invitation/accept/$inviteId': typeof InvitationAcceptInviteIdRoute
   '/dashboard/invitations': typeof LayoutAuthenticatedDashboardInvitationsRoute
@@ -441,6 +450,7 @@ export interface FileRoutesById {
   '/_layout/_authenticated/ideas': typeof LayoutAuthenticatedIdeasRoute
   '/_layout/_authenticated/invitations': typeof LayoutAuthenticatedInvitationsRoute
   '/_layout/_authenticated/onboarding': typeof LayoutAuthenticatedOnboardingRoute
+  '/_layout/_authenticated/pending': typeof LayoutAuthenticatedPendingRoute
   '/_layout/_authenticated/profile-setup': typeof LayoutAuthenticatedProfileSetupRoute
   '/invitation/accept/$inviteId': typeof InvitationAcceptInviteIdRoute
   '/_layout/_authenticated/dashboard/invitations': typeof LayoutAuthenticatedDashboardInvitationsRoute
@@ -488,6 +498,7 @@ export interface FileRouteTypes {
     | '/ideas'
     | '/invitations'
     | '/onboarding'
+    | '/pending'
     | '/profile-setup'
     | '/invitation/accept/$inviteId'
     | '/dashboard/invitations'
@@ -532,6 +543,7 @@ export interface FileRouteTypes {
     | '/ideas'
     | '/invitations'
     | '/onboarding'
+    | '/pending'
     | '/profile-setup'
     | '/invitation/accept/$inviteId'
     | '/dashboard/invitations'
@@ -578,6 +590,7 @@ export interface FileRouteTypes {
     | '/_layout/_authenticated/ideas'
     | '/_layout/_authenticated/invitations'
     | '/_layout/_authenticated/onboarding'
+    | '/_layout/_authenticated/pending'
     | '/_layout/_authenticated/profile-setup'
     | '/invitation/accept/$inviteId'
     | '/_layout/_authenticated/dashboard/invitations'
@@ -700,6 +713,13 @@ declare module '@tanstack/react-router' {
       path: '/profile-setup'
       fullPath: '/profile-setup'
       preLoaderRoute: typeof LayoutAuthenticatedProfileSetupRouteImport
+      parentRoute: typeof LayoutAuthenticatedRoute
+    }
+    '/_layout/_authenticated/pending': {
+      id: '/_layout/_authenticated/pending'
+      path: '/pending'
+      fullPath: '/pending'
+      preLoaderRoute: typeof LayoutAuthenticatedPendingRouteImport
       parentRoute: typeof LayoutAuthenticatedRoute
     }
     '/_layout/_authenticated/onboarding': {
@@ -1110,6 +1130,7 @@ interface LayoutAuthenticatedRouteChildren {
   LayoutAuthenticatedIdeasRoute: typeof LayoutAuthenticatedIdeasRoute
   LayoutAuthenticatedInvitationsRoute: typeof LayoutAuthenticatedInvitationsRoute
   LayoutAuthenticatedOnboardingRoute: typeof LayoutAuthenticatedOnboardingRoute
+  LayoutAuthenticatedPendingRoute: typeof LayoutAuthenticatedPendingRoute
   LayoutAuthenticatedProfileSetupRoute: typeof LayoutAuthenticatedProfileSetupRoute
 }
 
@@ -1119,6 +1140,7 @@ const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
   LayoutAuthenticatedIdeasRoute: LayoutAuthenticatedIdeasRoute,
   LayoutAuthenticatedInvitationsRoute: LayoutAuthenticatedInvitationsRoute,
   LayoutAuthenticatedOnboardingRoute: LayoutAuthenticatedOnboardingRoute,
+  LayoutAuthenticatedPendingRoute: LayoutAuthenticatedPendingRoute,
   LayoutAuthenticatedProfileSetupRoute: LayoutAuthenticatedProfileSetupRoute,
 }
 

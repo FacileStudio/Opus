@@ -6,10 +6,10 @@ require (
 	github.com/FacileStudio/Journal/sdk/journal v0.0.0-20260811165717-babb9d5d0e15
 	github.com/FacileStudio/antenne-client/go v0.0.0-20260824150250-7681849d44f9
 	github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee
-	github.com/FacileStudio/porte v0.15.1
+	github.com/FacileStudio/porte v0.16.0
 	github.com/FacileStudio/porte/directory v0.3.0
 	github.com/FacileStudio/porte/forfait v0.1.1
-	github.com/FacileStudio/tronc v0.18.0
+	github.com/FacileStudio/tronc v0.20.0
 	github.com/go-chi/chi/v5 v5.3.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/joho/godotenv v1.5.1
@@ -21,6 +21,16 @@ require (
 )
 
 require (
+	github.com/google/jsonschema-go v0.4.3 // indirect
+	github.com/segmentio/asm v1.2.0 // indirect
+	github.com/segmentio/encoding v0.5.4 // indirect
+	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/time v0.15.0 // indirect
+)
+
+require (
+	github.com/FacileStudio/porte/mcpauth v0.2.0
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/coreos/go-oidc/v3 v3.20.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -34,6 +44,7 @@ require (
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/mfridman/interpolate v0.0.2 // indirect
+	github.com/modelcontextprotocol/go-sdk v1.8.0
 	github.com/rogpeppe/go-internal v1.16.0 // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect

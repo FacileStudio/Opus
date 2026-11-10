@@ -2,6 +2,7 @@
 package env
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"net/url"
 	"os"
@@ -81,6 +82,32 @@ type Config struct {
 
 	// OIDC shapes the porte auth kit. Sign-in goes through Registre only.
 	OIDC *OIDCConfig
+
+	// MCP shapes the MCP server. It is off unless OIDC is on and
+	// MCP_RESOURCE is set.
+	MCP MCPConfig
+}
+
+// MCPConfig holds the MCP server settings.
+type MCPConfig struct {
+	// Resource is MCP_RESOURCE, the canonical URI of the endpoint, such as
+	// https://opus.facile.studio/mcp. Registre binds tokens to it.
+	Resource string
+
+	// StateKey signs the confirmation questions handed to clients. It is
+	// derived from the OIDC client secret, so it is secret, stable across
+	// restarts and needs no variable of its own.
+	StateKey []byte
+}
+
+// mcpConfig reads MCP_RESOURCE and derives the state key.
+func mcpConfig(oidc *OIDCConfig) MCPConfig {
+	resource := strings.TrimSpace(troncenv.String("MCP_RESOURCE", ""))
+	if oidc == nil || resource == "" {
+		return MCPConfig{}
+	}
+	key := sha256.Sum256([]byte("opus-mcp-state:" + oidc.ClientSecret))
+	return MCPConfig{Resource: resource, StateKey: key[:]}
 }
 
 func parseLegacyAPI() (*url.URL, error) {
@@ -156,6 +183,7 @@ func Load() (Config, error) {
 		GitHubWebhookSecret: troncenv.String("GITHUB_WEBHOOK_SECRET", ""),
 		BulleURL:            strings.TrimSuffix(troncenv.String("BULLE_URL", ""), "/"),
 		OIDC:                oidcConfig,
+		MCP:                 mcpConfig(oidcConfig),
 	}, nil
 }
 
