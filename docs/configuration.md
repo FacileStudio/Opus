@@ -40,7 +40,7 @@ The entrypoint URL-encodes the user and password before assembling `DATABASE_URL
 | `DISABLE_PASSWORD_REGISTRATION` | no | `false` | `true` rejects `/sign-up/email` but leaves other methods open |
 | `DISABLE_GUEST_ACCESS` | no | `false` | `true` removes the `anonymous` plugin |
 | `DEMO_MODE` | no | `false` | Reported by `GET /api/config` as `isDemoMode` |
-| `DEVICE_AUTH_CLIENT_IDS` | no | `opus-cli,opus-mcp` | Comma-separated client ids accepted by the device authorization flow |
+| `MCP_RESOURCE` | no | none | Public URL of the MCP server, such as `https://opus.facile.studio/mcp`. With `OIDC_ISSUER` set it turns `/mcp` on; Registre must declare the same URL as Opus's MCP resource |
 
 ## OAuth and SSO providers
 

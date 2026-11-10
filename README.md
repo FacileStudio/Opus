@@ -21,7 +21,8 @@ Live at [opus.facile.studio](https://opus.facile.studio).
 - Live collaboration over WebSockets, optionally fanned out across replicas through Redis
 - Outbound integrations for GitHub, Gitea, Discord, Slack, Telegram and generic webhooks
 - Two-way project and task sync with other suite apps through the Nook pool
-- An MCP server and a device authorization flow so CLIs and agents can act on a workspace
+- A remote MCP server at `/mcp`, so Claude, ChatGPT, Cursor or any MCP client can work on your
+  projects and tasks, signed in through Registre
 
 ## Stack
 
@@ -68,6 +69,45 @@ facile install opus
 Opus mints a static API key; `facile login opus` opens the page that
 generates it (Settings → Account → Developer).
 
+## MCP
+
+Opus serves a remote [MCP](https://modelcontextprotocol.io) server at
+`https://opus.facile.studio/mcp` (Streamable HTTP, stateless, spec 2026-07-28). Add that URL to
+any MCP client as a remote server. There is nothing to install and no API key to copy.
+
+```sh
+claude mcp add --transport http opus https://opus.facile.studio/mcp
+```
+
+**Sign-in.** The client finds Registre through the server's
+`/.well-known/oauth-protected-resource/mcp` document and signs you in with OAuth (PKCE). Registre
+shows a consent screen and issues a token bound to this server, with the scopes `opus.read` and
+`opus.write`. Revoke a client under Connected apps in your Facile account. Your first MCP call
+creates your Opus account if you never opened the web app. MCP is free on every plan.
+
+**What a tool can see.** Exactly what you see in the web app: the workspaces you belong to, their
+projects and tasks. Every write goes through the same checks, live updates and suite sync as the
+web app.
+
+| Tool | What it does |
+|---|---|
+| `opus_list_workspaces` | Your workspaces, their members (for assignees) and labels |
+| `opus_list_projects` | Projects with their key and the statuses a task can take |
+| `opus_search_tasks` | Find tasks by words, status, priority, assignee, label or due date |
+| `opus_read_task` | One task in full, by id or ref such as `web-12`, with its comments |
+| `opus_create_task` | Add a task, with assignee, due date and labels |
+| `opus_update_task` | Change status, assignee, dates, labels or project; only the fields set change |
+| `opus_comment_task` | Comment on a task under your name |
+| `opus_create_project` | Create a project with the default board |
+| `opus_update_project` | Rename, describe, archive or restore a project |
+| `opus_delete_task` | Delete a task, after you confirm |
+| `opus_delete_project` | Delete a project and its tasks, after you confirm |
+
+**Confirmations.** Deleting never happens on the agent's word alone. A client that can ask you
+(MRTR elicitation) shows a confirmation; any other client gets a link to
+`https://opus.facile.studio/pending`, where you confirm or dismiss the request. A task or project
+edited after the request cannot be confirmed.
+
 ## Configuration
 
 | Variable | What it does |
@@ -79,6 +119,7 @@ generates it (Settings → Account → Developer).
 | `AUTH_SECRET` | `better-auth` signing key, 32 characters or more; a random one is generated if unset |
 | `OIDC_ISSUER` | Registre. With an issuer set, Opus mounts no password or sign-up route |
 | `NOOK_POOL_URL` | Default Nook pool URL used when a workspace has no explicit one |
+| `MCP_RESOURCE` | The MCP server's public URL, such as `https://opus.facile.studio/mcp`. Needs `OIDC_ISSUER`; unset leaves `/mcp` off |
 
 Full reference: [docs/configuration.md](docs/configuration.md).
 

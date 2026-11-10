@@ -253,17 +253,20 @@ Emitted and accepted events: `project.created`, `project.updated`, `project.dele
 
 ## MCP
 
+The MCP server lives outside `/api`. It is on only when `OIDC_ISSUER` and `MCP_RESOURCE` are set.
+
 | Method | Path | Auth | What it does |
 |---|---|---|---|
-| POST | `/mcp/register` | none | Dynamic client registration |
-| GET | `/mcp/authorize` | none | Authorization endpoint |
-| POST | `/mcp/authorize/callback` | none | Authorization callback |
-| POST | `/mcp/token` | none | Token endpoint |
-| GET | `/.well-known/oauth-protected-resource/api/mcp` | none | Protected resource metadata |
-| GET | `/.well-known/oauth-authorization-server/api` | none | Authorization server metadata |
+| POST | `/mcp` | Registre access token bound to `MCP_RESOURCE` | Model Context Protocol, Streamable HTTP, stateless |
+| GET | `/.well-known/oauth-protected-resource/mcp` | none | RFC 9728 metadata: the resource, Registre as the authorization server, `opus.read` and `opus.write` |
+| GET | `/api/mcp/pending` | session | Deletes an MCP client asked for and could not confirm with you |
+| POST | `/api/mcp/pending/{id}/confirm` | session | Run one, once. 412 when the target changed since the request |
+| POST | `/api/mcp/pending/{id}/dismiss` | session | Close one without running it |
 
-The two `.well-known` documents are also served by nginx at the root, populated at container start
-by `apps/web/env.sh` from `OPUS_API_URL`.
+`GET /mcp` answers 405. A request without a valid token gets 401 with a `WWW-Authenticate`
+header naming the metadata; a write tool called with only `opus.read` gets 403
+`insufficient_scope`. A foreign browser `Origin` gets 403. Delegated tokens cannot confirm pending
+actions. The tools are listed in the [README](../README.md#mcp).
 
 ## WebSocket
 
