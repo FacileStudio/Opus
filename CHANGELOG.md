@@ -11,6 +11,7 @@ All notable changes to Opus are documented here.
 ### Fixed
 
 - The MCP confirmation before deleting a project no longer says "its 1 tasks": it counts the tasks and drops the count when there are none.
+- The unused `apps/web/nginx.conf` and `nginx.opus.conf`, which still routed the old `/api/mcp` metadata path, are removed: the Go binary serves the SPA and the MCP metadata itself.
 
 ## [2.33.0] - 2026-11-10
 

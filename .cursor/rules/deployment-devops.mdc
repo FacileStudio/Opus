@@ -15,7 +15,7 @@ The main Docker Compose configuration is in `docker-compose.yml` at the project 
 
 ### Service Structure
 
-Single-container deployment: API + Nginx frontend in one image built with Bun.
+Single-container deployment: one Go binary serves the API and the SPA (built with pnpm) from one image.
 
 ```yaml
 services:
