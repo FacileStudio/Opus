@@ -6,11 +6,8 @@ RUN bun install -g pnpm@10.32.1
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
-COPY packages/email/package.json ./packages/email/
 COPY packages/libs/package.json ./packages/libs/
-COPY packages/mcp/package.json ./packages/mcp/
 COPY apps/web/package.json ./apps/web/
-COPY apps/site/package.json ./apps/site/
 
 RUN pnpm install --frozen-lockfile
 

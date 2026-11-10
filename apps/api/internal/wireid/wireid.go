@@ -1,7 +1,7 @@
 // Package wireid is the id a request body carries: an int64 that also accepts
-// the decimal string form, because both in-repo JavaScript clients normalise
-// ids to strings before they reach a fetcher (see apps/web auth-client.ts toStr
-// and packages/mcp tool args) while the OpenAPI documentation advertises int64.
+// the decimal string form, because the in-repo web client normalises
+// ids to strings before they reach a fetcher (see apps/web auth-client.ts toStr)
+// while the OpenAPI documentation advertises int64.
 // Numbers and numeric strings decode to the same value; anything else — empty
 // string, float, overflow, garbage — is rejected and surfaces as the 400 the
 // strict decoder already produced, so validation stays at the trust boundary.
