@@ -76,6 +76,9 @@ type Config struct {
 	// GitHubWebhookSecret validates incoming GitHub webhooks.
 	GitHubWebhookSecret string
 
+	// BulleURL is Bulle's origin. Empty leaves the Ideas routes unmounted.
+	BulleURL string
+
 	// OIDC shapes the porte auth kit. Sign-in goes through Registre only.
 	OIDC *OIDCConfig
 }
@@ -151,6 +154,7 @@ func Load() (Config, error) {
 		AuthBridgeSecret:    troncenv.String("AUTH_BRIDGE_SECRET", ""),
 		RedisURL:            troncenv.String("REDIS_URL", ""),
 		GitHubWebhookSecret: troncenv.String("GITHUB_WEBHOOK_SECRET", ""),
+		BulleURL:            strings.TrimSuffix(troncenv.String("BULLE_URL", ""), "/"),
 		OIDC:                oidcConfig,
 	}, nil
 }

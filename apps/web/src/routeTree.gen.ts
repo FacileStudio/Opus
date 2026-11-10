@@ -22,6 +22,7 @@ import { Route as InvitationAcceptInviteIdRouteImport } from './routes/invitatio
 import { Route as LayoutAuthenticatedProfileSetupRouteImport } from './routes/_layout/_authenticated/profile-setup'
 import { Route as LayoutAuthenticatedOnboardingRouteImport } from './routes/_layout/_authenticated/onboarding'
 import { Route as LayoutAuthenticatedInvitationsRouteImport } from './routes/_layout/_authenticated/invitations'
+import { Route as LayoutAuthenticatedIdeasRouteImport } from './routes/_layout/_authenticated/ideas'
 import { Route as LayoutAuthenticatedDashboardRouteImport } from './routes/_layout/_authenticated/dashboard'
 import { Route as LayoutAuthenticatedDashboardIndexRouteImport } from './routes/_layout/_authenticated/dashboard/index'
 import { Route as LayoutAuthenticatedDashboardSettingsRouteImport } from './routes/_layout/_authenticated/dashboard/settings'
@@ -119,6 +120,12 @@ const LayoutAuthenticatedInvitationsRoute =
   LayoutAuthenticatedInvitationsRouteImport.update({
     id: '/invitations',
     path: '/invitations',
+    getParentRoute: () => LayoutAuthenticatedRoute,
+  } as any)
+const LayoutAuthenticatedIdeasRoute =
+  LayoutAuthenticatedIdeasRouteImport.update({
+    id: '/ideas',
+    path: '/ideas',
     getParentRoute: () => LayoutAuthenticatedRoute,
   } as any)
 const LayoutAuthenticatedDashboardRoute =
@@ -340,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
   '/shared/$token': typeof SharedTokenRoute
   '/dashboard': typeof LayoutAuthenticatedDashboardRouteWithChildren
+  '/ideas': typeof LayoutAuthenticatedIdeasRoute
   '/invitations': typeof LayoutAuthenticatedInvitationsRoute
   '/onboarding': typeof LayoutAuthenticatedOnboardingRoute
   '/profile-setup': typeof LayoutAuthenticatedProfileSetupRoute
@@ -383,6 +391,7 @@ export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
   '/shared/$token': typeof SharedTokenRoute
+  '/ideas': typeof LayoutAuthenticatedIdeasRoute
   '/invitations': typeof LayoutAuthenticatedInvitationsRoute
   '/onboarding': typeof LayoutAuthenticatedOnboardingRoute
   '/profile-setup': typeof LayoutAuthenticatedProfileSetupRoute
@@ -429,6 +438,7 @@ export interface FileRoutesById {
   '/public-project/$projectId': typeof PublicProjectProjectIdRoute
   '/shared/$token': typeof SharedTokenRoute
   '/_layout/_authenticated/dashboard': typeof LayoutAuthenticatedDashboardRouteWithChildren
+  '/_layout/_authenticated/ideas': typeof LayoutAuthenticatedIdeasRoute
   '/_layout/_authenticated/invitations': typeof LayoutAuthenticatedInvitationsRoute
   '/_layout/_authenticated/onboarding': typeof LayoutAuthenticatedOnboardingRoute
   '/_layout/_authenticated/profile-setup': typeof LayoutAuthenticatedProfileSetupRoute
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/public-project/$projectId'
     | '/shared/$token'
     | '/dashboard'
+    | '/ideas'
     | '/invitations'
     | '/onboarding'
     | '/profile-setup'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/auth/sign-in'
     | '/public-project/$projectId'
     | '/shared/$token'
+    | '/ideas'
     | '/invitations'
     | '/onboarding'
     | '/profile-setup'
@@ -563,6 +575,7 @@ export interface FileRouteTypes {
     | '/public-project/$projectId'
     | '/shared/$token'
     | '/_layout/_authenticated/dashboard'
+    | '/_layout/_authenticated/ideas'
     | '/_layout/_authenticated/invitations'
     | '/_layout/_authenticated/onboarding'
     | '/_layout/_authenticated/profile-setup'
@@ -701,6 +714,13 @@ declare module '@tanstack/react-router' {
       path: '/invitations'
       fullPath: '/invitations'
       preLoaderRoute: typeof LayoutAuthenticatedInvitationsRouteImport
+      parentRoute: typeof LayoutAuthenticatedRoute
+    }
+    '/_layout/_authenticated/ideas': {
+      id: '/_layout/_authenticated/ideas'
+      path: '/ideas'
+      fullPath: '/ideas'
+      preLoaderRoute: typeof LayoutAuthenticatedIdeasRouteImport
       parentRoute: typeof LayoutAuthenticatedRoute
     }
     '/_layout/_authenticated/dashboard': {
@@ -1087,6 +1107,7 @@ const LayoutAuthenticatedDashboardRouteWithChildren =
 
 interface LayoutAuthenticatedRouteChildren {
   LayoutAuthenticatedDashboardRoute: typeof LayoutAuthenticatedDashboardRouteWithChildren
+  LayoutAuthenticatedIdeasRoute: typeof LayoutAuthenticatedIdeasRoute
   LayoutAuthenticatedInvitationsRoute: typeof LayoutAuthenticatedInvitationsRoute
   LayoutAuthenticatedOnboardingRoute: typeof LayoutAuthenticatedOnboardingRoute
   LayoutAuthenticatedProfileSetupRoute: typeof LayoutAuthenticatedProfileSetupRoute
@@ -1095,6 +1116,7 @@ interface LayoutAuthenticatedRouteChildren {
 const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
   LayoutAuthenticatedDashboardRoute:
     LayoutAuthenticatedDashboardRouteWithChildren,
+  LayoutAuthenticatedIdeasRoute: LayoutAuthenticatedIdeasRoute,
   LayoutAuthenticatedInvitationsRoute: LayoutAuthenticatedInvitationsRoute,
   LayoutAuthenticatedOnboardingRoute: LayoutAuthenticatedOnboardingRoute,
   LayoutAuthenticatedProfileSetupRoute: LayoutAuthenticatedProfileSetupRoute,

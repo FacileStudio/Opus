@@ -1030,7 +1030,8 @@
 			"invitations": "Покани",
 			"more": "Повеќе",
 			"backToBoard": "Назад на табла",
-			"myTasks": "Мои задачи"
+			"myTasks": "Мои задачи",
+			"ideas": "Ideas"
 		},
 		"projectList": {
 			"viewProject": "Погледни проект",
@@ -1878,5 +1879,85 @@
 		"heroTitle": "Project management you host yourself",
 		"pageTitle": "Self-hosted project management",
 		"sectionTitle": "Everything a project needs, nothing it does not"
+	},
+	"ideas": {
+		"approval": {
+			"approve": "Approve",
+			"args": "Arguments",
+			"busy": "Sending your answer",
+			"decline": "Decline",
+			"heading": "Approval needed"
+		},
+		"busy": {
+			"description": "This takes a minute. You can leave this page.",
+			"title": "Looking for ideas"
+		},
+		"card": {
+			"continue": "Continue in Bulle",
+			"dismiss": "Dismiss",
+			"draft": "Draft",
+			"failed": "The run failed.",
+			"outputs": "Result",
+			"retry": "Try again",
+			"run": "Run",
+			"sources": "Sources"
+		},
+		"description": "Suggestions your assistant prepared for you.",
+		"empty": {
+			"description": "Generate a batch and your assistant suggests what to do next.",
+			"title": "No ideas yet"
+		},
+		"error": {
+			"retry": "Try again",
+			"title": "Ideas did not load"
+		},
+		"generate": "Generate",
+		"generating": "Generating",
+		"kind": {
+			"event": "Event",
+			"follow_up": "Follow-up",
+			"mail": "Email",
+			"other": "Idea",
+			"research": "Research",
+			"task": "Task"
+		},
+		"lastGenerated": "Last generated {{time}}",
+		"layout": {
+			"grid": "Grid",
+			"list": "List"
+		},
+		"layoutLabel": "Layout",
+		"list": "Ideas",
+		"loading": "Loading ideas",
+		"nav": "Ideas",
+		"neverGenerated": "Not generated yet",
+		"newCount_one": "{{count}} new idea",
+		"newCount_other": "{{count}} new ideas",
+		"state": {
+			"done": "Done",
+			"failed": "Failed",
+			"needs_approval": "Needs your approval",
+			"running": "Running"
+		},
+		"title": "Ideas",
+		"upsell": {
+			"cta": "See plans",
+			"description": "Your assistant reads your data, spots what needs doing and prepares it for you. You approve before anything is sent.",
+			"example": "Example",
+			"examples": "Examples of ideas",
+			"follow_up": {
+				"title": "Follow up with a quiet lead",
+				"why": "No answer in two weeks. A short nudge usually works."
+			},
+			"mail": {
+				"title": "Reply to Claire about the quote",
+				"why": "Her email has waited three days. A draft reply is ready."
+			},
+			"task": {
+				"title": "Turn the meeting notes into tasks",
+				"why": "Five action items came out of Tuesday's call."
+			},
+			"title": "Ideas come with an AI plan"
+		}
 	}
 }

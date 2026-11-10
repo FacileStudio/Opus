@@ -30,6 +30,13 @@ type Directory struct {
 	retryDelay time.Duration
 	synced     sync.Once
 	onSynced   func(context.Context)
+	onSnapshot func(directory.Snapshot)
+}
+
+// OnSnapshot hands every Registre snapshot to fn before it is applied, so an
+// app can read the entitlements it carries. Call it before Run.
+func (d *Directory) OnSnapshot(fn func(directory.Snapshot)) {
+	d.onSnapshot = fn
 }
 
 // OnFirstSync runs fn once, in the background, after the first Registre

@@ -28,7 +28,7 @@ type registreFollowers struct {
 // the one deletion poller. Without OIDC, Opus manages workspaces itself and
 // there is no sync route. onSynced runs once: after the first Registre
 // snapshot is applied, or right away without OIDC.
-func startWorkspaces(db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger, onSynced func(context.Context)) (
+func startWorkspaces(db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger, onSynced func(context.Context), onSnapshot func(directory.Snapshot)) (
 	*workspace.Service, registreFollowers, func(),
 ) {
 	workspaces := workspace.NewService(db, appEnv.UploadDir)
@@ -48,6 +48,7 @@ func startWorkspaces(db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger, on
 	}
 	spaces := workspace.NewDirectory(workspaces, client, appLogger)
 	spaces.OnFirstSync(onSynced)
+	spaces.OnSnapshot(onSnapshot)
 	deletions := workspace.NewDeletions(workspaces, client, portepg.New(sqlDB).EraseIdentity,
 		storage.NewAssetStorage(appEnv.UploadDir, storage.LoadS3Config()), appLogger)
 	ctx, cancel := context.WithCancel(context.Background())

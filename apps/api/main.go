@@ -23,6 +23,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
 	"github.com/FacileStudio/porte/oidc"
+	portepg "github.com/FacileStudio/porte/pg"
 	"github.com/FacileStudio/porte/session"
 	"github.com/FacileStudio/tronc/healthcheck"
 	"github.com/FacileStudio/tronc/logger"
@@ -37,6 +38,7 @@ type sqlPinger interface {
 type authKits struct {
 	sessions *session.Manager
 	oidc     *oidc.Kit
+	store    *portepg.Store
 }
 
 func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger) (*authKits, error) {
@@ -67,7 +69,7 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	if err != nil {
 		return nil, err
 	}
-	return &authKits{sessions: sessions, oidc: kit}, nil
+	return &authKits{sessions: sessions, oidc: kit, store: store}, nil
 }
 
 // backfillPictures fills the Registre picture URL for accounts that have not
@@ -150,7 +152,8 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		return nil, err
 	}
 	reconcile := reconcileJob(publisher, appLogger)
-	workspaces, followers, stopSpaces := startWorkspaces(db, appEnv, appLogger, reconcile)
+	ideas := newIdeas(db, kits, appEnv, appLogger)
+	workspaces, followers, stopSpaces := startWorkspaces(db, appEnv, appLogger, reconcile, ideas.apply)
 	router := buildRouter(routerDeps{
 		db:          db,
 		sqlDB:       sqlDB,
@@ -162,6 +165,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		reconcile:   reconcile,
 		workspaces:  workspaces,
 		registre:    followers,
+		ideas:       ideas,
 	})
 	addr := ":" + strconv.Itoa(appEnv.Port)
 	srv := &http.Server{

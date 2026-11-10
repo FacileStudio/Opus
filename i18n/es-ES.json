@@ -1030,7 +1030,8 @@
 			"invitations": "Invitaciones",
 			"more": "Más",
 			"backToBoard": "Volver al tablero",
-			"myTasks": "Mis tareas"
+			"myTasks": "Mis tareas",
+			"ideas": "Ideas"
 		},
 		"projectList": {
 			"viewProject": "Ver Proyecto",
@@ -1879,5 +1880,85 @@
 		},
 		"copyright": "© {{year}} Opus de Facile.",
 		"footerTagline": "Gestión de proyectos autoalojada."
+	},
+	"ideas": {
+		"newCount_one": "{{count}} idea nueva",
+		"newCount_other": "{{count}} ideas nuevas",
+		"title": "Ideas",
+		"description": "Las sugerencias que tu asistente ha preparado para ti.",
+		"generate": "Generar",
+		"generating": "Generando",
+		"lastGenerated": "Última generación: {{time}}",
+		"neverGenerated": "Aún sin generar",
+		"layoutLabel": "Disposición",
+		"layout": {
+			"grid": "Cuadrícula",
+			"list": "Lista"
+		},
+		"list": "Ideas",
+		"loading": "Cargando ideas",
+		"empty": {
+			"title": "Aún no hay ideas",
+			"description": "Genera un lote y tu asistente sugiere qué hacer a continuación."
+		},
+		"busy": {
+			"title": "Buscando ideas",
+			"description": "Tarda un minuto. Puedes salir de esta página."
+		},
+		"error": {
+			"title": "Las ideas no se cargaron",
+			"retry": "Reintentar"
+		},
+		"kind": {
+			"mail": "Correo",
+			"task": "Tarea",
+			"event": "Evento",
+			"follow_up": "Seguimiento",
+			"research": "Investigación",
+			"other": "Idea"
+		},
+		"state": {
+			"running": "En curso",
+			"needs_approval": "Necesita tu aprobación",
+			"done": "Hecho",
+			"failed": "Falló"
+		},
+		"card": {
+			"run": "Ejecutar",
+			"retry": "Reintentar",
+			"dismiss": "Descartar",
+			"sources": "Fuentes",
+			"draft": "Borrador",
+			"outputs": "Resultado",
+			"failed": "La ejecución falló.",
+			"continue": "Continuar en Bulle"
+		},
+		"approval": {
+			"heading": "Aprobación necesaria",
+			"approve": "Aprobar",
+			"decline": "Rechazar",
+			"args": "Argumentos",
+			"busy": "Enviando tu respuesta"
+		},
+		"upsell": {
+			"title": "Las ideas llegan con un plan de IA",
+			"description": "Tu asistente lee tus datos, detecta lo que hay que hacer y lo prepara por ti. Tú apruebas antes de que se envíe nada.",
+			"example": "Ejemplo",
+			"examples": "Ejemplos de ideas",
+			"cta": "Ver los planes",
+			"mail": {
+				"title": "Responder a Claire sobre el presupuesto",
+				"why": "Su correo lleva tres días esperando. Hay un borrador de respuesta listo."
+			},
+			"task": {
+				"title": "Convertir las notas de la reunión en tareas",
+				"why": "De la llamada del martes salieron cinco acciones."
+			},
+			"follow_up": {
+				"title": "Dar seguimiento a un contacto callado",
+				"why": "Sin respuesta desde hace dos semanas. Un recordatorio breve suele funcionar."
+			}
+		},
+		"nav": "Ideas"
 	}
 }

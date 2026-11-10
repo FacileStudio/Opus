@@ -1030,7 +1030,8 @@
 			"members": "Members",
 			"invitations": "Invitations",
 			"more": "More",
-			"backToBoard": "Back to board"
+			"backToBoard": "Back to board",
+			"ideas": "Ideas"
 		},
 		"projectList": {
 			"viewProject": "View Project",
@@ -1878,5 +1879,85 @@
 		},
 		"copyright": "© {{year}} Opus by Facile.",
 		"footerTagline": "Self-hosted project management."
+	},
+	"ideas": {
+		"newCount_one": "{{count}} new idea",
+		"newCount_other": "{{count}} new ideas",
+		"title": "Ideas",
+		"description": "Suggestions your assistant prepared for you.",
+		"generate": "Generate",
+		"generating": "Generating",
+		"lastGenerated": "Last generated {{time}}",
+		"neverGenerated": "Not generated yet",
+		"layoutLabel": "Layout",
+		"layout": {
+			"grid": "Grid",
+			"list": "List"
+		},
+		"list": "Ideas",
+		"loading": "Loading ideas",
+		"empty": {
+			"title": "No ideas yet",
+			"description": "Generate a batch and your assistant suggests what to do next."
+		},
+		"busy": {
+			"title": "Looking for ideas",
+			"description": "This takes a minute. You can leave this page."
+		},
+		"error": {
+			"title": "Ideas did not load",
+			"retry": "Try again"
+		},
+		"kind": {
+			"mail": "Email",
+			"task": "Task",
+			"event": "Event",
+			"follow_up": "Follow-up",
+			"research": "Research",
+			"other": "Idea"
+		},
+		"state": {
+			"running": "Running",
+			"needs_approval": "Needs your approval",
+			"done": "Done",
+			"failed": "Failed"
+		},
+		"card": {
+			"run": "Run",
+			"retry": "Try again",
+			"dismiss": "Dismiss",
+			"sources": "Sources",
+			"draft": "Draft",
+			"outputs": "Result",
+			"failed": "The run failed.",
+			"continue": "Continue in Bulle"
+		},
+		"approval": {
+			"heading": "Approval needed",
+			"approve": "Approve",
+			"decline": "Decline",
+			"args": "Arguments",
+			"busy": "Sending your answer"
+		},
+		"upsell": {
+			"title": "Ideas come with an AI plan",
+			"description": "Your assistant reads your data, spots what needs doing and prepares it for you. You approve before anything is sent.",
+			"example": "Example",
+			"examples": "Examples of ideas",
+			"cta": "See plans",
+			"mail": {
+				"title": "Reply to Claire about the quote",
+				"why": "Her email has waited three days. A draft reply is ready."
+			},
+			"task": {
+				"title": "Turn the meeting notes into tasks",
+				"why": "Five action items came out of Tuesday's call."
+			},
+			"follow_up": {
+				"title": "Follow up with a quiet lead",
+				"why": "No answer in two weeks. A short nudge usually works."
+			}
+		},
+		"nav": "Ideas"
 	}
 }
