@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"log/slog"
 
-	antenne "github.com/FacileStudio/antenne-client/go"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/modules/github"
+	antenne "github.com/FacileStudio/antenne-client/go"
 	"gorm.io/gorm"
 )
 

@@ -7,9 +7,9 @@ import (
 	"log/slog"
 	"testing"
 
-	antenne "github.com/FacileStudio/antenne-client/go"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
+	antenne "github.com/FacileStudio/antenne-client/go"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
