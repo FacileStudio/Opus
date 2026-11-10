@@ -1960,5 +1960,36 @@
 			}
 		},
 		"nav": "Ideas"
+	},
+	"pending": {
+		"title": "Acciones pendientes",
+		"description": "Un asistente de IA las pidió sin poder preguntarte. No pasa nada hasta que confirmes.",
+		"list": "Acciones pendientes",
+		"requestedBy": "Pedido por {{client}}",
+		"confirm": "Confirmar",
+		"dismiss": "Descartar",
+		"tasks_one": "{{count}} tarea",
+		"tasks_other": "{{count}} tareas",
+		"state": {
+			"ready": "Esperándote",
+			"changed": "Cambiado desde entonces",
+			"missing": "Ya no existe"
+		},
+		"stateHelp": {
+			"changed": "Se editó después de la solicitud, así que no se puede confirmar. Descártala y vuelve a pedirla.",
+			"missing": "Ya no existe. Descarta esta solicitud."
+		},
+		"done": {
+			"deleted": "Hecho. Se ha eliminado.",
+			"dismissed": "Descartado. No se eliminó nada."
+		},
+		"empty": {
+			"title": "Nada que confirmar",
+			"description": "Cuando un asistente quiere eliminar una tarea o un proyecto y no puede preguntarte, la solicitud espera aquí."
+		},
+		"error": {
+			"title": "No se pudieron cargar las solicitudes",
+			"retry": "Reintentar"
+		}
 	}
 }

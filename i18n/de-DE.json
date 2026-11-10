@@ -1959,5 +1959,36 @@
 			}
 		},
 		"nav": "Ideen"
+	},
+	"pending": {
+		"title": "Ausstehende Aktionen",
+		"description": "Ein KI-Assistent hat sie angefragt, konnte dich aber nicht selbst fragen. Nichts passiert, bevor du bestätigst.",
+		"list": "Ausstehende Aktionen",
+		"requestedBy": "Angefragt von {{client}}",
+		"confirm": "Bestätigen",
+		"dismiss": "Verwerfen",
+		"tasks_one": "{{count}} Aufgabe",
+		"tasks_other": "{{count}} Aufgaben",
+		"state": {
+			"ready": "Wartet auf dich",
+			"changed": "Seitdem geändert",
+			"missing": "Nicht mehr da"
+		},
+		"stateHelp": {
+			"changed": "Es wurde nach der Anfrage bearbeitet und kann daher nicht bestätigt werden. Verwirf die Anfrage und frag erneut.",
+			"missing": "Es existiert nicht mehr. Verwirf diese Anfrage."
+		},
+		"done": {
+			"deleted": "Erledigt. Es ist gelöscht.",
+			"dismissed": "Verworfen. Nichts wurde gelöscht."
+		},
+		"empty": {
+			"title": "Nichts zu bestätigen",
+			"description": "Wenn ein Assistent eine Aufgabe oder ein Projekt löschen will und dich nicht selbst fragen kann, wartet die Anfrage hier."
+		},
+		"error": {
+			"title": "Die Anfragen konnten nicht geladen werden",
+			"retry": "Erneut versuchen"
+		}
 	}
 }

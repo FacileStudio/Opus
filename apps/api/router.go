@@ -21,6 +21,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/modules/config"
 	"github.com/FacileStudio/Opus/apps/api/modules/github"
 	"github.com/FacileStudio/Opus/apps/api/modules/label"
+	"github.com/FacileStudio/Opus/apps/api/modules/mcp"
 	"github.com/FacileStudio/Opus/apps/api/modules/notification"
 	"github.com/FacileStudio/Opus/apps/api/modules/project"
 	"github.com/FacileStudio/Opus/apps/api/modules/search"
@@ -52,6 +53,8 @@ type routerDeps struct {
 	workspaces  *workspace.Service
 	registre    registreFollowers
 	ideas       *ideas
+	domain      domain
+	mcp         *mcp.Service
 }
 
 func referenceConfig() apiref.Config {
@@ -79,39 +82,60 @@ func referenceConfig() apiref.Config {
 				asset.Documentation(),
 				config.Documentation(),
 				github.Documentation(),
+				mcp.Documentation(),
 			},
 		},
 	}
 }
 
+// domain holds the services the HTTP routes and the MCP server share, so a
+// write through either broadcasts and syncs the same way.
+type domain struct {
+	projects   *project.Service
+	columns    *column.Service
+	tasks      *task.Service
+	relations  *taskrelation.Service
+	labels     *label.Service
+	comments   *comment.Service
+	activities *activity.Service
+}
+
+// newDomain builds the shared services with their realtime publisher and
+// Antenne emitter.
+func newDomain(db *gorm.DB, hub *realtime.Hub, emitter events.Emitter) domain {
+	d := domain{
+		projects:   project.NewService(db),
+		columns:    column.NewService(db),
+		tasks:      task.NewService(db),
+		relations:  taskrelation.NewService(db),
+		labels:     label.NewService(db),
+		comments:   comment.NewService(db),
+		activities: activity.NewService(db),
+	}
+	d.projects.SetEmitter(emitter)
+	d.tasks.SetEmitter(emitter)
+	if hub != nil {
+		d.tasks.SetPublisher(hub)
+		d.relations.SetPublisher(hub)
+		d.labels.SetPublisher(hub)
+		d.comments.SetPublisher(hub)
+	}
+	return d
+}
+
 func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, deps routerDeps) {
-	db, appEnv, hub := deps.db, deps.appEnv, deps.realtimeHub
+	db, appEnv, d := deps.db, deps.appEnv, deps.domain
 	configService := config.NewService(appEnv)
 	configService.SetSpacesURL(deps.workspaces.SpacesURL)
 	config.RegisterRoutes(api, configService)
-	projectService := project.NewService(db)
-	projectService.SetEmitter(deps.emitter)
-	project.RegisterRoutes(api, projectService, authService)
-	column.RegisterRoutes(api, column.NewService(db), authService)
-	taskService := task.NewService(db)
-	if hub != nil {
-		taskService.SetPublisher(hub)
-	}
-	taskService.SetEmitter(deps.emitter)
-	task.RegisterRoutes(api, taskService, authService)
-	task.RegisterPublicRoutes(api, taskService)
-	relationService := taskrelation.NewService(db)
-	labelService := label.NewService(db)
-	commentService := comment.NewService(db)
-	if hub != nil {
-		relationService.SetPublisher(hub)
-		labelService.SetPublisher(hub)
-		commentService.SetPublisher(hub)
-	}
-	taskrelation.RegisterRoutes(api, relationService, authService)
-	label.RegisterRoutes(api, labelService, authService)
-	comment.RegisterRoutes(api, commentService, authService)
-	activity.RegisterRoutes(api, activity.NewService(db), authService)
+	project.RegisterRoutes(api, d.projects, authService)
+	column.RegisterRoutes(api, d.columns, authService)
+	task.RegisterRoutes(api, d.tasks, authService)
+	task.RegisterPublicRoutes(api, d.tasks)
+	taskrelation.RegisterRoutes(api, d.relations, authService)
+	label.RegisterRoutes(api, d.labels, authService)
+	comment.RegisterRoutes(api, d.comments, authService)
+	activity.RegisterRoutes(api, d.activities, authService)
 	sharelink.RegisterRoutes(api, sharelink.NewService(db), authService)
 	timeentry.RegisterRoutes(api, timeentry.NewService(db), authService)
 	workflowrule.RegisterRoutes(api, workflowrule.NewService(db), authService)
@@ -145,6 +169,9 @@ func buildRouter(deps routerDeps) chi.Router {
 	router.Head("/health", health.Live())
 	router.Head("/api/health", health.Live())
 	apiref.Mount(router, referenceConfig())
+	if deps.mcp != nil {
+		mcp.RegisterRoutes(router, deps.mcp)
+	}
 
 	if deps.realtimeHub != nil {
 		router.Get("/ws", deps.realtimeHub.ServeWS)
@@ -165,6 +192,9 @@ func buildRouter(deps routerDeps) chi.Router {
 		}
 		registerDomainRoutes(api, authService, deps)
 		deps.ideas.mount(api, authService)
+		if deps.mcp != nil {
+			mcp.RegisterPendingRoutes(api, deps.mcp, authService)
+		}
 		if deps.reconcile != nil {
 			mountReconcile(api, deps.db, authService, deps.reconcile)
 		}

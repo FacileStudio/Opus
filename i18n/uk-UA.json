@@ -1971,5 +1971,38 @@
 		},
 		"newCount_few": "{{count}} new ideas",
 		"newCount_many": "{{count}} new ideas"
+	},
+	"pending": {
+		"title": "Pending actions",
+		"description": "An AI assistant asked for these and could not ask you itself. Nothing happens until you confirm.",
+		"list": "Pending actions",
+		"requestedBy": "Asked by {{client}}",
+		"confirm": "Confirm",
+		"dismiss": "Dismiss",
+		"tasks_one": "{{count}} task",
+		"tasks_few": "{{count}} tasks",
+		"tasks_many": "{{count}} tasks",
+		"tasks_other": "{{count}} tasks",
+		"state": {
+			"ready": "Waiting for you",
+			"changed": "Changed since",
+			"missing": "Gone"
+		},
+		"stateHelp": {
+			"changed": "It was edited after the request, so it cannot be confirmed. Dismiss it and ask again.",
+			"missing": "It no longer exists. Dismiss this request."
+		},
+		"done": {
+			"deleted": "Done. It is deleted.",
+			"dismissed": "Dismissed. Nothing was deleted."
+		},
+		"empty": {
+			"title": "Nothing to confirm",
+			"description": "When an assistant asks to delete a task or a project and cannot ask you itself, the request waits here."
+		},
+		"error": {
+			"title": "The requests did not load",
+			"retry": "Try again"
+		}
 	}
 }
