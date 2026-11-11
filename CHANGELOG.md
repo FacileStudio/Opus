@@ -2,6 +2,12 @@
 
 All notable changes to Opus are documented here.
 
+## [2.35.1] - 2026-11-11
+
+### Fixed
+
+- An account created at sign-in got a NULL colour instead of the empty one every older account carries. New accounts get the empty colour again.
+
 ## [2.35.0] - 2026-11-11
 
 ### Changed
