@@ -17,10 +17,10 @@ import (
 )
 
 type erasureFixture struct {
-	alice, bob                int64
-	shared, alicePersonal     int64
-	bobPersonal, sharedTask   int64
-	personalAsset, aliceTaskN int64
+	alice, bob              int64
+	shared, alicePersonal   int64
+	bobPersonal, sharedTask int64
+	aliceTaskN              int64
 }
 
 func seedErasure(t *testing.T, service *Service, db *gorm.DB) erasureFixture {

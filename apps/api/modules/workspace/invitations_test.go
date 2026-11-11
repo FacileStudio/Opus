@@ -43,11 +43,11 @@ func TestInviteMemberRoleDefaultsAndGuards(t *testing.T) {
 	addMember(t, db, workspaceID, memberID, "member")
 	ctx := context.Background()
 
-	invitation, err := service.InviteMember(ctx, memberID, workspaceID, InviteMemberRequest{Email: "paul@facile.studio"})
+	_, err := service.InviteMember(ctx, memberID, workspaceID, InviteMemberRequest{Email: "paul@facile.studio"})
 	if errors.Status(err) != 403 {
 		t.Fatalf("member InviteMember status = %d, want 403", errors.Status(err))
 	}
-	invitation, err = service.InviteMember(ctx, ownerID, workspaceID, InviteMemberRequest{Email: "lea@facile.studio"})
+	invitation, err := service.InviteMember(ctx, ownerID, workspaceID, InviteMemberRequest{Email: "lea@facile.studio"})
 	if errors.Status(err) != 409 {
 		t.Fatalf("invite existing member status = %d, want 409", errors.Status(err))
 	}

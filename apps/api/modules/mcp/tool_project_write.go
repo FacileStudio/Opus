@@ -2,7 +2,7 @@ package mcp
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/modules/project"
@@ -12,7 +12,7 @@ import (
 
 // errNoPersonal is the refusal for a create without a workspace when the
 // user has no personal workspace.
-var errNoPersonal = errors.New("the user has no personal workspace. Pass workspace_id; " + hintWorkspace)
+var errNoPersonal = fmt.Errorf("%s", "the user has no personal workspace. Pass workspace_id; "+hintWorkspace)
 
 // createProject is opus_create_project.
 func (t *toolset) createProject(ctx context.Context, req *sdk.CallToolRequest, in createProjectInput) (*sdk.CallToolResult, projectOutput, error) {
