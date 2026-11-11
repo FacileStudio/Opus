@@ -2,6 +2,12 @@
 
 All notable changes to Opus are documented here.
 
+## [2.35.2] - 2026-11-11
+
+### Fixed
+
+- Events sent through the outbox reached Antenne with Postgres's `jsonb` key order instead of the order Opus marshalled. The drainer re-encodes each row through its envelope, so receivers get the same bytes as before v2.35.0 again, and a test pins them for every channel.
+
 ## [2.35.1] - 2026-11-11
 
 ### Fixed
