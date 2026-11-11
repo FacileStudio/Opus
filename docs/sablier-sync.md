@@ -41,8 +41,9 @@ shape by `00009_antenne_outbox_v1.sql`). The library's drainer sends unsent rows
 failure, so a dead pool delays events but never drops or reorders them. After a failure it backs
 off up to 5 seconds. Sent rows are pruned after 7 days; an erasure deletes the sent rows that name
 the erased person at once. Idempotency keys read `<channel>:<facile_id>:<unixnano>`. The payload
-column is `jsonb`, so the sent bytes carry Postgres's key order, not Go's: same JSON, different
-bytes.
+column is `jsonb`, which reorders keys, so the drainer decodes each row into its envelope and
+encodes it again: receivers get the bytes Opus marshalled, pinned in
+`internal/events/testdata/events`.
 
 A project event carries `space`: `registre_space_id` for a workspace linked to Registre, or
 `personal: true` with the owner's porte subject and lowercased email for a personal workspace.

@@ -4,7 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"reflect"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -134,30 +135,29 @@ func TestUnconfiguredPublisherQueuesNothing(t *testing.T) {
 	}
 }
 
-func TestDrainedEventEqualsThePinnedEnvelope(t *testing.T) {
+func TestDrainedEventsKeepThePinnedBytes(t *testing.T) {
 	pub, fake, _ := outboxPublisher(t)
-	payload := wireSamples()[ChannelWorkspaceCreated]
-	want := wireEnvelope(t, ChannelWorkspaceCreated, payload)
-	var event map[string]any
-	if err := json.Unmarshal(want, &event); err != nil {
-		t.Fatal(err)
+	samples := wireSamples()
+	names := make([]string, 0, len(samples))
+	for name, payload := range samples {
+		names = append(names, name)
+		channel, _, _ := strings.Cut(name, ".minimal")
+		pub.enqueue(context.Background(), channel, "pin:"+name, json.RawMessage(wireEnvelope(t, name, payload)))
 	}
-	pub.enqueue(context.Background(), ChannelWorkspaceCreated, "workspace.created:studio:1", event)
 	if _, err := pub.drainer.Drain(context.Background()); err != nil {
 		t.Fatalf("drain: %v", err)
 	}
 	msgs := fake.getMessages()
-	if len(msgs) != 1 {
-		t.Fatalf("sent %d messages, want 1", len(msgs))
+	if len(msgs) != len(names) {
+		t.Fatalf("sent %d messages, want %d", len(msgs), len(names))
 	}
-	var got, expected any
-	if err := json.Unmarshal(msgs[0].payload.(json.RawMessage), &got); err != nil {
-		t.Fatal(err)
-	}
-	if err := json.Unmarshal(want, &expected); err != nil {
-		t.Fatal(err)
-	}
-	if !reflect.DeepEqual(got, expected) {
-		t.Fatalf("drained event = %v, want %v", got, expected)
+	for i, name := range names {
+		want, err := os.ReadFile(filepath.Join("testdata", "events", name+".json"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got := string(msgs[i].payload.(json.RawMessage)) + "\n"; got != string(want) {
+			t.Errorf("%s left the outbox as\n%s\nwant\n%s", name, got, want)
+		}
 	}
 }
