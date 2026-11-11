@@ -1,6 +1,6 @@
 module github.com/FacileStudio/Opus/apps/api
 
-go 1.26.10
+go 1.26.11
 
 require (
 	github.com/FacileStudio/Journal/sdk/journal v0.0.0-20260811165717-babb9d5d0e15
@@ -10,7 +10,7 @@ require (
 	github.com/FacileStudio/porte/forfait v0.1.1
 	github.com/FacileStudio/tronc v0.22.0
 	github.com/FacileStudio/tronc/testdb v0.1.1
-	github.com/go-chi/chi/v5 v5.3.1
+	github.com/go-chi/chi/v5 v5.4.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/joho/godotenv v1.5.1
 	github.com/pressly/goose/v3 v3.27.3
