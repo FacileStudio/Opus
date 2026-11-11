@@ -1,7 +1,7 @@
 {
 	"name": "Opus",
 	"short_name": "Opus",
-	"description": "Self-hosted project management for small teams.",
+	"description": "Kanban boards, linked tasks and instant search. Nothing you do not need, nothing that slows you down.",
 	"icons": [
 		{
 			"src": "/icon-192.png",
@@ -12,15 +12,10 @@
 			"src": "/icon-512.png",
 			"sizes": "512x512",
 			"type": "image/png"
-		},
-		{
-			"src": "/favicon.svg",
-			"sizes": "any",
-			"type": "image/svg+xml"
 		}
 	],
-	"theme_color": "#0a0a0a",
-	"background_color": "#0a0a0a",
+	"theme_color": "#fafafa",
+	"background_color": "#fafafa",
 	"display": "standalone",
 	"start_url": "/"
 }

@@ -48,7 +48,7 @@ function Landing() {
 
   return (
     <div className="flex h-svh w-full flex-col overflow-y-auto bg-background text-foreground">
-      <PageTitle title={t("pageTitle")} />
+      <PageTitle title={t("pageTitle")} hideAppName />
 
       <header>
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
