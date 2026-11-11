@@ -32,6 +32,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/modules/workflowrule"
 	"github.com/FacileStudio/Opus/apps/api/modules/workspace"
 	"github.com/FacileStudio/porte/directory"
+	"github.com/FacileStudio/porte/kit"
 	"github.com/FacileStudio/tronc/apiref"
 	"github.com/FacileStudio/tronc/health"
 	"github.com/FacileStudio/tronc/httpx"
@@ -182,8 +183,9 @@ func buildRouter(deps routerDeps) chi.Router {
 		api.Use(realtime.InitiatorMiddleware)
 		health.Mount(api, deps.sqlDB.PingContext)
 		api.Head("/health", health.Live())
-		deps.kits.sessions.Mount(api)
-		deps.kits.oidc.Mount(api)
+		if err := kit.Mount(api, kit.Config{Sessions: deps.kits.sessions, OIDC: deps.kits.oidc}); err != nil {
+			deps.appLogger.Error("auth routes not mounted", slog.Any("error", err))
+		}
 		auth.RegisterRoutes(api, authService)
 		workspace.RegisterRoutes(api, deps.workspaces, authService)
 		if deps.registre.spaces != nil && deps.registre.deletions != nil {

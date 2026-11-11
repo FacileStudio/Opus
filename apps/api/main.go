@@ -21,7 +21,9 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/poolsync"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/internal/scheduler"
+	"github.com/FacileStudio/Opus/apps/api/internal/storage"
 	"github.com/FacileStudio/Opus/apps/api/modules/auth"
+	"github.com/FacileStudio/Opus/apps/api/modules/workspace"
 	"github.com/FacileStudio/porte/oidc"
 	portepg "github.com/FacileStudio/porte/pg"
 	"github.com/FacileStudio/porte/session"
@@ -39,6 +41,7 @@ type authKits struct {
 	sessions *session.Manager
 	oidc     *oidc.Kit
 	store    *portepg.Store
+	users    *auth.UserStore
 }
 
 func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger) (*authKits, error) {
@@ -51,7 +54,11 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 		return nil, err
 	}
 	resealInBackground(ctx, store, appLogger)
-	users := auth.NewUserStore(db)
+	eraser := workspace.NewEraser(appEnv.UploadDir, storage.NewAssetStorage(appEnv.UploadDir, storage.LoadS3Config()))
+	users, err := auth.NewUserStore(ctx, sqlDB, eraser.EraseData)
+	if err != nil {
+		return nil, err
+	}
 	cfg := appEnv.Porte()
 	backfillPictures(ctx, users, cfg.Issuer, appLogger)
 
@@ -69,7 +76,7 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	if err != nil {
 		return nil, err
 	}
-	return &authKits{sessions: sessions, oidc: kit, store: store}, nil
+	return &authKits{sessions: sessions, oidc: kit, store: store, users: users}, nil
 }
 
 // backfillPictures fills the Registre picture URL for accounts that have not
@@ -153,7 +160,11 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 	}
 	reconcile := reconcileJob(publisher, appLogger)
 	ideas := newIdeas(db, kits, appEnv, appLogger)
-	workspaces, followers, stopSpaces := startWorkspaces(db, appEnv, appLogger, reconcile, ideas.apply)
+	workspaces, followers, stopSpaces := startWorkspaces(db, appEnv, appLogger, workspaceHooks{
+		onSynced:        reconcile,
+		onSnapshot:      ideas.apply,
+		onPersonDeleted: kits.users.EraseAccount,
+	})
 	shared := newDomain(db, hub, publisher)
 	mcpService, err := newMCP(context.Background(), kits, appEnv, mcpDomain(db, workspaces, shared), appLogger)
 	if err != nil {
