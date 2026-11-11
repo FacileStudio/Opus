@@ -5,6 +5,12 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
+
+	"github.com/FacileStudio/antenne-client/go/catalog"
+	envelope "github.com/FacileStudio/antenne-client/go/envelope"
+	"github.com/FacileStudio/antenne-client/go/outbox"
+
 	"gorm.io/gorm"
 )
 
@@ -32,6 +38,43 @@ func seedErasureTraces(t *testing.T, db *gorm.DB, f erasureFixture) {
 		if err := db.Exec(s.query, s.args...).Error; err != nil {
 			t.Fatalf("seed %q: %v", s.query, err)
 		}
+	}
+	queueUnsentEvents(t, db)
+}
+
+func queueUnsentEvents(t *testing.T, db *gorm.DB) {
+	t.Helper()
+	queued := []struct {
+		channel, key string
+		event        any
+	}{
+		{"task.updated", "u1", envelope.Event[events.TaskPayload]{Payload: events.TaskPayload{
+			Title: "Ship it", ActorEmail: "Alice@Facile.Studio", OwnerEmail: "alice@facile.studio"}}},
+		{"task.created", "u2", envelope.Event[events.TaskPayload]{Payload: events.TaskPayload{
+			Title: "Ship it", ActorSubject: "sub-alice"}}},
+		{"project.created", "u3", envelope.Event[events.ProjectPayload]{Payload: events.ProjectPayload{
+			Name: "Side", Space: &events.SpacePayload{Personal: true, OwnerSubject: "sub-alice", OwnerEmail: "alice@facile.studio"}}}},
+		{"task.updated", "u4", envelope.Event[events.TaskPayload]{Payload: events.TaskPayload{
+			Title: "Review", ActorEmail: "bob@facile.studio", ActorSubject: "sub-bob"}}},
+	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		t.Fatalf("sql db: %v", err)
+	}
+	tx, err := sqlDB.BeginTx(context.Background(), nil)
+	if err != nil {
+		t.Fatalf("begin: %v", err)
+	}
+	for _, q := range queued {
+		if err := outbox.Enqueue(context.Background(), tx, catalog.Channel(q.channel), q.event, q.key); err != nil {
+			t.Fatalf("enqueue %s: %v", q.key, err)
+		}
+	}
+	if err := tx.Commit(); err != nil {
+		t.Fatalf("commit: %v", err)
+	}
+	if n := count(t, db, "SELECT count(*) FROM antenne_outbox WHERE sent_at IS NULL"); n != 4 {
+		t.Fatalf("queued %d unsent events, want 4", n)
 	}
 }
 
@@ -74,12 +117,16 @@ func TestErasureLeavesNoTextNamingThePerson(t *testing.T) {
 	if n := count(t, db, "SELECT count(*) FROM mcp_actions WHERE user_id = ?", needles[4]); n != 0 {
 		t.Errorf("mcp_actions: %d rows for the erased id", n)
 	}
+	if n := count(t, db, "SELECT count(*) FROM antenne_outbox WHERE idempotency_key IN ('u1', 'u2', 'u3')"); n != 0 {
+		t.Errorf("antenne_outbox: %d queued events naming the person survive", n)
+	}
 	references := map[string]int64{
 		"activity author":   count(t, db, "SELECT count(*) FROM activities WHERE user_id IS NULL AND content = 'shared note'"),
 		"time entry author": count(t, db, "SELECT count(*) FROM time_entries WHERE user_id IS NULL AND description = 'pairing'"),
 		"task assignee":     count(t, db, "SELECT count(*) FROM tasks WHERE id = ? AND actor_id IS NULL", f.sharedTask),
 		"pull request":      count(t, db, "SELECT count(*) FROM task_pull_requests WHERE title = 'Fix it' AND author_github_id IS NULL"),
 		"others' events":    count(t, db, "SELECT count(*) FROM antenne_outbox WHERE idempotency_key = 'k3'"),
+		"others' queued":    count(t, db, "SELECT count(*) FROM antenne_outbox WHERE idempotency_key = 'u4' AND sent_at IS NULL"),
 	}
 	for name, n := range references {
 		if n != 1 {
