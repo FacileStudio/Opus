@@ -1,0 +1,1 @@
+{"version":1,"app":"Opus","object":"task","action":"updated","facile_id":"1","payload":{"id":1,"facile_id":"","project_id":1,"project_facile_id":"","workspace_id":1,"title":"t","name":"t","status":"","description":"","priority":"none","due_date":null},"timestamp":"2026-11-11T09:30:00Z","idempotency_key":"task.updated:1:1794389400123456789"}

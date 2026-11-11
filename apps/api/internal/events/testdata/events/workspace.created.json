@@ -1,0 +1,1 @@
+{"version":1,"app":"Opus","object":"workspace","action":"created","facile_id":"studio","payload":{"id":1,"facile_id":"studio","name":"Studio","slug":"studio","description":"Plan the launch","actor_email":"camille@facile.studio"},"timestamp":"2026-11-11T09:30:00Z","idempotency_key":"workspace.created:studio:1794389400123456789"}
