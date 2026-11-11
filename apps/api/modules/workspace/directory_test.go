@@ -7,13 +7,12 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"sync"
 	"testing"
 	"time"
 
-	"github.com/FacileStudio/Opus/apps/api/internal/database"
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte/directory"
 	"github.com/FacileStudio/tronc/errors"
@@ -25,30 +24,7 @@ const testIssuer = "https://sso.test"
 
 func newPostgresService(t *testing.T) (*Service, *gorm.DB) {
 	t.Helper()
-	base := os.Getenv("TEST_DATABASE_URL")
-	if base == "" {
-		t.Skip("TEST_DATABASE_URL is not set, skipping the Postgres directory test")
-	}
-	url := fmt.Sprintf("%s/opus_spaces_%d", strings.TrimRight(base, "/"), time.Now().UnixNano())
-	if err := database.EnsureDatabase(url); err != nil {
-		t.Fatalf("create database: %v", err)
-	}
-	db, err := database.Open(url)
-	if err != nil {
-		t.Fatalf("open database: %v", err)
-	}
-	sqlDB, err := db.DB()
-	if err != nil {
-		t.Fatalf("sql handle: %v", err)
-	}
-	t.Cleanup(func() {
-		if err := sqlDB.Close(); err != nil {
-			t.Logf("close database: %v", err)
-		}
-	})
-	if err := database.RunMigrations(sqlDB); err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
+	db := dbtest.Open(t)
 	return NewService(db, t.TempDir()), db
 }
 

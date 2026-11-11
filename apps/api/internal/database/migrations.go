@@ -23,7 +23,14 @@ func RunMigrations(db *sql.DB) error {
 
 // RunMigrationsContext applies all pending migrations with context and Postgres session lock.
 func RunMigrationsContext(ctx context.Context, db *sql.DB) error {
-	locker, err := lock.NewPostgresSessionLocker()
+	return RunMigrationsLocked(ctx, db, lock.DefaultLockID)
+}
+
+// RunMigrationsLocked applies all pending migrations under the Postgres
+// session lock lockID. The lock is database-wide, so callers sharing one
+// database across schemas, as the tests do, pass one id per schema.
+func RunMigrationsLocked(ctx context.Context, db *sql.DB, lockID int64) error {
+	locker, err := lock.NewPostgresSessionLocker(lock.WithLockID(lockID))
 	if err != nil {
 		return fmt.Errorf("session locker: %w", err)
 	}

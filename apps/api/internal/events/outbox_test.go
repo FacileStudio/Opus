@@ -7,22 +7,16 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 func outboxPublisher(t *testing.T) (*Publisher, *fakeTransport, *gorm.DB) {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
+	db := dbtest.Open(t)
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxOpenConns(1)
-	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.Project{}, &schemas.AntenneOutbox{}); err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
 	fake := &fakeTransport{connected: true}
 	return New(Config{URL: "http://localhost", Secret: "sec"}, WithTransport(fake), WithStore(db)), fake, db
 }

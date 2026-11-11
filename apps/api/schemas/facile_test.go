@@ -4,19 +4,16 @@ import (
 	"testing"
 	"time"
 
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 )
 
 func TestFacileIDMinted(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open: %v", err)
+	db := dbtest.Open(t)
+	workspace := Workspace{Name: "W", Slug: "w", CreatedAt: time.Now()}
+	if err := db.Create(&workspace).Error; err != nil {
+		t.Fatalf("create workspace: %v", err)
 	}
-	if err := db.AutoMigrate(&Project{}, &Task{}); err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
-	project := Project{WorkspaceID: 1, Name: "P", Slug: "p", CreatedAt: time.Now()}
+	project := Project{WorkspaceID: workspace.ID, Name: "P", Slug: "p", CreatedAt: time.Now()}
 	if err := db.Create(&project).Error; err != nil {
 		t.Fatalf("create project: %v", err)
 	}

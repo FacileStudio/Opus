@@ -11,11 +11,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/internal/storage"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/go-chi/chi/v5"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -48,22 +48,7 @@ func (a *testAuth) IdentityForUser(_ context.Context, userID int64) (int64, stri
 
 func setupTestEnv(t *testing.T) (*gorm.DB, *Service, string) {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
-	err = db.AutoMigrate(
-		&schemas.User{},
-		&schemas.Workspace{},
-		&schemas.WorkspaceMember{},
-		&schemas.Project{},
-		&schemas.Task{},
-		&schemas.ShareLink{},
-		&schemas.Asset{},
-	)
-	if err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
+	db := dbtest.Open(t)
 	tempDir, err := os.MkdirTemp("", "opus_asset_test_*")
 	if err != nil {
 		t.Fatalf("temp dir: %v", err)
@@ -75,16 +60,20 @@ func setupTestEnv(t *testing.T) (*gorm.DB, *Service, string) {
 
 func seedFixture(t *testing.T, db *gorm.DB) (int64, int64, int64) {
 	t.Helper()
+	create := func(row any) {
+		if err := db.Create(row).Error; err != nil {
+			t.Fatalf("seed %T: %v", row, err)
+		}
+	}
 	user := schemas.User{Email: "test@facile.studio", Name: "Tester"}
-	db.Create(&user)
-	workspace := schemas.Workspace{Name: "Workspace"}
-	db.Create(&workspace)
-	member := schemas.WorkspaceMember{WorkspaceID: workspace.ID, UserID: user.ID, Role: "admin"}
-	db.Create(&member)
-	project := schemas.Project{WorkspaceID: workspace.ID, Name: "Project"}
-	db.Create(&project)
-	task := schemas.Task{ProjectID: project.ID, Title: "Task"}
-	db.Create(&task)
+	create(&user)
+	workspace := schemas.Workspace{Name: "Workspace", Slug: "workspace"}
+	create(&workspace)
+	create(&schemas.WorkspaceMember{WorkspaceID: workspace.ID, UserID: user.ID, Role: "admin"})
+	project := schemas.Project{WorkspaceID: workspace.ID, Name: "Project", Slug: "project"}
+	create(&project)
+	task := schemas.Task{WorkspaceID: workspace.ID, ProjectID: project.ID, Title: "Task"}
+	create(&task)
 	return user.ID, project.ID, task.ID
 }
 

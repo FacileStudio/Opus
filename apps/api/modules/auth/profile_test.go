@@ -6,21 +6,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func newProfileService(t *testing.T) *Service {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
-	if err := db.AutoMigrate(&schemas.User{}); err != nil {
-		t.Fatalf("migrate user: %v", err)
-	}
+	db := dbtest.Open(t)
 	return NewService(db, nil, slog.New(slog.DiscardHandler))
 }
 

@@ -2,17 +2,15 @@ package mcp
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"net"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/FacileStudio/Opus/apps/api/internal/database"
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/modules/activity"
 	"github.com/FacileStudio/Opus/apps/api/modules/column"
 	"github.com/FacileStudio/Opus/apps/api/modules/label"
@@ -26,7 +24,6 @@ import (
 	"github.com/FacileStudio/tronc/mcp/mcptest"
 	"github.com/go-chi/chi/v5"
 	sdk "github.com/modelcontextprotocol/go-sdk/mcp"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -72,62 +69,17 @@ type fixture struct {
 	perMinute int
 }
 
-// openDB opens a fresh database with Opus's schema and the pending store
-// on it: Postgres with the real migrations when TEST_DATABASE_URL is set,
-// else in-memory SQLite.
+// openDB opens the test database with Opus's migrations, mcp_actions
+// included, and the Postgres pending store on it.
 func openDB(t *testing.T) (*gorm.DB, mcpkit.Pending) {
 	t.Helper()
-	if base := os.Getenv("TEST_DATABASE_URL"); base != "" {
-		return openPostgres(t, base)
-	}
-	name := strings.NewReplacer("/", "_", " ", "_").Replace(t.Name())
-	db, err := gorm.Open(sqlite.Open("file:"+name+"?mode=memory&cache=shared"), &gorm.Config{Logger: logger.Discard})
-	if err != nil {
-		t.Fatal(err)
-	}
-	sqlDB := closeWith(t, db)
-	sqlDB.SetMaxOpenConns(1)
-	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}, &schemas.Project{},
-		&schemas.Column{}, &schemas.Task{}, &schemas.Label{}, &schemas.Comment{}, &schemas.TaskRelation{},
-		&schemas.Activity{}); err != nil {
-		t.Fatal(err)
-	}
-	return db, mcptest.NewPending()
-}
-
-// openPostgres creates a scratch database under base and runs Opus's
-// migrations on it, mcp_actions included.
-func openPostgres(t *testing.T, base string) (*gorm.DB, mcpkit.Pending) {
-	t.Helper()
-	url := fmt.Sprintf("%s/opus_mcp_%d", strings.TrimRight(base, "/"), time.Now().UnixNano())
-	if err := database.EnsureDatabase(url); err != nil {
-		t.Fatalf("create database: %v", err)
-	}
-	db, err := database.Open(url)
-	if err != nil {
-		t.Fatalf("open database: %v", err)
-	}
+	db := dbtest.Open(t)
 	db.Logger = logger.Discard
-	sqlDB := closeWith(t, db)
-	if err := database.RunMigrations(sqlDB); err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
-	return db, mcpkit.PostgresPending{DB: sqlDB}
-}
-
-// closeWith closes db's pool when the test ends.
-func closeWith(t *testing.T, db *gorm.DB) *sql.DB {
-	t.Helper()
 	sqlDB, err := db.DB()
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() {
-		if err := sqlDB.Close(); err != nil {
-			t.Log(err)
-		}
-	})
-	return sqlDB
+	return db, mcpkit.PostgresPending{DB: sqlDB}
 }
 
 // newFixture starts the endpoint.

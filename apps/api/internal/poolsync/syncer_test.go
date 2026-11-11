@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -25,19 +25,9 @@ func (n *notifyRecorder) BroadcastToProject(_ string, msg realtime.BroadcastMess
 
 func newSyncer(t *testing.T) (*Syncer, *gorm.DB, *notifyRecorder) {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
+	db := dbtest.Open(t)
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxOpenConns(1)
-	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}, &schemas.Project{}, &schemas.Column{},
-		&schemas.Task{}, &schemas.TimeEntry{}, &schemas.PoolProcessedEvent{}); err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
-	if err := db.Exec("CREATE TABLE porte_identities (user_id INTEGER, provider TEXT, subject TEXT)").Error; err != nil {
-		t.Fatalf("identities: %v", err)
-	}
 	workspace := schemas.Workspace{Name: "WS", Slug: "ws", CreatedAt: time.Now()}
 	if err := db.Create(&workspace).Error; err != nil {
 		t.Fatalf("seed workspace: %v", err)

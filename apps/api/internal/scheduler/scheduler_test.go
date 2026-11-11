@@ -7,29 +7,25 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 func newTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
+	db := dbtest.Open(t)
+	now := time.Now()
+	seeds := []any{
+		&schemas.User{ID: 42, Email: "dedup@facile.studio", CreatedAt: now, UpdatedAt: now},
+		&schemas.User{ID: 101, Email: "actor@facile.studio", CreatedAt: now, UpdatedAt: now},
+		&schemas.Workspace{ID: 1, Name: "WS", Slug: "ws", CreatedAt: now},
+		&schemas.Project{ID: 1, WorkspaceID: 1, Name: "P", Slug: "p", CreatedAt: now, UpdatedAt: now},
 	}
-	err = db.AutoMigrate(
-		&schemas.User{},
-		&schemas.Workspace{},
-		&schemas.Invitation{},
-		&schemas.Project{},
-		&schemas.Column{},
-		&schemas.Task{},
-		&schemas.Notification{},
-		&schemas.TaskReminderSent{},
-	)
-	if err != nil {
-		t.Fatalf("migrate: %v", err)
+	for _, seed := range seeds {
+		if err := db.Create(seed).Error; err != nil {
+			t.Fatalf("seed %T: %v", seed, err)
+		}
 	}
 	return db
 }
@@ -47,10 +43,10 @@ func TestRunPruneInvitations(t *testing.T) {
 	past := now.Add(-time.Hour)
 	future := now.Add(time.Hour)
 
-	inv1 := schemas.Invitation{WorkspaceID: 1, Email: "exp@facile.studio", Status: "pending", ExpiresAt: &past, CreatedAt: past}
-	inv2 := schemas.Invitation{WorkspaceID: 1, Email: "valid@facile.studio", Status: "pending", ExpiresAt: &future, CreatedAt: now}
-	inv3 := schemas.Invitation{WorkspaceID: 1, Email: "noexp@facile.studio", Status: "pending", ExpiresAt: nil, CreatedAt: now}
-	inv4 := schemas.Invitation{WorkspaceID: 1, Email: "done@facile.studio", Status: "accepted", ExpiresAt: &past, CreatedAt: past}
+	inv1 := schemas.Invitation{WorkspaceID: 1, InviterID: 42, Email: "exp@facile.studio", Status: "pending", ExpiresAt: &past, CreatedAt: past}
+	inv2 := schemas.Invitation{WorkspaceID: 1, InviterID: 42, Email: "valid@facile.studio", Status: "pending", ExpiresAt: &future, CreatedAt: now}
+	inv3 := schemas.Invitation{WorkspaceID: 1, InviterID: 42, Email: "noexp@facile.studio", Status: "pending", ExpiresAt: nil, CreatedAt: now}
+	inv4 := schemas.Invitation{WorkspaceID: 1, InviterID: 42, Email: "done@facile.studio", Status: "accepted", ExpiresAt: &past, CreatedAt: past}
 	db.Create(&[]schemas.Invitation{inv1, inv2, inv3, inv4})
 
 	if err := s.RunPruneInvitations(ctx, now); err != nil {
@@ -79,12 +75,12 @@ func createDueReminderTasks(db *gorm.DB, now time.Time, actorID int64, nonFinalC
 	t5Due := now.Add(24 * time.Hour)
 	t6Due := now.Add(5 * time.Hour)
 
-	db.Create(&schemas.Task{ID: 1, Title: "Task 1", ActorID: &actorID, ColumnID: &nonFinalCol.ID, DueDate: &t1Due})
-	db.Create(&schemas.Task{ID: 2, Title: "Task 2", ActorID: &actorID, ColumnID: nil, DueDate: &t2Due})
-	db.Create(&schemas.Task{ID: 3, Title: "Task 3", ActorID: &actorID, ColumnID: &nonFinalCol.ID, DueDate: &t3Due})
-	db.Create(&schemas.Task{ID: 4, Title: "Task 4", ActorID: &actorID, ColumnID: &finalCol.ID, DueDate: &t4Due})
-	db.Create(&schemas.Task{ID: 5, Title: "Task 5", ActorID: nil, ColumnID: &nonFinalCol.ID, DueDate: &t5Due})
-	db.Create(&schemas.Task{ID: 6, Title: "Task 6", ActorID: &actorID, ColumnID: &nonFinalCol.ID, DueDate: &t6Due})
+	db.Create(&schemas.Task{WorkspaceID: 1, ProjectID: 1, ID: 1, Title: "Task 1", ActorID: &actorID, ColumnID: &nonFinalCol.ID, DueDate: &t1Due})
+	db.Create(&schemas.Task{WorkspaceID: 1, ProjectID: 1, ID: 2, Title: "Task 2", ActorID: &actorID, ColumnID: nil, DueDate: &t2Due})
+	db.Create(&schemas.Task{WorkspaceID: 1, ProjectID: 1, ID: 3, Title: "Task 3", ActorID: &actorID, ColumnID: &nonFinalCol.ID, DueDate: &t3Due})
+	db.Create(&schemas.Task{WorkspaceID: 1, ProjectID: 1, ID: 4, Title: "Task 4", ActorID: &actorID, ColumnID: &finalCol.ID, DueDate: &t4Due})
+	db.Create(&schemas.Task{WorkspaceID: 1, ProjectID: 1, ID: 5, Title: "Task 5", ActorID: nil, ColumnID: &nonFinalCol.ID, DueDate: &t5Due})
+	db.Create(&schemas.Task{WorkspaceID: 1, ProjectID: 1, ID: 6, Title: "Task 6", ActorID: &actorID, ColumnID: &nonFinalCol.ID, DueDate: &t6Due})
 }
 
 func verifyReminderNotifications(t *testing.T, notifications []schemas.Notification) {
@@ -154,7 +150,7 @@ func TestRunDueRemindersDeduplication(t *testing.T) {
 
 	actorID := int64(42)
 	due := now.Add(24 * time.Hour)
-	db.Create(&schemas.Task{ID: 10, Title: "Dedup Task", ActorID: &actorID, DueDate: &due})
+	db.Create(&schemas.Task{WorkspaceID: 1, ProjectID: 1, ID: 10, Title: "Dedup Task", ActorID: &actorID, DueDate: &due})
 
 	if err := s.RunDueReminders(ctx, now); err != nil {
 		t.Fatalf("first run failed: %v", err)

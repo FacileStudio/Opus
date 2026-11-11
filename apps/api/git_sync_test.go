@@ -7,11 +7,10 @@ import (
 	"log/slog"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	antenne "github.com/FacileStudio/antenne-client/go"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 type testGitTransport struct {
@@ -31,10 +30,7 @@ func (t *testGitTransport) Listen(channel string, handler antenne.EventHandler) 
 }
 
 func TestAttachGitSync(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
+	db := dbtest.Open(t)
 
 	transport := &testGitTransport{handlers: map[string]antenne.EventHandler{}}
 	pub := events.New(events.Config{URL: "ws://localhost", Secret: "secret"}, events.WithTransport(transport))

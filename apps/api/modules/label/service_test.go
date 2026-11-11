@@ -5,30 +5,16 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/internal/wireid"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/tronc/errors"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 func newTestService(t *testing.T) (*Service, *gorm.DB) {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
-	err = db.AutoMigrate(
-		&schemas.User{},
-		&schemas.Workspace{},
-		&schemas.WorkspaceMember{},
-		&schemas.Project{},
-		&schemas.Task{},
-		&schemas.Label{},
-	)
-	if err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
+	db := dbtest.Open(t)
 	return NewService(db), db
 }
 

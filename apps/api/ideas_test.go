@@ -12,6 +12,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
@@ -19,7 +20,6 @@ import (
 	"github.com/FacileStudio/porte/exchange"
 	"github.com/FacileStudio/porte/forfait"
 	"github.com/go-chi/chi/v5"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -49,13 +49,7 @@ func (noIdentities) Save(context.Context, porte.StoredIdentity) error { return n
 
 func newTestIdeas(t *testing.T) (*ideas, *gorm.DB, chi.Router) {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
-	if err := db.AutoMigrate(&schemas.User{}, &schemas.Workspace{}, &schemas.WorkspaceMember{}, &schemas.ForfaitState{}); err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
+	db := dbtest.Open(t)
 	exchanger, err := exchange.New(exchange.Config{Issuer: "https://sso.test", ClientID: "c", ClientSecret: "s", Identities: noIdentities{}})
 	if err != nil {
 		t.Fatalf("exchange: %v", err)

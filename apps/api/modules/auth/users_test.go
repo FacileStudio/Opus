@@ -5,26 +5,15 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	tronc "github.com/FacileStudio/tronc/errors"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func newTestUserStore(t *testing.T) *UserStore {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
-	if err := db.AutoMigrate(&schemas.User{}); err != nil {
-		t.Fatalf("migrate user: %v", err)
-	}
-	if err := db.Exec("CREATE TABLE porte_identities (user_id integer, provider text, subject text)").Error; err != nil {
-		t.Fatalf("create porte_identities: %v", err)
-	}
+	db := dbtest.Open(t)
 	return NewUserStore(db)
 }
 

@@ -84,6 +84,20 @@ client. Integration tests live in `tests/api-integration/` and cover config, dev
 health, labels, the OpenAPI spec, projects and tasks. Setup and fixtures are in
 `tests/api-integration/setup.ts` and `helpers/`.
 
+The Go API's tests run against PostgreSQL only, through `tronc/testdb`. Each test package gets
+its own schema with the real migrations, and every test starts from empty tables. Without
+`TEST_DATABASE_URL` the database tests skip:
+
+```sh
+docker run -d --name opus-test -e POSTGRES_PASSWORD=opus -p 127.0.0.1:5433:5432 \
+  postgres:16 -c fsync=off -c synchronous_commit=off -c full_page_writes=off
+cd apps/api
+TEST_DATABASE_URL='postgres://postgres:opus@127.0.0.1:5433/postgres?sslmode=disable' go test -race ./...
+```
+
+`fsync=off` matters: each test truncates every table, which costs about 3 seconds per test with
+fsync on.
+
 Watch mode and coverage:
 
 ```sh

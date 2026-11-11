@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	"github.com/FacileStudio/porte"
 	"github.com/go-chi/chi/v5"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -32,21 +32,7 @@ func (a *testAuth) IdentityForUser(_ context.Context, userID int64) (int64, stri
 
 func newTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
-	err = db.AutoMigrate(
-		&schemas.User{},
-		&schemas.Workspace{},
-		&schemas.WorkspaceMember{},
-		&schemas.Project{},
-		&schemas.Task{},
-		&schemas.Comment{},
-	)
-	if err != nil {
-		t.Fatalf("migrate: %v", err)
-	}
+	db := dbtest.Open(t)
 	return db
 }
 

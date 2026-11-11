@@ -8,13 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/FacileStudio/Opus/apps/api/schemas"
+	"github.com/FacileStudio/Opus/apps/api/internal/database/dbtest"
 	"github.com/FacileStudio/porte"
 	"github.com/FacileStudio/porte/session"
 	"github.com/FacileStudio/tronc/errors"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 type memorySessions struct {
@@ -107,13 +104,7 @@ func (m *memorySessions) drop(match func(porte.Session) bool) (int64, error) {
 
 func newTokenService(t *testing.T) (*Service, *session.Manager) {
 	t.Helper()
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("open sqlite: %v", err)
-	}
-	if err := db.AutoMigrate(&schemas.User{}); err != nil {
-		t.Fatalf("migrate user: %v", err)
-	}
+	db := dbtest.Open(t)
 	manager, err := session.New(porte.Config{}, session.Deps{
 		Sessions: &memorySessions{},
 		Logger:   slog.New(slog.DiscardHandler),
