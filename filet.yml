@@ -2,15 +2,18 @@
 # https://github.com/FacileStudio/filet
 #
 #   filet check .     the rules
-#   filet roast .     the rules, with commentary
-#   filet docker .    the Dockerfile
+#   filet gate .      format, rules, analyzers, tests and douane: the pre-push step
 #
-# Opus is a mixed repo: the Go backend (apps/api) is filet's, the TypeScript
-# frontend is biome's. That split is why the extension list is Go-only.
+# Opus is a mixed repo: the Go backend (apps/api) is filet's, the React
+# frontend (apps/web) is biome's. That split is why the extension list is
+# Go-only and apps/web is ignored. A preset's lists are replaced, not merged,
+# so the ignore list is restated in full.
+#
+# The limits are looser than the preset's: the API was ported from an older
+# codebase, and the ported modules were written to these numbers. Tightening
+# them is its own change.
 
-# The defaults already cover node_modules, vendor, build, dist, target,
-# testdata and coverage, and every dotted directory is skipped whether it is
-# listed or not.
+preset: facile
 
 kind: app
 
@@ -21,43 +24,25 @@ ignore:
   - dist
   - testdata
   - coverage
-  - apps/web # React frontend, linted by biome
+  - apps/web
 
 extensions: [.go]
 
 limits:
-  fileLines: 300 # ESLint max-lines
-  funcsPerFile: 0 # off: the package, not the file, is Go's unit of organisation
-  funcLines: 60 # funlen default
-  funcStatements: 40 # funlen default
-  lineLength: 120 # lll default
-  params: 5
-  returns: 3
-  nesting: 5 # ESLint max-depth 4, plus one for the function's own block
-  complexity: 15 # SonarSource cognitive complexity
+  fileLines: 300
+  funcsPerFile: 0
+  funcLines: 60
+  funcStatements: 40
+  nesting: 5
+  complexity: 15
   structFields: 15
   interfaceMethods: 5
 
 architecture:
   requiredDirs: [apps/api]
-  # A module that owns HTTP declares it in router.go. This is the one
-  # structural convention the Go family actually shares, and it is the rule
-  # that gives the `error` gate teeth.
-  requiredFiles:
-    "apps/api/modules/*": [router.go]
 
-style:
-  banInlineComments: true
-  banTODO: true
-  requireDocComments: true
-  banGlobalMutable: true
-  banInit: true
-  banTrailingSpace: true
-
-disabled:
-  # gofmt owns Go line breaking. Every survivor is therefore a line nothing
-  # could have wrapped, and flagging what the formatter already decided is
-  # noise.
-  - gen.line.long
-
-failOn: error
+# douane cannot read pnpm-lock.yaml, so a scan of the repository root always
+# ends "scan incomplete" (exit 3). The pre-push hook and CI run douane on
+# apps/api instead, the module that ships.
+gate:
+  disable: [douane]

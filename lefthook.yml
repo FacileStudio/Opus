@@ -11,3 +11,10 @@ pre-commit:
       run: pnpm exec biome ci .
     build:
       run: pnpm run build
+
+pre-push:
+  jobs:
+    - name: gate
+      run: filet gate .
+    - name: douane
+      run: douane scan -fail critical -scope prod apps/api

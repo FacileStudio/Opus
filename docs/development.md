@@ -113,6 +113,10 @@ The gate is lefthook (`lefthook.yml`), pulling the shared commit-msg policy from
 
 - `pre-commit` runs `pnpm exec biome ci .` then `pnpm run build`. The full build on every commit
   is deliberate and slow — make sure the code compiles before you commit.
+- `pre-push` runs `filet gate .` (gofmt, `filet check`, vet, staticcheck, the pnpm, Go and npm
+  tests) and then `douane scan -fail critical -scope prod apps/api`. douane runs on `apps/api`
+  only, because it cannot read `pnpm-lock.yaml`; `filet.yml` disables the gate's own douane step
+  for that reason. Export `TEST_DATABASE_URL` first, or the Go database tests skip.
 - `commit-msg` (shared `common.yml`) validates Conventional Commits and prepends the gitmoji —
   never write the emoji yourself; the hook derives it from the type.
 - Hooks install via `mise install` (`[hooks] postinstall = "lefthook install"` in `mise.toml`).
