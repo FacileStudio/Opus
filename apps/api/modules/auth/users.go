@@ -32,7 +32,7 @@ var _ porte.UserStore = (*UserStore)(nil)
 // NewUserStore builds the store. eraseData deletes what an erased person owns
 // before the kit deletes their users row, in the same transaction.
 func NewUserStore(ctx context.Context, db *sql.DB, eraseData func(context.Context, *sql.Tx, int64) error) (*UserStore, error) {
-	store, err := kit.NewStore(ctx, kit.Store{DB: db, Columns: Columns(), EraseData: eraseData})
+	store, err := kit.NewStore(ctx, kit.Store{DB: db, Columns: Columns(), OnCreate: fillNewAccount, EraseData: eraseData})
 	if err != nil {
 		return nil, err
 	}
@@ -54,6 +54,14 @@ func (s *UserStore) UpsertFromOIDC(ctx context.Context, claims porte.Claims) (in
 		return 0, errors.Internal("failed to store the github account", err)
 	}
 	return userID, nil
+}
+
+// fillNewAccount writes the empty colour every account created before the
+// kit carries, so a new row reads like the old ones. github_id stays NULL
+// until Registre reports a GitHub account, as it always has.
+func fillNewAccount(ctx context.Context, tx *sql.Tx, userID int64) error {
+	_, err := tx.ExecContext(ctx, `UPDATE users SET color = '' WHERE id = $1`, userID)
+	return err
 }
 
 func extractGitHubID(extra map[string]json.RawMessage) string {

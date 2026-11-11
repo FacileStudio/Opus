@@ -34,7 +34,7 @@ func signIn(t *testing.T, store *UserStore, claims porte.Claims) int64 {
 	return id
 }
 
-func TestUserStoreLeavesOnlyColorAndGitHubUnwritten(t *testing.T) {
+func TestKitInsertLeavesOnlyColorAndGitHubUnwritten(t *testing.T) {
 	store, _ := newTestUserStore(t)
 	if got, want := store.Unwritten(), []string{"color", "github_id"}; !slices.Equal(got, want) {
 		t.Fatalf("Unwritten() = %v, want %v", got, want)
@@ -49,8 +49,8 @@ func TestNewAccountFillsEveryColumnOldAccountsHave(t *testing.T) {
 	})
 	var nulls int
 	err := db.QueryRow(`SELECT (email IS NULL)::int + (email_verified IS NULL)::int + (name IS NULL)::int +
-		(image IS NULL)::int + (locale IS NULL)::int + (created_at IS NULL)::int + (updated_at IS NULL)::int
-		FROM users WHERE id = $1`, id).Scan(&nulls)
+		(image IS NULL)::int + (locale IS NULL)::int + (created_at IS NULL)::int + (updated_at IS NULL)::int +
+		(color IS NULL)::int FROM users WHERE id = $1`, id).Scan(&nulls)
 	if err != nil || nulls != 0 {
 		t.Fatalf("NULL columns on a new account = %d, %v, want 0", nulls, err)
 	}
