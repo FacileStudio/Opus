@@ -1,5 +1,14 @@
+import { addIcon, Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import useProjectStore from "@/store/project";
+
+const OPUS_ICON = "solar:slider-vertical-minimalistic-bold-duotone";
+
+addIcon(OPUS_ICON, {
+  body: '<path fill="currentColor" d="M5.84619 8C5.84619 5.17157 5.84619 3.75736 6.7474 2.87868C7.64861 2 9.09909 2 12 2C14.901 2 16.3515 2 17.2527 2.87868C18.1539 3.75736 18.1539 5.17157 18.1539 8V16C18.1539 18.8284 18.1539 20.2426 17.2527 21.1213C16.3515 22 14.901 22 12 22C9.09909 22 7.64861 22 6.7474 21.1213C5.84619 20.2426 5.84619 18.8284 5.84619 16V8Z"/><path fill="currentColor" fill-rule="evenodd" d="M2.76923 3.75C3.19407 3.75 3.53846 4.08579 3.53846 4.5V19.5C3.53846 19.9142 3.19407 20.25 2.76923 20.25C2.3444 20.25 2 19.9142 2 19.5V4.5C2 4.08579 2.3444 3.75 2.76923 3.75ZM21.2308 3.75C21.6556 3.75 22 4.08579 22 4.5V19.5C22 19.9142 21.6556 20.25 21.2308 20.25C20.8059 20.25 20.4615 19.9142 20.4615 19.5V4.5C20.4615 4.08579 20.8059 3.75 21.2308 3.75Z" clip-rule="evenodd" opacity=".5"/>',
+  width: 24,
+  height: 24,
+});
 
 export type LogoProps = {
   className?: string;
@@ -23,21 +32,7 @@ export function Logo({
       className={`w-auto ${className}`}
     >
       <span className="flex items-center gap-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          className="h-6 w-auto"
-        >
-          <path
-            fill="currentColor"
-            d="M6 8c0-2.828 0-4.243.879-5.121C7.757 2 9.172 2 12 2s4.243 0 5.121.879C18 3.757 18 5.172 18 8v8c0 2.828 0 4.243-.879 5.121C16.243 22 14.828 22 12 22s-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z"
-          />
-          <path
-            fill="currentColor"
-            d="M6.141 4.5C6 5.343 6 6.462 6 8v8c0 1.538 0 2.657.141 3.5H6c-1.4 0-2.1 0-2.635-.273a2.5 2.5 0 0 1-1.093-1.092C2 17.6 2 16.9 2 15.5v-7c0-1.4 0-2.1.272-2.635a2.5 2.5 0 0 1 1.093-1.093C3.9 4.5 4.6 4.5 6 4.5zm11.718 0C18 5.343 18 6.462 18 8v8c0 1.538 0 2.657-.141 3.5H18c1.4 0 2.1 0 2.635-.273a2.5 2.5 0 0 0 1.092-1.092C22 17.6 22 16.9 22 15.5v-7c0-1.4 0-2.1-.273-2.635a2.5 2.5 0 0 0-1.092-1.093C20.1 4.5 19.4 4.5 18 4.5z"
-            opacity=".5"
-          />
-        </svg>
+        <Icon icon={OPUS_ICON} className="h-6 w-6" aria-hidden="true" />
         {wordmark ? (
           <span className="text-xl font-semibold tracking-tight">Opus</span>
         ) : null}
