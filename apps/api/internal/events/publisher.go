@@ -2,13 +2,15 @@ package events
 
 import (
 	"context"
+	"database/sql"
 	"log/slog"
 	"math"
 	"sync"
 	"time"
 
 	antenne "github.com/FacileStudio/antenne-client/go"
-	enveloppe "github.com/FacileStudio/enveloppe/go"
+	envelope "github.com/FacileStudio/antenne-client/go/envelope"
+	"github.com/FacileStudio/antenne-client/go/outbox"
 	"gorm.io/gorm"
 )
 
@@ -47,8 +49,9 @@ func WithLogger(l *slog.Logger) Option {
 	}
 }
 
-// WithStore queues events in the antenne_outbox table of db instead of
-// sending them directly, and lets the publisher describe each project's space.
+// WithStore queues events in the antenne_outbox table of db, through
+// antenne-client's outbox, instead of sending them directly, and lets the
+// publisher describe each project's space.
 func WithStore(db *gorm.DB) Option {
 	return func(p *Publisher) {
 		p.db = db
@@ -61,6 +64,8 @@ type Publisher struct {
 	transport Transport
 	logger    *slog.Logger
 	db        *gorm.DB
+	sqlDB     *sql.DB
+	drainer   *outbox.Drainer
 	mu        sync.Mutex
 	dialed    bool
 	published int64
@@ -80,7 +85,7 @@ func New(cfg Config, opts ...Option) *Publisher {
 	}
 	if p.transport == nil && cfg.Enabled() {
 		p.transport = antenne.NewClient(&antenne.Config{
-			App:        string(enveloppe.AppOpus),
+			App:        string(envelope.AppOpus),
 			Instance:   cfg.URL,
 			Secret:     cfg.Secret,
 			InstanceID: cfg.InstanceID,
@@ -94,6 +99,12 @@ func New(cfg Config, opts ...Option) *Publisher {
 				p.logger.Warn("antenne connection error", slog.Any("error", err))
 			}),
 		)
+	}
+	if p.db != nil && p.transport != nil {
+		if sqlDB, err := p.db.DB(); err == nil {
+			p.sqlDB = sqlDB
+			p.drainer = p.newDrainer(sqlDB)
+		}
 	}
 	return p
 }
@@ -113,8 +124,8 @@ func (p *Publisher) Start(ctx context.Context) {
 		return
 	}
 	go p.dial(ctx)
-	if p.db != nil {
-		go p.runOutbox(ctx, outboxInterval)
+	if p.drainer != nil {
+		go p.drainer.Run(ctx)
 	}
 }
 

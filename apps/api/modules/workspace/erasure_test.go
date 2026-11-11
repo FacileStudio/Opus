@@ -23,6 +23,10 @@ func seedErasureTraces(t *testing.T, db *gorm.DB, f erasureFixture) {
 			VALUES ('act-1', ?, 'delete_task', 'task:1', 'd', 'Delete Ship it', now() + interval '1 hour')`, []any{fmt.Sprint(f.alice)}},
 		{`INSERT INTO task_pull_requests (task_id, repo_full_name, pr_number, title, url, state, author_github_id)
 			VALUES (?, 'facile/opus', 7, 'Fix it', 'https://github.com/facile/opus/pull/7', 'open', 'gh-alice')`, []any{f.sharedTask}},
+		{`INSERT INTO antenne_outbox (channel, payload, idempotency_key, sent_at) VALUES
+			('task.updated', '{"payload":{"actor_email":"alice@facile.studio"}}', 'k1', now()),
+			('project.created', '{"payload":{"space":{"owner_subject":"sub-alice"}}}', 'k2', now()),
+			('task.updated', '{"payload":{"actor_email":"bob@facile.studio"}}', 'k3', now())`, nil},
 	}
 	for _, s := range statements {
 		if err := db.Exec(s.query, s.args...).Error; err != nil {
@@ -75,6 +79,7 @@ func TestErasureLeavesNoTextNamingThePerson(t *testing.T) {
 		"time entry author": count(t, db, "SELECT count(*) FROM time_entries WHERE user_id IS NULL AND description = 'pairing'"),
 		"task assignee":     count(t, db, "SELECT count(*) FROM tasks WHERE id = ? AND actor_id IS NULL", f.sharedTask),
 		"pull request":      count(t, db, "SELECT count(*) FROM task_pull_requests WHERE title = 'Fix it' AND author_github_id IS NULL"),
+		"others' events":    count(t, db, "SELECT count(*) FROM antenne_outbox WHERE idempotency_key = 'k3'"),
 	}
 	for name, n := range references {
 		if n != 1 {

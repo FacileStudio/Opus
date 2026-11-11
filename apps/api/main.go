@@ -100,7 +100,10 @@ type serverBundle struct {
 }
 
 func initServices(db *gorm.DB, kits *authKits, appEnv *env.Config, appLogger *slog.Logger) (*realtime.Hub, *events.Publisher, func(), error) {
-	eventsCfg := events.LoadConfig()
+	eventsCfg, err := events.LoadConfig()
+	if err != nil {
+		return nil, nil, nil, err
+	}
 	if appEnv.OIDC != nil {
 		eventsCfg.Issuer = appEnv.OIDC.Issuer
 	}

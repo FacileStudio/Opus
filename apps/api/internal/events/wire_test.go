@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	envelope "github.com/FacileStudio/enveloppe/go"
+	envelope "github.com/FacileStudio/antenne-client/go/envelope"
 )
 
 var updateGolden = flag.Bool("update-golden", false, "rewrite testdata/events from the current envelopes")

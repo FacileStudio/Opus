@@ -1,9 +1,13 @@
 package events
 
 import (
+	"errors"
 	"os"
 	"strconv"
 	"strings"
+
+	antenne "github.com/FacileStudio/antenne-client/go"
+	envelope "github.com/FacileStudio/antenne-client/go/envelope"
 )
 
 // Config carries Antenne client connection settings. SyncWorkspaceID only
@@ -18,15 +22,21 @@ type Config struct {
 	Issuer          string
 }
 
-// LoadConfig reads Antenne configuration from standard environment variables.
-func LoadConfig() Config {
-	return Config{
-		URL:        os.Getenv("ANTENNE_URL"),
-		Secret:     os.Getenv("ANTENNE_SECRET"),
-		InstanceID: os.Getenv("ANTENNE_INSTANCE_ID"),
-
-		SyncWorkspaceID: parseWorkspaceID(os.Getenv("ANTENNE_SYNC_WORKSPACE_ID")),
+// LoadConfig reads the Antenne settings through antenne.ConfigFromEnv:
+// ANTENNE_URL, or its older synonym ANTENNE_INSTANCE, ANTENNE_SECRET and
+// ANTENNE_INSTANCE_ID. No URL turns the bus off; a URL without a secret is an
+// error. Opus always registers as the Opus app, whatever ANTENNE_APP says.
+func LoadConfig() (Config, error) {
+	cfg := Config{SyncWorkspaceID: parseWorkspaceID(os.Getenv("ANTENNE_SYNC_WORKSPACE_ID"))}
+	client, err := antenne.ConfigFromEnv(string(envelope.AppOpus))
+	switch {
+	case errors.Is(err, antenne.ErrNotConfigured):
+		return cfg, nil
+	case err != nil:
+		return cfg, err
 	}
+	cfg.URL, cfg.Secret, cfg.InstanceID = client.Instance, client.Secret, client.InstanceID
+	return cfg, nil
 }
 
 // Enabled reports whether Antenne publishing is configured.

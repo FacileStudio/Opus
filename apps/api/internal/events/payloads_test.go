@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"os"
 	"testing"
 	"time"
 
@@ -64,21 +63,27 @@ func TestAllChannels(t *testing.T) {
 }
 
 func TestLoadConfig(t *testing.T) {
-	os.Setenv("ANTENNE_URL", "http://example.com")
-	os.Setenv("ANTENNE_SECRET", "supersecret")
-	os.Setenv("ANTENNE_INSTANCE_ID", "inst-1")
-	defer func() {
-		os.Unsetenv("ANTENNE_URL")
-		os.Unsetenv("ANTENNE_SECRET")
-		os.Unsetenv("ANTENNE_INSTANCE_ID")
-	}()
+	t.Setenv("ANTENNE_URL", "")
+	t.Setenv("ANTENNE_INSTANCE", "http://example.com/")
+	t.Setenv("ANTENNE_SECRET", "supersecret")
+	t.Setenv("ANTENNE_INSTANCE_ID", "inst-1")
+	t.Setenv("ANTENNE_APP", "renamed")
 
-	cfg := LoadConfig()
-	if cfg.URL != "http://example.com" || cfg.Secret != "supersecret" || cfg.InstanceID != "inst-1" {
-		t.Errorf("unexpected config: %+v", cfg)
+	cfg, err := LoadConfig()
+	if err != nil || cfg.URL != "http://example.com" || cfg.Secret != "supersecret" || cfg.InstanceID != "inst-1" {
+		t.Errorf("unexpected config: %+v, %v", cfg, err)
 	}
 	if !cfg.Enabled() {
 		t.Error("expected config to be enabled")
+	}
+
+	t.Setenv("ANTENNE_SECRET", "")
+	if _, err := LoadConfig(); err == nil {
+		t.Error("a URL without a secret must fail")
+	}
+	t.Setenv("ANTENNE_INSTANCE", "")
+	if cfg, err := LoadConfig(); err != nil || cfg.Enabled() {
+		t.Errorf("no URL must turn the bus off: %+v, %v", cfg, err)
 	}
 }
 

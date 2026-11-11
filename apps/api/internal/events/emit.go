@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"time"
 
-	enveloppe "github.com/FacileStudio/enveloppe/go"
+	envelope "github.com/FacileStudio/antenne-client/go/envelope"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 )
@@ -17,23 +17,23 @@ func IdempotencyKey(channel, entityID string, t time.Time) string {
 	return fmt.Sprintf("%s:%s:%d", channel, entityID, t.UTC().UnixNano())
 }
 
-// ActionForChannel maps an event channel name to its canonical enveloppe action.
-func ActionForChannel(channel string) enveloppe.Action {
+// ActionForChannel maps an event channel name to its canonical envelope action.
+func ActionForChannel(channel string) envelope.Action {
 	switch channel {
 	case ChannelTaskCreated, ChannelProjectCreated, ChannelCommentCreated, ChannelWorkspaceCreated:
-		return enveloppe.ActionCreated
+		return envelope.ActionCreated
 	case ChannelTaskDeleted, ChannelProjectDeleted:
-		return enveloppe.ActionDeleted
+		return envelope.ActionDeleted
 	default:
-		return enveloppe.ActionUpdated
+		return envelope.ActionUpdated
 	}
 }
 
-// BuildEnvelope creates a populated enveloppe.Event with the Opus contract.
-func BuildEnvelope[T any](channel string, entityID string, objType enveloppe.ObjectType, payload T, now time.Time) enveloppe.Event[T] {
-	return enveloppe.Event[T]{
-		Version:        enveloppe.EventVersion,
-		App:            enveloppe.AppOpus,
+// BuildEnvelope creates a populated envelope.Event with the Opus contract.
+func BuildEnvelope[T any](channel string, entityID string, objType envelope.ObjectType, payload T, now time.Time) envelope.Event[T] {
+	return envelope.Event[T]{
+		Version:        envelope.EventVersion,
+		App:            envelope.AppOpus,
 		Object:         objType,
 		Action:         ActionForChannel(channel),
 		FacileID:       entityID,
@@ -58,7 +58,7 @@ func (p *Publisher) active() bool {
 	return p != nil && p.config.Enabled() && p.transport != nil
 }
 
-func (p *Publisher) emit(ctx context.Context, channel string, entityID string, objType enveloppe.ObjectType, payload any) error {
+func (p *Publisher) emit(ctx context.Context, channel string, entityID string, objType envelope.ObjectType, payload any) error {
 	if !p.active() {
 		if p != nil && p.logger != nil {
 			p.logger.Debug("antenne disabled, skipping event", slog.String("channel", channel))
@@ -66,8 +66,8 @@ func (p *Publisher) emit(ctx context.Context, channel string, entityID string, o
 		return nil
 	}
 	event := BuildEnvelope(channel, entityID, objType, payload, time.Now().UTC())
-	if p.db != nil {
-		p.enqueue(ctx, channel, event)
+	if p.drainer != nil {
+		p.enqueue(ctx, channel, event.IdempotencyKey, event)
 		return nil
 	}
 	err := p.transport.EmitNow(channel, event)
@@ -92,7 +92,7 @@ func (p *Publisher) emitTask(ctx context.Context, channel string, payload TaskPa
 	if link {
 		p.link(ctx, &schemas.Task{}, payload.ID)
 	}
-	return p.emit(ctx, channel, payload.entityID(), enveloppe.ObjectTask, payload)
+	return p.emit(ctx, channel, payload.entityID(), envelope.ObjectTask, payload)
 }
 
 // EmitProject publishes a project event to the given channel. A project in
@@ -109,7 +109,7 @@ func (p *Publisher) emitProject(ctx context.Context, channel string, payload Pro
 	if link {
 		p.link(ctx, &schemas.Project{}, payload.ID)
 	}
-	return p.emit(ctx, channel, payload.entityID(), enveloppe.ObjectProject, payload)
+	return p.emit(ctx, channel, payload.entityID(), envelope.ObjectProject, payload)
 }
 
 // EmitComment publishes a comment event to the given channel.

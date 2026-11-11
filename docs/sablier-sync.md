@@ -34,10 +34,15 @@ assignee or due date changes made in Sablier.
 
 ## Outbound delivery
 
-Every project and task event goes into the `antenne_outbox` table first (migration
-`00005_sablier_sync_v2.sql`). A worker sends rows in id order every 2 seconds while the pool is
-connected, deletes each sent row, and stops the batch at the first failure, so a dead pool delays
-events but never drops or reorders them. Idempotency keys read `<channel>:<facile_id>:<unixnano>`.
+Every project and task event goes into the `antenne_outbox` table first, through antenne-client's
+`outbox` package (table from migration `00005_sablier_sync_v2.sql`, converted to the library's
+shape by `00009_antenne_outbox_v1.sql`). The library's drainer sends unsent rows in id order every
+2 seconds while the pool is connected, marks each one sent, and stops the pass at the first
+failure, so a dead pool delays events but never drops or reorders them. After a failure it backs
+off up to 5 seconds. Sent rows are pruned after 7 days; an erasure deletes the sent rows that name
+the erased person at once. Idempotency keys read `<channel>:<facile_id>:<unixnano>`. The payload
+column is `jsonb`, so the sent bytes carry Postgres's key order, not Go's: same JSON, different
+bytes.
 
 A project event carries `space`: `registre_space_id` for a workspace linked to Registre, or
 `personal: true` with the owner's porte subject and lowercased email for a personal workspace.

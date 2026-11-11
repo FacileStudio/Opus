@@ -2,63 +2,50 @@ package events
 
 import (
 	"context"
-	"encoding/json"
+	"database/sql"
+	"errors"
 	"log/slog"
 	"time"
 
-	"github.com/FacileStudio/Opus/apps/api/schemas"
+	antenne "github.com/FacileStudio/antenne-client/go"
+	"github.com/FacileStudio/antenne-client/go/catalog"
+	"github.com/FacileStudio/antenne-client/go/outbox"
 )
 
-const (
-	outboxInterval  = 2 * time.Second
-	outboxBatchSize = 100
-)
+const outboxMaxBackoff = 5 * time.Second
 
-func (p *Publisher) enqueue(ctx context.Context, channel string, event any) {
-	raw, err := json.Marshal(event)
-	if err != nil {
-		p.logger.Error("antenne: failed to serialize outbox event", slog.String("channel", channel), slog.Any("error", err))
-		return
-	}
-	row := schemas.AntenneOutbox{Channel: channel, Payload: string(raw)}
-	if err := p.db.WithContext(context.WithoutCancel(ctx)).Create(&row).Error; err != nil {
-		p.logger.Error("antenne: failed to enqueue outbox event", slog.String("channel", channel), slog.Any("error", err))
-	}
+func (p *Publisher) newDrainer(db *sql.DB) *outbox.Drainer {
+	return outbox.NewDrainer(db, p.sendQueued,
+		outbox.WithMaxBackoff(outboxMaxBackoff),
+		outbox.WithOnError(func(err error) {
+			if !errors.Is(err, antenne.ErrNotConnected) {
+				p.logger.Warn("antenne: outbox pass failed", slog.Any("error", err))
+			}
+		}),
+	)
 }
 
-func (p *Publisher) runOutbox(ctx context.Context, every time.Duration) {
-	ticker := time.NewTicker(every)
-	defer ticker.Stop()
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case <-ticker.C:
-			p.drainOutbox(ctx)
-		}
-	}
-}
-
-// drainOutbox sends queued events in id order while the pool is connected. A
-// failure stops the batch, since skipping a row would reorder the log; the
-// row is retried on the next tick.
-func (p *Publisher) drainOutbox(ctx context.Context) {
+func (p *Publisher) sendQueued(channel string, payload any) error {
 	if !p.transport.IsConnected() {
-		return
+		return antenne.ErrNotConnected
 	}
-	var rows []schemas.AntenneOutbox
-	if err := p.db.WithContext(ctx).Order("id ASC").Limit(outboxBatchSize).Find(&rows).Error; err != nil {
-		p.logger.Error("antenne: failed to read outbox", slog.Any("error", err))
-		return
-	}
-	for _, row := range rows {
-		err := p.transport.EmitNow(row.Channel, json.RawMessage(row.Payload))
-		p.recordResult(err)
-		if err != nil {
-			p.logger.Warn("antenne: outbox emit failed", slog.String("channel", row.Channel), slog.Any("error", err))
-			p.db.WithContext(ctx).Model(&row).Updates(map[string]any{"attempts": row.Attempts + 1, "last_error": err.Error()})
-			return
+	err := p.transport.EmitNow(channel, payload)
+	p.recordResult(err)
+	return err
+}
+
+func (p *Publisher) enqueue(ctx context.Context, channel, key string, event any) {
+	ctx = context.WithoutCancel(ctx)
+	tx, err := p.sqlDB.BeginTx(ctx, nil)
+	if err == nil {
+		err = outbox.Enqueue(ctx, tx, catalog.Channel(channel), event, key)
+		if err == nil || errors.Is(err, outbox.ErrDuplicate) {
+			err = tx.Commit()
+		} else {
+			_ = tx.Rollback()
 		}
-		p.db.WithContext(ctx).Delete(&row)
+	}
+	if err != nil {
+		p.logger.Error("antenne: failed to enqueue outbox event", slog.String("channel", channel), slog.Any("error", err))
 	}
 }

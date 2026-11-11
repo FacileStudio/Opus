@@ -1,9 +1,7 @@
 github.com/FacileStudio/Journal/sdk/journal v0.0.0-20260811165717-babb9d5d0e15 h1:moBNWOvylTOc49lMBng4uPnDZQher1zcBNHxJYlEnlA=
 github.com/FacileStudio/Journal/sdk/journal v0.0.0-20260811165717-babb9d5d0e15/go.mod h1:mb3rZqpSwA4CMrP9LQe2eWdM/4np3xzkRy6l/WWSaUg=
-github.com/FacileStudio/antenne-client/go v0.0.0-20260824150250-7681849d44f9 h1:OMVGmz/Krx6qS0YFxrLvweuaXMlLCBd75PKewv7jjgI=
-github.com/FacileStudio/antenne-client/go v0.0.0-20260824150250-7681849d44f9/go.mod h1:NOjvg9/8LYsdw7bcNGccqfN4kAWss690I8FqvMX3eT4=
-github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee h1:xEfz6XsCHem0XaQWhTSjgBlEspvmYDAf8n4pDCCwzAY=
-github.com/FacileStudio/enveloppe/go v0.0.0-20260824150156-c6a22ad287ee/go.mod h1:OxizkzJhMaBPcuHVba9z1wem5oROgwaEPikYowDQbmo=
+github.com/FacileStudio/antenne-client/go v1.1.0 h1:DVfiUneBwgeobaUWmNUNr7jCEOuHc1g2lUfKGM3Zpzs=
+github.com/FacileStudio/antenne-client/go v1.1.0/go.mod h1:L36VhKkpNZ0zLo0AfV8w3NwaKv6poZpDnff4xlq+Zso=
 github.com/FacileStudio/porte v0.18.3 h1:VGexb5FWjZxYT3pI1ZWuWCX7XDxPM3I2I+gRQewqvJ8=
 github.com/FacileStudio/porte v0.18.3/go.mod h1:V7gSnyj+w9itRiG9yesKXc0Vc+OYL+IJojWa1LOmkow=
 github.com/FacileStudio/porte/directory v0.4.0 h1:U+86bDXChiMUBUQnN5VwEyiBoCiLwduwo5IYqRBkC60=
@@ -14,6 +12,8 @@ github.com/FacileStudio/porte/mcpauth v0.2.0 h1:MrXEWCmgknDiNYWbRWPceUAGlBPSXfBj
 github.com/FacileStudio/porte/mcpauth v0.2.0/go.mod h1:OAwHhZW3zOQPtMWNIZZlG73/lP6BnVg9i5dUbsz7IM4=
 github.com/FacileStudio/tronc v0.21.0 h1:lXm4Y69Y0irciHxJ5FcDuyAhkgzWx+GWaIl/2/oCDFM=
 github.com/FacileStudio/tronc v0.21.0/go.mod h1:QugDOuUrqoQw6JEi1jcPqY19lgmL+lhHDxtJcIkDk3g=
+github.com/FacileStudio/tronc/migrate v0.1.0 h1:M+UZo4f9DSiwW8zwYqraI9OuLBtIVCQNxa84MXYwp6k=
+github.com/FacileStudio/tronc/migrate v0.1.0/go.mod h1:n7Yy3IVgveI1HXdzfqv5mQlDiV1a8yXeSh8vTW1pwwk=
 github.com/FacileStudio/tronc/testdb v0.1.1 h1:PTwGRnPcibkhzEdCM+YTxare8L2vneuUrhoGfPO7Iao=
 github.com/FacileStudio/tronc/testdb v0.1.1/go.mod h1:49KIfUnXScKflXJBJM+UiaI3Zvl9d1Z21Cp95mLIUR4=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=
@@ -24,7 +24,6 @@ github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UF
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/coreos/go-oidc/v3 v3.20.0 h1:EtE0WIBHk03N+DqGkY4+UONzzZHk7amKt6IyNd7OsZE=
 github.com/coreos/go-oidc/v3 v3.20.0/go.mod h1:DYCf24+ncYi+XkIH97GY1+dqoRlbaSI26KVTCI9SrY4=
-github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

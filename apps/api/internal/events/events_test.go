@@ -7,7 +7,7 @@ import (
 	"time"
 
 	antenne "github.com/FacileStudio/antenne-client/go"
-	enveloppe "github.com/FacileStudio/enveloppe/go"
+	envelope "github.com/FacileStudio/antenne-client/go/envelope"
 )
 
 type recordedMessage struct {
@@ -99,21 +99,21 @@ func TestPublisher_EmitTask_Success(t *testing.T) {
 		t.Errorf("channel = %s, want %s", msgs[0].channel, ChannelTaskCreated)
 	}
 
-	evt, ok := msgs[0].payload.(enveloppe.Event[any])
+	evt, ok := msgs[0].payload.(envelope.Event[any])
 	if !ok {
-		t.Fatalf("payload is not enveloppe.Event[any]: %T", msgs[0].payload)
+		t.Fatalf("payload is not envelope.Event[any]: %T", msgs[0].payload)
 	}
 	if evt.Version != 1 {
 		t.Errorf("version = %d, want 1", evt.Version)
 	}
-	if evt.App != enveloppe.AppOpus {
-		t.Errorf("app = %s, want %s", evt.App, enveloppe.AppOpus)
+	if evt.App != envelope.AppOpus {
+		t.Errorf("app = %s, want %s", evt.App, envelope.AppOpus)
 	}
-	if evt.Object != enveloppe.ObjectTask {
-		t.Errorf("object = %s, want %s", evt.Object, enveloppe.ObjectTask)
+	if evt.Object != envelope.ObjectTask {
+		t.Errorf("object = %s, want %s", evt.Object, envelope.ObjectTask)
 	}
-	if evt.Action != enveloppe.ActionCreated {
-		t.Errorf("action = %s, want %s", evt.Action, enveloppe.ActionCreated)
+	if evt.Action != envelope.ActionCreated {
+		t.Errorf("action = %s, want %s", evt.Action, envelope.ActionCreated)
 	}
 	if evt.FacileID != "101" {
 		t.Errorf("facile_id = %s, want 101", evt.FacileID)
@@ -156,18 +156,18 @@ func TestPublisher_AllTaskChannels(t *testing.T) {
 	}
 	expected := []struct {
 		channel string
-		action  enveloppe.Action
+		action  envelope.Action
 	}{
-		{ChannelTaskUpdated, enveloppe.ActionUpdated},
-		{ChannelTaskDeleted, enveloppe.ActionDeleted},
-		{ChannelTaskStatusChanged, enveloppe.ActionUpdated},
-		{ChannelTaskActorChanged, enveloppe.ActionUpdated},
+		{ChannelTaskUpdated, envelope.ActionUpdated},
+		{ChannelTaskDeleted, envelope.ActionDeleted},
+		{ChannelTaskStatusChanged, envelope.ActionUpdated},
+		{ChannelTaskActorChanged, envelope.ActionUpdated},
 	}
 	for i, exp := range expected {
 		if msgs[i].channel != exp.channel {
 			t.Errorf("[%d] channel = %s, want %s", i, msgs[i].channel, exp.channel)
 		}
-		evt := msgs[i].payload.(enveloppe.Event[any])
+		evt := msgs[i].payload.(envelope.Event[any])
 		if evt.Action != exp.action {
 			t.Errorf("[%d] action = %s, want %s", i, evt.Action, exp.action)
 		}
@@ -203,9 +203,9 @@ func TestPublisher_EmitProject_Channels(t *testing.T) {
 	if msgs[2].channel != ChannelProjectDeleted {
 		t.Errorf("channel = %s, want %s", msgs[2].channel, ChannelProjectDeleted)
 	}
-	evt := msgs[0].payload.(enveloppe.Event[any])
-	if evt.Object != enveloppe.ObjectProject {
-		t.Errorf("object = %s, want %s", evt.Object, enveloppe.ObjectProject)
+	evt := msgs[0].payload.(envelope.Event[any])
+	if evt.Object != envelope.ObjectProject {
+		t.Errorf("object = %s, want %s", evt.Object, envelope.ObjectProject)
 	}
 	if evt.FacileID != "core-api" {
 		t.Errorf("facile_id = %s, want core-api", evt.FacileID)
@@ -228,11 +228,11 @@ func TestPublisher_EmitCommentAndWorkspace(t *testing.T) {
 	if len(msgs) != 2 {
 		t.Fatalf("expected 2 messages, got %d", len(msgs))
 	}
-	evtComment := msgs[0].payload.(enveloppe.Event[any])
+	evtComment := msgs[0].payload.(envelope.Event[any])
 	if evtComment.Object != ObjectComment {
 		t.Errorf("object = %s, want %s", evtComment.Object, ObjectComment)
 	}
-	evtWs := msgs[1].payload.(enveloppe.Event[any])
+	evtWs := msgs[1].payload.(envelope.Event[any])
 	if evtWs.Object != ObjectWorkspace {
 		t.Errorf("object = %s, want %s", evtWs.Object, ObjectWorkspace)
 	}

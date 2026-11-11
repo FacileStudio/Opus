@@ -94,13 +94,15 @@ Separate from GitHub sign-in. These power repository sync and webhook delivery.
 ## Antenne event bus
 
 Opus publishes project and task events to Antenne and applies the ones Sablier publishes. All
-three variables are optional. With `ANTENNE_URL` or `ANTENNE_SECRET` unset, the bus is off and
-local writes are unaffected. See [Sablier sync](sablier-sync.md).
+variables are optional. With no URL the bus is off and local writes are unaffected. A URL without
+`ANTENNE_SECRET` stops the API at boot. Opus registers as the `Opus` app and does not read
+`ANTENNE_APP`. See [Sablier sync](sablier-sync.md).
 
 | Variable | Required | Default | What it does |
 |---|---|---|---|
 | `ANTENNE_URL` | no | — | Antenne instance URL |
-| `ANTENNE_SECRET` | no | — | Shared secret of the Antenne instance |
+| `ANTENNE_INSTANCE` | no | — | Older name for `ANTENNE_URL`. `ANTENNE_URL` wins when both are set |
+| `ANTENNE_SECRET` | with a URL | — | Shared secret of the Antenne instance |
 | `ANTENNE_INSTANCE_ID` | no | — | Distinguishes several Opus instances on one bus |
 | `ANTENNE_SYNC_WORKSPACE_ID` | no | — | Fallback workspace for projects from old Sablier versions whose events carry no `space`. Current Sablier projects land in their Registre or personal workspace |
 

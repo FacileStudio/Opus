@@ -59,6 +59,9 @@ const (
 	deletePendingActions    = `DELETE FROM mcp_actions WHERE user_id = ($1::bigint)::text`
 	forgetPullAuthor        = `UPDATE task_pull_requests SET author_github_id = NULL
 		WHERE author_github_id = (SELECT github_id FROM users WHERE id = $1)`
+	deleteSentEvents = `DELETE FROM antenne_outbox o WHERE o.sent_at IS NOT NULL AND (
+		strpos(lower(o.payload::text), (SELECT lower(email) FROM users WHERE id = $1)) > 0
+		OR EXISTS (SELECT 1 FROM porte_identities i WHERE i.user_id = $1 AND strpos(o.payload::text, '"' || i.subject || '"') > 0))`
 )
 
 // Eraser deletes what an erased person owns, as the user store's EraseData:
@@ -80,8 +83,9 @@ func NewEraser(uploadDir string, assets AssetRemover) *Eraser {
 }
 
 // EraseData removes the person's stored objects first, then the invitations
-// sent to their address and their pending MCP actions, and drops their GitHub
-// id from the pull requests they authored. A storage failure rolls the transaction back, so
+// sent to their address, their pending MCP actions and the already delivered
+// bus events that name them, and drops their GitHub id from the pull requests
+// they authored. A storage failure rolls the transaction back, so
 // Registre's retry finds the account and deletes the objects again; deleting
 // a missing object succeeds.
 func (e *Eraser) EraseData(ctx context.Context, tx *sql.Tx, userID int64) error {
@@ -101,7 +105,7 @@ func (e *Eraser) EraseData(ctx context.Context, tx *sql.Tx, userID int64) error 
 			slog.Warn("failed to remove an erased person's workspace logo", slog.Any("error", err))
 		}
 	}
-	for _, statement := range []string{deleteInvitationsToThem, deletePendingActions, forgetPullAuthor} {
+	for _, statement := range []string{deleteInvitationsToThem, deletePendingActions, forgetPullAuthor, deleteSentEvents} {
 		if _, err := tx.ExecContext(ctx, statement, userID); err != nil {
 			return err
 		}

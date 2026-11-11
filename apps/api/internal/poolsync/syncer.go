@@ -11,7 +11,7 @@ import (
 	"time"
 
 	antenne "github.com/FacileStudio/antenne-client/go"
-	enveloppe "github.com/FacileStudio/enveloppe/go"
+	envelope "github.com/FacileStudio/antenne-client/go/envelope"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
@@ -98,7 +98,7 @@ func (s *Syncer) Handle(ctx context.Context, channel string, raw json.RawMessage
 	if err != nil {
 		return err
 	}
-	if evt.app != string(enveloppe.AppSablier) {
+	if evt.app != string(envelope.AppSablier) {
 		return nil
 	}
 	if evt.at.IsZero() || time.Since(evt.at) > ledgerRetention {
@@ -162,11 +162,11 @@ func claim(tx *gorm.DB, key string) error {
 
 func (s *Syncer) dispatch(tx *gorm.DB, object, action string, evt inbound) (outcome, error) {
 	switch object {
-	case string(enveloppe.ObjectProject):
+	case string(envelope.ObjectProject):
 		return s.applyProject(tx, action, evt)
-	case string(enveloppe.ObjectTask):
+	case string(envelope.ObjectTask):
 		return s.applyTask(tx, action, evt)
-	case string(enveloppe.ObjectTimeEntry):
+	case string(envelope.ObjectTimeEntry):
 		return s.applyTimeEntry(tx, action, evt)
 	default:
 		return outcome{skipped: true}, nil
