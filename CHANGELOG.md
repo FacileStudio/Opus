@@ -2,6 +2,17 @@
 
 All notable changes to Opus are documented here.
 
+## [2.36.0] - 2026-11-11
+
+### Changed
+
+- The app logo draws the suite catalog icon, `solar:slider-vertical-minimalistic-bold-duotone`, registered through `@iconify/react` like the Ideas icon.
+- Brand assets come from the muse v0.19.0 generator: favicon.svg, favicon.ico, the touch and manifest icons, og-image.png and site.webmanifest match the rest of the suite. `apps/web/index.html` carries the generated head block, so the title, description, theme colours and every Open Graph and Twitter tag appear once, with the catalog's wording. The landing page title follows the catalog in every locale.
+
+### Removed
+
+- Unused brand files in `apps/web/public`: favicon-96x96.png, web-app-manifest-192x192.png, web-app-manifest-512x512.png, logo-dark.svg and logo-light.svg.
+
 ## [2.35.4] - 2026-11-11
 
 ### Fixed
