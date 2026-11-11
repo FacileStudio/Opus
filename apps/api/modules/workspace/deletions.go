@@ -5,10 +5,12 @@ import (
 	"database/sql"
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/storage"
 
 	"github.com/FacileStudio/porte/directory"
+	mcpkit "github.com/FacileStudio/tronc/mcp"
 
 	"gorm.io/gorm"
 )
@@ -56,7 +58,6 @@ const (
 		JOIN workspaces w ON w.id = a.workspace_id WHERE w.personal_owner_id = $1`
 	selectPersonalWorkspace = `SELECT id FROM workspaces WHERE personal_owner_id = $1`
 	deleteInvitationsToThem = `DELETE FROM invitations WHERE lower(email) = (SELECT lower(email) FROM users WHERE id = $1)`
-	deletePendingActions    = `DELETE FROM mcp_actions WHERE user_id = ($1::bigint)::text`
 	forgetPullAuthor        = `UPDATE task_pull_requests SET author_github_id = NULL
 		WHERE author_github_id = (SELECT github_id FROM users WHERE id = $1)`
 	deleteSentEvents = `DELETE FROM antenne_outbox o WHERE o.sent_at IS NOT NULL AND (
@@ -105,12 +106,12 @@ func (e *Eraser) EraseData(ctx context.Context, tx *sql.Tx, userID int64) error 
 			slog.Warn("failed to remove an erased person's workspace logo", slog.Any("error", err))
 		}
 	}
-	for _, statement := range []string{deleteInvitationsToThem, deletePendingActions, forgetPullAuthor, deleteSentEvents} {
+	for _, statement := range []string{deleteInvitationsToThem, forgetPullAuthor, deleteSentEvents} {
 		if _, err := tx.ExecContext(ctx, statement, userID); err != nil {
 			return err
 		}
 	}
-	return nil
+	return mcpkit.ErasePending(ctx, tx, strconv.FormatInt(userID, 10))
 }
 
 func queryColumn[T any](ctx context.Context, tx *sql.Tx, query string, args ...any) ([]T, error) {

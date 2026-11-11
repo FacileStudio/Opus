@@ -2,11 +2,8 @@ package mcp
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/modules/project"
@@ -35,12 +32,7 @@ func (t *toolset) kinds() map[string]mcpkit.Kind {
 
 // refOf reads the user and the id an action targets.
 func refOf(a mcpkit.Action) (int64, int64, error) {
-	userID, errUser := strconv.ParseInt(a.UserID, 10, 64)
-	id, errID := strconv.ParseInt(a.Target, 10, 64)
-	if errUser != nil || errID != nil {
-		return 0, 0, errTarget
-	}
-	return userID, id, nil
+	return mcpkit.TargetIDs(a, errTarget)
 }
 
 // taskPrint is the digest of the targeted task as it is now.
@@ -54,7 +46,7 @@ func (t *toolset) taskPrint(ctx context.Context, a mcpkit.Action) (string, error
 	if err != nil {
 		return "", err
 	}
-	return digest(tk.UpdatedAt.UTC().Format(time.RFC3339Nano), tk.Title, tk.Status, strconv.FormatInt(tk.ProjectID, 10)), nil
+	return mcpkit.Digest(tk.UpdatedAt.UTC().Format(time.RFC3339Nano), tk.Title, tk.Status, strconv.FormatInt(tk.ProjectID, 10)), nil
 }
 
 // removeTask deletes the targeted task.
@@ -79,7 +71,7 @@ func (t *toolset) projectPrint(ctx context.Context, a mcpkit.Action) (string, er
 	if err != nil {
 		return "", err
 	}
-	return digest(p.Name, p.Slug, p.Description, strconv.Itoa(taskCount(*p))), nil
+	return mcpkit.Digest(p.Name, p.Slug, p.Description, strconv.Itoa(taskCount(*p))), nil
 }
 
 // removeProject deletes the targeted project with its tasks.
@@ -91,12 +83,6 @@ func (t *toolset) removeProject(ctx context.Context, a mcpkit.Action) error {
 	ctx = t.as(ctx, userID, "")
 	_, err = t.domain.Projects.Calls().Delete(ctx, userID, projectID)
 	return err
-}
-
-// digest fingerprints the fields the person was shown.
-func digest(fields ...string) string {
-	sum := sha256.Sum256([]byte(strings.Join(fields, "\x00")))
-	return hex.EncodeToString(sum[:16])
 }
 
 // taskCount is how many tasks a project holds.
