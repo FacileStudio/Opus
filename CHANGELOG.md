@@ -2,6 +2,23 @@
 
 All notable changes to Opus are documented here.
 
+## [2.35.0] - 2026-11-11
+
+### Changed
+
+- Sign-in, the picture backfill and account erasure run on porte/kit (porte v0.18.3). The stored email is rewritten at sign-in only when Registre marks it verified, and the boot backfill fills empty pictures only. Routes, status codes and the `/api/auth/config` body are unchanged.
+- Antenne publishing uses antenne-client v1.1.0 and its durable outbox; `enveloppe` is no longer a dependency. Migration 00009 converts `antenne_outbox` to the library's table: sent rows are kept 7 days instead of deleted. The envelope Opus queues is byte for byte the same; the `jsonb` column sends it with Postgres's key order. `ANTENNE_INSTANCE` is read as a synonym of `ANTENNE_URL`, and a URL without `ANTENNE_SECRET` now stops the API at boot.
+- tronc v0.21.0, porte/directory v0.4.0, goose v3.27.3, Go 1.26.10, and patched go-jose, go-redis and x/text.
+- Every Go test runs on PostgreSQL through tronc/testdb; the SQLite driver is gone. CI pins filet v0.19.2, adds douane 0.7.2, and the pre-push hook runs `filet gate` and douane.
+
+### Fixed
+
+- A Registre erasure now also deletes the person's pending MCP actions and the delivered bus events that name them, and drops their GitHub id from the pull requests they authored. An erasure notice matches the issuer with or without a trailing slash. `docs/erasure.md` states what is deleted and what is anonymised.
+
+### Rollback
+
+- Before running v2.34.0 or older against a database migrated by this release, run migration 00009 Down (`goose down` to version 8). Older binaries write outbox rows without an idempotency key, which the converted table refuses, so their events would be lost.
+
 ## [2.34.0] - 2026-11-10
 
 ### Changed
