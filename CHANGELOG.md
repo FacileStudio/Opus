@@ -9,6 +9,7 @@ All notable changes to Opus are documented here.
 - The MCP server and its confirm page run on tronc/mcp v0.22.0 (`mcp.NewApp`, `PendingPage`, `Digest`, `TargetIDs`, `ErasePending`); Opus's own copies of the pending routes, their types and the digest are gone. Tool names and schemas are unchanged, and open pending actions keep their fingerprints, so they still confirm.
 - `/api/mcp/pending` answers a delegated token's 403 with "only the person's own session can confirm actions" (code `permission_denied` as before). The API reference names the list schema `PendingList_PendingItem` and documents the `id` path parameter and the optional `url` of the result.
 - An account erasure deletes the person's pending MCP actions through `mcpkit.ErasePending` in the same transaction.
+- Go 1.26.11 (image `golang:1.26.11-alpine`) and chi v5.4.0, for the advisories published on 2026-11-11 (CVE-2026-114437 in chi, GO-2026-6848 to GO-2026-6859 in the toolchain and stdlib) that made the douane scan incomplete.
 
 ## [2.35.2] - 2026-11-11
 
