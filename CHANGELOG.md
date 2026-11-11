@@ -2,6 +2,16 @@
 
 All notable changes to Opus are documented here.
 
+## [2.35.4] - 2026-11-11
+
+### Fixed
+
+- A Registre erasure now also deletes the outbox events still waiting to be sent that name the person's email or Registre subject. Before, only delivered rows went, so an event queued while Antenne was unreachable reached the bus after the person was erased. The next reconcile re-sends the current state of shared projects and tasks.
+
+### Changed
+
+- `CLAUDE.md` describes the Go API, porte auth, the outbox and the deployment as they are, instead of the retired Hono, Drizzle and Better Auth stack.
+
 ## [2.35.3] - 2026-11-11
 
 ### Changed
