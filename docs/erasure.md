@@ -23,7 +23,7 @@ Registre holds a self-deletion for 30 days before it notifies apps.
 | Memberships, notifications, notification preferences and rules | Deleted with the row |
 | Invitations they sent, and invitations sent to their address | Deleted |
 | Pending MCP actions (`mcp_actions`) | Deleted |
-| Delivered bus events naming their email or subject (`antenne_outbox`, sent rows) | Deleted. Unsent rows are delivered, then pruned after 7 days |
+| Bus events naming their email or subject (`antenne_outbox`), sent or still queued | Deleted. A queued event is never delivered; the next reconcile re-sends shared projects and tasks |
 | Comments, activity entries, time entries, assets and share links in shared workspaces | Kept. The author becomes empty (`ON DELETE SET NULL`); the client shows a deleted user |
 | Tasks assigned to them in shared workspaces | Kept, unassigned |
 | Pull requests they authored on shared tasks | Kept, without their GitHub id |
@@ -40,7 +40,9 @@ succeeds.
 
 `modules/workspace/erasure_test.go` seeds a person with a row in every table above, erases them
 through `EraseAccount`, then scans every text and JSON column of every table for their email,
-name, Registre subject and GitHub id, and asserts there is none (`antenne_outbox` included). It also asserts the shared rows
-survive with an empty author. A new table that stores one of these values fails the test.
+name, Registre subject and GitHub id, and asserts there is none (`antenne_outbox` included). It queues unsent events through
+`outbox.Enqueue` before the erasure, so a queued event naming the person fails it too. It
+also asserts the shared rows survive with an empty author and another person's queued event
+stays queued. A new table that stores one of these values fails the test.
 
 Back to the [documentation index](README.md).
