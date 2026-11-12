@@ -2,6 +2,16 @@
 
 All notable changes to Opus are documented here.
 
+## [2.37.0] - 2026-11-13
+
+### Changed
+
+- porte v0.19.0 and porte/directory v0.5.0. A Registre subject the deletion receiver handled never gets an account again: porte's sign-in, bearer provisioning (the first MCP call) and profile sync refuse it (`oidc.Deps.Erased`), and the Registre space sync skips it instead of pre-provisioning the member. An account that a racing call re-created anyway is erased by the next push or poll of the same notice, with no restart (`directory.Deletions.Holds`). See `docs/erasure.md`.
+
+### Fixed
+
+- Uploads survive a redeploy. `docker-compose.yml` mounted the `opus-uploads` volume at `/app/apps/api/data/uploads` while the entrypoint writes to `/app/data/uploads`, so workspace logos and local assets lived in the container layer. The volume is now mounted at `/app/data/uploads`, as is the Helm chart's.
+
 ## [2.36.0] - 2026-11-11
 
 ### Changed
