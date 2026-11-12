@@ -165,7 +165,7 @@ The API reads `.env` from its working directory (godotenv), then the process env
 | `TRUSTED_PROXIES` | empty | Proxies whose forwarded headers the router trusts |
 | `JOURNAL_URL` / `JOURNAL_TOKEN` | empty | Log shipping to Journal when both are set |
 | `CLIENT_DIR` | `./client`, `/client` in the image | Where the built SPA lives. No client, no SPA mount |
-| `UPLOAD_DIR` | `./data/uploads`, `/app/data/uploads` from the entrypoint | Workspace logos and local assets |
+| `UPLOAD_DIR` | `./data/uploads`, `/app/data/uploads` from the entrypoint | Workspace logos and local assets. The `opus-uploads` volume is mounted there |
 | `OIDC_ISSUER` | empty | `https://sso.facile.studio`. Empty disables sign-in |
 | `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` / `OIDC_REDIRECT_URL` | empty | Required when `OIDC_ISSUER` is set. Redirect: `https://opus.facile.studio/api/auth/oidc/callback` |
 | `OIDC_SUCCESS_URL` | first CORS origin | Where a completed login lands |
@@ -240,6 +240,3 @@ The API reads `.env` from its working directory (godotenv), then the process env
 - **mise tasks with `depends` fail on mise 2026.9** (`':task' pattern should be expanded`).
   `mise run deps` works; `mise run build`, `test` and `check` do not. Run `go` directly.
 - **Back up `opus_go`, not `opus`.** `pg_dump -d opus` silently dumps the retired database.
-- The compose file mounts the `opus-uploads` volume at `/app/apps/api/data/uploads`, but the
-  entrypoint sets `UPLOAD_DIR=/app/data/uploads`, so uploaded logos live in the container
-  layer and go away on redeploy.

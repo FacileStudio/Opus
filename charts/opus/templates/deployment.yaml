@@ -87,7 +87,7 @@ spec:
           {{- if .Values.opus.persistence.enabled }}
           volumeMounts:
             - name: uploads
-              mountPath: /app/apps/api/data/uploads
+              mountPath: /app/data/uploads
           {{- end }}
       {{- if .Values.opus.persistence.enabled }}
       volumes:
