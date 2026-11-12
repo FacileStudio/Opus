@@ -36,6 +36,25 @@ Everything runs in one transaction under the kit's advisory lock. A storage fail
 back, so the next delivery finds the account and tries again; deleting a missing object
 succeeds.
 
+## An erased subject never gets an account again
+
+Since v2.37.0 the receiver's handled subjects (`directory_deletion_state`, kept at least 60 days)
+guard every path that creates or links an account from a Registre subject:
+
+| Path | Answer for a handled subject |
+|---|---|
+| Sign-in, bearer provisioning (the first MCP call) and the profile sync, all in porte/oidc (`oidc.Deps.Erased`) | Refused with `permission_denied`, nothing written; the callback shows "this account was deleted" |
+| Registre space sync (`workspace.Directory.Apply`), which pre-provisions members | The member is skipped: no user, no identity, no membership |
+
+An account re-created anyway, by a call that raced the erasure, is erased by the next push or
+poll of the same notice, with no restart: porte asks `pg.Store.HoldsIdentity` whether an identity
+of the issuer holds a handled subject again (`directory.Deletions.Holds`). That check matches
+the issuer exactly as `OIDC_ISSUER` spells it, which is how sign-in and the space sync store it.
+
+Tests: `TestAHandledSubjectIsRefusedAnAccount` (`main`),
+`TestARepushedNoticeErasesAnAccountRecreatedAfterTheErasure` and
+`TestTheSpaceSyncSkipsAnErasedMember` (`modules/workspace`).
+
 ## The proof
 
 `modules/workspace/erasure_test.go` seeds a person with a row in every table above, erases them

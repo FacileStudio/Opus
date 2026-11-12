@@ -9,10 +9,10 @@ Simplicity first. Do not add features, refactors or improvements beyond what was
 
 ## Tech stack
 
-- **API** (`apps/api`): Go 1.26.11, chi v5.4.0, GORM over PostgreSQL 16, ordered goose SQL
+- **API** (`apps/api`): Go 1.26.11, chi v5.5.0, GORM over PostgreSQL 16, ordered goose SQL
   migrations embedded in the binary
-- **Auth**: [`porte`](https://github.com/FacileStudio/porte) v0.18.3. `porte/kit` owns the user
-  store and erasure, `porte/oidc` signs people in through Registre, `porte/directory` v0.4.0
+- **Auth**: [`porte`](https://github.com/FacileStudio/porte) v0.19.0. `porte/kit` owns the user
+  store and erasure, `porte/oidc` signs people in through Registre, `porte/directory` v0.5.0
   syncs Registre spaces and deletion notices, `porte/mcpauth` v0.2.0 guards `/mcp`,
   `porte/forfait` v0.1.1 holds plan entitlements
 - **Chassis**: [`tronc`](https://github.com/FacileStudio/tronc) v0.22.0 supplies `env`, `httpx`,

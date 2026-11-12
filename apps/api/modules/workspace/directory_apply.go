@@ -112,7 +112,8 @@ func (d *Directory) createLinked(tx *gorm.DB, space directory.Space) (int64, err
 
 // resolveMember finds the user a Registre member is, by identity and then by
 // email, and pre-provisions one otherwise. It answers 0 for a member Registre
-// sent without a subject, which cannot be matched safely.
+// sent without a subject, which cannot be matched safely, and for a subject
+// Opus erased, which never gets an account again.
 func (d *Directory) resolveMember(tx *gorm.DB, member directory.Member) (int64, error) {
 	if member.Subject == "" {
 		return 0, nil
@@ -125,6 +126,9 @@ func (d *Directory) resolveMember(tx *gorm.DB, member directory.Member) (int64, 
 	}
 	if userID != 0 {
 		return userID, nil
+	}
+	if erased, err := d.isErased(tx, member.Subject); err != nil || erased {
+		return 0, err
 	}
 	email := strings.ToLower(strings.TrimSpace(member.Email))
 	if email == "" {
@@ -146,6 +150,18 @@ func (d *Directory) resolveMember(tx *gorm.DB, member directory.Member) (int64, 
 		return 0, errors.Internal("failed to record a member identity", err)
 	}
 	return userID, nil
+}
+
+// isErased asks the deletion receiver whether Opus erased the subject.
+func (d *Directory) isErased(tx *gorm.DB, subject string) (bool, error) {
+	if d.erased == nil {
+		return false, nil
+	}
+	erased, err := d.erased.Erased(tx.Statement.Context, d.issuer, subject)
+	if err != nil {
+		return false, errors.Internal("failed to read the erased subjects", err)
+	}
+	return erased, nil
 }
 
 // syncMembers adds and re-ranks the wanted members of a workspace, and

@@ -38,10 +38,11 @@ type sqlPinger interface {
 }
 
 type authKits struct {
-	sessions *session.Manager
-	oidc     *oidc.Kit
-	store    *portepg.Store
-	users    *auth.UserStore
+	sessions  *session.Manager
+	oidc      *oidc.Kit
+	store     *portepg.Store
+	users     *auth.UserStore
+	deletions *workspace.Deletions
 }
 
 func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *slog.Logger) (*authKits, error) {
@@ -66,17 +67,19 @@ func buildAuth(ctx context.Context, db *gorm.DB, appEnv *env.Config, appLogger *
 	if err != nil {
 		return nil, err
 	}
+	deletions := newDeletions(db, appEnv, users, store, appLogger)
 	kit, err := oidc.New(ctx, cfg, oidc.Deps{
 		Users:      users,
 		Identities: store.Identities(),
 		Sessions:   sessions,
 		Codes:      store.LoginCodes(),
+		Erased:     erasedSubjects(deletions),
 		Logger:     appLogger,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &authKits{sessions: sessions, oidc: kit, store: store, users: users}, nil
+	return &authKits{sessions: sessions, oidc: kit, store: store, users: users, deletions: deletions}, nil
 }
 
 // backfillPictures fills the Registre picture URL for accounts that have not
@@ -164,9 +167,9 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 	reconcile := reconcileJob(publisher, appLogger)
 	ideas := newIdeas(db, kits, appEnv, appLogger)
 	workspaces, followers, stopSpaces := startWorkspaces(db, appEnv, appLogger, workspaceHooks{
-		onSynced:        reconcile,
-		onSnapshot:      ideas.apply,
-		onPersonDeleted: kits.users.EraseAccount,
+		onSynced:   reconcile,
+		onSnapshot: ideas.apply,
+		deletions:  kits.deletions,
 	})
 	shared := newDomain(db, hub, publisher)
 	mcpService, err := newMCP(context.Background(), kits, appEnv, mcpDomain(db, workspaces, shared), appLogger)

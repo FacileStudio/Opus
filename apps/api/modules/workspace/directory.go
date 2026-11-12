@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/schemas"
+	"github.com/FacileStudio/porte"
 	"github.com/FacileStudio/porte/directory"
 	"github.com/FacileStudio/tronc/errors"
 )
@@ -31,12 +32,20 @@ type Directory struct {
 	synced     sync.Once
 	onSynced   func(context.Context)
 	onSnapshot func(directory.Snapshot)
+	erased     porte.ErasedSubjects
 }
 
 // OnSnapshot hands every Registre snapshot to fn before it is applied, so an
 // app can read the entitlements it carries. Call it before Run.
 func (d *Directory) OnSnapshot(fn func(directory.Snapshot)) {
 	d.onSnapshot = fn
+}
+
+// RefuseErased makes Apply skip a member whose subject the deletion receiver
+// handled, so a snapshot read before an erasure never provisions or links that
+// person again. Call it before Run.
+func (d *Directory) RefuseErased(erased porte.ErasedSubjects) {
+	d.erased = erased
 }
 
 // OnFirstSync runs fn once, in the background, after the first Registre

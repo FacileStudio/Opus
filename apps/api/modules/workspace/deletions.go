@@ -10,6 +10,7 @@ import (
 	"github.com/FacileStudio/Opus/apps/api/internal/storage"
 
 	"github.com/FacileStudio/porte/directory"
+	portepg "github.com/FacileStudio/porte/pg"
 	mcpkit "github.com/FacileStudio/tronc/mcp"
 
 	"gorm.io/gorm"
@@ -28,19 +29,28 @@ type AssetRemover interface {
 }
 
 // NewDeletions builds the receiver. onPersonDeleted erases the Opus account
-// behind a Registre identity, the user store's EraseAccount; erase is porte's
-// own rows eraser, pg.Store.EraseIdentity.
+// behind a Registre identity, the user store's EraseAccount; store erases
+// porte's own rows and tells a handled subject an account holds again, so the
+// next notice erases that account instead of skipping it.
 func NewDeletions(
-	service *Service, client directory.Client, onPersonDeleted, erase func(context.Context, string, string) error,
-	logger *slog.Logger,
+	orm *gorm.DB, client directory.Client, onPersonDeleted func(context.Context, string, string) error,
+	store *portepg.Store, logger *slog.Logger,
 ) *Deletions {
 	return &Deletions{receiver: &directory.Deletions{
 		Client:          client,
 		OnPersonDeleted: onPersonDeleted,
-		Erase:           erase,
-		State:           deletionState{orm: service.orm},
+		Erase:           store.EraseIdentity,
+		Holds:           store.HoldsIdentity,
+		State:           deletionState{orm: orm},
 		Logger:          logger,
 	}}
+}
+
+// Erased reports whether the receiver handled this subject of the issuer:
+// porte/oidc's Deps.Erased, and the space sync's guard. It reads the saved
+// state on every call, so it needs no running receiver.
+func (d *Deletions) Erased(ctx context.Context, provider, subject string) (bool, error) {
+	return d.receiver.Erased(ctx, provider, subject)
 }
 
 // Run polls until ctx ends. Start it in exactly one replica.
