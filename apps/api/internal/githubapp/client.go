@@ -1,4 +1,4 @@
-// Package githubapp talks to GitHub as the Opus GitHub App. It signs the App
+// Package githubapp talks to GitHub as the Facile Opus App. It signs the App
 // JWT, finds the installation that covers a repository and mints installation
 // tokens scoped to that one repository and the one permission a call needs.
 // Tokens and keys never leave this package and are never logged.
@@ -47,10 +47,11 @@ type Client struct {
 	http     *http.Client
 	now      func() time.Time
 
-	mu     sync.Mutex
-	tokens map[string]cachedToken
-	access map[string]cachedPermission
-	issues map[string]cachedIssues
+	mu      sync.Mutex
+	tokens  map[string]cachedToken
+	access  map[string]cachedPermission
+	issues  map[string]cachedIssues
+	install installLink
 }
 
 type cachedToken struct {

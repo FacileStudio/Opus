@@ -542,6 +542,9 @@
 						"oidcError": {
 							"type": "string"
 						},
+						"sessionEnded": {
+							"type": "string"
+						},
 						"label": {
 							"type": "string"
 						},
@@ -568,6 +571,7 @@
 						"invitationSubtitle",
 						"invitationAlert",
 						"oidcError",
+						"sessionEnded",
 						"label",
 						"loading",
 						"tagline",
@@ -2149,6 +2153,12 @@
 						"githubAdminOnly": {
 							"type": "string"
 						},
+						"githubInstall": {
+							"type": "string"
+						},
+						"githubInstallHint": {
+							"type": "string"
+						},
 						"githubLinked": {
 							"type": "string"
 						},
@@ -2181,6 +2191,8 @@
 						"githubUnlink",
 						"githubLinkHint",
 						"githubAdminOnly",
+						"githubInstall",
+						"githubInstallHint",
 						"githubLinked",
 						"githubUnlinked",
 						"githubDefaultBranch"

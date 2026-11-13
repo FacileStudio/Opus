@@ -546,8 +546,10 @@
 			"githubRepoPlaceholder": "propriétaire/dépôt",
 			"githubLink": "Lier le dépôt",
 			"githubUnlink": "Délier",
-			"githubLinkHint": "Il vous faut l'accès en écriture au dépôt sur GitHub, et l'App GitHub Opus doit y être installée.",
+			"githubLinkHint": "Il vous faut l'accès en écriture au dépôt sur GitHub, et l'app Facile Opus doit y être installée.",
 			"githubAdminOnly": "Seuls les propriétaires et administrateurs de l'espace peuvent lier ou délier des dépôts.",
+			"githubInstall": "Installer l'app Facile Opus sur GitHub",
+			"githubInstallHint": "Installez-la sur votre compte ou votre organisation, choisissez les dépôts, privés compris, puis liez-les ici.",
 			"githubLinked": "Dépôt lié",
 			"githubUnlinked": "Dépôt délié",
 			"githubDefaultBranch": "Branche par défaut : {{branch}}"

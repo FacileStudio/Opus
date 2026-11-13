@@ -3,12 +3,13 @@ import { createFileRoute, useParams } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PageTitle from "@/components/page-title";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   useLinkGitHubRepo,
   useUnlinkGitHubRepo,
 } from "@/hooks/mutations/github/use-github-repo-mutations";
+import useGetConfig from "@/hooks/queries/config/use-get-config";
 import { useGetGitHubRepos } from "@/hooks/queries/github/use-github-repos";
 import { useWorkspacePermission } from "@/hooks/use-workspace-permission";
 import { toast } from "@/lib/toast";
@@ -51,6 +52,45 @@ function RouteComponent() {
   );
 }
 
+/**
+ * The page where a GitHub account or organization installs the Opus GitHub
+ * App, or an empty string when the App is off.
+ */
+function useGitHubAppInstallUrl(): string {
+  const { data } = useGetConfig();
+  return (
+    (data as { githubAppInstallUrl?: string } | undefined)
+      ?.githubAppInstallUrl ?? ""
+  );
+}
+
+/**
+ * Links to the GitHub page that installs the Facile Opus App, with a hint on
+ * what to do there. It renders nothing without an install URL.
+ */
+function InstallGitHubAppLink() {
+  const { t } = useTranslation();
+  const installUrl = useGitHubAppInstallUrl();
+  if (!installUrl) {
+    return null;
+  }
+  return (
+    <div className="space-y-1">
+      <a
+        href={installUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonVariants({ variant: "outline", size: "sm" })}
+      >
+        {t("settings:projectIntegrations.githubInstall")}
+      </a>
+      <p className="text-xs text-muted-foreground">
+        {t("settings:projectIntegrations.githubInstallHint")}
+      </p>
+    </div>
+  );
+}
+
 function GitHubSection() {
   const { t } = useTranslation();
   const { projectId = "" } = useParams({ strict: false });
@@ -59,6 +99,7 @@ function GitHubSection() {
   const linkRepo = useLinkGitHubRepo(projectId);
   const unlinkRepo = useUnlinkGitHubRepo(projectId);
   const [name, setName] = useState("");
+  const [notInstalled, setNotInstalled] = useState(false);
 
   const handleLink = async (event: FormEvent) => {
     event.preventDefault();
@@ -67,9 +108,12 @@ function GitHubSection() {
     try {
       await linkRepo.mutateAsync(repo);
       setName("");
+      setNotInstalled(false);
       toast.success(t("settings:projectIntegrations.githubLinked"));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : String(e));
+      const message = e instanceof Error ? e.message : String(e);
+      setNotInstalled(message.includes("App is not installed on"));
+      toast.error(message);
     }
   };
 
@@ -92,6 +136,8 @@ function GitHubSection() {
           {t("settings:projectIntegrations.githubSectionSubtitle")}
         </p>
       </div>
+
+      <InstallGitHubAppLink />
 
       {error ? (
         <p className="text-sm text-muted-foreground">{error.message}</p>
@@ -160,6 +206,12 @@ function GitHubSection() {
               <p className="text-xs text-muted-foreground">
                 {t("settings:projectIntegrations.githubLinkHint")}
               </p>
+              {notInstalled && (
+                <div className="space-y-2 rounded-lg bg-muted/50 p-3">
+                  <p className="text-sm">{linkRepo.error?.message}</p>
+                  <InstallGitHubAppLink />
+                </div>
+              )}
             </form>
           ) : (
             <p className="text-xs text-muted-foreground">

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +14,9 @@ import (
 func TestConfigGet(t *testing.T) {
 	appEnv := &env.Config{OIDC: &env.OIDCConfig{Issuer: "https://sso.test"}}
 	service := NewService(appEnv)
+	service.SetGitHubAppInstallURL(func(context.Context) string {
+		return "https://github.com/apps/facile-opus/installations/new"
+	})
 	r := chi.NewRouter()
 	RegisterRoutes(r, service)
 
@@ -34,6 +38,9 @@ func TestConfigGet(t *testing.T) {
 	}
 	if resp.CustomOAuthLogoutURL == nil || *resp.CustomOAuthLogoutURL != "https://sso.test/logout" {
 		t.Fatalf("expected Registre's logout page, got %v", resp.CustomOAuthLogoutURL)
+	}
+	if resp.GitHubAppInstallURL != "https://github.com/apps/facile-opus/installations/new" {
+		t.Fatalf("expected the GitHub App install page, got %q", resp.GitHubAppInstallURL)
 	}
 	if !resp.HasGuestAccess {
 		t.Fatal("expected HasGuestAccess to be true")

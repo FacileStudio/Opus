@@ -546,8 +546,10 @@
 			"githubRepoPlaceholder": "owner/repo",
 			"githubLink": "Link repository",
 			"githubUnlink": "Unlink",
-			"githubLinkHint": "You need write access to the repository on GitHub, and the Opus GitHub App must be installed on it.",
+			"githubLinkHint": "You need write access to the repository on GitHub, and the Facile Opus App must be installed on it.",
 			"githubAdminOnly": "Only workspace owners and admins can link or unlink repositories.",
+			"githubInstall": "Install the Facile Opus App on GitHub",
+			"githubInstallHint": "Install it on your own account or organization, choose the repositories, including private ones, then link them here.",
 			"githubLinked": "Repository linked",
 			"githubUnlinked": "Repository unlinked",
 			"githubDefaultBranch": "Default branch: {{branch}}"

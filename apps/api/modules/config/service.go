@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"strings"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
@@ -11,6 +12,7 @@ type Service struct {
 	appEnv     *env.Config
 	controller *controller
 	spacesURL  func() string
+	installURL func(context.Context) string
 }
 
 // NewService constructs a new configuration service.
@@ -26,8 +28,14 @@ func (s *Service) SetSpacesURL(spacesURL func() string) {
 	s.spacesURL = spacesURL
 }
 
+// SetGitHubAppInstallURL wires the source of the page where a GitHub account
+// or organization installs the Facile Opus App.
+func (s *Service) SetGitHubAppInstallURL(installURL func(context.Context) string) {
+	s.installURL = installURL
+}
+
 // Get returns the public application configuration values.
-func (s *Service) Get() ConfigResponse {
+func (s *Service) Get(ctx context.Context) ConfigResponse {
 	hasOIDC := false
 	var logoutURL *string
 	if s.appEnv != nil && s.appEnv.OIDC != nil {
@@ -37,6 +45,10 @@ func (s *Service) Get() ConfigResponse {
 	registreSpacesURL := ""
 	if s.spacesURL != nil {
 		registreSpacesURL = s.spacesURL()
+	}
+	githubAppInstallURL := ""
+	if s.installURL != nil {
+		githubAppInstallURL = s.installURL(ctx)
 	}
 	return ConfigResponse{
 		SSOOnly:                     hasOIDC,
@@ -51,6 +63,7 @@ func (s *Service) Get() ConfigResponse {
 		HasGuestAccess:              true,
 		CustomOAuthLogoutURL:        logoutURL,
 		RegistreSpacesURL:           registreSpacesURL,
+		GitHubAppInstallURL:         githubAppInstallURL,
 	}
 }
 

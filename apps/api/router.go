@@ -129,6 +129,8 @@ func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, 
 	db, appEnv, d := deps.db, deps.appEnv, deps.domain
 	configService := config.NewService(appEnv)
 	configService.SetSpacesURL(deps.workspaces.SpacesURL)
+	app := githubApp(appEnv, deps.appLogger)
+	configService.SetGitHubAppInstallURL(app.InstallURL)
 	config.RegisterRoutes(api, configService)
 	project.RegisterRoutes(api, d.projects, authService)
 	column.RegisterRoutes(api, d.columns, authService)
@@ -147,10 +149,10 @@ func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, 
 	assetStorage.SetUploadKey(appEnv.UploadKey())
 	asset.RegisterRoutes(api, asset.NewService(db, assetStorage), authService)
 	github.RegisterRoutes(api, github.NewService(db, appEnv.GitHubWebhookSecret), authService)
-	github.RegisterRepoRoutes(api, github.NewRepos(db, githubApp(appEnv, deps.appLogger)), authService)
+	github.RegisterRepoRoutes(api, github.NewRepos(db, app), authService)
 }
 
-// githubApp builds the Opus GitHub App client. A missing or broken
+// githubApp builds the Facile Opus App client. A missing or broken
 // configuration leaves it nil, and the GitHub routes answer 412.
 func githubApp(appEnv *env.Config, appLogger *slog.Logger) *githubapp.Client {
 	app, err := githubapp.New(appEnv.GitHubApp.ClientID, appEnv.GitHubApp.PrivateKey)

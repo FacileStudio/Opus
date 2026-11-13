@@ -52,7 +52,7 @@ skip the tab that made the change.
 | GET | `/auth/api-tokens` | session | List personal API tokens |
 | POST | `/auth/api-tokens` | session | Mint one |
 | DELETE | `/auth/api-tokens/{id}` | session | Revoke one |
-| GET | `/config` | public | Public settings for the client, including `registreSpacesUrl` and `customOAuthLogoutUrl` (Registre's `/logout`) |
+| GET | `/config` | public | Public settings for the client, including `registreSpacesUrl`, `customOAuthLogoutUrl` (Registre's `/logout`) and `githubAppInstallUrl` (where a GitHub account installs the Facile Opus App; empty when the App is off) |
 
 ## Registre
 
@@ -179,7 +179,7 @@ precise activity entry.
 | DELETE | `/project/{projectId}/github-repos/{repoId}` | Unlink. Workspace owner or admin. Works without the App |
 | GET | `/project/{projectId}/github-issues?state=open\|closed` | Issues of every linked repository, pull requests excluded, at most 100 per repository, cached 60 s. Workspace members. A repository GitHub refuses is listed under `unavailable` with the reason |
 
-The linked-repository and issues routes answer 412 with a plain reason when the Opus GitHub App
+The linked-repository and issues routes answer 412 with a plain reason when the Facile Opus App
 is not configured, when the caller has no GitHub account on file (POST), or when the App is not
 installed on the repository (POST).
 
