@@ -2,6 +2,19 @@
 
 All notable changes to Opus are documented here.
 
+## [2.37.1] - 2026-11-13
+
+### Removed
+
+- Environment variables nothing reads. `.env.sample` dropped `AUTH_SECRET`, the GitHub OAuth and App keys, SMTP, the Redis sentinel and cluster settings, `POSTGRES_DB_GO` and `AUTH_BRIDGE_SECRET`; the Helm chart (0.5.0) dropped `AUTH_SECRET`, `DISABLE_REGISTRATION` and `DISABLE_PASSWORD_REGISTRATION` with their values; the web env files dropped `VITE_CLIENT_URL`; the runtime image dropped `NODE_ENV`. The API no longer parses `LEGACY_API_URL` or `AUTH_BRIDGE_SECRET`. A deployment that still sets any of them is unaffected.
+- The finished Go port's handoff notes and the `.cursor` rules, which described the retired Hono backend.
+
+### Changed
+
+- `.env.sample` lists the variables the API reads: sign-in, MCP, Ideas, Antenne, GitHub, Redis, Journal and S3.
+- `docs/configuration.md`, `docs/development.md`, `docs/architecture.md`, `docs/api.md`, `docs/deployment.md`, the README and the chart README describe the Go API instead of the retired Hono, Drizzle and Better Auth stack.
+- `biome ci .` skips Go `testdata`, so the root check passes again without reformatting the golden event files.
+
 ## [2.37.0] - 2026-11-13
 
 ### Changed
