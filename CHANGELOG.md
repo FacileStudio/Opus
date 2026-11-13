@@ -2,6 +2,12 @@
 
 All notable changes to Opus are documented here.
 
+## [2.37.3] - 2026-11-13
+
+### Changed
+
+- chore(deploy): healthchecks run every 30 s with a 1 s start interval.
+
 ## [2.37.2] - 2026-11-13
 
 ### Security
