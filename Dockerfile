@@ -56,7 +56,6 @@ COPY --chown=appuser:appuser apps/web/env.sh /usr/local/bin/web-env.sh
 
 RUN chmod +x /usr/local/bin/opus-entrypoint.sh /usr/local/bin/web-env.sh
 
-ENV NODE_ENV=production
 ENV PORT=80
 ENV CLIENT_DIR=/client
 

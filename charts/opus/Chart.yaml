@@ -2,23 +2,22 @@ apiVersion: v2
 name: opus
 description: Opus - All you need. Nothing you don't. Open source project management that works for you.
 type: application
-# 0.4.0: add opus.extraEnv for arbitrary env vars on the opus container
-version: 0.4.0
-appVersion: "2.24.1"
+# 0.5.0: drop opus.env.authSecret, existingSecret, disableRegistration and
+# disablePasswordRegistration, which the Go API never read
+version: 0.5.0
+appVersion: "2.37.1"
 keywords:
   - project-management
   - kanban
   - task-management
   - productivity
   - collaboration
-home: https://opus.app
+home: https://opus.facile.studio
 sources:
   - https://github.com/FacileStudio/opus
-icon: https://assets.opus.app/logo-text.png
 maintainers:
   - name: Opus Team
     url: https://github.com/FacileStudio
-    email: info@opus.app
 annotations:
   artifacthub.io/license: AGPL-3.0-only
   artifacthub.io/containsSecurityUpdates: "false"

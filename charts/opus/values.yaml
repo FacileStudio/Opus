@@ -91,15 +91,6 @@ opus:
     # Allowed CORS origins. Accepts a comma-separated string or YAML list.
     # Defaults to clientUrl when left empty.
     corsOrigins: []
-    # Must be at least 32 characters long for Better Auth
-    # Generate with: openssl rand -hex 32
-    authSecret: change_me_to_at_least_32_characters_long_string
-    existingSecret:
-      enabled: false
-      name: ""
-      key: auth-secret
-    disableRegistration: false
-    disablePasswordRegistration: false
     # Database configuration
     database:
       # Use external PostgreSQL (set postgresql.enabled to false)
@@ -125,17 +116,22 @@ opus:
           passwordKey: postgres_uri
   # Additional environment variables for the opus container.
   # Each entry is a standard Kubernetes EnvVar (supports `value` or `valueFrom`).
-  # Useful for CUSTOM_OAUTH_*, SMTP_*, etc. without editing the chart.
+  # Sign-in needs the OIDC_* variables: without OIDC_ISSUER nobody can sign in.
+  # See docs/configuration.md for every variable the app reads.
   # extraEnv entries are appended after chart-defined vars; duplicate names override.
   extraEnv: []
   # extraEnv:
-  #   - name: CUSTOM_OAUTH_DISCOVERY_URL
-  #     value: "https://idp.example.com/.well-known/openid-configuration"
-  #   - name: CUSTOM_OAUTH_CLIENT_ID
+  #   - name: OIDC_ISSUER
+  #     value: "https://sso.example.com"
+  #   - name: OIDC_CLIENT_ID
+  #     value: "opus"
+  #   - name: OIDC_REDIRECT_URL
+  #     value: "https://opus.example.com/api/auth/oidc/callback"
+  #   - name: OIDC_CLIENT_SECRET
   #     valueFrom:
   #       secretKeyRef:
-  #         name: oauth-secret
-  #         key: client-id
+  #         name: opus-oidc
+  #         key: client-secret
   livenessProbe:
     httpGet:
       path: /api/health

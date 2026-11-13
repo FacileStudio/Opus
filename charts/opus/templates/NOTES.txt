@@ -51,9 +51,10 @@ NOTES:
    {{- end }}
 
 2. Important environment variables:
-   - AUTH_SECRET: Secret key for Better Auth (currently set to: {{ .Values.opus.env.authSecret }})
    - OPUS_CLIENT_URL: Public URL of this instance (currently set to: "{{ .Values.opus.env.clientUrl }}")
    - DATABASE_URL: Derived from postgresql.auth values unless opus.env.database.external.enabled=true
+   - OIDC_ISSUER, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_REDIRECT_URL: sign-in through Registre.
+     Set them in opus.extraEnv. Without OIDC_ISSUER nobody can sign in.
 
    You can customize these values in your values.yaml file.
 

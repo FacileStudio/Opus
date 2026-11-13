@@ -49,15 +49,6 @@ spec:
               value: {{ $corsOriginsValue | quote }}
             - name: PORT
               value: "{{ .Values.opus.service.targetPort }}"
-            - name: AUTH_SECRET
-              {{- if .Values.opus.env.existingSecret.enabled }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.opus.env.existingSecret.name }}
-                  key: {{ .Values.opus.env.existingSecret.key }}
-              {{- else }}
-              value: "{{ .Values.opus.env.authSecret }}"
-              {{- end }}
             - name: DATABASE_URL
               {{- if .Values.opus.env.database.external.enabled }}
               {{- if .Values.opus.env.database.external.existingSecret.enabled }}
@@ -71,10 +62,6 @@ spec:
               {{- else }}
               value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ include "opus.fullname" . }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.postgresql.auth.database }}"
               {{- end }}
-            - name: DISABLE_REGISTRATION
-              value: {{ .Values.opus.env.disableRegistration | quote }}
-            - name: DISABLE_PASSWORD_REGISTRATION
-              value: {{ .Values.opus.env.disablePasswordRegistration | quote }}
             {{- with .Values.opus.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
