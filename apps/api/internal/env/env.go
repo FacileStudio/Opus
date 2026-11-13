@@ -4,7 +4,6 @@ package env
 import (
 	"crypto/sha256"
 	"fmt"
-	"net/url"
 	"os"
 	"strings"
 
@@ -56,20 +55,8 @@ func (c Config) Porte() porte.Config {
 type Config struct {
 	troncenv.Core
 
-	// LegacyAPI is the transitional TypeScript API every /api route the Go
-	// backend does not own yet is proxied to. nil when not configured.
-	LegacyAPI *url.URL
-
 	// UploadDir files uploaded assets under, workspace logos today.
 	UploadDir string
-
-	// AuthBridgeSecret is the shared secret the Go proxy and the legacy TS API
-	// both read. The proxy stamps proxied requests with an HMAC derived from it
-	// so the legacy API can trust the injected user headers without exposing
-	// the action to a caller who cannot name the user. Empty disables the
-	// bridge: no identity headers are injected and proxied routes keep their
-	// legacy 401 behaviour.
-	AuthBridgeSecret string
 
 	// RedisURL configures the Redis pub/sub broker for realtime broadcasts.
 	RedisURL string
@@ -108,18 +95,6 @@ func mcpConfig(oidc *OIDCConfig) MCPConfig {
 	}
 	key := sha256.Sum256([]byte("opus-mcp-state:" + oidc.ClientSecret))
 	return MCPConfig{Resource: resource, StateKey: key[:]}
-}
-
-func parseLegacyAPI() (*url.URL, error) {
-	raw := troncenv.String("LEGACY_API_URL", "")
-	if raw == "" {
-		return nil, nil
-	}
-	parsed, err := url.Parse(raw)
-	if err != nil {
-		return nil, fmt.Errorf("LEGACY_API_URL must be a valid URL")
-	}
-	return parsed, nil
 }
 
 func parseOIDCConfig(corsOrigins []string) (*OIDCConfig, error) {
@@ -166,19 +141,13 @@ func Load() (Config, error) {
 	if !validLogLevel(core.LogLevel) {
 		return Config{}, fmt.Errorf("LOG_LEVEL must be one of debug, info, warn, error")
 	}
-	legacyAPI, err := parseLegacyAPI()
-	if err != nil {
-		return Config{}, err
-	}
 	oidcConfig, err := parseOIDCConfig(core.CORSAllowedOrigins)
 	if err != nil {
 		return Config{}, err
 	}
 	return Config{
 		Core:                core,
-		LegacyAPI:           legacyAPI,
 		UploadDir:           troncenv.String("UPLOAD_DIR", "./data/uploads"),
-		AuthBridgeSecret:    troncenv.String("AUTH_BRIDGE_SECRET", ""),
 		RedisURL:            troncenv.String("REDIS_URL", ""),
 		GitHubWebhookSecret: troncenv.String("GITHUB_WEBHOOK_SECRET", ""),
 		BulleURL:            strings.TrimSuffix(troncenv.String("BULLE_URL", ""), "/"),
