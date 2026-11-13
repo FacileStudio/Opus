@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 import type { NotificationPreferences } from "./get-notification-preferences";
 
 export type UpsertNotificationWorkspaceRuleRequest = {
@@ -15,7 +15,7 @@ async function upsertNotificationWorkspaceRule(
   workspaceId: string,
   json: UpsertNotificationWorkspaceRuleRequest,
 ): Promise<NotificationPreferences> {
-  const response = await fetch(
+  const response = await apiFetch(
     getApiUrl(`/notification-preferences/workspaces/${workspaceId}`),
     {
       body: JSON.stringify(json),

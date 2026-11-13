@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 import type { PullRequest } from "@/types/pull-request";
 
 export async function getTaskPullRequests(
@@ -6,7 +6,7 @@ export async function getTaskPullRequests(
   taskId: string,
 ): Promise<PullRequest[]> {
   if (!taskId || !projectId) return [];
-  const response = await fetch(
+  const response = await apiFetch(
     getApiUrl(`/project/${projectId}/task/${taskId}/pull-requests/`),
     {
       credentials: "include",

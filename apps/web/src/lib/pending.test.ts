@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   clientName,
-  isPendingPath,
+  isReturnPath,
   rememberReturn,
   takeReturn,
 } from "./pending";
@@ -14,11 +14,14 @@ describe("pending helpers", () => {
     expect(clientName("bulle")).toBe("bulle");
   });
 
-  it("only returns to the pending page", () => {
-    expect(isPendingPath("/pending?action=abc")).toBe(true);
-    expect(isPendingPath("/pending")).toBe(true);
-    expect(isPendingPath("//evil.com/pending")).toBe(false);
-    expect(isPendingPath("/pendingx")).toBe(false);
+  it("returns to in-app pages only", () => {
+    expect(isReturnPath("/dashboard/workspace/1?tab=a#x")).toBe(true);
+    expect(isReturnPath("//evil.com/x")).toBe(false);
+    expect(isReturnPath("/\\evil.com")).toBe(false);
+    expect(isReturnPath("https://evil.com/")).toBe(false);
+    expect(isReturnPath("/auth/sign-in?redirect=/x")).toBe(false);
+    expect(isReturnPath("/login?error=x")).toBe(false);
+    expect(isReturnPath("/authors")).toBe(true);
   });
 
   it("keeps the confirm link across sign-in, once", () => {

@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 
 export type InvitationDetails = {
   id: string;
@@ -19,7 +19,7 @@ export type GetInvitationDetailsResponse = {
 export async function getInvitationDetails(
   invitationId: string,
 ): Promise<GetInvitationDetailsResponse> {
-  const response = await fetch(
+  const response = await apiFetch(
     getApiUrl(`/invitation/public/${invitationId}`),
     {
       credentials: "include",

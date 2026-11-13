@@ -31,12 +31,21 @@ export function clientName(clientId: string): string {
   }
 }
 
-export function isPendingPath(href: string): boolean {
-  return href === "/pending" || href.startsWith("/pending?");
+/**
+ * An in-app path worth coming back to after sign-in: same origin by
+ * construction, and never a sign-in page, which would only sign in again.
+ */
+export function isReturnPath(href: string): boolean {
+  return (
+    href.startsWith("/") &&
+    !href.startsWith("//") &&
+    !href.includes("\\") &&
+    !/^\/(auth|login)(\/|\?|#|$)/.test(href)
+  );
 }
 
 export function rememberReturn(href: string) {
-  if (!isPendingPath(href)) return;
+  if (!isReturnPath(href)) return;
   try {
     sessionStorage.setItem(RETURN_KEY, href);
   } catch {
@@ -48,7 +57,7 @@ export function takeReturn(): string | null {
   try {
     const href = sessionStorage.getItem(RETURN_KEY);
     sessionStorage.removeItem(RETURN_KEY);
-    return href && isPendingPath(href) ? href : null;
+    return href && isReturnPath(href) ? href : null;
   } catch {
     return null;
   }

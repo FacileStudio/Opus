@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 import type { NookPoolConfig } from "./get-config";
 
 export type SaveNookPoolConfigRequest = {
@@ -11,7 +11,7 @@ async function saveNookPoolConfig(
   workspaceId: string,
   json: SaveNookPoolConfigRequest,
 ) {
-  const response = await fetch(getApiUrl(`/nook-pool/${workspaceId}`), {
+  const response = await apiFetch(getApiUrl(`/nook-pool/${workspaceId}`), {
     method: "POST",
     credentials: "include",
     headers: {

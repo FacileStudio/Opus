@@ -1,10 +1,10 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 
 async function uploadWorkspaceLogo(workspaceId: string, file: File) {
   const formData = new FormData();
   formData.append("logo", file);
 
-  const response = await fetch(getApiUrl(`/workspace/${workspaceId}/logo`), {
+  const response = await apiFetch(getApiUrl(`/workspace/${workspaceId}/logo`), {
     method: "POST",
     body: formData,
     credentials: "include",
@@ -24,7 +24,7 @@ async function uploadWorkspaceLogo(workspaceId: string, file: File) {
 }
 
 async function deleteWorkspaceLogo(workspaceId: string) {
-  const response = await fetch(getApiUrl(`/workspace/${workspaceId}/logo`), {
+  const response = await apiFetch(getApiUrl(`/workspace/${workspaceId}/logo`), {
     method: "DELETE",
     credentials: "include",
     headers: {

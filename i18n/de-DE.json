@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Melde dich an, um deine Einladung anzunehmen",
 			"invitationAlert": "Nach der Anmeldung kannst du deine Space-Einladung annehmen.",
 			"oidcError": "Anmeldung fehlgeschlagen",
+			"sessionEnded": "Ihre Sitzung wurde beendet und die automatische Anmeldung ist fehlgeschlagen. Melden Sie sich an, um fortzufahren.",
 			"label": "Mit Facile anmelden",
 			"loading": "Anmeldung läuft…",
 			"tagline": "Selbst gehostetes Projektmanagement für Teams, die ihre Daten behalten.",

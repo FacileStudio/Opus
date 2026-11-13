@@ -32,6 +32,9 @@ func TestConfigGet(t *testing.T) {
 	if !resp.SSOOnly || !resp.DisableRegistration {
 		t.Fatal("expected an issuer to close local sign-in and registration")
 	}
+	if resp.CustomOAuthLogoutURL == nil || *resp.CustomOAuthLogoutURL != "https://sso.test/logout" {
+		t.Fatalf("expected Registre's logout page, got %v", resp.CustomOAuthLogoutURL)
+	}
 	if !resp.HasGuestAccess {
 		t.Fatal("expected HasGuestAccess to be true")
 	}

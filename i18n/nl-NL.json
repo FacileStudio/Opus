@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Log in om je uitnodiging te accepteren",
 			"invitationAlert": "Na het inloggen kun je de uitnodiging voor de space accepteren.",
 			"oidcError": "Inloggen met OIDC mislukt",
+			"sessionEnded": "Je sessie is beëindigd en automatisch opnieuw inloggen is mislukt. Log in om verder te gaan.",
 			"createAccount": "Create your account",
 			"label": "Sign in with Facile",
 			"language": "Language",

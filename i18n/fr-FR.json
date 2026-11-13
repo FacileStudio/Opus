@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Connectez-vous pour accepter votre invitation",
 			"invitationAlert": "Après vous être connecté, vous pourrez accepter votre invitation à l'espace.",
 			"oidcError": "Échec de la connexion",
+			"sessionEnded": "Votre session a pris fin et la reconnexion automatique a échoué. Connectez-vous pour continuer.",
 			"label": "Se connecter avec Facile",
 			"loading": "Connexion…",
 			"tagline": "Gestion de projet auto-hébergée pour les équipes qui gardent leurs données.",

@@ -1,7 +1,7 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 
 async function deleteNookPoolConfig(workspaceId: string) {
-  const response = await fetch(getApiUrl(`/nook-pool/${workspaceId}`), {
+  const response = await apiFetch(getApiUrl(`/nook-pool/${workspaceId}`), {
     method: "DELETE",
     credentials: "include",
     headers: {

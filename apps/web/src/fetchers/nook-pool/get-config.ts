@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 
 export type NookPoolConfig = {
   id: string;
@@ -12,7 +12,7 @@ export type NookPoolConfig = {
 } | null;
 
 async function getNookPoolConfig(workspaceId: string) {
-  const response = await fetch(getApiUrl(`/nook-pool/${workspaceId}`), {
+  const response = await apiFetch(getApiUrl(`/nook-pool/${workspaceId}`), {
     credentials: "include",
   });
 

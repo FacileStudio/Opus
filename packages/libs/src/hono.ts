@@ -7,6 +7,9 @@ import type { AppType } from "./types";
 
 const apiUrl = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
 
+/** Dispatched on window whenever the API answers 401: the session is gone. */
+export const UNAUTHORIZED_EVENT = "opus:unauthorized";
+
 // Generate once per tab load
 export const windowId = Math.random().toString(36).substring(2, 11);
 
@@ -31,6 +34,9 @@ export const client = hc<AppType>(apiUrl, {
       credentials: "include",
     })
       .then(async (response) => {
+        if (response.status === 401) {
+          window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+        }
         if (!response.headers.get("content-type")?.includes("json")) {
           return response;
         }

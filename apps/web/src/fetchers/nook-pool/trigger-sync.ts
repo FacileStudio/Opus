@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 
 type TriggerSyncResult = {
   success: boolean;
@@ -8,7 +8,7 @@ type TriggerSyncResult = {
 };
 
 async function triggerNookPoolSync(workspaceId: string) {
-  const response = await fetch(getApiUrl(`/nook-pool/${workspaceId}/sync`), {
+  const response = await apiFetch(getApiUrl(`/nook-pool/${workspaceId}/sync`), {
     method: "POST",
     credentials: "include",
   });

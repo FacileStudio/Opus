@@ -13,6 +13,7 @@ import { Logo } from "@/components/common/logo";
 import PageTitle from "@/components/page-title";
 import { Card, CardContent } from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
+import { ssoAttemptPending } from "@/lib/follow-registre";
 
 type Feature = {
   icon: typeof Layers;
@@ -39,6 +40,9 @@ export const Route = createFileRoute("/")({
     }
     if (signedIn) {
       throw redirect({ to: "/dashboard" });
+    }
+    if (ssoAttemptPending()) {
+      throw redirect({ to: "/auth/sign-in", search: { ended: true } });
     }
   },
 });

@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 
 export type PoolEventToggle = {
   event: string;
@@ -6,9 +6,12 @@ export type PoolEventToggle = {
 };
 
 async function getPoolEvents(workspaceId: string) {
-  const response = await fetch(getApiUrl(`/nook-pool/${workspaceId}/events`), {
-    credentials: "include",
-  });
+  const response = await apiFetch(
+    getApiUrl(`/nook-pool/${workspaceId}/events`),
+    {
+      credentials: "include",
+    },
+  );
 
   if (!response.ok) {
     throw new Error(await response.text());

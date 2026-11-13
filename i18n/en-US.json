@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Sign in to accept your invitation",
 			"invitationAlert": "After signing in, you'll be able to accept your space invitation.",
 			"oidcError": "Sign-in failed",
+			"sessionEnded": "Your session ended and signing you back in did not work. Sign in to continue.",
 			"label": "Sign in with Facile",
 			"loading": "Signing in…",
 			"tagline": "Self-hosted project management for teams that keep their own data.",

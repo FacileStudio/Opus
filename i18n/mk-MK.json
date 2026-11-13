@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Најави се за да ја прифатиш поканата",
 			"invitationAlert": "По најавувањето, ќе можеш да ја прифатиш поканата за space.",
 			"oidcError": "Неуспешна најава со OIDC",
+			"sessionEnded": "Вашата сесија заврши и автоматското повторно најавување не успеа. Најавете се за да продолжите.",
 			"createAccount": "Create your account",
 			"label": "Sign in with Facile",
 			"language": "Language",
