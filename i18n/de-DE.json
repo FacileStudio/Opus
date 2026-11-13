@@ -546,8 +546,10 @@
 			"githubRepoPlaceholder": "besitzer/repository",
 			"githubLink": "Repository verknüpfen",
 			"githubUnlink": "Trennen",
-			"githubLinkHint": "Du brauchst Schreibzugriff auf das Repository bei GitHub, und die Opus GitHub App muss dort installiert sein.",
+			"githubLinkHint": "Du brauchst Schreibzugriff auf das Repository bei GitHub, und die Facile Opus App muss dort installiert sein.",
 			"githubAdminOnly": "Nur Besitzer und Admins des Workspaces können Repositories verknüpfen oder trennen.",
+			"githubInstall": "Facile Opus App auf GitHub installieren",
+			"githubInstallHint": "Installiere sie auf deinem Konto oder deiner Organisation, wähle die Repositories, auch private, und verknüpfe sie dann hier.",
 			"githubLinked": "Repository verknüpft",
 			"githubUnlinked": "Repository getrennt",
 			"githubDefaultBranch": "Standard-Branch: {{branch}}"

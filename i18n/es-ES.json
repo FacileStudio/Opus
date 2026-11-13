@@ -457,8 +457,10 @@
 			"githubRepoPlaceholder": "propietario/repositorio",
 			"githubLink": "Vincular repositorio",
 			"githubUnlink": "Desvincular",
-			"githubLinkHint": "Necesitas acceso de escritura al repositorio en GitHub, y la GitHub App de Opus debe estar instalada en él.",
+			"githubLinkHint": "Necesitas acceso de escritura al repositorio en GitHub, y la app Facile Opus debe estar instalada en él.",
 			"githubAdminOnly": "Solo los propietarios y administradores del espacio de trabajo pueden vincular o desvincular repositorios.",
+			"githubInstall": "Instalar la app Facile Opus en GitHub",
+			"githubInstallHint": "Instálala en tu cuenta u organización, elige los repositorios, incluidos los privados, y vincúlalos aquí.",
 			"githubLinked": "Repositorio vinculado",
 			"githubUnlinked": "Repositorio desvinculado",
 			"githubDefaultBranch": "Rama por defecto: {{branch}}"

@@ -7,7 +7,8 @@ All notable changes to Opus are documented here.
 ### Added
 
 - Projects link to GitHub repositories and show their issues. Integrations in the project settings links and unlinks `owner/repo`; an Issues tab on the project lists open or closed issues of every linked repository (pull requests excluded, 100 per repository) with labels, author and a link to GitHub. Routes: `GET`, `POST /api/project/{projectId}/github-repos`, `DELETE /api/project/{projectId}/github-repos/{repoId}`, `GET /api/project/{projectId}/github-issues`.
-- Linking needs the workspace owner or admin role, a GitHub account linked in Registre, and write or admin on the repository, checked through the new Opus GitHub App. Reading issues needs workspace membership.
+- Linking needs the workspace owner or admin role, a GitHub account linked in Registre, and write or admin on the repository, checked through the new Facile Opus App. Reading issues needs workspace membership.
+- Anyone can link their own repositories, private ones included. The Integrations page links to the App's GitHub install page ("Install the Facile Opus App on GitHub"), and shows the link again when linking fails because the App is not installed. `GET /api/config` returns it as `githubAppInstallUrl`, empty when the App is off. The App must be public ("Any account") for other accounts to install it.
 - `OPUS_GITHUB_APP_CLIENT_ID` and `OPUS_GITHUB_APP_PRIVATE_KEY` (base64 PEM). Without them the new routes answer 412 and the Issues tab stays hidden. Setup steps in `docs/configuration.md`.
 
 ### Changed

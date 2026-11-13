@@ -26,7 +26,7 @@ func Documentation() documentation.Module {
 				Method:      "GET",
 				Path:        "/project/{projectId}/github-repos",
 				Summary:     "List linked GitHub repositories",
-				Description: "Returns the repositories linked to a project. Any workspace member. 412 when the Opus GitHub App is not configured.",
+				Description: "Returns the repositories linked to a project. Any workspace member. 412 when the Facile Opus App is not configured.",
 				Auth:        "bearer",
 			},
 			{

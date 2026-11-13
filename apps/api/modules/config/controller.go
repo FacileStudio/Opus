@@ -10,6 +10,6 @@ func newController(service *Service) *controller {
 	return &controller{service: service}
 }
 
-func (c *controller) get(_ context.Context) ConfigResponse {
-	return c.service.Get()
+func (c *controller) get(ctx context.Context) ConfigResponse {
+	return c.service.Get(ctx)
 }

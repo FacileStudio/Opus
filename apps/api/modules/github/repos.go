@@ -14,14 +14,14 @@ import (
 )
 
 const (
-	appMissing = "GitHub is not set up on this Opus: the Opus GitHub App needs OPUS_GITHUB_APP_CLIENT_ID and OPUS_GITHUB_APP_PRIVATE_KEY"
+	appMissing = "GitHub is not set up on this Opus: the Facile Opus App needs OPUS_GITHUB_APP_CLIENT_ID and OPUS_GITHUB_APP_PRIVATE_KEY"
 	idMissing  = "Link your GitHub account in your Facile account, then sign in to Opus again"
 )
 
 var adminRoles = []string{"owner", "admin"}
 
 // Repos links projects to GitHub repositories and reads their issues
-// through the Opus GitHub App. A nil app turns every call but unlinking
+// through the Facile Opus App. A nil app turns every call but unlinking
 // into a 412.
 type Repos struct {
 	db  *gorm.DB
@@ -171,7 +171,7 @@ func (r *Repos) requireWrite(ctx context.Context, userID int64, name string) err
 func appError(err error, name string) error {
 	switch {
 	case stderrors.Is(err, githubapp.ErrNotInstalled):
-		return errors.Failed("The Opus GitHub App is not installed on " + name + ": ask an owner of the GitHub organization to install it")
+		return errors.Failed("The Facile Opus App is not installed on " + name + ": install it on the GitHub account or organization that owns the repository, then link it again")
 	case stderrors.Is(err, githubapp.ErrInvalidRepo):
 		return errors.Invalid("Write the repository as owner/repo")
 	case stderrors.Is(err, githubapp.ErrNotFound):

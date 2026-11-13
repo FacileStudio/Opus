@@ -457,8 +457,10 @@
 			"githubRepoPlaceholder": "eigenaar/repository",
 			"githubLink": "Repository koppelen",
 			"githubUnlink": "Ontkoppelen",
-			"githubLinkHint": "Je hebt schrijfrechten op de repository op GitHub nodig, en de Opus GitHub App moet erop geïnstalleerd zijn.",
+			"githubLinkHint": "Je hebt schrijfrechten op de repository op GitHub nodig, en de Facile Opus App moet erop geïnstalleerd zijn.",
 			"githubAdminOnly": "Alleen eigenaren en beheerders van de werkruimte kunnen repository's koppelen of ontkoppelen.",
+			"githubInstall": "Installeer de Facile Opus App op GitHub",
+			"githubInstallHint": "Installeer hem op je eigen account of organisatie, kies de repository's, ook privé, en koppel ze dan hier.",
 			"githubLinked": "Repository gekoppeld",
 			"githubUnlinked": "Repository ontkoppeld",
 			"githubDefaultBranch": "Standaardbranch: {{branch}}"

@@ -180,7 +180,7 @@ The API reads `.env` from its working directory (godotenv), then the process env
 | `BULLE_URL` | empty | Bulle base URL for the Ideas page. Needs OIDC too |
 | `REDIS_URL` | empty | Realtime fan-out across replicas. Empty keeps it in memory |
 | `GITHUB_WEBHOOK_SECRET` | empty | Verifies the GitHub webhook signature |
-| `OPUS_GITHUB_APP_CLIENT_ID` / `OPUS_GITHUB_APP_PRIVATE_KEY` | empty | The Opus GitHub App (client id, base64 PEM). Both turn on linked repositories and the issues view; without them those routes answer 412 |
+| `OPUS_GITHUB_APP_CLIENT_ID` / `OPUS_GITHUB_APP_PRIVATE_KEY` | empty | The Facile Opus App (client id, base64 PEM). Both turn on linked repositories and the issues view; without them those routes answer 412 |
 | `S3_ENDPOINT` / `S3_BUCKET` / `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | empty | All four turn S3 assets on. Also `S3_REGION`, `S3_PUBLIC_BASE_URL`, `S3_FORCE_PATH_STYLE`, `S3_MAX_IMAGE_UPLOAD_BYTES`, `S3_PRESIGN_TTL_SECONDS` |
 | `OPUS_CLIENT_URL` / `OPUS_API_URL` | empty | Container only. Substituted into the built JavaScript by `env.sh` |
 

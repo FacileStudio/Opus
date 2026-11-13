@@ -1,6 +1,6 @@
 // Package githubapptest is an in-memory GitHub API for tests: it verifies the
 // App JWT, mints installation tokens, answers collaborator permissions and
-// serves issues with an ETag.
+// serves issues with an ETag and the App's own page.
 package githubapptest
 
 import (
@@ -33,11 +33,14 @@ type Fake struct {
 	Logins      map[string]string
 	Permissions map[string]string
 	Issues      map[string][]map[string]any
+	// AppDown makes GET /app answer 500.
+	AppDown bool
 
 	key         *rsa.PrivateKey
 	mu          sync.Mutex
 	scopes      []map[string]any
 	issueCalls  int
+	appCalls    int
 	notModified int
 }
 
@@ -83,6 +86,7 @@ func (f *Fake) IssueCalls() (int, int) {
 
 func (f *Fake) routes() http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /app", f.app)
 	mux.HandleFunc("GET /repos/{owner}/{repo}/installation", f.installation)
 	mux.HandleFunc("POST /app/installations/{id}/access_tokens", f.mint)
 	mux.HandleFunc("GET /repos/{owner}/{repo}", f.withToken(f.repository))
@@ -111,6 +115,29 @@ func (f *Fake) validJWT(r *http.Request) bool {
 		Exp int64  `json:"exp"`
 	}
 	return json.Unmarshal(payload, &claims) == nil && claims.Iss == ClientID && claims.Exp > time.Now().Unix()
+}
+
+// AppCalls returns how many GET /app requests reached the fake.
+func (f *Fake) AppCalls() int {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.appCalls
+}
+
+func (f *Fake) app(w http.ResponseWriter, r *http.Request) {
+	if !f.validJWT(r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	f.mu.Lock()
+	f.appCalls++
+	down := f.AppDown
+	f.mu.Unlock()
+	if down {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	writeJSON(w, map[string]any{"slug": "facile-opus", "html_url": "https://github.com/apps/facile-opus"})
 }
 
 func (f *Fake) installation(w http.ResponseWriter, r *http.Request) {
