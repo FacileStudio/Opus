@@ -65,7 +65,7 @@ type Config struct {
 	// GitHubWebhookSecret validates incoming GitHub webhooks.
 	GitHubWebhookSecret string
 
-	// GitHubApp is the Opus GitHub App. Both fields empty turn the linked
+	// GitHubApp is the Facile Opus App. Both fields empty turn the linked
 	// repositories and the issues view off; they then answer 412.
 	GitHubApp GitHubAppConfig
 
