@@ -4,8 +4,11 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.38.0] - 2026-11-13
+
 ### Added
 
+- The web client loads Vision's tracker (`s.js` with `data-mask`) on `opus.facile.studio` only, and never on a `/shared/` link, whose path carries the share token. The security config adds `https://vision.facile.studio` to `script-src`.
 - Projects link to GitHub repositories and show their issues. Integrations in the project settings links and unlinks `owner/repo`; an Issues tab on the project lists open or closed issues of every linked repository (pull requests excluded, 100 per repository) with labels, author and a link to GitHub. Routes: `GET`, `POST /api/project/{projectId}/github-repos`, `DELETE /api/project/{projectId}/github-repos/{repoId}`, `GET /api/project/{projectId}/github-issues`.
 - Linking needs the workspace owner or admin role, a GitHub account linked in Registre, and write or admin on the repository, checked through the new Facile Opus App. Reading issues needs workspace membership.
 - Anyone can link their own repositories, private ones included. The Integrations page links to the App's GitHub install page ("Install the Facile Opus App on GitHub"), and shows the link again when linking fails because the App is not installed. `GET /api/config` returns it as `githubAppInstallUrl`, empty when the App is off. The App must be public ("Any account") for other accounts to install it.
@@ -14,6 +17,7 @@ All notable changes to Opus are documented here.
 ### Changed
 
 - Sign-in asks Registre for the `connections` scope, so `users.github_id` is filled once Registre emits the claim for Opus. A person who linked GitHub signs in again to have it stored.
+- Opus follows the Registre session. A revoked session (Registre sign-out, back-channel logout) sends the browser straight back through SSO, with a one-shot guard against redirect loops; any 401 wipes cached user data first. Signing out of Opus also ends the Registre session. `POST /api/auth/backchannel-logout` is listed in the API reference.
 
 ## [2.37.3] - 2026-11-13
 
