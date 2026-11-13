@@ -50,6 +50,17 @@
       document.head.appendChild(script);
     }
   </script>
+
+  <script>
+    (function () {
+      if (location.hostname !== 'opus.facile.studio' || location.pathname.indexOf('/shared/') === 0) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://vision.facile.studio/s.js';
+      s.setAttribute('data-mask', '');
+      document.head.appendChild(s);
+    })();
+  </script>
 </head>
 
 <body>
