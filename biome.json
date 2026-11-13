@@ -23,7 +23,8 @@
 			"!**/.cache",
 			"!**/coverage",
 			"!**/.claude",
-			"!**/openapi.json"
+			"!**/openapi.json",
+			"!**/testdata"
 		]
 	},
 	"formatter": {
