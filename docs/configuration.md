@@ -112,9 +112,48 @@ no URL the bus is off and local writes are unaffected. See [Sablier sync](sablie
 | Variable | Default | What it does |
 |---|---|---|
 | `GITHUB_WEBHOOK_SECRET` | empty | Verifies `X-Hub-Signature-256` on `POST /api/integrations/github/webhook` |
+| `OPUS_GITHUB_APP_CLIENT_ID` | empty | Client ID of the Opus GitHub App, used as the JWT issuer |
+| `OPUS_GITHUB_APP_PRIVATE_KEY` | empty | The App's private key: the downloaded `.pem` file, base64-encoded on one line |
 
 The same events can also arrive over the Antenne bus (`git.pull_request`, `git.push`), which
 needs no variable here.
+
+### Linked repositories and the issues view
+
+A project links to GitHub repositories (Integrations in the project settings) and shows their
+issues in an Issues view. Opus reads GitHub through its own GitHub App, which only reads
+metadata and issues: it never reads code and never writes. Without both App variables the
+routes answer 412 and the Issues tab stays hidden; nothing else changes.
+
+Set up the App once:
+
+1. On GitHub, open the organization's Settings, Developer settings, GitHub Apps, New GitHub App.
+   Name it (for example "Opus"), set the homepage to the Opus URL, and turn the webhook off.
+2. Repository permissions: Metadata read-only (GitHub sets it), Issues read-only, Pull requests
+   read-only. No organization or account permissions. "Only on this account" is enough.
+3. Create it, copy the Client ID into `OPUS_GITHUB_APP_CLIENT_ID`, generate a private key and
+   store `base64 -w0 opus.private-key.pem` in `OPUS_GITHUB_APP_PRIVATE_KEY`. Delete the file.
+4. Install the App on the organization, on all repositories or the ones projects will link.
+5. Redeploy Opus. Change the Dokploy env through the env-merge procedure, never by pasting a
+   partial block.
+
+Each person who links a repository needs:
+
+- the owner or admin role in the project's workspace;
+- a GitHub account linked to their Facile account in Registre, then a fresh sign-in to Opus.
+  Opus asks Registre for the `connections` scope and stores the GitHub account id in
+  `users.github_id`; Registre must list `connections` and the GitHub login provider for the
+  Opus client;
+- write or admin access to the repository on GitHub. Opus checks it with the App
+  (`GET /user/{id}`, then the collaborator permission endpoint) and caches the answer for
+  10 minutes.
+
+Repositories are typed as `owner/repo`. Opus never lists the App's installed repositories to
+a user, since that would reveal private repository names.
+
+Every call uses an installation token scoped to the one repository and the one permission it
+needs (Metadata read to check access, Issues read to list issues). Tokens are cached in memory
+until 5 minutes before they expire; issue lists for 60 seconds, then revalidated with the ETag.
 
 ## Realtime
 

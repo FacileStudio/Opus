@@ -81,7 +81,8 @@ structs that mirror it. Ids are `int64`.
   `activities` rows of type `comment`; the `comments` table is the older surface.
 - **Notifications**: `notifications`, `user_notification_preferences` and
   `user_notification_workspace_rules`.
-- **GitHub**: `project_github_repos` and `task_pull_requests`.
+- **GitHub**: `project_github_repos` (repositories linked to a project, read through the Opus
+  GitHub App by `internal/githubapp`) and `task_pull_requests`.
 - **Suite plumbing**: `antenne_outbox` (the library's outbox), `pool_processed_events` (inbound
   idempotency), `mcp_actions` (pending MCP confirmations), `forfait_state` (the last plan
   document from Registre) and `directory_deletion_state` (the deletion cursor).

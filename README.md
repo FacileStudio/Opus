@@ -20,6 +20,7 @@ Live at [opus.facile.studio](https://opus.facile.studio).
   keep working
 - Live collaboration over WebSockets, optionally fanned out across replicas through Redis
 - GitHub pull requests linked to tasks, moving them through the board as they open and merge
+- GitHub repositories linked to a project, with their open and closed issues in an Issues view
 - Two-way project and task sync with Sablier over the Antenne bus
 - A remote MCP server at `/mcp`, so Claude, ChatGPT, Cursor or any MCP client can work on your
   projects and tasks, signed in through Registre
