@@ -1,451 +1,151 @@
-# Opus Helm Chart
+# Opus Helm chart
 
-This Helm chart deploys [Opus](https://opus.app) - open source project management that works for you, not against you.
+Deploys [Opus](https://opus.facile.studio) on Kubernetes: one Deployment running the Opus image
+(the Go API and the built React client in one container, port 80), its Service, and an optional
+bundled PostgreSQL 16. Ingress and Gateway API routes are optional.
 
-## Introduction
-
-This chart bootstraps a Opus deployment on a Kubernetes cluster using the Helm package manager. It deploys both the API backend and Web frontend components, along with a PostgreSQL database, with optional ingress or Gateway API resources.
+Production on opus.facile.studio runs the Docker Compose file, not this chart. See
+[docs/deployment.md](../../docs/deployment.md).
 
 ## Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.2.0+
-- PV provisioner support in the underlying infrastructure (if persistence is enabled)
+- A PV provisioner, when persistence is enabled
 
-## Quick Start
-
-### Basic Installation
-
-Clone the repository and install with Helm:
+## Install
 
 ```bash
-# Clone the repo
-git clone https://github.com/FacileStudio/opus.git
-cd opus
-
-# Install with Helm
-helm install opus ./charts/opus --namespace opus --create-namespace
-
-# Access locally
-kubectl port-forward svc/opus-web 5173:5173 -n opus
+helm install opus ./charts/opus --namespace opus --create-namespace \
+  --set opus.env.clientUrl=https://opus.example.com
+kubectl port-forward svc/opus-opus 8080:80 -n opus
 ```
 
-Open [http://localhost:5173](http://localhost:5173) and you're ready to go.
+Sign-in goes through a Registre (OIDC) issuer only. Opus has no password or sign-up route, so
+without the `OIDC_*` variables nobody can sign in. Pass them through `opus.extraEnv`:
 
-### Production Setup with Ingress
-
-For real deployments, you'll want proper ingress:
-
-```bash
-helm install opus ./charts/opus \
-  --namespace opus \
-  --create-namespace \
-  --set ingress.enabled=true \
-  --set ingress.className=nginx \
-  --set "ingress.hosts[0].host=pm.yourcompany.com"
+```yaml
+opus:
+  env:
+    clientUrl: https://opus.example.com
+  extraEnv:
+    - name: OIDC_ISSUER
+      value: https://sso.example.com
+    - name: OIDC_CLIENT_ID
+      value: opus
+    - name: OIDC_REDIRECT_URL
+      value: https://opus.example.com/api/auth/oidc/callback
+    - name: OIDC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: opus-oidc
+          key: client-secret
 ```
 
-### Production Setup with Gateway API
+Every variable the app reads is in [docs/configuration.md](../../docs/configuration.md).
 
-If your cluster already has Gateway API CRDs and a `Gateway` configured, you can expose Opus with an `HTTPRoute`:
+Uninstall with `helm uninstall opus -n opus`.
 
-```bash
-helm install opus ./charts/opus \
-  --namespace opus \
-  --create-namespace \
-  --set gateway.enabled=true \
-  --set "gateway.parentRefs[0].name=main-gateway" \
-  --set "gateway.parentRefs[0].namespace=gateway-system" \
-  --set "gateway.parentRefs[0].sectionName=https" \
-  --set "gateway.hostnames[0]=pm.yourcompany.com"
-```
+## What the chart sets on the container
 
-## Installing the Chart
+| Variable | From |
+|---|---|
+| `OPUS_CLIENT_URL` | `opus.env.clientUrl`. The entrypoint derives `OPUS_API_URL` as `<clientUrl>/api` |
+| `CORS_ORIGINS` | `opus.env.corsOrigins` (string or list), else `opus.env.clientUrl` |
+| `PORT` | `opus.service.targetPort` |
+| `DATABASE_URL` | The bundled PostgreSQL, or `opus.env.database.external.*` |
+| anything else | `opus.extraEnv`, appended last, so a duplicate name overrides |
 
-To install the chart with the release name `my-opus`:
-
-```bash
-helm install my-opus ./charts/opus
-```
-
-The command deploys Opus on the Kubernetes cluster with default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
-
-## Uninstalling the Chart
-
-To uninstall/delete the `my-opus` deployment:
-
-```bash
-helm uninstall my-opus
-```
+Migrations run when the app starts. With a role that may create databases, the app also creates
+the database named in `DATABASE_URL` when it is missing.
 
 ## Parameters
 
-### Global parameters
+### Global
 
-| Name                     | Description                                                                                                        | Value       |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------ | ----------- |
-| `nameOverride`           | String to partially override the fullname template (will maintain the release name)                                | `""`        |
-| `fullnameOverride`       | String to fully override the fullname template                                                                     | `""`        |
-| `replicaCount`           | Number of replicas (ignored if autoscaling is enabled)                                                             | `1`         |
+| Name | Description | Default |
+|---|---|---|
+| `nameOverride` | Partially override the fullname | `""` |
+| `fullnameOverride` | Fully override the fullname | `""` |
+| `replicaCount` | Replicas, ignored with autoscaling | `1` |
+| `autoscaling.enabled` | Create a HorizontalPodAutoscaler | `false` |
+| `autoscaling.minReplicas` / `maxReplicas` | Replica bounds | `1` / `10` |
+| `autoscaling.targetCPUUtilizationPercentage` | CPU target | `80` |
+| `serviceAccount.create` / `name` / `annotations` | Service account | `true` / `""` / `{}` |
+| `podAnnotations`, `podSecurityContext`, `nodeSelector`, `tolerations`, `affinity` | Pod settings | empty |
 
-### Autoscaling parameters
+More than one replica needs `REDIS_URL` in `opus.extraEnv` for realtime updates, and shared
+storage for uploads.
 
-| Name                                | Description                                                                                                        | Value       |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------- |
-| `autoscaling.enabled`               | Enable autoscaling for the deployment                                                                              | `false`     |
-| `autoscaling.minReplicas`           | Minimum number of replicas                                                                                         | `1`         |
-| `autoscaling.maxReplicas`           | Maximum number of replicas                                                                                         | `10`        |
-| `autoscaling.targetCPUUtilizationPercentage` | Target CPU utilization percentage                                                                         | `80`        |
+### Opus container
 
-### PostgreSQL Database parameters
+| Name | Description | Default |
+|---|---|---|
+| `opus.image.repository` | Image | `ghcr.io/facilestudio/opus` |
+| `opus.image.tag` | Tag, falls back to the chart's `appVersion` when empty | `latest` |
+| `opus.image.pullPolicy` | Pull policy | `IfNotPresent` |
+| `opus.securityContext` | Container security context | `{}` |
+| `opus.service.type` / `port` / `targetPort` | Service | `ClusterIP` / `80` / `80` |
+| `opus.resources` | Requests and limits | `{}` |
+| `opus.persistence.enabled` | Mount a PVC at `/app/data/uploads` for logos and local assets | `false` |
+| `opus.persistence.size` / `storageClass` / `accessMode` | Uploads PVC | `1Gi` / `""` / `ReadWriteOnce` |
+| `opus.env.clientUrl` | Public URL of the instance | `""` |
+| `opus.env.corsOrigins` | Allowed origins, string or list | `[]` |
+| `opus.env.database.external.enabled` | Use an external PostgreSQL (set `postgresql.enabled=false`) | `false` |
+| `opus.env.database.external.host` / `port` / `database` / `username` / `password` | External database | `""` / `5432` / `opus` / `opus_user` / `""` |
+| `opus.env.database.external.existingSecret.enabled` / `name` / `passwordKey` | Read the whole connection URI from a secret | `false` / `""` / `postgres_uri` |
+| `opus.extraEnv` | Extra `EnvVar` entries | `[]` |
+| `opus.livenessProbe` / `readinessProbe` | Probes, both on `/api/health` | see `values.yaml` |
 
-| Name                                | Description                                                                                                        | Value                           |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `postgresql.enabled`                | Deploy PostgreSQL as part of this chart                                                                           | `true`                          |
-| `postgresql.image.repository`       | PostgreSQL image repository                                                                                        | `postgres`                      |
-| `postgresql.image.tag`              | PostgreSQL image tag                                                                                               | `16-alpine`                     |
-| `postgresql.image.pullPolicy`       | PostgreSQL image pull policy                                                                                      | `IfNotPresent`                  |
-| `postgresql.auth.database`          | PostgreSQL database name                                                                                           | `opus`                         |
-| `postgresql.auth.username`          | PostgreSQL username                                                                                                | `opus_user`                    |
-| `postgresql.auth.password`          | PostgreSQL password                                                                                                | `opus_password`                |
-| `postgresql.auth.existingSecret`    | Name of existing secret containing PostgreSQL credentials                                                          | `""`                            |
-| `postgresql.persistence.enabled`    | Enable persistence for PostgreSQL data                                                                             | `true`                          |
-| `postgresql.persistence.size`       | PostgreSQL PVC size                                                                                                | `8Gi`                           |
-| `postgresql.persistence.storageClass` | PostgreSQL PVC storage class                                                                                     | `""`                            |
-| `postgresql.persistence.accessMode` | PostgreSQL PVC access mode                                                                                         | `ReadWriteOnce`                 |
-| `postgresql.service.type`           | PostgreSQL service type                                                                                            | `ClusterIP`                     |
-| `postgresql.service.port`           | PostgreSQL service port                                                                                            | `5432`                          |
-| `postgresql.resources`              | Resource requests and limits for PostgreSQL container                                                              | `{}`                            |
+### Bundled PostgreSQL
 
-### API Backend parameters
+| Name | Description | Default |
+|---|---|---|
+| `postgresql.enabled` | Deploy PostgreSQL in the release | `true` |
+| `postgresql.image.repository` / `tag` / `pullPolicy` | Image | `postgres` / `16-alpine` / `IfNotPresent` |
+| `postgresql.auth.database` / `username` / `password` | Credentials. Change the password | `opus` / `opus_user` / `opus_password` |
+| `postgresql.auth.existingSecret` | Secret holding the PostgreSQL password, under `secretKeys.userPasswordKey` (`password`). The app's `DATABASE_URL` is still built from `postgresql.auth.password`, so keep the two equal | `""` |
+| `postgresql.persistence.enabled` / `size` / `storageClass` / `accessMode` | Data PVC | `true` / `8Gi` / `""` / `ReadWriteOnce` |
+| `postgresql.service.type` / `port` | Service | `ClusterIP` / `5432` |
+| `postgresql.resources` | Requests and limits | `{}` |
 
-| Name                                | Description                                                                                                        | Value                           |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `api.image.repository`              | API image repository                                                                                              | `ghcr.io/facilestudio/api`          |
-| `api.image.tag`                     | API image tag                                                                                                     | `latest`                        |
-| `api.image.pullPolicy`              | API image pull policy                                                                                             | `IfNotPresent`                  |
-| `api.service.type`                  | API service type                                                                                                  | `ClusterIP`                     |
-| `api.service.port`                  | API service port                                                                                                  | `1337`                          |
-| `api.service.targetPort`            | API container port                                                                                                | `1337`                          |
-| `api.env`                           | Environment variables for the API container                                                                       | See `values.yaml`               |
-| `api.env.jwtAccess`                 | Secret key for JWT token generation (ignored if existingSecret is enabled)                                        | `change_me`                     |
-| `api.env.existingSecret.enabled`    | Whether to use an existing secret for JWT access token                                                            | `false`                         |
-| `api.env.existingSecret.name`       | Name of the existing secret containing the JWT access token                                                       | `""`                            |
-| `api.env.existingSecret.key`        | Key in the existing secret that contains the JWT access token                                                     | `jwt-access`                    |
-| `api.env.disableRegistration`       | Disable new user registration                                                                                      | `false`                         |
-| `api.env.disablePasswordRegistration` | Disable password-based account creation while keeping social/OIDC registration available                        | `false`                         |
-| `api.env.database.external.enabled` | Use external PostgreSQL database (set postgresql.enabled to false)                                               | `false`                         |
-| `api.env.database.external.host`    | External PostgreSQL host                                                                                          | `""`                            |
-| `api.env.database.external.port`    | External PostgreSQL port                                                                                          | `5432`                          |
-| `api.env.database.external.database` | External PostgreSQL database name                                                                                | `opus`                         |
-| `api.env.database.external.username` | External PostgreSQL username                                                                                     | `opus_user`                    |
-| `api.env.database.external.password` | External PostgreSQL password                                                                                     | `""`                            |
-| `api.resources`                     | Resource requests and limits for the API container (optional, disabled by default)                                | `{}`                            |
+### Ingress and Gateway API
 
-### Web Frontend parameters
+| Name | Description | Default |
+|---|---|---|
+| `ingress.enabled` | Create an Ingress | `false` |
+| `ingress.className` | Ingress class | `nginx` |
+| `ingress.annotations` / `tls` | Annotations and TLS | `{}` / `[]` |
+| `ingress.hosts` | Hosts and paths. `service: opus` expands to the release's Opus Service | `opus.local`, `/` |
+| `gateway.enabled` | Create an `HTTPRoute` | `false` |
+| `gateway.parentRefs` / `hostnames` | Gateway listeners and hostnames | `[]` / `[]` |
+| `gateway.annotations` / `labels` | Route metadata | `{}` / `{}` |
+| `gateway.rules` | Rules. `service: opus` expands the same way | `/` to the Opus Service |
 
-| Name                                | Description                                                                                                        | Value                           |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `web.image.repository`              | Web image repository                                                                                               | `ghcr.io/facilestudio/web`          |
-| `web.image.tag`                     | Web image tag                                                                                                      | `latest`                        |
-| `web.image.pullPolicy`              | Web image pull policy                                                                                              | `IfNotPresent`                  |
-| `web.service.type`                  | Web service type                                                                                                   | `ClusterIP`                     |
-| `web.service.port`                  | Web service port                                                                                                   | `80`                            |
-| `web.service.targetPort`            | Web container port                                                                                                 | `80`                            |
-| `web.env`                           | Environment variables for the Web container                                                                        | See `values.yaml`               |
-| `web.resources`                     | Resource requests and limits for the Web container (optional, disabled by default)                                 | `{}`                            |
-
-### Ingress parameters
-
-| Name                                | Description                                                                                                        | Value                           |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `ingress.enabled`                   | Enable ingress                                                                                                     | `false`                         |
-| `ingress.className`                 | Ingress class name                                                                                                 | `""`                            |
-| `ingress.annotations`               | Ingress annotations                                                                                                | `{}`                            |
-| `ingress.hosts`                     | Ingress hosts configuration                                                                                        | See `values.yaml`               |
-| `ingress.tls`                       | Ingress TLS configuration                                                                                          | `[]`                            |
-
-### Gateway API parameters
-
-| Name                                | Description                                                                                                        | Value                           |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| `gateway.enabled`                   | Enable Gateway API `HTTPRoute` creation                                                                            | `false`                         |
-| `gateway.annotations`               | Annotations added to the `HTTPRoute`                                                                               | `{}`                            |
-| `gateway.labels`                    | Extra labels added to the `HTTPRoute`                                                                              | `{}`                            |
-| `gateway.parentRefs`                | Parent Gateway listener references for attaching the `HTTPRoute`                                                   | `[]`                            |
-| `gateway.hostnames`                 | Hostnames exposed by the `HTTPRoute`                                                                               | `[]`                            |
-| `gateway.rules`                     | Gateway API routing rules mapping paths to the chart services                                                      | See `values.yaml`               |
-
-## Configuration Examples
-
-### Minimal Configuration
+Route every path to the Opus Service on port 80. The binary serves `/api`, `/mcp`, `/ws` and the
+client itself, so the chart needs no path rewrite and no second backend.
 
 ```yaml
-# values.yaml
-api:
-  env:
-    jwtAccess: "your-secure-jwt-secret"
-
-web:
-  env:
-    apiUrl: "https://your-domain.com"
-
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-  hosts:
-    - host: your-domain.com
-      paths:
-        - path: /?(.*)
-          pathType: Prefix
-          service: web
-          port: 80
-        - path: /api/?(.*)
-          pathType: Prefix
-          service: api
-          port: 1337
-```
-
-### Production Configuration with TLS
-
-```yaml
-# values.yaml
-replicaCount: 1
-
-# PostgreSQL configuration
-postgresql:
-  auth:
-    password: "your-secure-db-password"
-  persistence:
-    size: 20Gi
-    storageClass: "managed-premium"
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-
-# API configuration
-api:
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 1Gi
-    requests:
-      cpu: 200m
-      memory: 256Mi
-  env:
-    jwtAccess: "your-secure-jwt-secret"
-
-# Web configuration
-web:
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  env:
-    apiUrl: "https://your-domain.com"
-
 ingress:
   enabled: true
   className: nginx
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
   hosts:
-    - host: your-domain.com
+    - host: opus.example.com
       paths:
         - path: /
           pathType: Prefix
-          service: web
+          service: opus
           port: 80
-        - path: /api/?(.*)
-          pathType: Prefix
-          service: api
-          port: 1337
   tls:
     - secretName: opus-tls
       hosts:
-        - your-domain.com
+        - opus.example.com
 ```
 
-### Using External PostgreSQL Database
-
-If you prefer to use an external PostgreSQL database instead of the bundled one:
-
-```yaml
-# values.yaml
-# Disable bundled PostgreSQL
-postgresql:
-  enabled: false
-
-api:
-  env:
-    jwtAccess: "your-secure-jwt-secret"
-    database:
-      external:
-        enabled: true
-        host: "your-postgres-host.com"
-        port: 5432
-        database: "opus"
-        username: "opus_user"
-        password: "your-db-password"
-```
-
-### Using an Existing Secret for Sensitive Data
-
-For production environments, it's recommended to store sensitive data like the JWT access token and database credentials in Kubernetes Secrets:
+## Backups
 
 ```bash
-# Create a Secret for sensitive data
-kubectl create secret generic opus-secrets \
-  --namespace opus \
-  --from-literal=jwt-access="your-secure-jwt-secret" \
-  --from-literal=postgres-password="your-secure-db-password"
+kubectl exec deployment/opus-postgresql -n opus -- pg_dump -U opus_user --format=custom opus > opus.dump
 ```
-
-Then reference these secrets in your values:
-
-```yaml
-# values.yaml
-postgresql:
-  auth:
-    existingSecret: "opus-secrets"
-    secretKeys:
-      userPasswordKey: "postgres-password"
-
-api:
-  env:
-    existingSecret:
-      enabled: true
-      name: "opus-secrets"
-      key: "jwt-access"
-```
-
-## Database Management
-
-### PostgreSQL Configuration
-
-The chart deploys PostgreSQL 16 (Alpine) by default with the following configuration:
-- Database name: `opus`
-- Username: `opus_user`
-- Default password: `opus_password` (change this in production!)
-- Persistent storage: 8Gi (configurable)
-
-### Backup and Recovery
-
-For production deployments, consider implementing regular database backups:
-
-```bash
-# Example backup command
-kubectl exec -it deployment/my-opus-postgresql -- pg_dump -U opus_user opus > opus-backup.sql
-```
-
-### Migration from SQLite
-
-If you're migrating from a previous SQLite-based installation, you'll need to:
-1. Export your data from SQLite
-2. Deploy the new PostgreSQL-based chart
-3. Import your data into PostgreSQL
-
-Contact the Opus community on [Discord](https://discord.gg/rU4tSyhXXU) for migration assistance.
-
-## Architecture
-
-This chart deploys the following components:
-
-1. **API Backend**: Handles all business logic and database operations
-2. **Web Frontend**: Serves the user interface
-3. **PostgreSQL Database**: Stores all application data with proper relational integrity
-
-The API and Web components are deployed in the same pod for simplified connectivity, while PostgreSQL runs in a separate pod for better resource isolation and management.
-
-## Production Environment
-
-For production deployments, you should:
-
-1. Set secure passwords for JWT and PostgreSQL
-2. Use an Ingress controller to expose the application
-3. Configure TLS for secure access
-4. Set appropriate resource limits and requests
-5. Enable persistent storage with appropriate storage classes
-6. Consider using external PostgreSQL for better scalability
-
-```yaml
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-  hosts:
-    - host: your-domain.com
-      paths:
-        - path: /?(.*)
-          pathType: Prefix
-          service: web
-          port: 80
-        - path: /api/?(.*)
-          pathType: Prefix
-          service: api
-          port: 1337
-  tls:
-    - secretName: opus-tls
-      hosts:
-        - your-domain.com
-```
-
-## Using Gateway API
-
-As an alternative to Ingress, the chart can create an `HTTPRoute` for the Kubernetes Gateway API:
-
-```yaml
-# values.yaml
-gateway:
-  enabled: true
-  parentRefs:
-    - name: main-gateway
-      namespace: gateway-system
-      sectionName: https
-  hostnames:
-    - opus.example.com
-```
-
-By default the chart creates two Gateway API rules:
-
-1. `/api` goes to the API service and rewrites the prefix to `/`
-2. `/` goes to the web service
-
-If you need custom matching or multiple backend references, override `gateway.rules` directly. Each `backendRefs` entry follows the same pattern as ingress and uses the chart-specific `service` field (`api` or `web`), which is expanded to the release-specific Service name.
-
-## Security
-
-For production deployments, consider the following security recommendations:
-
-1. Use secure JWT_ACCESS and PostgreSQL passwords, preferably stored in Kubernetes Secrets
-2. Enable TLS for ingress or Gateway API
-3. Enable and set resource limits to prevent resource exhaustion
-4. Use a dedicated storage class for the PostgreSQL database
-5. Consider using a network policy to restrict traffic between components
-6. Regularly update PostgreSQL and application images
-
-### Registration Control
-
-By default, user registration is enabled. To disable new user registration:
-
-```yaml
-api:
-  env:
-    disableRegistration: true
-```
-
-This will prevent new users from registering while still allowing existing users to log in. The registration option will be hidden from the login page.

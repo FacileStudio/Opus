@@ -1,259 +1,192 @@
-# Opus — API
+# Opus: API
 
-Every HTTP route the Hono app mounts, grouped by module. Generated from
-`apps/api/src/index.ts` and the per-feature routers.
+The HTTP surface of the Go API, grouped by module. Every path below is relative to `/api` unless
+it starts with another root.
 
-Opus serves its own machine-readable spec, and that spec is the authority:
+The spec the binary serves is the authority. Each module declares its routes in its
+`documentation.go`, and `router_test.go` fails when a module is missing:
 
-- `GET /docs` — interactive Scalar reference, served at the public root
-- `GET /docs/openapi.json` — merged OpenAPI 3.0.3 document (feature routes plus the
-  `better-auth` surface)
-- `GET /api/openapi` — the same document, kept as an alias for the Mintlify docs site
+- `GET /docs`: the interactive reference
+- `GET /docs/openapi.json`: the OpenAPI document
 
-Every path below is relative to `/api`, except `/docs` and `/docs/openapi.json`, which are
-mounted on the root router beside `/api`.
+## Credentials
 
-## Authentication
-
-Three credential types are accepted, resolved by `authenticateApiRequest`:
+Authentication is porte's. A request carries one of:
 
 | Credential | How to send it |
 |---|---|
-| Session cookie | Set by `better-auth` after a browser sign-in |
-| Bearer token | `Authorization: Bearer <session-token>` |
-| API key | `x-api-key: <key>`, or `Authorization: Bearer <key>` on non-auth routes |
+| Session cookie | `__Host-session`, `HttpOnly`, set by the single sign-on callback |
+| Session token | `Authorization: Bearer <token>`. A personal API token is a session with a label, so it works everywhere a login does |
+| Registre machine JWT | `Authorization: Bearer <jwt>`, when `OIDC_MACHINE_AUDIENCE` is set. It needs `opus.read` for GET, HEAD and OPTIONS and `opus.write` for the rest |
 
-Everything is authenticated except the public routes listed below. Routes scoped to a workspace
-additionally run a membership check, so a valid credential for the wrong workspace gets a 403.
-API keys are rate-limited to 100 requests per minute.
+A cookie-authenticated request that is not GET, HEAD or OPTIONS must also send `X-Facile-CSRF`
+with any non-empty value; bearer requests need no header. Routes scoped to a workspace check
+membership, so a valid credential for the wrong workspace gets 403.
 
-Errors are JSON `HTTPException` bodies. Send `X-Opus-Window-Id` from a browser client so the
-WebSocket fan-out can skip echoing your own changes back to you.
+Errors are JSON: `{"error": {"code": "...", "message": "..."}}`. Request bodies are decoded
+strictly, so an unknown field answers 400. IDs in request bodies may be JSON numbers or decimal
+strings (`internal/wireid`). Send `X-Opus-Window-Id` from a browser tab so realtime broadcasts
+skip the tab that made the change.
 
-## Public routes
+## Root routes
 
 | Method | Path | What it does |
 |---|---|---|
-| GET | `/health` | Liveness probe, returns `{"status":"ok"}` |
-| GET | `/config` | Public feature flags — `ssoOnly`, `disableRegistration`, `disablePasswordRegistration`, `isDemoMode`, `hasSmtp`, `hasGithubSignIn`, `hasGoogleSignIn`, `hasDiscordSignIn`, `hasCustomOAuth`, `hasGuestAccess`, `customOAuthLogoutUrl` |
-| GET | `/public-project/:id` | A project marked public |
-| GET | `/shared-project/:token` | A project behind a share link token |
-| GET | `/invitation/public/:id` | Invitation details before signing in |
-| GET | `/asset/:id` | Download an asset. Authorized by workspace membership, or by `?share_token=` when the project is not public |
-| GET | `/workspace/:workspaceId/logo` | Workspace logo image, cached for a year |
-| GET | `/openapi` | Merged OpenAPI document (alias of `/docs/openapi.json`) |
-| POST | `/github-integration/webhook` | GitHub App webhook receiver, verified with `GITHUB_WEBHOOK_SECRET` |
-| POST | `/gitea-integration/webhook/:integrationId` | Gitea webhook receiver |
+| GET, HEAD | `/health`, `/api/health` | Liveness |
+| GET | `/ready`, `/api/ready` | Readiness: pings the database, 503 until it answers |
+| GET | `/version` | The version baked into the binary |
+| GET | `/docs`, `/docs/openapi.json` | The API reference |
 
-## Authentication routes
-
-`/auth/*` is handled entirely by `better-auth` (sign-in, sign-up, magic link, email OTP, social
-callbacks, organization management, API keys, device authorization). Its operations are merged
-into `/api/openapi`; read that rather than a list here, since the surface changes with the plugin
-set.
-
-Two routes are wrapped by hand:
+## Auth
 
 | Method | Path | Auth | What it does |
 |---|---|---|---|
-| GET | `/auth/get-session` | optional | Current session, or `null` |
-| GET | `/auth/device` | none | Redirects real browser navigations to `<OPUS_CLIENT_URL>/device`, returns the Better Auth JSON payload otherwise. `?ui=1` forces the redirect |
+| GET | `/auth/config` | public | The sign-in methods on offer |
+| GET | `/auth/oidc` | public | Start single sign-on with Registre |
+| GET | `/auth/oidc/callback` | public | Finish it, set the cookie, redirect to `OIDC_SUCCESS_URL` |
+| POST | `/auth/oidc/exchange` | public | Trade a CLI device-grant token for a session. Only with `OIDC_CLI_AUDIENCE` |
+| POST | `/auth/logout` | session | End the current session |
+| GET | `/auth/me` | session | The caller's profile |
+| PATCH | `/auth/me` | session | Update the caller's own profile |
+| GET | `/auth/api-tokens` | session | List personal API tokens |
+| POST | `/auth/api-tokens` | session | Mint one |
+| DELETE | `/auth/api-tokens/{id}` | session | Revoke one |
+| GET | `/config` | public | Public settings for the client, including `registreSpacesUrl` |
+
+## Registre
 
 | Method | Path | Auth | What it does |
 |---|---|---|---|
-| GET | `/oauth/id-token` | session | The `id_token` of the current user's custom OAuth account |
+| POST | `/registre/sync` | public | Nudge a space sync. Only with OIDC |
+| POST | `/registre/deletions` | Registre signature | Receive a deletion notice. Only with OIDC. See [erasure.md](erasure.md) |
 
-## Workspaces
+## Workspaces and invitations
 
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/workspace` | session | Workspaces the caller belongs to |
-| GET | `/workspace/:workspaceId/members` | member | Members of a workspace |
-| POST | `/workspace/:workspaceId/logo` | member | Upload a workspace logo |
-| DELETE | `/workspace/:workspaceId/logo` | member | Remove the logo |
-| GET | `/invitation/pending` | session | Pending invitations addressed to the caller's email |
-| GET | `/invitation/:id` | session | Details of one invitation |
+| Method | Path | What it does |
+|---|---|---|
+| GET | `/workspace` | The caller's workspaces, personal first |
+| POST | `/workspace` | Create one. 409 once the Registre import has succeeded |
+| PATCH | `/workspace/{workspaceId}` | Update one. 409 on a linked workspace |
+| DELETE | `/workspace/{workspaceId}` | Delete one. 409 on a linked or personal workspace |
+| GET | `/workspace/{workspaceId}/full` | A workspace and its members |
+| GET | `/workspace/{workspaceId}/members` | Members |
+| GET | `/workspace/{workspaceId}/members/me` | The caller's membership |
+| PATCH | `/workspace/{workspaceId}/members/{userId}` | Change a role |
+| DELETE | `/workspace/{workspaceId}/members/{memberIdOrEmail}` | Remove a member |
+| POST | `/workspace/{workspaceId}/members` | Invite by email |
+| GET | `/workspace/{workspaceId}/invitations` | A workspace's invitations |
+| GET | `/workspace/{workspaceId}/logo` | The logo, public |
+| POST, DELETE | `/workspace/{workspaceId}/logo` | Upload or remove the logo |
+| GET | `/invitation` | The caller's pending invitations |
+| GET | `/invitation/{invitationId}` | One invitation |
+| POST | `/invitation/{invitationId}/accept` | Accept |
+| POST | `/invitation/{invitationId}/reject` | Reject |
+| DELETE | `/invitation/{invitationId}` | Cancel |
 
-## Projects
+## Projects, columns and workflow rules
 
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/project?workspaceId=&includeArchived=` | member | Projects in a workspace, with statistics |
-| POST | `/project` | member | Create a project. Body: `name`, `workspaceId`, `icon`, `slug` |
-| GET | `/project/:id` | member | One project |
-| PUT | `/project/:id` | member | Update a project |
-| DELETE | `/project/:id` | member | Delete a project |
-| PUT | `/project/:id/archive` | member | Archive |
-| PUT | `/project/:id/unarchive` | member | Unarchive |
-
-## Columns and workflow rules
-
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/column/:projectId` | member | Columns of a project |
-| POST | `/column/:projectId` | member | Create a column |
-| PUT | `/column/reorder/:projectId` | member | Reorder columns |
-| PUT | `/column/:id` | member | Update a column |
-| DELETE | `/column/:id` | member | Delete a column |
-| GET | `/workflow-rule/:projectId` | member | Workflow rules of a project |
-| PUT | `/workflow-rule/:projectId` | member | Create or update a rule |
-| DELETE | `/workflow-rule/:id` | member | Delete a rule |
+| Method | Path | What it does |
+|---|---|---|
+| GET | `/project?workspaceId=` | Projects in a workspace |
+| POST | `/project` | Create one |
+| GET, PUT, DELETE | `/project/{id}` | Read, update, delete one |
+| PUT | `/project/{id}/archive`, `/project/{id}/unarchive` | Archive, restore |
+| GET | `/public-project/{id}` | A project marked public, no auth |
+| GET, POST | `/column/{projectId}` | List, create columns |
+| PUT, DELETE | `/column/{id}` | Update, delete one |
+| PUT | `/column/reorder/{projectId}` | Reorder |
+| GET, PUT | `/workflow-rule/{projectId}` | List, upsert rules |
+| DELETE | `/workflow-rule/{id}` | Delete one |
 
 ## Tasks
 
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/task/tasks/:projectId` | member | All tasks in a project |
-| GET | `/task/:id` | member | One task |
-| POST | `/task/:projectId` | member | Create a task |
-| PUT | `/task/:id` | member | Update every field |
-| PATCH | `/task/bulk` | member | Bulk operations across several tasks |
-| DELETE | `/task/:id` | member | Delete a task |
-| PUT | `/task/move/:id` | member | Move a task to another project |
-| PUT | `/task/status/:id` | member | Update status only |
-| PUT | `/task/priority/:id` | member | Update priority only |
-| PUT | `/task/actor/:id` | member | Assign or unassign |
-| PUT | `/task/due-date/:id` | member | Update due date only |
-| PUT | `/task/title/:id` | member | Update title only |
-| PUT | `/task/description/:id` | member | Update description only |
-| GET | `/task/export/:projectId` | member | Export every task of a project |
-| POST | `/task/import/:projectId` | member | Import tasks into a project |
-| PUT | `/task/image-upload/:id` | member | Create a presigned S3 upload URL for a description or comment image |
-| POST | `/task/image-upload/:id/finalize` | member | Register the uploaded object as a private asset |
+| Method | Path | What it does |
+|---|---|---|
+| GET | `/task/tasks/{projectId}` | All tasks of a project |
+| GET | `/task/me` | Tasks assigned to the caller |
+| GET | `/task/{id}` | One task |
+| POST | `/task/{projectId}` | Create a task |
+| PUT | `/task/{id}` | Update every field |
+| DELETE | `/task/{id}` | Delete a task |
+| PATCH | `/task/bulk` | Bulk update |
+| PUT | `/task/move/{id}` | Move to another project |
+| PUT | `/task/status/{id}`, `/task/priority/{id}`, `/task/actor/{id}`, `/task/due-date/{id}`, `/task/title/{id}`, `/task/description/{id}` | Update one field |
+| GET | `/task-relation/{taskId}` | Relations of a task |
+| POST | `/task-relation` | Relate two tasks |
+| DELETE | `/task-relation/{id}` | Remove a relation |
+| GET | `/external-link/task/{taskId}` | Always an empty list, kept for the client |
 
-The narrow single-field routes exist so a kanban drag or an inline edit sends the smallest possible
-write and produces a precise activity entry.
+The single-field routes let a board drag or an inline edit send the smallest write and record a
+precise activity entry.
 
-## Comments, activity and relations
+## Labels, comments and activity
 
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/comment/:taskId` | member | Comments on a task |
-| POST | `/comment/:taskId` | member | Add a comment |
-| PUT | `/comment/:id` | author | Edit a comment |
-| DELETE | `/comment/:id` | author | Delete a comment |
-| GET | `/activity/:taskId` | member | Activity feed of a task |
-| POST | `/activity/create` | member | Record a system-generated activity |
-| POST | `/activity/comment` | member | Comment through the activity feed |
-| PUT | `/activity/comment` | author | Edit that comment |
-| DELETE | `/activity/comment` | author | Delete that comment |
-| GET | `/task-relation/:taskId` | member | Relations of a task |
-| POST | `/task-relation` | member | Relate two tasks |
-| DELETE | `/task-relation/:id` | member | Remove a relation |
-| GET | `/external-link/task/:taskId` | member | External links attached to a task |
+| Method | Path | What it does |
+|---|---|---|
+| GET | `/label/workspace/{workspaceId}` | Labels of a workspace |
+| GET | `/label/task/{taskId}` | Labels on a task |
+| POST | `/label` | Create one |
+| GET, PUT, DELETE | `/label/{id}` | Read, update, delete one |
+| PUT, DELETE | `/label/{id}/task` | Attach to or detach from a task |
+| GET, POST | `/comment/{taskId}` | List, add comments |
+| PUT, DELETE | `/comment/{id}` | Edit, delete one |
+| GET | `/activity/{taskId}` | Activity feed of a task |
+| POST | `/activity/create` | Record an activity |
+| POST, PUT, DELETE | `/activity/comment` | Add, edit, delete a comment in the feed. The web client comments here |
 
-## Labels
+## Time entries, share links, search
 
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/label/workspace/:workspaceId` | member | Labels in a workspace |
-| GET | `/label/task/:taskId` | member | Labels on a task |
-| GET | `/label/:id` | member | One label |
-| POST | `/label` | member | Create a label |
-| PUT | `/label/:id` | member | Update a label |
-| DELETE | `/label/:id` | member | Delete a label |
-| PUT | `/label/:id/task` | member | Attach a label to a task |
-| DELETE | `/label/:id/task` | member | Detach it |
-
-## Time entries
-
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/time-entry/task/:taskId` | member | Time entries on a task |
-| GET | `/time-entry/:id` | member | One entry |
-| POST | `/time-entry` | member | Create an entry |
-| PUT | `/time-entry/:id` | member | Update an entry |
-
-## Search
-
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/search` | session | Search across tasks, projects, workspaces, comments and activities |
+| Method | Path | What it does |
+|---|---|---|
+| GET | `/time-entry/task/{taskId}` | Entries of a task |
+| POST | `/time-entry` | Create one |
+| GET, PUT, DELETE | `/time-entry/{id}` | Read, update, delete one. Entries mirrored from Sablier answer 409 to edits |
+| GET, POST | `/share-link` | List, create share links of a project |
+| PUT, DELETE | `/share-link/{id}` | Update, delete one |
+| GET | `/shared-project/{token}` | A project behind a share link, no auth |
+| GET | `/search` | Search tasks, projects, workspaces and comments the caller can see |
 
 ## Notifications
 
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/notification` | session | Notifications for the caller |
-| POST | `/notification` | session | Create a notification for a user |
-| PATCH | `/notification/:id/read` | session | Mark one as read |
-| PATCH | `/notification/read-all` | session | Mark all as read |
-| DELETE | `/notification/clear-all` | session | Clear all |
-| GET | `/notification-preferences` | session | Global delivery preferences |
-| PUT | `/notification-preferences` | session | Update global preferences |
-| PUT | `/notification-preferences/workspaces/:workspaceId` | session | Create or update a per-workspace rule |
-| DELETE | `/notification-preferences/workspaces/:workspaceId` | session | Delete that rule |
+| Method | Path | What it does |
+|---|---|---|
+| GET, POST | `/notification` | List, create |
+| PATCH | `/notification/{id}/read`, `/notification/{id}/unread` | Mark one |
+| DELETE | `/notification/{id}` | Delete one |
+| PATCH | `/notification/read-all` | Mark all read |
+| DELETE | `/notification/clear-all` | Clear all |
+| GET, PUT | `/notification-preferences` | Global preferences |
+| PUT, DELETE | `/notification-preferences/workspaces/{workspaceId}` | Per-workspace rule |
 
-Provider secrets submitted here are encrypted at rest with `NOTIFICATION_SECRET_ENCRYPTION_KEY`.
-
-## Share links
-
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/share-link` | member | Share links of a project |
-| POST | `/share-link` | member | Create one |
-| PUT | `/share-link/:id` | member | Update one |
-| DELETE | `/share-link/:id` | member | Delete one |
-
-Tokens are consumed by the public `GET /shared-project/:token` and by `?share_token=` on
-`GET /asset/:id`.
-
-## Integrations
-
-Every per-project integration follows the same four-route shape.
+## Assets
 
 | Method | Path | What it does |
 |---|---|---|
-| GET | `/<integration>/project/:projectId` | Read the integration config |
-| POST | `/<integration>/project/:projectId` | Create or replace it |
-| PATCH | `/<integration>/project/:projectId` | Update settings |
-| DELETE | `/<integration>/project/:projectId` | Remove it |
+| PUT | `/task/image-upload/{id}` | Start a task image upload. Returns the upload URL and key |
+| POST | `/task/image-upload/{id}/finalize` | Register the uploaded object as an asset |
+| PUT | `/asset/upload/*` | Local storage only: receives the bytes when S3 is not configured |
+| GET | `/asset/{id}` | Download. Workspace members, or `?share_token=` when the project is not public |
 
-`<integration>` is one of `github-integration`, `gitea-integration`,
-`generic-webhook-integration`, `discord-integration`, `slack-integration`,
-`telegram-integration`.
-
-The two source-forge integrations add a few routes:
+## GitHub
 
 | Method | Path | What it does |
 |---|---|---|
-| GET | `/github-integration/app-info` | GitHub App configuration as the server sees it |
-| GET | `/github-integration/repositories` | Repositories the installation can reach |
-| POST | `/github-integration/verify` | Verify the App installation on a repository |
-| POST | `/github-integration/import-issues` | Import GitHub issues as tasks |
-| POST | `/gitea-integration/repositories` | Repositories reachable with a supplied token |
-| POST | `/gitea-integration/verify` | Verify a token and repository |
-| POST | `/gitea-integration/import-issues` | Import Gitea issues as tasks |
+| POST | `/integrations/github/webhook` | GitHub webhook, verified with `GITHUB_WEBHOOK_SECRET` |
+| GET | `/project/{projectId}/task/{taskId}/pull-requests` | Pull requests linked to a task |
 
-## Workspace webhooks
+## Sync and Ideas
 
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/workspace-webhook/:workspaceId` | member | List webhooks |
-| POST | `/workspace-webhook/:workspaceId` | member | Create a webhook |
-| PATCH | `/workspace-webhook/:workspaceId/:webhookId` | member | Update it |
-| DELETE | `/workspace-webhook/:workspaceId/:webhookId` | member | Delete it |
-| POST | `/workspace-webhook/:workspaceId/:webhookId/test` | member | Send a test ping |
-
-## Nook pool
-
-| Method | Path | Auth | What it does |
-|---|---|---|---|
-| GET | `/nook-pool/:workspaceId` | member | Current pool configuration |
-| POST | `/nook-pool/:workspaceId` | member | Save instance URL, secret and enabled flag |
-| DELETE | `/nook-pool/:workspaceId` | member | Delete the configuration and disconnect |
-| POST | `/nook-pool/:workspaceId/test` | member | Test the connection to a pool instance |
-| POST | `/nook-pool/:workspaceId/sync` | member | Push every existing project and task to the pool |
-| GET | `/nook-pool/:workspaceId/events` | member | Per-event toggles |
-| PUT | `/nook-pool/:workspaceId/events` | member | Update those toggles |
-
-Emitted and accepted events: `project.created`, `project.updated`, `project.deleted`,
-`task.created`, `task.updated`, `task.deleted`. See
-[architecture.md](architecture.md) for the outbox and idempotency machinery.
+| Method | Path | What it does |
+|---|---|---|
+| POST | `/sync/reconcile` | Re-send every syncable project and task to Antenne. Owner or admin of a workspace; answers 202 |
+| GET | `/ideas` | Bulle's ideas for the active workspace. Only with `BULLE_URL` and OIDC |
+| POST | `/ideas/generate`, `/ideas/{id}/run`, `/ideas/{id}/dismiss` | Generate, run, dismiss an idea |
+| GET | `/ideas/runs/{run}` | A run's status |
+| POST | `/ideas/runs/{run}/approvals/{call}` | Approve or refuse a step |
 
 ## MCP
 
-The MCP server lives outside `/api`. It is on only when `OIDC_ISSUER` and `MCP_RESOURCE` are set.
+The MCP server lives at the root. It is on only when `OIDC_ISSUER` and `MCP_RESOURCE` are set.
 
 | Method | Path | Auth | What it does |
 |---|---|---|---|
@@ -272,7 +205,7 @@ actions. The tools are listed in the [README](../README.md#mcp).
 
 | Path | Auth | What it does |
 |---|---|---|
-| `/ws/:projectId` | session, bearer or API key | Live project updates. Optional `?windowId=` deduplicates echoes back to the originating tab |
+| `/ws/{projectId}`, `/api/ws/{projectId}` | session cookie, bearer token or `?token=` | Live updates for one project. `?windowId=` skips echoes to the originating tab |
 
-The caller must be a member of the project's workspace. Broadcasts go through Redis when it is
-configured and in-memory otherwise.
+The caller must be a member of the project's workspace. Broadcasts go through Redis when
+`REDIS_URL` is set and stay in memory otherwise.

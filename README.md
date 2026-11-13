@@ -1,26 +1,26 @@
 # Opus
 
-Self-hosted project management for small teams — projects, kanban boards, tasks, comments and
+Self-hosted project management for small teams: projects, kanban boards, tasks, comments and
 time tracking behind one login.
 
-Opus is the stack outlier of the suite: `pnpm` instead of `bun`, Hono with OpenAPI instead of
-tRPC, Drizzle instead of Prisma, and React instead of SvelteKit. It is also the only repo that
-consumes another suite repo directly, pulling `@facile/antenne` from
-`github:FacileStudio/antenne-client#ts` to sync projects and tasks over the Antenne event bus.
+A Go API on the suite's tronc chassis serves the data and the built React client from one
+binary. Sign-in goes through Registre with porte. Projects and tasks sync with Sablier over the
+Antenne bus.
 
 Live at [opus.facile.studio](https://opus.facile.studio).
 
 ## What it does
 
-- Workspaces with members, teams and invitations, backed by `better-auth` organizations
+- Workspaces with members and invitations, synced with Registre's shared spaces, plus a
+  personal workspace for everyone
 - Projects with kanban columns, task priorities, due dates, labels and task relations
 - Rich task descriptions, threaded comments, activity history and full-text search
 - Per-task time entries and per-project time reporting
 - Sign-in through Facile (Registre) only: no local passwords or sign-up. CLI and API tokens
   keep working
 - Live collaboration over WebSockets, optionally fanned out across replicas through Redis
-- Outbound integrations for GitHub, Gitea, Discord, Slack, Telegram and generic webhooks
-- Two-way project and task sync with other suite apps through the Nook pool
+- GitHub pull requests linked to tasks, moving them through the board as they open and merge
+- Two-way project and task sync with Sablier over the Antenne bus
 - A remote MCP server at `/mcp`, so Claude, ChatGPT, Cursor or any MCP client can work on your
   projects and tasks, signed in through Registre
 
@@ -28,10 +28,10 @@ Live at [opus.facile.studio](https://opus.facile.studio).
 
 | Layer | Tech |
 |---|---|
-| API | Hono 4, `hono-openapi` 1, Drizzle ORM 0.45, PostgreSQL 16, `better-auth` 1.6, Valibot 1 |
-| Client | React 19, Vite 7, TanStack Router and Query, Tailwind CSS 4, Radix UI, Tiptap 3 |
-| Runtime | Node 20.19+ with `tsx` in development, Bun 1 in the container; pnpm 10.32 workspaces and Turborepo |
-| Storage | PostgreSQL for data, S3-compatible object storage for task images, local disk for workspace logos |
+| API | Go 1.26, chi, GORM over PostgreSQL 16, goose SQL migrations, tronc, porte, antenne-client |
+| Client | React 19, Vite 7, TanStack Router and Query, Tailwind CSS 4, base-ui and Radix, Tiptap 3 |
+| Tooling | pnpm 10.32 workspaces and Turborepo for the client, Biome, Vitest, filet and douane for Go |
+| Storage | PostgreSQL for data, local disk or S3-compatible storage for task images, local disk for workspace logos |
 | Deploy | Docker Compose, one Go container serving the API and SPA on `:80`, Helm chart in `charts/opus` |
 
 ## Quick start
@@ -41,19 +41,20 @@ cp .env.sample .env
 docker compose up -d
 ```
 
-Set at least `OPUS_CLIENT_URL`, `POSTGRES_PASSWORD` and `AUTH_SECRET` in `.env` before starting.
-The compose file publishes no host ports — the `opus` container listens on `80` internally and is
-meant to sit behind Traefik. Add a `ports:` mapping to reach it directly.
+Set at least `OPUS_CLIENT_URL`, `CORS_ORIGINS`, `POSTGRES_PASSWORD` and the `OIDC_*` variables
+in `.env` before starting: without a Registre issuer nobody can sign in. The compose file
+publishes no host ports. The `opus` container listens on `80` internally and is meant to sit
+behind Traefik; add a `ports:` mapping to reach it directly.
 
 ### Local development
 
 ```sh
-pnpm install
-pnpm dev
+pnpm install --frozen-lockfile
+cd apps/api && go run .                  # the API on :1337, reads apps/api/.env
+pnpm --filter @opus/web dev              # the client on :5173
 ```
 
-The API listens on `http://localhost:1337` and the web client on `http://localhost:5173`.
-Migrations run automatically when the API starts.
+Migrations run when the API starts. See [docs/development.md](docs/development.md).
 
 ## Command line
 
@@ -66,8 +67,8 @@ curl -fsSL https://get.facile.studio | bash
 facile install opus
 ```
 
-Opus mints a static API key; `facile login opus` opens the page that
-generates it (Settings → Account → Developer).
+`opus login` prints a browser approval link and saves a session token. Personal API tokens are
+also listed and minted with `opus token`, or in Settings, Account, Developer.
 
 ## MCP
 
@@ -112,13 +113,13 @@ edited after the request cannot be confirmed.
 
 | Variable | What it does |
 |---|---|
-| `OPUS_CLIENT_URL` | Public URL of the web client; drives CORS, cookies and email links |
-| `OPUS_API_URL` | Public URL of the API; derived from `OPUS_CLIENT_URL` inside the container |
+| `OPUS_CLIENT_URL` | Public URL of the instance, written into the built client at container start |
+| `CORS_ORIGINS` | Allowed browser origins; the first one is where a login lands |
 | `DATABASE_URL` | Postgres connection string; derived from the `POSTGRES_*` variables if unset |
 | `POSTGRES_PASSWORD` | Password for the Postgres container, also used to derive `DATABASE_URL` |
-| `AUTH_SECRET` | `better-auth` signing key, 32 characters or more; a random one is generated if unset |
-| `OIDC_ISSUER` | Registre. With an issuer set, Opus mounts no password or sign-up route |
-| `NOOK_POOL_URL` | Default Nook pool URL used when a workspace has no explicit one |
+| `OIDC_ISSUER` | Registre. Opus has no password or sign-up route, so without it nobody can sign in |
+| `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` / `OIDC_REDIRECT_URL` | Opus's client in Registre. The redirect is `<public URL>/api/auth/oidc/callback` |
+| `ANTENNE_URL` / `ANTENNE_SECRET` | The Antenne bus for the Sablier sync. Empty turns it off |
 | `MCP_RESOURCE` | The MCP server's public URL, such as `https://opus.facile.studio/mcp`. Needs `OIDC_ISSUER`; unset leaves `/mcp` off |
 
 Full reference: [docs/configuration.md](docs/configuration.md).
@@ -127,25 +128,28 @@ Full reference: [docs/configuration.md](docs/configuration.md).
 
 ```
 apps/
-  api/       Hono backend — one directory per feature, drizzle/ holds SQL migrations
-  web/       React 19 client — TanStack Router pages, fetchers, query and mutation hooks
+  api/       Go API: modules/ per domain, internal/ plumbing, migrations/ goose SQL
+  web/       React 19 client: TanStack Router pages, fetchers, query and mutation hooks
 packages/
-  libs/      Types and helpers shared between api and web
+  libs/      TypeScript helpers for the client
 charts/      Helm chart for Kubernetes deployments
+deploy/      Container entrypoint and Postgres init script
 i18n/        Translation files and the scripts that validate them
-tests/       API unit tests and API integration tests
-docs/        Architecture, configuration, development, deployment, API
+tests/       TypeScript tests of the retired Hono API; nothing runs them
+docs/        Architecture, configuration, development, deployment, API, erasure, Sablier sync
 ```
 
 ## Documentation
 
 | Doc | What's in it |
 |---|---|
-| [Architecture](docs/architecture.md) | Request flow, data model, auth, the Nook pool integration |
+| [Architecture](docs/architecture.md) | Request flow, data model, sign-in, the Antenne bus |
 | [Configuration](docs/configuration.md) | Every environment variable and default |
-| [Development](docs/development.md) | Local setup, tests, linting, database migrations |
-| [Deployment](docs/deployment.md) | Docker Compose, the single container, Helm, Traefik routing |
-| [API](docs/api.md) | HTTP endpoints and payloads |
+| [Development](docs/development.md) | Local setup, tests, checks, database migrations |
+| [Deployment](docs/deployment.md) | Releases, Docker Compose, the single container, Helm, Traefik |
+| [API](docs/api.md) | HTTP routes by module |
+| [Erasure](docs/erasure.md) | What a Registre deletion removes and what it anonymises |
+| [Sablier sync](docs/sablier-sync.md) | The project, task and time-entry contract with Sablier |
 
 ## License
 

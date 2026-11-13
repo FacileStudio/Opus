@@ -1,175 +1,161 @@
-# Opus — Architecture
+# Opus: architecture
 
-How a request travels through Opus, what the database looks like, how authentication works, and
-how the app exchanges events with the rest of the suite.
+How a request travels through Opus, what the database holds, how sign-in works, and how Opus
+exchanges events with the rest of the suite.
 
 ## Runtime topology
 
-Opus ships as a single container. nginx serves the built React bundle and reverse-proxies
-`/api/` to the Hono API running in the same container.
+Opus ships as one container running one Go binary, `opus-api`. It serves the API, the MCP
+server, the WebSocket hub and the built React client on one port.
 
 ```
-Internet ──▶ Traefik ──▶ nginx (:80) ──┬──▶ /api/*        proxy_pass 127.0.0.1:1337  Hono API
-                                        ├──▶ /.well-known/oauth-*  proxy_pass 127.0.0.1:1337
-                                        └──▶ everything    /usr/share/nginx/html  SPA fallback
-                                                                    │
-                                                    ┌───────────────┼───────────────┐
-                                                    │               │               │
-                                              Postgres 16      Redis (opt)    S3 (opt)
-                                                    │
-                                             Nook pool (WebSocket, opt)
+Internet ──▶ Traefik ──▶ :80 opus-api ──┬──▶ /health, /ready, /version, /docs
+                                         ├──▶ /mcp            MCP server (with OIDC and MCP_RESOURCE)
+                                         ├──▶ /ws, /api/ws    realtime WebSocket hub
+                                         ├──▶ /api/*          the API
+                                         └──▶ everything else /client, SPA fallback to index.html
+                                                   │
+                        ┌──────────────┬───────────┼───────────┬──────────────┐
+                   Postgres 16     Registre     Antenne     Redis (opt)    S3 (opt)
 ```
 
 `deploy/opus-entrypoint.sh` is the container command. It derives `OPUS_API_URL` and
-`DATABASE_URL` when they are not set, generates an `AUTH_SECRET` if missing, runs
-`apps/web/env.sh` to substitute build-time placeholders in the served JavaScript, starts the API,
-waits for `GET /api/health` to answer, then starts nginx. If either process exits, the entrypoint
-tears the other one down and exits with the first non-zero status.
+`DATABASE_URL` when they are unset, runs `apps/web/env.sh` to write the real URLs into the built
+JavaScript, then `exec`s the binary. See [deployment.md](deployment.md).
 
 ## Components
 
 | Component | Path | Role |
 |---|---|---|
-| API | `apps/api` | Hono app, one directory per feature, controllers under `<feature>/controllers/` |
-| Web client | `apps/web` | React 19 SPA, TanStack Router file-based routes, TanStack Query for server state |
-| Shared libs | `packages/libs` | Types and helpers imported by both `api` and `web` |
+| API | `apps/api` | Go on the tronc chassis: chi router, GORM over Postgres, goose migrations. One package per domain under `modules/`, shared plumbing under `internal/` |
+| Web client | `apps/web` | React 19 SPA: TanStack Router file routes, TanStack Query for server state, Zustand for client state |
+| Shared libs | `packages/libs` | TypeScript helpers for the client |
+| Translations | `i18n/` | JSON per locale, checked by `scripts/i18n/` |
+
+## Boot
+
+`main.go` runs, in order:
+
+1. Load the configuration (`internal/env`). A bad value stops the boot.
+2. Create the database when it is missing, open it, and apply the goose migrations under a
+   Postgres session lock. A failed migration stops the boot with exit code 1.
+3. Build the porte auth kits: sessions, the user store (`kit.Store`), `porte/oidc` and the
+   Registre deletion receiver.
+4. Start the realtime hub, the Antenne publisher and outbox drainer, the inbound Sablier sync, the
+   scheduler and the Registre space sync.
+5. Build the router and serve until SIGINT or SIGTERM, then shut down gracefully.
 
 ## Request lifecycle
 
-1. nginx matches the path. Anything under `/api/` is proxied to `127.0.0.1:1337`; everything else
-   falls back to `index.html`.
-2. The Hono root app applies CORS. Allowed origins come from `CORS_ORIGINS`, falling back to
-   `OPUS_CLIENT_URL`. When neither is set, the request origin is echoed back.
-3. The `/api` sub-app serves its public routes first: `/health`, `/public-project/:id`,
-   `/shared-project/:token`, `/invitation/public/:id`, `/asset/:id`, `/workspace/:id/logo`, the
-   integration webhook receivers, `/openapi`, and the whole `/auth/*` surface handled by
-   `better-auth`.
-4. A catch-all middleware then runs `authenticateApiRequest` on every remaining route, skipping the
-   well-known documents. It resolves either a `better-auth` session cookie, a bearer
-   token, or an `x-api-key` API key, and sets `userId`, `user`, `session` and `userEmail` on the
-   context.
-5. The same middleware opens an `eventContext` async-local scope carrying an `initiatorId` built
-   from the user id and the optional `X-Opus-Window-Id` header. That is how WebSocket broadcasts
-   avoid echoing a change back to the browser tab that caused it.
-6. Feature routers handle the request. Routes that operate on a workspace go through
-   `workspaceAccess` middleware, which validates membership and puts `workspaceId` on the context.
-7. Controllers call Drizzle, then `publishEvent` to record activity and fan out over WebSockets.
-
-Errors are thrown as `HTTPException` and rendered by Hono.
+1. `tronc/httpx` builds the router: real client IP from trusted proxies, request logging, CORS
+   (`CORS_ORIGINS`, credentials allowed, plus the `X-Facile-CSRF` and `X-Opus-Window-Id`
+   headers), and security headers with a Content-Security-Policy that hashes the client's inline
+   scripts.
+2. chi matches the path. Root routes come first, then `/api`, then the SPA catch-all, which is
+   mounted last.
+3. Under `/api`, `realtime.InitiatorMiddleware` reads `X-Opus-Window-Id`, so a broadcast skips the
+   browser tab that caused the change.
+4. Protected routes run `middleware.RequireAuth`, which resolves a porte session from the
+   `__Host-session` cookie or an `Authorization: Bearer` token (a personal API token is a
+   labelled session), or a Registre machine JWT when `OIDC_MACHINE_AUDIENCE` is set. A
+   cookie-authenticated request that is not GET, HEAD or OPTIONS must also send
+   `X-Facile-CSRF`.
+5. The module controller checks workspace membership and calls its service, which writes through
+   GORM, publishes to the realtime hub, and queues Antenne events in the same transaction.
+6. Errors are tronc `errors` values, written as JSON by `httpjson.WriteError`.
 
 ## Data model
 
-PostgreSQL, 34 tables, all with CUID2 primary keys and explicit cascade rules on foreign keys.
-The schema lives in `apps/api/src/database/schema.ts` and the relations in `relations.ts`.
+PostgreSQL 16. The schema is the SQL in `apps/api/migrations/`; `apps/api/schemas/` holds the GORM
+structs that mirror it. Ids are `int64`.
 
-**Identity and tenancy** — `user`, `session`, `account`, `verification`, `apikey` and `device_code`
-are the `better-auth` tables. `workspace` is the `better-auth` organization, remapped: members live
-in `workspace_member` (with `organizationId` renamed to `workspaceId`), plus `team`, `team_member`
-and `invitation`.
+- **Identity**: `users`, and porte's `porte_identities`, `porte_sessions` and
+  `porte_login_codes`. `sessions`, `accounts` and `verifications` are leftovers of the retired
+  Better Auth schema, kept by the baseline.
+- **Tenancy**: `workspaces`, `workspace_members`, `invitations`. A workspace is linked to a
+  Registre space when `registre_space_id` is set, and is someone's personal workspace when
+  `personal_owner_id` is set.
+- **Work**: `projects` own `columns`, `workflow_rules` and `share_links`. `tasks` belong to a
+  project and a column and carry `activities`, `time_entries`, `task_relations`, `task_labels`,
+  `asset` rows and `task_reminder_sents`. `labels` are workspace-scoped. Comments are
+  `activities` rows of type `comment`; the `comments` table is the older surface.
+- **Notifications**: `notifications`, `user_notification_preferences` and
+  `user_notification_workspace_rules`.
+- **GitHub**: `project_github_repos` and `task_pull_requests`.
+- **Suite plumbing**: `antenne_outbox` (the library's outbox), `pool_processed_events` (inbound
+  idempotency), `mcp_actions` (pending MCP confirmations), `forfait_state` (the last plan
+  document from Registre) and `directory_deletion_state` (the deletion cursor).
 
-**Work** — `project` belongs to a workspace and owns `column`, `workflow_rule` and `share_link`.
-`task` belongs to a project and a column, and carries `comment`, `activity`, `time_entry`,
-`task_relation`, `external_link`, `asset` and `task_reminder_sent`. `label` is workspace-scoped and
-attached to tasks.
-
-**Notifications** — `notification` holds delivered items; `user_notification_preference`,
-`user_notification_workspace_rule` and `user_notification_workspace_project` hold the three levels
-of per-user routing. Provider secrets in those rows are encrypted with
-`NOTIFICATION_SECRET_ENCRYPTION_KEY`.
-
-**Integrations** — `github_integration` and the generic `integration` table store per-project
-integration config; `workspace_webhook` stores outbound webhooks.
-
-**Nook pool** — `nook_pool_config` (one row per workspace: instance URL, secret, enabled flag,
-per-event toggles), `nook_pool_outbox` (durable outbound queue) and `nook_pool_processed_event`
-(idempotency ledger).
-
-Migrations are plain SQL under `apps/api/drizzle/`, generated by `drizzle-kit`. `runStartupTasks`
-in `apps/api/src/index.ts` runs them on every boot, along with a handful of hand-written
-reconciliation steps that must run before or after the Drizzle migrator.
+Projects and tasks carry a `facile_id`, the identity they share with Sablier.
 
 ## Authentication
 
-Opus uses `better-auth`, mounted at `/api/auth`. **This is a deliberate deviation from the rest of
-the suite**, which federates to Authentik with `go-oidc` or `jose` and hand-rolled OIDC client
-code. Opus reaches the same identity provider through the `genericOAuth` plugin instead, so the
-Authentik application is configured through the `CUSTOM_OAUTH_*` variables rather than
-`OIDC_ISSUER` / `OIDC_CLIENT_ID`. Do not assume the suite's OIDC conventions apply here.
+Opus signs people in through Registre only, with porte. It has no password, sign-up or magic-link
+route.
 
-Enabled plugins: `organization` (workspaces, teams, invitations), `magicLink`, `emailOTP`,
-`genericOAuth`, `bearer`, `apiKey`, `deviceAuthorization`, `anonymous` (guest access, disabled by
-`DISABLE_GUEST_ACCESS`), `lastLoginMethod` and `openAPI`. Social providers are GitHub, Google and
-Discord. Passwords are hashed with bcrypt.
+- **Browser**: `GET /api/auth/oidc` starts an OIDC code flow with PKCE, and
+  `/api/auth/oidc/callback` finishes it, upserts the user (`kit.Store`), sets the session cookie
+  and redirects to `OIDC_SUCCESS_URL`. Profile and picture follow Registre at every sign-in.
+- **CLI**: with `OIDC_CLI_AUDIENCE` set, `POST /api/auth/oidc/exchange` trades a device-grant
+  token for a session. Personal API tokens are minted at `/api/auth/api-tokens`.
+- **Other suite apps**: with `OIDC_MACHINE_AUDIENCE` and `OIDC_SCOPE_PREFIX=opus`, a Registre
+  machine JWT needs `opus.read` for reads and `opus.write` for writes.
+- **MCP clients**: `porte/mcpauth` checks a Registre token bound to `MCP_RESOURCE`.
 
-Three gates run in the `before` hook:
-
-- `SSO_ONLY=true` rejects `/sign-in/email`, `/sign-up/email`, both magic-link paths, both OTP
-  paths and `/sign-in/anonymous`.
-- `DISABLE_PASSWORD_REGISTRATION=true` rejects `/sign-up/email` only.
-- `DISABLE_REGISTRATION=true` rejects sign-ups that carry neither a known email nor a valid
-  invitation id.
-
-Cookie attributes adapt to the deployment: when the API and client hostnames differ and the API is
-HTTPS, cookies are issued `SameSite=None; Secure; Partitioned`, otherwise `SameSite=Lax`.
-`COOKIE_DOMAIN` overrides the domain explicitly.
-
-The device authorization flow backs `opus-cli`. MCP clients sign in through Registre instead,
-with tokens bound to `MCP_RESOURCE` (see the README's MCP section). `GET /api/auth/device` redirects real browser navigations to
-`<OPUS_CLIENT_URL>/device` and returns JSON to everything else.
+`porte/directory` keeps Registre's shared spaces in step with Opus workspaces: linked workspaces
+answer 409 to rename, delete, invitation and role changes. The same package receives Registre's
+deletion notices, by poll and by signed push on `POST /api/registre/deletions`, and
+`kit.EraseAccount` erases the person in one transaction. A subject Registre has erased never
+gets an account again. See [erasure.md](erasure.md).
 
 ## Real-time
 
-`GET /api/ws/:projectId` upgrades to a WebSocket after authenticating the request and validating
-workspace access. Connections are grouped per project. The broadcast adapter is selected at
-startup: Redis pub/sub when `REDIS_URL`, `REDIS_SENTINELS` or `REDIS_CLUSTER_NODES` is set,
-in-memory otherwise. In-memory is correct for a single container and wrong for more than one.
+`/ws/{projectId}` (also under `/api`) upgrades to a WebSocket after authenticating the session
+cookie, a bearer token or a `?token=` query parameter, and checking workspace membership.
+Connections are grouped per project. Broadcasts go through Redis pub/sub when `REDIS_URL` is set
+and stay in memory otherwise, which is only correct for one container.
 
-A `croner` job runs every five minutes to send due-date reminders.
+The scheduler runs every five minutes: it prunes expired invitations and sends due-date
+reminders as in-app notifications, one day before, one hour before and when overdue.
 
-## Antenne bus integration
+## Antenne bus
 
-Opus is one of the apps genuinely wired to the suite event bus. It imports `AntenneClient` from
-`@facile/antenne`, resolved as `github:FacileStudio/antenne-client#ts` — the only real cross-repo
-dependency in the suite.
+Opus syncs projects and tasks with Sablier over Antenne, and mirrors Sablier's time entries.
+`internal/events` publishes, `internal/poolsync` applies inbound events.
 
 ```
-Opus API ──▶ nook_pool_outbox (Postgres) ──▶ AntenneClient ──▶ Antenne (WebSocket)
-    ▲                                                                │
-    └──── nook_pool_processed_event (idempotency) ◀── client.listen ──┘
+Opus write ──▶ antenne_outbox (same transaction) ──▶ drainer ──▶ Antenne
+     ▲                                                              │
+     └──── poolsync ◀── pool_processed_events (idempotency) ◀───────┘
 ```
 
-The `nook_pool_*` table names are the pre-rename physical names and are deliberately kept: editing
-applied Drizzle migrations would desynchronize the journal and cost the outbox and the idempotency
-ledger.
+- Events go into `antenne_outbox` first. The drainer sends unsent rows in id order and stops at
+  the first failure, so ordering holds. Sent rows are kept 7 days.
+- Every boot's reconcile queues `project.created` and `task.created` again for every syncable
+  project, so a receiver that missed events catches up.
+- Payloads carry the workspace's space (Registre space, or personal plus the owner), and projects
+  of a shared workspace that is not linked to Registre are never sent.
+- Opus also listens to `git.pull_request` and `git.push`, which Antenne fans out from GitHub, and
+  handles them like the direct webhook.
 
-- Connections are **per workspace**, not per process. `nook_pool_config` holds the instance URL and
-  secret for each workspace; `NOOK_POOL_URL` and `NOOK_POOL_SECRET` act as defaults when a row
-  leaves them blank. The pool `instance_id` is the workspace id.
-- Emission is never done inline. Events are appended to `nook_pool_outbox` inside the same
-  transaction as the change, and a 2-second timer drains up to 100 rows per workspace. A failed
-  send increments `attempts`, records `lastError` and stops the batch so ordering is preserved.
-  A disconnected client is retried at most every 30 seconds.
-- Inbound events are serialized through a per-workspace queue and deduplicated against
-  `nook_pool_processed_event`, whose rows are pruned after 35 days on startup.
-- Six event types are emitted and listened to, in both directions: `project.created`,
-  `project.updated`, `project.deleted`, `task.created`, `task.updated`, `task.deleted`. The list is
-  duplicated in `nook.yaml` at the repo root for documentation; the authoritative copy is
-  `apps/api/src/nook-pool/sync.ts`.
-- Cross-app entity identity is carried as `facile_id` in the payload.
-
-Task payloads carry `due_date` as RFC3339 UTC (for example `2026-10-30T00:00:00Z`) and omit it when
-the task has none. Any change to a task, including setting, changing or clearing the due date,
-emits `task.updated`; a payload without `due_date` tells the consumer to drop the calendar event.
-`task.created` and `task.deleted` carry it too. The Go API builds the payload in
-`apps/api/internal/events/payloads.go` and emits from `apps/api/modules/task/antenne.go`.
-
-Per-event toggles are stored as JSON in `nook_pool_config.poolEvents` and default to enabled.
+The wire contract is in [sablier-sync.md](sablier-sync.md). `nook.yaml` at the repo root lists
+the six project and task channels for reference.
 
 ## Object storage
 
-Task image uploads go to S3-compatible storage through presigned URLs
-(`PUT /api/task/image-upload/:id` then `POST /api/task/image-upload/:id/finalize`). Downloads are
-proxied by `GET /api/asset/:id`, which authorizes the caller against the asset's workspace, or
-against an active share link when the project is not public. Workspace logos are the exception:
-they are written to the local disk under `UPLOAD_DIR`, which the compose file backs with the
-`opus-uploads` volume.
+Task images go to S3-compatible storage through presigned URLs when S3 is configured
+(`PUT /api/task/image-upload/{id}`, then `POST /api/task/image-upload/{id}/finalize`).
+Without S3 the API takes the upload itself and writes it under `UPLOAD_DIR/assets`. Downloads go
+through `GET /api/asset/{id}`, which checks workspace membership, or an active share link with
+`?share_token=` when the project is not public. Workspace logos always sit on the local disk under
+`UPLOAD_DIR/workspaces`, which the compose file backs with the `opus-uploads` volume.
+
+## MCP and Ideas
+
+The MCP server at `/mcp` (Streamable HTTP, stateless) exposes eleven tools over projects and
+tasks. Tools call the same controllers as the HTTP routes, through `Calls()`, so permissions,
+broadcasts and Antenne events match. Deletes wait for the person's confirmation, by elicitation
+or on the `/pending` page. The tools are listed in the [README](../README.md#mcp).
+
+With `BULLE_URL` set, `/api/ideas` proxies Bulle's Ideas for the active workspace, behind the
+plan entitlements stored in `forfait_state`.

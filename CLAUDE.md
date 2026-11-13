@@ -48,11 +48,10 @@ filet gate .                              # the pre-push gate: gofmt, rules, vet
 Run these from `apps/api`.
 
 ```sh
-go run .                                  # the API; reads .env in the working directory
+PORT=1337 go run .                        # the API on :1337, where the client's dev build points; reads .env
 go vet ./...
 go test ./...                             # database tests skip without TEST_DATABASE_URL
 douane scan -fail critical -scope prod .  # advisory scan, as CI and pre-push run it
-mise run dev                              # the API on :1337, where the client's dev build points
 ```
 
 Database tests need a throwaway Postgres. `TEST_DATABASE_URL` is a full URL with a database
@@ -102,7 +101,8 @@ everything else                    -> the SPA, mounted last with tronc/spa
 Opus has no `/api/version`; a 404 there is normal. After a deploy, Traefik answers
 `404 page not found` on every path for about 30 seconds while the new container boots.
 
-`charts/opus` is a Helm chart. Production does not use it.
+`charts/opus` is a Helm chart. Production does not use it. It sets only `OPUS_CLIENT_URL`,
+`CORS_ORIGINS`, `PORT` and `DATABASE_URL`; everything else goes through `opus.extraEnv`.
 
 ## Project structure
 
@@ -159,7 +159,7 @@ The API reads `.env` from its working directory (godotenv), then the process env
 | `DATABASE_URL` | none | Postgres connection string. The entrypoint builds it from `POSTGRES_*` when unset |
 | `POSTGRES_DB` / `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_HOST` / `POSTGRES_PORT` | `opus_go` / `opus` / none / `postgres` / `5432` | Entrypoint only. It exits 1 when neither `DATABASE_URL` nor `POSTGRES_PASSWORD` is set |
 | `GO_DATABASE_URL` | empty | Entrypoint only. Replaces `DATABASE_URL` when set |
-| `PORT` | `8080`, `80` in the image | Listen port. `mise run dev` uses 1337 |
+| `PORT` | `8080`, `80` in the image | Listen port. Local development uses 1337 |
 | `LOG_LEVEL` | `info` | `debug`, `info`, `warn`, `error`. Anything else stops the boot |
 | `CORS_ALLOWED_ORIGINS` | empty | tronc reads the first set of `CORS_ALLOWED_ORIGINS`, `ALLOWED_ORIGINS`, `DOMAINS`, `DOMAIN`, `CORS_ORIGINS`, `TRUSTED_ORIGINS`, `CLIENT_ORIGIN`. Production sets `CORS_ORIGINS` |
 | `TRUSTED_PROXIES` | empty | Proxies whose forwarded headers the router trusts |
