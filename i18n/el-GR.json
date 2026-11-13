@@ -530,7 +530,7 @@
 			"title": "Ενσωματώσεις έργου",
 			"subtitle": "Συνδέστε το έργο σας με εξωτερικά εργαλεία και υπηρεσίες για πιο ομαλή ροή εργασίας.",
 			"githubSectionTitle": "Ενσωμάτωση GitHub",
-			"githubSectionSubtitle": "Συγχρονίστε εργασίες με GitHub issues και ενεργοποιήστε αμφίδρομο συγχρονισμό.",
+			"githubSectionSubtitle": "Συνδέστε αποθετήρια GitHub με αυτό το έργο και δείτε τα issues τους.",
 			"giteaSectionTitle": "Ενσωμάτωση Gitea",
 			"giteaSectionSubtitle": "Συγχρονίστε εργασίες με μια αυτο-φιλοξενούμενη εγκατάσταση Gitea (issues, PRs, webhooks).",
 			"telegramSectionTitle": "Ενσωμάτωση Telegram",
@@ -540,7 +540,16 @@
 			"genericWebhookSectionTitle": "Γενικά Webhooks",
 			"genericWebhookSectionSubtitle": "Στείλτε γεγονότα εργασιών έργου σε οποιοδήποτε HTTP endpoint ως JSON.",
 			"slackSectionTitle": "Ενσωμάτωση Slack",
-			"slackSectionSubtitle": "Στείλτε ενημερώσεις εργασιών έργου σε κανάλι Slack μέσω εισερχόμενου webhook."
+			"slackSectionSubtitle": "Στείλτε ενημερώσεις εργασιών έργου σε κανάλι Slack μέσω εισερχόμενου webhook.",
+			"githubNoRepos": "Δεν έχει συνδεθεί ακόμη αποθετήριο.",
+			"githubRepoPlaceholder": "ιδιοκτήτης/αποθετήριο",
+			"githubLink": "Σύνδεση αποθετηρίου",
+			"githubUnlink": "Αποσύνδεση",
+			"githubLinkHint": "Χρειάζεστε δικαίωμα εγγραφής στο αποθετήριο στο GitHub, και το Opus GitHub App πρέπει να είναι εγκατεστημένο σε αυτό.",
+			"githubAdminOnly": "Μόνο οι ιδιοκτήτες και οι διαχειριστές του χώρου εργασίας μπορούν να συνδέουν ή να αποσυνδέουν αποθετήρια.",
+			"githubLinked": "Το αποθετήριο συνδέθηκε",
+			"githubUnlinked": "Το αποθετήριο αποσυνδέθηκε",
+			"githubDefaultBranch": "Προεπιλεγμένος κλάδος: {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Ορατότητα έργου",
@@ -1675,6 +1684,18 @@
 			"viewLabel": "Προβολή",
 			"viewList": "Λίστα",
 			"viewColumns": "Στήλες"
+		},
+		"issues": {
+			"tab": "Issues",
+			"pageTitle": "{{name}} — Issues",
+			"title": "Issues του GitHub",
+			"open": "Ανοιχτά",
+			"closed": "Κλειστά",
+			"empty": "Δεν υπάρχουν issues στα συνδεδεμένα αποθετήρια.",
+			"noRepos": "Κανένα συνδεδεμένο αποθετήριο",
+			"noReposSubtitle": "Συνδέστε ένα αποθετήριο GitHub στις ρυθμίσεις του έργου για να δείτε εδώ τα issues του.",
+			"openSettings": "Άνοιγμα ρυθμίσεων",
+			"openedBy": "{{repo}}#{{number}} από {{author}}"
 		}
 	},
 	"invitations": {

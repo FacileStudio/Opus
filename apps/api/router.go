@@ -10,6 +10,7 @@ import (
 	documentation "github.com/FacileStudio/Opus/apps/api/internal/documentation"
 	"github.com/FacileStudio/Opus/apps/api/internal/env"
 	"github.com/FacileStudio/Opus/apps/api/internal/events"
+	"github.com/FacileStudio/Opus/apps/api/internal/githubapp"
 	"github.com/FacileStudio/Opus/apps/api/internal/middleware"
 	"github.com/FacileStudio/Opus/apps/api/internal/realtime"
 	"github.com/FacileStudio/Opus/apps/api/internal/storage"
@@ -146,6 +147,18 @@ func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, 
 	assetStorage.SetUploadKey(appEnv.UploadKey())
 	asset.RegisterRoutes(api, asset.NewService(db, assetStorage), authService)
 	github.RegisterRoutes(api, github.NewService(db, appEnv.GitHubWebhookSecret), authService)
+	github.RegisterRepoRoutes(api, github.NewRepos(db, githubApp(appEnv, deps.appLogger)), authService)
+}
+
+// githubApp builds the Opus GitHub App client. A missing or broken
+// configuration leaves it nil, and the GitHub routes answer 412.
+func githubApp(appEnv *env.Config, appLogger *slog.Logger) *githubapp.Client {
+	app, err := githubapp.New(appEnv.GitHubApp.ClientID, appEnv.GitHubApp.PrivateKey)
+	if err != nil {
+		appLogger.Error("GitHub App disabled", slog.Any("error", err))
+		return nil
+	}
+	return app
 }
 
 func buildRouter(deps routerDeps) chi.Router {

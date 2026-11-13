@@ -441,7 +441,7 @@
 			"title": "Projectintegraties",
 			"subtitle": "Verbind je project met externe tools om je workflow te stroomlijnen.",
 			"githubSectionTitle": "GitHub Integratie",
-			"githubSectionSubtitle": "Synchroniseer taken met GitHub issues en activeer tweerichtings-synchronisatie.",
+			"githubSectionSubtitle": "Koppel GitHub-repository's aan dit project en toon hun issues.",
 			"discordSectionTitle": "Discord Integratie",
 			"discordSectionSubtitle": "Verstuur updates van projecttaken naar een Discord-kanaal met een webhook.",
 			"genericWebhookSectionTitle": "Generieke Webhooks",
@@ -451,7 +451,16 @@
 			"giteaSectionSubtitle": "Synchronize tasks with a self-hosted Gitea instance (issues, PRs, webhooks).",
 			"giteaSectionTitle": "Gitea Integration",
 			"telegramSectionSubtitle": "Send project task updates into a Telegram chat or topic with a bot.",
-			"telegramSectionTitle": "Telegram Integration"
+			"telegramSectionTitle": "Telegram Integration",
+			"githubNoRepos": "Nog geen repository gekoppeld.",
+			"githubRepoPlaceholder": "eigenaar/repository",
+			"githubLink": "Repository koppelen",
+			"githubUnlink": "Ontkoppelen",
+			"githubLinkHint": "Je hebt schrijfrechten op de repository op GitHub nodig, en de Opus GitHub App moet erop geïnstalleerd zijn.",
+			"githubAdminOnly": "Alleen eigenaren en beheerders van de werkruimte kunnen repository's koppelen of ontkoppelen.",
+			"githubLinked": "Repository gekoppeld",
+			"githubUnlinked": "Repository ontkoppeld",
+			"githubDefaultBranch": "Standaardbranch: {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Projectzichtbaarheid",
@@ -1675,6 +1684,18 @@
 			"viewLabel": "Weergave",
 			"viewList": "Lijst",
 			"viewColumns": "Kolommen"
+		},
+		"issues": {
+			"tab": "Issues",
+			"pageTitle": "{{name}} — Issues",
+			"title": "GitHub-issues",
+			"open": "Open",
+			"closed": "Gesloten",
+			"empty": "Geen issues in de gekoppelde repository's.",
+			"noRepos": "Geen repository gekoppeld",
+			"noReposSubtitle": "Koppel een GitHub-repository in de projectinstellingen om de issues hier te zien.",
+			"openSettings": "Instellingen openen",
+			"openedBy": "{{repo}}#{{number}} door {{author}}"
 		}
 	},
 	"invitations": {

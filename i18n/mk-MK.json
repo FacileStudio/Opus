@@ -530,7 +530,7 @@
 			"title": "Интеграции на проект",
 			"subtitle": "Поврзи го твојот проект со надворешни алатки и сервиси за да го подобриш работниот тек.",
 			"githubSectionTitle": "GitHub интеграција",
-			"githubSectionSubtitle": "Синхронизирај задачи со GitHub issues и овозможи двонасочна синхронизација.",
+			"githubSectionSubtitle": "Поврзете GitHub репозиториуми со овој проект и прикажете ги нивните issues.",
 			"giteaSectionTitle": "Gitea интеграција",
 			"giteaSectionSubtitle": "Синхронизирај задачи со само-хостирана Gitea инстанца (issues, PRs, webhooks).",
 			"telegramSectionTitle": "Telegram интеграција",
@@ -540,7 +540,16 @@
 			"genericWebhookSectionTitle": "Општи webhooks",
 			"genericWebhookSectionSubtitle": "Испрати настани за задачи на проектот до кој било HTTP endpoint како JSON.",
 			"slackSectionTitle": "Slack интеграција",
-			"slackSectionSubtitle": "Испрати ажурирања за задачи на проектот во Slack канал преку дојдовен webhook."
+			"slackSectionSubtitle": "Испрати ажурирања за задачи на проектот во Slack канал преку дојдовен webhook.",
+			"githubNoRepos": "Сè уште нема поврзан репозиториум.",
+			"githubRepoPlaceholder": "сопственик/репозиториум",
+			"githubLink": "Поврзи репозиториум",
+			"githubUnlink": "Откачи",
+			"githubLinkHint": "Потребен ви е пристап за запишување до репозиториумот на GitHub, а Opus GitHub App мора да е инсталирана на него.",
+			"githubAdminOnly": "Само сопствениците и администраторите на работниот простор можат да поврзуваат или откачуваат репозиториуми.",
+			"githubLinked": "Репозиториумот е поврзан",
+			"githubUnlinked": "Репозиториумот е откачен",
+			"githubDefaultBranch": "Стандардна гранка: {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Видливост на проект",
@@ -1675,6 +1684,18 @@
 			"viewLabel": "Приказ",
 			"viewList": "Листа",
 			"viewColumns": "Колони"
+		},
+		"issues": {
+			"tab": "Issues",
+			"pageTitle": "{{name}} — Issues",
+			"title": "GitHub issues",
+			"open": "Отворени",
+			"closed": "Затворени",
+			"empty": "Нема issues во поврзаните репозиториуми.",
+			"noRepos": "Нема поврзан репозиториум",
+			"noReposSubtitle": "Поврзете GitHub репозиториум во поставките на проектот за да ги видите неговите issues тука.",
+			"openSettings": "Отвори поставки",
+			"openedBy": "{{repo}}#{{number}} од {{author}}"
 		}
 	},
 	"invitations": {

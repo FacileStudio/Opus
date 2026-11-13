@@ -47,6 +47,7 @@ func (c Config) Porte() porte.Config {
 		CLIAudience:     c.OIDC.CLIAudience,
 		MachineAudience: c.OIDC.MachineAudience,
 		ScopePrefix:     c.OIDC.ScopePrefix,
+		ExtraScopes:     []string{"connections"},
 		ExtraClaims:     []string{"connections"},
 	}
 }
@@ -64,6 +65,10 @@ type Config struct {
 	// GitHubWebhookSecret validates incoming GitHub webhooks.
 	GitHubWebhookSecret string
 
+	// GitHubApp is the Opus GitHub App. Both fields empty turn the linked
+	// repositories and the issues view off; they then answer 412.
+	GitHubApp GitHubAppConfig
+
 	// BulleURL is Bulle's origin. Empty leaves the Ideas routes unmounted.
 	BulleURL string
 
@@ -73,6 +78,13 @@ type Config struct {
 	// MCP shapes the MCP server. It is off unless OIDC is on and
 	// MCP_RESOURCE is set.
 	MCP MCPConfig
+}
+
+// GitHubAppConfig holds the App's client id, the JWT issuer, and its
+// private key, the PEM file base64-encoded.
+type GitHubAppConfig struct {
+	ClientID   string
+	PrivateKey string
 }
 
 // MCPConfig holds the MCP server settings.
@@ -161,9 +173,13 @@ func Load() (Config, error) {
 		UploadDir:           troncenv.String("UPLOAD_DIR", "./data/uploads"),
 		RedisURL:            troncenv.String("REDIS_URL", ""),
 		GitHubWebhookSecret: troncenv.String("GITHUB_WEBHOOK_SECRET", ""),
-		BulleURL:            strings.TrimSuffix(troncenv.String("BULLE_URL", ""), "/"),
-		OIDC:                oidcConfig,
-		MCP:                 mcpConfig(oidcConfig),
+		GitHubApp: GitHubAppConfig{
+			ClientID:   troncenv.String("OPUS_GITHUB_APP_CLIENT_ID", ""),
+			PrivateKey: troncenv.String("OPUS_GITHUB_APP_PRIVATE_KEY", ""),
+		},
+		BulleURL: strings.TrimSuffix(troncenv.String("BULLE_URL", ""), "/"),
+		OIDC:     oidcConfig,
+		MCP:      mcpConfig(oidcConfig),
 	}, nil
 }
 

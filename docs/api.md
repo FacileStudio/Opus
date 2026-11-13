@@ -173,6 +173,14 @@ precise activity entry.
 |---|---|---|
 | POST | `/integrations/github/webhook` | GitHub webhook, verified with `GITHUB_WEBHOOK_SECRET` |
 | GET | `/project/{projectId}/task/{taskId}/pull-requests` | Pull requests linked to a task |
+| GET | `/project/{projectId}/github-repos` | Repositories linked to the project. Workspace members |
+| POST | `/project/{projectId}/github-repos` | Link `{"repo": "owner/repo"}`. Workspace owner or admin, a GitHub account linked in Registre, and write or admin on the repository. 409 when already linked |
+| DELETE | `/project/{projectId}/github-repos/{repoId}` | Unlink. Workspace owner or admin. Works without the App |
+| GET | `/project/{projectId}/github-issues?state=open\|closed` | Issues of every linked repository, pull requests excluded, at most 100 per repository, cached 60 s. Workspace members. A repository GitHub refuses is listed under `unavailable` with the reason |
+
+The linked-repository and issues routes answer 412 with a plain reason when the Opus GitHub App
+is not configured, when the caller has no GitHub account on file (POST), or when the App is not
+installed on the repository (POST).
 
 ## Sync and Ideas
 

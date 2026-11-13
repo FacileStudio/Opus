@@ -4,6 +4,8 @@ import {
   HamburgerMenu,
   Widget5,
 } from "@solar-icons/react";
+import { useTranslation } from "react-i18next";
+import type { ProjectView } from "@/components/common/project-layout";
 import { MdiPlus as AddCircle } from "@/components/icons/mdi-plus";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,10 +20,11 @@ import { cn } from "@/lib/cn";
 type MobileProjectNavProps = {
   workspaceId: string;
   projectId: string;
-  activeView: "backlog" | "board" | "gantt";
+  activeView: ProjectView;
   onSelectBoard: () => void;
   onSelectBacklog: () => void;
   onSelectGantt: () => void;
+  onSelectIssues?: () => void;
   onSelectProject: (projectId: string) => void;
   onAddProject: () => void;
 };
@@ -33,9 +36,11 @@ export default function MobileProjectNav({
   onSelectBoard,
   onSelectBacklog,
   onSelectGantt,
+  onSelectIssues,
   onSelectProject,
   onAddProject,
 }: MobileProjectNavProps) {
+  const { t } = useTranslation();
   const { data: projects = [] } = useGetProjects({ workspaceId });
 
   return (
@@ -57,7 +62,12 @@ export default function MobileProjectNav({
             <p className="px-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               View
             </p>
-            <div className="grid grid-cols-3 gap-1">
+            <div
+              className={cn(
+                "grid gap-1",
+                onSelectIssues ? "grid-cols-4" : "grid-cols-3",
+              )}
+            >
               <button
                 type="button"
                 onClick={onSelectBacklog}
@@ -96,6 +106,20 @@ export default function MobileProjectNav({
                 <CalendarDate size={14} />
                 Gantt
               </button>
+              {onSelectIssues && (
+                <button
+                  type="button"
+                  onClick={onSelectIssues}
+                  className={cn(
+                    "flex w-full items-center justify-center gap-1 whitespace-nowrap rounded-md border px-2 py-1.5 text-xs font-medium transition-colors",
+                    activeView === "issues"
+                      ? "border-border bg-secondary text-foreground"
+                      : "border-transparent text-muted-foreground hover:bg-accent",
+                  )}
+                >
+                  {t("tasks:issues.tab")}
+                </button>
+              )}
             </div>
           </div>
 
