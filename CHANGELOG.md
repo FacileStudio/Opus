@@ -2,6 +2,12 @@
 
 All notable changes to Opus are documented here.
 
+## [2.37.2] - 2026-11-13
+
+### Security
+
+- `PUT /api/asset/upload/*`, the local-disk upload route used when S3 is not configured, accepted any body from anyone and wrote it under the uploads directory, overwriting an existing file of the same name and with no size limit. The URL that `PUT /api/task/image-upload/{id}` hands out is now signed (HMAC of the key, a 15-minute expiry, the signer and the 10 MiB cap, with a key derived from `OIDC_CLIENT_SECRET`), and the route answers 401 without a signature, 403 for a wrong or expired one, 413 over the cap and 409 when the object already exists. The client uses the returned URL as before. S3 uploads are unchanged.
+
 ## [2.37.1] - 2026-11-13
 
 ### Removed
