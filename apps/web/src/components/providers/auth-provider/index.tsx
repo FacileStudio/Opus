@@ -1,5 +1,6 @@
 import { createContext, type PropsWithChildren, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
+import { followRegistreSession, forgetUserData } from "@/lib/follow-registre";
 import type { User } from "@/types/user";
 import { LoadingSkeleton } from "../../ui/loading-skeleton";
 
@@ -15,6 +16,18 @@ export const AuthContext = createContext<{
 
 function AuthProvider({ children }: PropsWithChildren) {
   const { data, isPending } = useSession();
+
+  useEffect(
+    () =>
+      authClient.onSessionLost(() => {
+        forgetUserData();
+        const { pathname, search, hash } = window.location;
+        if (!followRegistreSession(`${pathname}${search}${hash}`)) {
+          window.location.assign("/auth/sign-in?ended=true");
+        }
+      }),
+    [],
+  );
 
   useEffect(() => {
     let active = true;

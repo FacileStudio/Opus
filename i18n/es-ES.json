@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Inicia sesión para aceptar la invitación",
 			"invitationAlert": "Al iniciar sesión, podrás aceptar la invitación al espacio.",
 			"oidcError": "Error al iniciar sesión",
+			"sessionEnded": "Tu sesión ha terminado y no se pudo volver a iniciarla automáticamente. Inicia sesión para continuar.",
 			"label": "Iniciar sesión con Facile",
 			"loading": "Iniciando sesión…",
 			"tagline": "Gestión de proyectos autoalojada para equipos que conservan sus propios datos.",

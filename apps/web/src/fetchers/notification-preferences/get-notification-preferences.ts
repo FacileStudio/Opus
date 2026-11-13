@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 
 export type NotificationPreferenceWorkspaceRule = {
   id: string;
@@ -40,7 +40,7 @@ export type NotificationPreferences = {
 };
 
 async function getNotificationPreferences(): Promise<NotificationPreferences> {
-  const response = await fetch(getApiUrl("/notification-preferences"), {
+  const response = await apiFetch(getApiUrl("/notification-preferences"), {
     credentials: "include",
   });
 

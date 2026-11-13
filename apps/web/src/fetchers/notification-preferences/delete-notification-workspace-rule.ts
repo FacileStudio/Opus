@@ -1,10 +1,10 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 import type { NotificationPreferences } from "./get-notification-preferences";
 
 async function deleteNotificationWorkspaceRule(
   workspaceId: string,
 ): Promise<NotificationPreferences> {
-  const response = await fetch(
+  const response = await apiFetch(
     getApiUrl(`/notification-preferences/workspaces/${workspaceId}`),
     {
       credentials: "include",

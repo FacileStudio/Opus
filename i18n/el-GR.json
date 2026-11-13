@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Συνδεθείτε για να αποδεχτείτε την πρόσκλησή σας",
 			"invitationAlert": "Μετά τη σύνδεση, θα μπορείτε να αποδεχτείτε την πρόσκληση για τον space σας.",
 			"oidcError": "Αποτυχία σύνδεσης με OIDC",
+			"sessionEnded": "Η συνεδρία σας έληξε και η αυτόματη επανασύνδεση απέτυχε. Συνδεθείτε για να συνεχίσετε.",
 			"createAccount": "Create your account",
 			"label": "Sign in with Facile",
 			"language": "Language",

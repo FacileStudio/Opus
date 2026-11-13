@@ -1,5 +1,7 @@
+import { UNAUTHORIZED_EVENT } from "@opus/libs";
 import { useSyncExternalStore } from "react";
 import { getApiUrl } from "@/fetchers/get-api-url";
+import { clearSsoAttempt } from "./follow-registre";
 import { roleHas } from "./permissions";
 
 /**
@@ -108,6 +110,27 @@ function subscribeSession(listener: () => void) {
   return () => sessionListeners.delete(listener);
 }
 
+const sessionLostListeners = new Set<() => void>();
+
+/**
+ * Ends the session in the store after the API refused the credential. The
+ * listeners hear about it only when someone was signed in, so a signed-out
+ * page probing /auth/me does not set off a wipe or a redirect each time.
+ */
+function endSession() {
+  const hadUser = sessionState.user !== null;
+  localStorage.removeItem("opus.access_token");
+  setSessionState({ user: null, isPending: false });
+  if (!hadUser) return;
+  for (const listener of sessionLostListeners) {
+    listener();
+  }
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener(UNAUTHORIZED_EVENT, endSession);
+}
+
 async function request<T>(
   path: string,
   init: RequestInit = {},
@@ -139,7 +162,7 @@ async function request<T>(
     path !== "/auth/login" &&
     path !== "/auth/register"
   ) {
-    setSessionState({ user: null, isPending: false });
+    endSession();
   }
   if (!response.ok) {
     let message = response.statusText || "Request failed";
@@ -280,6 +303,13 @@ function mapSessionUser(user: {
 }
 
 export const authClient = {
+  onSessionLost(listener: () => void) {
+    sessionLostListeners.add(listener);
+    return () => {
+      sessionLostListeners.delete(listener);
+    };
+  },
+
   useSession: () => {
     const state = useSyncExternalStore(
       subscribeSession,
@@ -308,6 +338,7 @@ export const authClient = {
     if (!raw) {
       return { data: null };
     }
+    clearSsoAttempt();
     return { data: { user: mapSessionUser(raw) } };
   },
 

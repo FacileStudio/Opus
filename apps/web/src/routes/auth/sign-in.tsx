@@ -9,6 +9,7 @@ const signInSearchSchema = z.object({
   email: z.string().optional(),
   redirect: z.string().optional(),
   error: z.string().optional(),
+  ended: z.boolean().optional(),
 });
 
 export const Route = createFileRoute("/auth/sign-in")({
@@ -22,16 +23,18 @@ function SignIn() {
 
   const notice = search.error
     ? `${t("auth:signIn.oidcError")}: ${search.error}`
-    : search.invitationId
-      ? t("auth:signIn.invitationAlert")
-      : null;
+    : search.ended
+      ? t("auth:signIn.sessionEnded")
+      : search.invitationId
+        ? t("auth:signIn.invitationAlert")
+        : null;
 
   return (
     <>
       <PageTitle title={t("auth:signIn.pageTitle")} />
       <AuthScreen
         notice={notice}
-        noticeTone={search.error ? "error" : "info"}
+        noticeTone={search.error || search.ended ? "error" : "info"}
       />
     </>
   );

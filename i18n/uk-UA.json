@@ -136,6 +136,7 @@
 			"invitationSubtitle": "Увійдіть, щоб прийняти запрошення",
 			"invitationAlert": "Після входу ви зможете прийняти запрошення до space.",
 			"oidcError": "Не вдалося увійти через OIDC",
+			"sessionEnded": "Ваш сеанс завершився, і автоматичний повторний вхід не вдався. Увійдіть, щоб продовжити.",
 			"createAccount": "Create your account",
 			"label": "Sign in with Facile",
 			"language": "Language",
