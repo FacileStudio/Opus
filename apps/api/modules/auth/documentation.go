@@ -28,6 +28,15 @@ func oidcRoutes() []documentation.Route {
 		},
 		{
 			Method:       "POST",
+			Path:         "/auth/backchannel-logout",
+			Summary:      "Sign a person out on Registre's word",
+			Description:  "Served by porte, registered only when OIDC_ISSUER is set. OpenID Connect Back-Channel Logout 1.0: Registre posts a signed logout token as the form field logout_token when the person signs out there. A valid token revokes every Opus session the subject holds. An unknown subject also answers 200; a bad token answers 401.",
+			Auth:         "public",
+			RequestBody:  `logout_token=<jwt> (application/x-www-form-urlencoded)`,
+			ResponseBody: `{"logged_out":true}`,
+		},
+		{
+			Method:       "POST",
 			Path:         "/auth/oidc/exchange",
 			Summary:      "Trade a CLI login code for a session token",
 			Description:  "The other half of ?flow=cli. The code is single use, hashed at rest and valid for 60 seconds.",
