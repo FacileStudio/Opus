@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.38.1] - 2026-11-13
+
+### Security
+
+- `env.sh` no longer prints environment values at boot or rewrites arbitrary `OPUS_*` names in the client bundle. It printed `OPUS_GITHUB_APP_PRIVATE_KEY` into the container log; it never reached the served JavaScript. It now substitutes only `OPUS_API_URL` and `OPUS_CLIENT_URL` and logs key names. Rotate any secret named `OPUS_*` that was set before this release.
+
+### Changed
+
+- The 412 for a missing GitHub account says where to link it and to sign in to Opus again.
+
 ## [2.38.0] - 2026-11-13
 
 ### Added
