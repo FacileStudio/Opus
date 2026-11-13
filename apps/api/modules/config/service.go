@@ -1,6 +1,10 @@
 package config
 
-import "github.com/FacileStudio/Opus/apps/api/internal/env"
+import (
+	"strings"
+
+	"github.com/FacileStudio/Opus/apps/api/internal/env"
+)
 
 // Service provides application configuration state.
 type Service struct {
@@ -25,8 +29,10 @@ func (s *Service) SetSpacesURL(spacesURL func() string) {
 // Get returns the public application configuration values.
 func (s *Service) Get() ConfigResponse {
 	hasOIDC := false
+	var logoutURL *string
 	if s.appEnv != nil && s.appEnv.OIDC != nil {
 		hasOIDC = true
+		logoutURL = registreLogoutURL(s.appEnv.OIDC.Issuer)
 	}
 	registreSpacesURL := ""
 	if s.spacesURL != nil {
@@ -43,7 +49,18 @@ func (s *Service) Get() ConfigResponse {
 		HasDiscordSignIn:            false,
 		HasCustomOAuth:              hasOIDC,
 		HasGuestAccess:              true,
-		CustomOAuthLogoutURL:        nil,
+		CustomOAuthLogoutURL:        logoutURL,
 		RegistreSpacesURL:           registreSpacesURL,
 	}
+}
+
+// registreLogoutURL is Registre's own sign-out page, which ends the Registre
+// session so the next sign-in cannot silently pick it up again. porte keeps no
+// ID token, so the id_token_hint that end_session needs is not available.
+func registreLogoutURL(issuer string) *string {
+	if issuer == "" {
+		return nil
+	}
+	url := strings.TrimRight(issuer, "/") + "/logout"
+	return &url
 }

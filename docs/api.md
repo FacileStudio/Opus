@@ -46,12 +46,13 @@ skip the tab that made the change.
 | GET | `/auth/oidc/callback` | public | Finish it, set the cookie, redirect to `OIDC_SUCCESS_URL` |
 | POST | `/auth/oidc/exchange` | public | Trade a CLI device-grant token for a session. Only with `OIDC_CLI_AUDIENCE` |
 | POST | `/auth/logout` | session | End the current session |
+| POST | `/auth/backchannel-logout` | logout token | Registre's back-channel logout: a signed `logout_token` revokes every session the subject holds |
 | GET | `/auth/me` | session | The caller's profile |
 | PATCH | `/auth/me` | session | Update the caller's own profile |
 | GET | `/auth/api-tokens` | session | List personal API tokens |
 | POST | `/auth/api-tokens` | session | Mint one |
 | DELETE | `/auth/api-tokens/{id}` | session | Revoke one |
-| GET | `/config` | public | Public settings for the client, including `registreSpacesUrl` |
+| GET | `/config` | public | Public settings for the client, including `registreSpacesUrl` and `customOAuthLogoutUrl` (Registre's `/logout`) |
 
 ## Registre
 
