@@ -530,7 +530,7 @@
 			"title": "Intégrations du projet",
 			"subtitle": "Connectez votre projet avec des outils et services externes pour rationaliser votre flux de travail.",
 			"githubSectionTitle": "Intégration GitHub",
-			"githubSectionSubtitle": "Synchronisez les tâches avec les problèmes GitHub et activez la synchronisation bidirectionnelle.",
+			"githubSectionSubtitle": "Liez des dépôts GitHub à ce projet et affichez leurs tickets.",
 			"giteaSectionTitle": "Intégration Gitea",
 			"giteaSectionSubtitle": "Synchronisez les tâches avec une instance Gitea auto-hébergée (issues, PRs, webhooks).",
 			"telegramSectionTitle": "Intégration Telegram",
@@ -540,7 +540,16 @@
 			"genericWebhookSectionTitle": "Webhooks génériques",
 			"genericWebhookSectionSubtitle": "Envoyez les événements des tâches du projet vers n'importe quel point de terminaison HTTP au format JSON.",
 			"slackSectionTitle": "Intégration Slack",
-			"slackSectionSubtitle": "Envoyez les mises à jour des tâches du projet dans un canal Slack via un webhook entrant."
+			"slackSectionSubtitle": "Envoyez les mises à jour des tâches du projet dans un canal Slack via un webhook entrant.",
+			"githubNoRepos": "Aucun dépôt lié pour l'instant.",
+			"githubRepoPlaceholder": "propriétaire/dépôt",
+			"githubLink": "Lier le dépôt",
+			"githubUnlink": "Délier",
+			"githubLinkHint": "Il vous faut l'accès en écriture au dépôt sur GitHub, et l'App GitHub Opus doit y être installée.",
+			"githubAdminOnly": "Seuls les propriétaires et administrateurs de l'espace peuvent lier ou délier des dépôts.",
+			"githubLinked": "Dépôt lié",
+			"githubUnlinked": "Dépôt délié",
+			"githubDefaultBranch": "Branche par défaut : {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Visibilité du projet",
@@ -1676,6 +1685,18 @@
 			"searchActions": "Rechercher des actions...",
 			"noActionsFound": "Aucune action trouvée.",
 			"changeStatus": "Changer le statut"
+		},
+		"issues": {
+			"tab": "Tickets",
+			"pageTitle": "{{name}} — Tickets",
+			"title": "Tickets GitHub",
+			"open": "Ouverts",
+			"closed": "Fermés",
+			"empty": "Aucun ticket dans les dépôts liés.",
+			"noRepos": "Aucun dépôt lié",
+			"noReposSubtitle": "Liez un dépôt GitHub dans les paramètres du projet pour voir ses tickets ici.",
+			"openSettings": "Ouvrir les paramètres",
+			"openedBy": "{{repo}}#{{number}} par {{author}}"
 		}
 	},
 	"invitations": {

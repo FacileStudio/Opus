@@ -530,7 +530,7 @@
 			"title": "Projektintegrationen",
 			"subtitle": "Verbinde dein Projekt mit externen Tools und Diensten, um deinen Workflow zu optimieren.",
 			"githubSectionTitle": "GitHub-Integration",
-			"githubSectionSubtitle": "Synchronisiere Aufgaben mit GitHub-Issues und aktiviere die bidirektionale Synchronisierung.",
+			"githubSectionSubtitle": "Verknüpfe GitHub-Repositories mit diesem Projekt und zeige ihre Issues an.",
 			"giteaSectionTitle": "Gitea Integration",
 			"giteaSectionSubtitle": "Synchronize tasks with a self-hosted Gitea instance (issues, PRs, webhooks).",
 			"discordSectionTitle": "Discord-Integration",
@@ -540,7 +540,16 @@
 			"slackSectionTitle": "Slack-Integration",
 			"slackSectionSubtitle": "Sende Projektaktualisierungen per Incoming Webhook in einen Slack-Kanal.",
 			"telegramSectionTitle": "Telegram-Integration",
-			"telegramSectionSubtitle": "Sende Projektaktualisierungen mit einem Bot in einen Telegram-Chat oder ein Thema."
+			"telegramSectionSubtitle": "Sende Projektaktualisierungen mit einem Bot in einen Telegram-Chat oder ein Thema.",
+			"githubNoRepos": "Noch kein Repository verknüpft.",
+			"githubRepoPlaceholder": "besitzer/repository",
+			"githubLink": "Repository verknüpfen",
+			"githubUnlink": "Trennen",
+			"githubLinkHint": "Du brauchst Schreibzugriff auf das Repository bei GitHub, und die Opus GitHub App muss dort installiert sein.",
+			"githubAdminOnly": "Nur Besitzer und Admins des Workspaces können Repositories verknüpfen oder trennen.",
+			"githubLinked": "Repository verknüpft",
+			"githubUnlinked": "Repository getrennt",
+			"githubDefaultBranch": "Standard-Branch: {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Projektsichtbarkeit",
@@ -1675,6 +1684,18 @@
 			"viewLabel": "Ansicht",
 			"viewList": "Liste",
 			"viewColumns": "Spalten"
+		},
+		"issues": {
+			"tab": "Issues",
+			"pageTitle": "{{name}} — Issues",
+			"title": "GitHub-Issues",
+			"open": "Offen",
+			"closed": "Geschlossen",
+			"empty": "Keine Issues in den verknüpften Repositories.",
+			"noRepos": "Kein Repository verknüpft",
+			"noReposSubtitle": "Verknüpfe ein GitHub-Repository in den Projekteinstellungen, um seine Issues hier zu sehen.",
+			"openSettings": "Einstellungen öffnen",
+			"openedBy": "{{repo}}#{{number}} von {{author}}"
 		}
 	},
 	"invitations": {

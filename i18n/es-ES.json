@@ -441,7 +441,7 @@
 			"title": "Integraciones del Proyecto",
 			"subtitle": "Conecta tu proyecto con herramientas y servicios externos para coordinar tus flujos de trabajo.",
 			"githubSectionTitle": "Integración con GitHub",
-			"githubSectionSubtitle": "Sincroniza tareas con GitHub issues y permite la sincronización cruzada.",
+			"githubSectionSubtitle": "Vincula repositorios de GitHub a este proyecto y muestra sus issues.",
 			"discordSectionTitle": "Integración con Discord",
 			"discordSectionSubtitle": "Envía actualizaciones de tareas a un canal de Discord mediante webhook.",
 			"genericWebhookSectionTitle": "Webhooks generales",
@@ -451,7 +451,16 @@
 			"giteaSectionSubtitle": "Synchronize tasks with a self-hosted Gitea instance (issues, PRs, webhooks).",
 			"giteaSectionTitle": "Gitea Integration",
 			"telegramSectionSubtitle": "Send project task updates into a Telegram chat or topic with a bot.",
-			"telegramSectionTitle": "Telegram Integration"
+			"telegramSectionTitle": "Telegram Integration",
+			"githubNoRepos": "Aún no hay ningún repositorio vinculado.",
+			"githubRepoPlaceholder": "propietario/repositorio",
+			"githubLink": "Vincular repositorio",
+			"githubUnlink": "Desvincular",
+			"githubLinkHint": "Necesitas acceso de escritura al repositorio en GitHub, y la GitHub App de Opus debe estar instalada en él.",
+			"githubAdminOnly": "Solo los propietarios y administradores del espacio de trabajo pueden vincular o desvincular repositorios.",
+			"githubLinked": "Repositorio vinculado",
+			"githubUnlinked": "Repositorio desvinculado",
+			"githubDefaultBranch": "Rama por defecto: {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Visibilidad del Proyecto",
@@ -1676,6 +1685,18 @@
 			"viewLabel": "Vista",
 			"viewList": "Lista",
 			"viewColumns": "Columnas"
+		},
+		"issues": {
+			"tab": "Issues",
+			"pageTitle": "{{name}} — Issues",
+			"title": "Issues de GitHub",
+			"open": "Abiertas",
+			"closed": "Cerradas",
+			"empty": "No hay issues en los repositorios vinculados.",
+			"noRepos": "Ningún repositorio vinculado",
+			"noReposSubtitle": "Vincula un repositorio de GitHub en los ajustes del proyecto para ver aquí sus issues.",
+			"openSettings": "Abrir ajustes",
+			"openedBy": "{{repo}}#{{number}} por {{author}}"
 		}
 	},
 	"invitations": {

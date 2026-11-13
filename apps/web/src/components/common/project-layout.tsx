@@ -1,11 +1,13 @@
 import {
   CalendarDate,
+  Notes,
   SettingsMinimalistic,
   Widget2,
   Widget5,
 } from "@solar-icons/react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
+import { useTranslation } from "react-i18next";
 import MobileProjectNav from "@/components/common/header/mobile-project-nav";
 import ProjectCrumbSelect from "@/components/common/header/project-crumb-select";
 import WorkspaceCrumbSelect from "@/components/common/header/workspace-crumb-select";
@@ -21,6 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { shortcuts } from "@/constants/shortcuts";
+import { useGetGitHubRepos } from "@/hooks/queries/github/use-github-repos";
 import useGetProject from "@/hooks/queries/project/use-get-project";
 import { useProjectWebSocket } from "@/hooks/use-project-websocket";
 import { cn } from "@/lib/cn";
@@ -31,8 +34,24 @@ type ProjectLayoutProps = {
   headerActions?: ReactNode;
   children: ReactNode;
   showViewSwitcher?: boolean;
-  activeView?: "backlog" | "board" | "gantt";
+  activeView?: ProjectView;
 };
+
+export type ProjectView = "backlog" | "board" | "gantt" | "issues";
+
+const viewRoutes = {
+  backlog: "/dashboard/workspace/$workspaceId/project/$projectId/backlog",
+  board: "/dashboard/workspace/$workspaceId/project/$projectId/board",
+  gantt: "/dashboard/workspace/$workspaceId/project/$projectId/gantt",
+  issues: "/dashboard/workspace/$workspaceId/project/$projectId/issues",
+} as const;
+
+function viewFromPath(pathname: string): ProjectView {
+  if (pathname.includes("/backlog")) return "backlog";
+  if (pathname.includes("/gantt")) return "gantt";
+  if (pathname.includes("/issues")) return "issues";
+  return "board";
+}
 
 export default function ProjectLayout({
   projectId,
@@ -42,21 +61,18 @@ export default function ProjectLayout({
   showViewSwitcher = true,
   activeView,
 }: ProjectLayoutProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { data: project } = useGetProject({ id: projectId, workspaceId });
+  const { data: githubRepos } = useGetGitHubRepos(projectId);
+  const hasIssues = (githubRepos?.length ?? 0) > 0;
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] =
     useState(false);
 
   useProjectWebSocket(projectId);
 
-  const resolvedView =
-    activeView ??
-    (location.pathname.includes("/backlog")
-      ? "backlog"
-      : location.pathname.includes("/gantt")
-        ? "gantt"
-        : "board");
+  const resolvedView = activeView ?? viewFromPath(location.pathname);
 
   const handleNavigateToBacklog = () => {
     navigate({
@@ -79,14 +95,14 @@ export default function ProjectLayout({
     });
   };
 
+  const handleNavigateToIssues = () => {
+    navigate({ to: viewRoutes.issues, params: { workspaceId, projectId } });
+  };
+
   const handleProjectSwitch = (nextProjectId: string) => {
     navigate({
       to:
-        resolvedView === "backlog"
-          ? "/dashboard/workspace/$workspaceId/project/$projectId/backlog"
-          : resolvedView === "gantt"
-            ? "/dashboard/workspace/$workspaceId/project/$projectId/gantt"
-            : "/dashboard/workspace/$workspaceId/project/$projectId/board",
+        resolvedView === "issues" ? viewRoutes.board : viewRoutes[resolvedView],
       params: {
         workspaceId,
         projectId: nextProjectId,
@@ -140,6 +156,7 @@ export default function ProjectLayout({
                 onSelectBacklog={handleNavigateToBacklog}
                 onSelectBoard={handleNavigateToBoard}
                 onSelectGantt={handleNavigateToGantt}
+                onSelectIssues={hasIssues ? handleNavigateToIssues : undefined}
                 onSelectProject={handleProjectSwitch}
                 onAddProject={() => setIsCreateProjectModalOpen(true)}
               />
@@ -183,6 +200,20 @@ export default function ProjectLayout({
                   <CalendarDate size={14} />
                   Gantt
                 </Button>
+                {hasIssues && (
+                  <Button
+                    variant={resolvedView === "issues" ? "secondary" : "ghost"}
+                    size="xs"
+                    onClick={handleNavigateToIssues}
+                    className={cn(
+                      "h-6 gap-1.5 rounded-full px-2.5 text-xs",
+                      resolvedView !== "issues" && "text-muted-foreground",
+                    )}
+                  >
+                    <Notes size={14} />
+                    {t("tasks:issues.tab")}
+                  </Button>
+                )}
               </div>
             )}
           </div>

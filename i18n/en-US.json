@@ -530,7 +530,7 @@
 			"title": "Project Integrations",
 			"subtitle": "Connect your project with external tools and services to streamline your workflow.",
 			"githubSectionTitle": "GitHub Integration",
-			"githubSectionSubtitle": "Synchronize tasks with GitHub issues and enable two-way sync.",
+			"githubSectionSubtitle": "Link GitHub repositories to this project and show their issues.",
 			"giteaSectionTitle": "Gitea Integration",
 			"giteaSectionSubtitle": "Synchronize tasks with a self-hosted Gitea instance (issues, PRs, webhooks).",
 			"discordSectionTitle": "Discord Integration",
@@ -540,7 +540,16 @@
 			"slackSectionTitle": "Slack Integration",
 			"slackSectionSubtitle": "Send project task updates into a Slack channel with an incoming webhook.",
 			"telegramSectionTitle": "Telegram Integration",
-			"telegramSectionSubtitle": "Send project task updates into a Telegram chat or topic with a bot."
+			"telegramSectionSubtitle": "Send project task updates into a Telegram chat or topic with a bot.",
+			"githubNoRepos": "No repository linked yet.",
+			"githubRepoPlaceholder": "owner/repo",
+			"githubLink": "Link repository",
+			"githubUnlink": "Unlink",
+			"githubLinkHint": "You need write access to the repository on GitHub, and the Opus GitHub App must be installed on it.",
+			"githubAdminOnly": "Only workspace owners and admins can link or unlink repositories.",
+			"githubLinked": "Repository linked",
+			"githubUnlinked": "Repository unlinked",
+			"githubDefaultBranch": "Default branch: {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Project Visibility",
@@ -1675,6 +1684,18 @@
 			"searchActions": "Search actions...",
 			"noActionsFound": "No actions found.",
 			"changeStatus": "Change Status"
+		},
+		"issues": {
+			"tab": "Issues",
+			"pageTitle": "{{name}} — Issues",
+			"title": "GitHub issues",
+			"open": "Open",
+			"closed": "Closed",
+			"empty": "No issues in the linked repositories.",
+			"noRepos": "No repository linked",
+			"noReposSubtitle": "Link a GitHub repository in the project settings to see its issues here.",
+			"openSettings": "Open settings",
+			"openedBy": "{{repo}}#{{number}} by {{author}}"
 		}
 	},
 	"invitations": {

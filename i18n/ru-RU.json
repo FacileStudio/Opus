@@ -530,7 +530,7 @@
 			"title": "Интеграции проекта",
 			"subtitle": "Подключите ваш проект к внешним инструментам и сервисам для оптимизации рабочего процесса.",
 			"githubSectionTitle": "Интеграция с GitHub",
-			"githubSectionSubtitle": "Синхронизация задач с GitHub Issues и двусторонняя синхронизация.",
+			"githubSectionSubtitle": "Привяжите репозитории GitHub к этому проекту и смотрите их задачи.",
 			"giteaSectionTitle": "Интеграция с Gitea",
 			"giteaSectionSubtitle": "Синхронизация задач с вашим экземпляром Gitea (задачи, PR, вебхуки).",
 			"discordSectionTitle": "Интеграция с Discord",
@@ -540,7 +540,16 @@
 			"slackSectionTitle": "Интеграция со Slack",
 			"slackSectionSubtitle": "Отправка обновлений по задачам проекта в канал Slack через входящий вебхук.",
 			"telegramSectionTitle": "Интеграция с Telegram",
-			"telegramSectionSubtitle": "Отправка обновлений по задачам проекта в чат или тему Telegram через бота."
+			"telegramSectionSubtitle": "Отправка обновлений по задачам проекта в чат или тему Telegram через бота.",
+			"githubNoRepos": "Репозитории пока не привязаны.",
+			"githubRepoPlaceholder": "владелец/репозиторий",
+			"githubLink": "Привязать репозиторий",
+			"githubUnlink": "Отвязать",
+			"githubLinkHint": "Нужен доступ на запись к репозиторию на GitHub, и в нём должно быть установлено приложение Opus GitHub App.",
+			"githubAdminOnly": "Привязывать и отвязывать репозитории могут только владельцы и администраторы рабочего пространства.",
+			"githubLinked": "Репозиторий привязан",
+			"githubUnlinked": "Репозиторий отвязан",
+			"githubDefaultBranch": "Ветка по умолчанию: {{branch}}"
 		},
 		"projectVisibility": {
 			"pageTitle": "Видимость проекта",
@@ -1739,6 +1748,18 @@
 			"viewLabel": "Вид",
 			"viewList": "Список",
 			"viewColumns": "Колонки"
+		},
+		"issues": {
+			"tab": "Issues",
+			"pageTitle": "{{name}} — Issues",
+			"title": "Задачи GitHub",
+			"open": "Открытые",
+			"closed": "Закрытые",
+			"empty": "В привязанных репозиториях нет задач.",
+			"noRepos": "Репозиторий не привязан",
+			"noReposSubtitle": "Привяжите репозиторий GitHub в настройках проекта, чтобы видеть здесь его задачи.",
+			"openSettings": "Открыть настройки",
+			"openedBy": "{{repo}}#{{number}}, автор {{author}}"
 		}
 	},
 	"invitations": {
