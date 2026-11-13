@@ -87,6 +87,17 @@ type MCPConfig struct {
 	StateKey []byte
 }
 
+// UploadKey signs local upload URLs. It is derived from the OIDC client
+// secret, so it is secret and stable across restarts and replicas without a
+// variable of its own; nil without OIDC, where a per-process key is used.
+func (c Config) UploadKey() []byte {
+	if c.OIDC == nil || c.OIDC.ClientSecret == "" {
+		return nil
+	}
+	key := sha256.Sum256([]byte("opus-upload-sign:" + c.OIDC.ClientSecret))
+	return key[:]
+}
+
 // mcpConfig reads MCP_RESOURCE and derives the state key.
 func mcpConfig(oidc *OIDCConfig) MCPConfig {
 	resource := strings.TrimSpace(troncenv.String("MCP_RESOURCE", ""))

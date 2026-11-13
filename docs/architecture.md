@@ -145,7 +145,10 @@ the six project and task channels for reference.
 
 Task images go to S3-compatible storage through presigned URLs when S3 is configured
 (`PUT /api/task/image-upload/{id}`, then `POST /api/task/image-upload/{id}/finalize`).
-Without S3 the API takes the upload itself and writes it under `UPLOAD_DIR/assets`. Downloads go
+Without S3 the API takes the upload itself and writes it under `UPLOAD_DIR/assets`, through a
+URL signed with an HMAC of the key, a 15-minute expiry, the signer and the size cap. The key that
+signs it is derived from `OIDC_CLIENT_SECRET` (a random one per process without OIDC), so the
+PUT needs no session and no CSRF header, and it never overwrites an existing object. Downloads go
 through `GET /api/asset/{id}`, which checks workspace membership, or an active share link with
 `?share_token=` when the project is not public. Workspace logos always sit on the local disk under
 `UPLOAD_DIR/workspaces`, which the compose file backs with the `opus-uploads` volume.

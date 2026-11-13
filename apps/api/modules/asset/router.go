@@ -47,7 +47,13 @@ func registerAssetDownloadRoutes(router chi.Router, service *Service, authServic
 			key = strings.TrimPrefix(r.URL.Path, "/asset/upload/")
 			key = strings.TrimPrefix(key, "/api/asset/upload/")
 		}
-		if err := service.controller.storeDirectUpload(key, r.Body); err != nil {
+		maxBytes, err := service.VerifyUpload(key, r.URL.Query())
+		if err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		body := http.MaxBytesReader(w, r.Body, maxBytes)
+		if err := service.controller.storeDirectUpload(key, body); err != nil {
 			httpjson.WriteError(w, err)
 			return
 		}

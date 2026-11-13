@@ -7,6 +7,7 @@ import (
 	stderrors "errors"
 	"fmt"
 	"io"
+	"net/url"
 	"time"
 
 	"github.com/FacileStudio/Opus/apps/api/internal/storage"
@@ -73,7 +74,7 @@ func (s *Service) CreateImageUpload(ctx context.Context, userID, taskID int64, r
 		return nil, valErr
 	}
 	key := storage.BuildObjectKey(project.WorkspaceID, project.ID, task.ID, req.Surface, req.Filename)
-	uploadURL, headers, err := s.storage.GenerateUpload(key, req.ContentType, req.Size, "")
+	uploadURL, headers, err := s.storage.GenerateUpload(key, req.ContentType, userID, "")
 	if err != nil {
 		return nil, err
 	}
@@ -180,4 +181,9 @@ func (s *Service) GetAsset(ctx context.Context, callerID int64, assetID, shareTo
 // StoreLocalAsset writes incoming raw data to local disk.
 func (s *Service) StoreLocalAsset(key string, r io.Reader) error {
 	return s.storage.StoreLocal(key, r)
+}
+
+// VerifyUpload checks a signed local upload URL and returns its size cap.
+func (s *Service) VerifyUpload(key string, query url.Values) (int64, error) {
+	return s.storage.VerifyUpload(key, query, time.Now())
 }

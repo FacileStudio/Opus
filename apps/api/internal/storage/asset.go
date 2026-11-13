@@ -150,27 +150,6 @@ func sanitizeStorageKey(key string) (string, error) {
 	return clean, nil
 }
 
-// SaveLocalAsset writes asset bytes into the local uploads directory.
-func SaveLocalAsset(uploadDir, key string, r io.Reader) error {
-	cleanKey, err := sanitizeStorageKey(key)
-	if err != nil {
-		return err
-	}
-	targetPath := filepath.Join(uploadDir, "assets", cleanKey)
-	if err := os.MkdirAll(filepath.Dir(targetPath), 0o755); err != nil {
-		return errors.Internal("failed to create asset directory", err)
-	}
-	dest, err := os.Create(targetPath)
-	if err != nil {
-		return errors.Internal("failed to create asset file", err)
-	}
-	defer dest.Close()
-	if _, err := io.Copy(dest, r); err != nil {
-		return errors.Internal("failed to write asset bytes", err)
-	}
-	return nil
-}
-
 // ReadLocalAsset opens a local asset file stream from disk.
 func ReadLocalAsset(uploadDir, key string) (*ObjectStream, error) {
 	cleanKey, err := sanitizeStorageKey(key)
@@ -201,11 +180,13 @@ func ReadLocalAsset(uploadDir, key string) (*ObjectStream, error) {
 type AssetStorage struct {
 	uploadDir string
 	s3Config  *S3Config
+	uploadKey []byte
 }
 
-// NewAssetStorage constructs a new asset storage manager.
+// NewAssetStorage constructs a new asset storage manager. Local upload URLs
+// are signed with a random per-process key until SetUploadKey replaces it.
 func NewAssetStorage(uploadDir string, s3Config *S3Config) *AssetStorage {
-	return &AssetStorage{uploadDir: uploadDir, s3Config: s3Config}
+	return &AssetStorage{uploadDir: uploadDir, s3Config: s3Config, uploadKey: randomUploadKey()}
 }
 
 // IsS3 returns true when S3 object storage is configured.
@@ -221,8 +202,10 @@ func (s *AssetStorage) MaxUploadBytes() int64 {
 	return 10 * 1024 * 1024
 }
 
-// GenerateUpload generates an upload URL and required headers.
-func (s *AssetStorage) GenerateUpload(key, contentType string, size int64, localBaseURL string) (string, map[string]string, error) {
+// GenerateUpload generates an upload URL and required headers. On local disk
+// the URL carries a signature binding the key, an expiry, the signer and the
+// size cap, which is the only authorization the upload route accepts.
+func (s *AssetStorage) GenerateUpload(key, contentType string, userID int64, localBaseURL string) (string, map[string]string, error) {
 	headers := map[string]string{"Content-Type": contentType}
 	if s.IsS3() {
 		uploadURL, err := PresignURL(s.s3Config, http.MethodPut, key, contentType, s.s3Config.PresignTTLSeconds)
@@ -232,13 +215,9 @@ func (s *AssetStorage) GenerateUpload(key, contentType string, size int64, local
 		return uploadURL, headers, nil
 	}
 	cleanKey := strings.TrimPrefix(key, "/")
-	uploadURL := fmt.Sprintf("%s/api/asset/upload/%s", strings.TrimSuffix(localBaseURL, "/"), cleanKey)
+	query := s.signUpload(cleanKey, userID, time.Now())
+	uploadURL := fmt.Sprintf("%s/api/asset/upload/%s?%s", strings.TrimSuffix(localBaseURL, "/"), cleanKey, query.Encode())
 	return uploadURL, headers, nil
-}
-
-// StoreLocal saves the direct upload stream to disk when using local storage.
-func (s *AssetStorage) StoreLocal(key string, r io.Reader) error {
-	return SaveLocalAsset(s.uploadDir, key, r)
 }
 
 // Open retrieves an object stream from either S3 or local disk.

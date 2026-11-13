@@ -164,7 +164,7 @@ precise activity entry.
 |---|---|---|
 | PUT | `/task/image-upload/{id}` | Start a task image upload. Returns the upload URL and key |
 | POST | `/task/image-upload/{id}/finalize` | Register the uploaded object as an asset |
-| PUT | `/asset/upload/*` | Local storage only: receives the bytes when S3 is not configured |
+| PUT | `/asset/upload/*` | Local storage only: receives the bytes when S3 is not configured. Takes no session: the signed URL from `/task/image-upload/{id}` is the authorization (15 minutes, size cap, never overwrites). 401 unsigned, 403 bad or expired signature, 413 over the cap, 409 if the object exists |
 | GET | `/asset/{id}` | Download. Workspace members, or `?share_token=` when the project is not public |
 
 ## GitHub

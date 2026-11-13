@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -77,7 +78,7 @@ func seedFixture(t *testing.T, db *gorm.DB) (int64, int64, int64) {
 	return user.ID, project.ID, task.ID
 }
 
-func executeCreateUpload(t *testing.T, r http.Handler, taskID int64) string {
+func executeCreateUpload(t *testing.T, r http.Handler, taskID int64) CreateImageUploadResponse {
 	t.Helper()
 	uploadReq := CreateImageUploadRequest{
 		Filename:    "test-image.png",
@@ -97,12 +98,13 @@ func executeCreateUpload(t *testing.T, r http.Handler, taskID int64) string {
 	if err := json.Unmarshal(w.Body.Bytes(), &resp); err != nil || resp.Key == "" {
 		t.Fatalf("invalid create upload response: %v", err)
 	}
-	return resp.Key
+	return resp
 }
 
-func executeDirectAndFinalize(t *testing.T, r http.Handler, taskID int64, key string, data []byte) string {
+func executeDirectAndFinalize(t *testing.T, r http.Handler, taskID int64, upload CreateImageUploadResponse, data []byte) string {
 	t.Helper()
-	putReq := httptest.NewRequest(http.MethodPut, "/asset/upload/"+key, bytes.NewReader(data))
+	key := upload.Key
+	putReq := httptest.NewRequest(http.MethodPut, strings.TrimPrefix(upload.UploadURL, "/api"), bytes.NewReader(data))
 	putW := httptest.NewRecorder()
 	r.ServeHTTP(putW, putReq)
 	if putW.Code != http.StatusOK {
@@ -139,9 +141,9 @@ func TestAssetUploadAndDownload(t *testing.T) {
 	r := chi.NewRouter()
 	RegisterRoutes(r, service, auth)
 
-	uploadKey := executeCreateUpload(t, r, taskID)
+	upload := executeCreateUpload(t, r, taskID)
 	directData := []byte("image binary payload")
-	assetID := executeDirectAndFinalize(t, r, taskID, uploadKey, directData)
+	assetID := executeDirectAndFinalize(t, r, taskID, upload, directData)
 
 	getReq := httptest.NewRequest(http.MethodGet, "/asset/"+assetID, nil)
 	getW := httptest.NewRecorder()

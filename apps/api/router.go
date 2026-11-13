@@ -143,6 +143,7 @@ func registerDomainRoutes(api chi.Router, authService middleware.Authenticator, 
 	notification.RegisterRoutes(api, notification.NewService(db), authService)
 	search.RegisterRoutes(api, search.NewService(db), authService)
 	assetStorage := storage.NewAssetStorage(appEnv.UploadDir, storage.LoadS3Config())
+	assetStorage.SetUploadKey(appEnv.UploadKey())
 	asset.RegisterRoutes(api, asset.NewService(db, assetStorage), authService)
 	github.RegisterRoutes(api, github.NewService(db, appEnv.GitHubWebhookSecret), authService)
 }
