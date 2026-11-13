@@ -15,7 +15,7 @@ import (
 
 const (
 	appMissing = "GitHub is not set up on this Opus: the Facile Opus App needs OPUS_GITHUB_APP_CLIENT_ID and OPUS_GITHUB_APP_PRIVATE_KEY"
-	idMissing  = "Link your GitHub account in your Facile account, then sign in to Opus again"
+	idMissing  = "Opus does not know your GitHub account yet: link GitHub at sso.facile.studio/account, then sign out of Opus and sign in again"
 )
 
 var adminRoles = []string{"owner", "admin"}
