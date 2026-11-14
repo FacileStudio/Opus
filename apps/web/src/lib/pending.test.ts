@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   clientName,
+  isOwnSessionRefusal,
   isReturnPath,
+  OWN_SESSION_REFUSAL,
   rememberReturn,
   takeReturn,
 } from "./pending";
@@ -30,5 +32,26 @@ describe("pending helpers", () => {
     expect(takeReturn()).toBeNull();
     rememberReturn("https://evil.com");
     expect(takeReturn()).toBeNull();
+  });
+
+  it("asks to sign in again only for porte's own-session refusal", () => {
+    expect(
+      isOwnSessionRefusal({
+        status: 403,
+        code: "permission_denied",
+        message: OWN_SESSION_REFUSAL,
+      }),
+    ).toBe(true);
+    expect(
+      isOwnSessionRefusal({
+        status: 403,
+        code: "permission_denied",
+        message: "access denied",
+      }),
+    ).toBe(false);
+    expect(
+      isOwnSessionRefusal({ status: 403, message: OWN_SESSION_REFUSAL }),
+    ).toBe(false);
+    expect(isOwnSessionRefusal(null)).toBe(false);
   });
 });

@@ -23,6 +23,25 @@ export type PendingAction = {
 
 export const RETURN_KEY = "opus.return";
 
+export const OWN_SESSION_REFUSAL =
+  "only the person's own session can confirm actions";
+
+/**
+ * Reports whether error is porte's refusal of a session that is not the
+ * person's own browser session: a cookie from before the upgrade, a CLI or API
+ * token, or the mobile or desktop app. Signing in again fixes only this one;
+ * any other 403 is the confirmed action's own refusal.
+ */
+export function isOwnSessionRefusal(
+  error: { status?: number; code?: string; message: string } | null | undefined,
+): boolean {
+  return (
+    error?.status === 403 &&
+    error.code === "permission_denied" &&
+    error.message === OWN_SESSION_REFUSAL
+  );
+}
+
 export function clientName(clientId: string): string {
   try {
     return new URL(clientId).hostname || clientId;

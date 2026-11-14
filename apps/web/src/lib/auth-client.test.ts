@@ -48,7 +48,11 @@ describe("an API error body", () => {
 
     const result = await apiRequest("/mcp/pending");
 
-    expect(result.error).toEqual({ message: "Sign in again", status: 403 });
+    expect(result.error).toEqual({
+      message: "Sign in again",
+      status: 403,
+      code: "forbidden",
+    });
   });
 
   it("falls back on a flat message, then on the fallback", () => {
