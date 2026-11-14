@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.40.2] - 2026-11-14
+
+### Fixed
+
+- The MCP confirm page asks you to sign in again only for porte's own-session refusal. Any other 403, such as losing access to the task after the agent asked, now shows the server's message.
+
 ## [2.40.1] - 2026-11-14
 
 ### Security
