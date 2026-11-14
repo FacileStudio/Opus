@@ -4,6 +4,13 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.40.1] - 2026-11-14
+
+### Security
+
+- Browser session mark fix: porte v0.20.1 marks browser session tokens with `b~` instead of `b-`. A plain token is base64url, so 1 in 4096 CLI or API tokens started with `b-` and could pass the MCP confirm page as a browser cookie. People sign in once more in their browser before they can confirm an MCP action.
+- porte v0.20.1, porte/mcpauth v0.3.1, tronc v0.23.1.
+
 ## [2.40.0] - 2026-11-14
 
 ### Security
