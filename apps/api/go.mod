@@ -5,10 +5,10 @@ go 1.26.11
 require (
 	github.com/FacileStudio/Journal/sdk/journal v0.0.0-20260811165717-babb9d5d0e15
 	github.com/FacileStudio/antenne-client/go v1.1.0
-	github.com/FacileStudio/porte v0.20.0
+	github.com/FacileStudio/porte v0.20.1
 	github.com/FacileStudio/porte/directory v0.5.0
 	github.com/FacileStudio/porte/forfait v0.1.3
-	github.com/FacileStudio/tronc v0.23.0
+	github.com/FacileStudio/tronc v0.23.1
 	github.com/FacileStudio/tronc/testdb v0.1.2
 	github.com/go-chi/chi/v5 v5.5.0
 	github.com/gorilla/websocket v1.5.3
@@ -29,7 +29,7 @@ require (
 )
 
 require (
-	github.com/FacileStudio/porte/mcpauth v0.3.0
+	github.com/FacileStudio/porte/mcpauth v0.3.1
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/coreos/go-oidc/v3 v3.20.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
