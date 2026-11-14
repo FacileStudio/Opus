@@ -1,8 +1,32 @@
 import { registerIcons } from '@facile/muse';
 
 export const OPUS_ICON = 'solar:slider-vertical-minimalistic-bold-duotone';
+export const PR_OPEN_ICON = 'solar:branching-paths-down-linear';
+export const PR_MERGED_ICON = 'solar:branching-paths-up-linear';
+export const TASK_ICON = 'solar:hashtag-linear';
+export const COMMENT_ICON = 'solar:chat-square-linear';
 
 registerIcons({
+	[PR_OPEN_ICON]: {
+		body: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22Z"/><path stroke-linejoin="round" d="M16 16.5H18M16.5 18L18 16.5L16.5 15"/><path d="M16 16.5C13.7909 16.5 12 14.7091 12 12.5V6.5"/><path stroke-linejoin="round" d="M8 16.5H6M7.5 18L6 16.5L7.5 15"/><path d="M8 16.5C10.2091 16.5 12 14.7091 12 12.5V6.5"/></g>',
+		width: 24,
+		height: 24
+	},
+	[PR_MERGED_ICON]: {
+		body: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22Z"/><path stroke-linejoin="round" d="M16 8H18M16.5 6.5L18 8L16.5 9.5"/><path d="M16 8C13.7909 8 12 9.79086 12 12V18"/><path stroke-linejoin="round" d="M8 8H6M7.5 6.5L6 8L7.5 9.5"/><path d="M8 8C10.2091 8 12 9.79086 12 12V18"/></g>',
+		width: 24,
+		height: 24
+	},
+	[TASK_ICON]: {
+		body: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M10 3L5 21"/><path d="M19 3L14 21"/><path d="M22 9H4"/><path d="M20 16H2"/></g>',
+		width: 24,
+		height: 24
+	},
+	[COMMENT_ICON]: {
+		body: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M13.6288 20.4718C14.0492 19.7614 14.2595 19.4062 14.5972 19.2098C14.9349 19.0134 15.36 19.0061 16.2104 18.9915C17.4658 18.9698 18.2531 18.8929 18.9134 18.6194C20.1386 18.1119 21.1119 17.1386 21.6194 15.9134C22 14.9946 22 13.8297 22 11.5V10.5C22 7.22657 22 5.58985 21.2632 4.38751C20.8509 3.71473 20.2853 3.14908 19.6125 2.7368C18.4101 2 16.7734 2 13.5 2H10.5C7.22657 2 5.58985 2 4.38751 2.7368C3.71473 3.14908 3.14908 3.71473 2.7368 4.38751C2 5.58985 2 7.22657 2 10.5V11.5C2 13.8297 2 14.9946 2.3806 15.9134C2.88807 17.1386 3.86144 18.1119 5.08658 18.6194C5.74689 18.8929 6.53422 18.9698 7.78958 18.9915C8.63992 19.0061 9.06509 19.0134 9.40279 19.2098C9.74049 19.4063 9.95073 19.7614 10.3712 20.4718L10.9133 21.3877C11.3965 22.204 12.6035 22.204 13.0867 21.3877L13.6288 20.4718Z"/>',
+		width: 24,
+		height: 24
+	},
 	[OPUS_ICON]: {
 		body: '<path fill="currentColor" d="M5.84619 8C5.84619 5.17157 5.84619 3.75736 6.7474 2.87868C7.64861 2 9.09909 2 12 2C14.901 2 16.3515 2 17.2527 2.87868C18.1539 3.75736 18.1539 5.17157 18.1539 8V16C18.1539 18.8284 18.1539 20.2426 17.2527 21.1213C16.3515 22 14.901 22 12 22C9.09909 22 7.64861 22 6.7474 21.1213C5.84619 20.2426 5.84619 18.8284 5.84619 16V8Z"/><path fill="currentColor" fill-rule="evenodd" d="M2.76923 3.75C3.19407 3.75 3.53846 4.08579 3.53846 4.5V19.5C3.53846 19.9142 3.19407 20.25 2.76923 20.25C2.3444 20.25 2 19.9142 2 19.5V4.5C2 4.08579 2.3444 3.75 2.76923 3.75ZM21.2308 3.75C21.6556 3.75 22 4.08579 22 4.5V19.5C22 19.9142 21.6556 20.25 21.2308 20.25C20.8059 20.25 20.4615 19.9142 20.4615 19.5V4.5C20.4615 4.08579 20.8059 3.75 21.2308 3.75Z" clip-rule="evenodd" opacity=".5"/>',
 		width: 24,

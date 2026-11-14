@@ -3,7 +3,10 @@
 	import { CHECKSUMS_URL, CLI_COMMANDS, RELEASES_URL } from '$lib/downloads';
 	import { t } from '$lib/i18n';
 	import BoardDemo from '$lib/landing/BoardDemo.svelte';
+	import GithubTile from '$lib/landing/GithubTile.svelte';
+	import SearchTile from '$lib/landing/SearchTile.svelte';
 	import Shell from '$lib/landing/Shell.svelte';
+	import TimelineTile from '$lib/landing/TimelineTile.svelte';
 
 	const features = $derived([
 		{
@@ -48,6 +51,17 @@
 				</a>
 			</div>
 			<div class="mt-12 w-full sm:mt-16"><BoardDemo /></div>
+		</section>
+
+		<section class="relative mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
+			<h2 class="mb-10 text-center font-fc-title text-fc-2xl font-bold tracking-tight text-fc-fg sm:text-fc-3xl">
+				{t('tiles.title')}
+			</h2>
+			<div class="grid gap-6 md:grid-cols-3">
+				<TimelineTile />
+				<SearchTile />
+				<GithubTile />
+			</div>
 		</section>
 
 		<section id="features" class="mx-auto max-w-5xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20">

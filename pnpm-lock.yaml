@@ -55,8 +55,8 @@ importers:
   apps/site:
     dependencies:
       '@facile/mise-en-scene':
-        specifier: github:FacileStudio/mise-en-scene#v0.2.1
-        version: https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/29d936d4fbd57828c0ed236d432053b87a144e09(svelte@5.57.3)
+        specifier: github:FacileStudio/mise-en-scene#v0.2.2
+        version: https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e(svelte@5.57.3)
       '@facile/muse':
         specifier: github:FacileStudio/muse#v0.23.0
         version: https://codeload.github.com/FacileStudio/muse/tar.gz/eb871cd9ab6afdb86ae878c43c207fa70cdf5a00(svelte@5.57.3)(tailwindcss@4.3.5)
@@ -1029,9 +1029,9 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@facile/mise-en-scene@https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/29d936d4fbd57828c0ed236d432053b87a144e09':
-    resolution: {tarball: https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/29d936d4fbd57828c0ed236d432053b87a144e09}
-    version: 0.2.1
+  '@facile/mise-en-scene@https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e':
+    resolution: {tarball: https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e}
+    version: 0.2.2
     peerDependencies:
       svelte: ^5.29.0
 
@@ -5984,7 +5984,7 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 2.0.1
 
-  '@facile/mise-en-scene@https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/29d936d4fbd57828c0ed236d432053b87a144e09(svelte@5.57.3)':
+  '@facile/mise-en-scene@https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e(svelte@5.57.3)':
     dependencies:
       svelte: 5.57.3
 

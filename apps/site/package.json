@@ -12,7 +12,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
 	},
 	"dependencies": {
-		"@facile/mise-en-scene": "github:FacileStudio/mise-en-scene#v0.2.1",
+		"@facile/mise-en-scene": "github:FacileStudio/mise-en-scene#v0.2.2",
 		"@facile/muse": "github:FacileStudio/muse#v0.23.0"
 	},
 	"devDependencies": {
