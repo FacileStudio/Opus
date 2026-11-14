@@ -12,51 +12,27 @@ input:-webkit-autofill:active {
 }
 
 @font-face {
-  font-family: "Cal Sans UI";
-  src: url("./assets/fonts/CalSansUI[wght,GEOM]-s.p.c2e3469d.woff2") format("woff2");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 300 700;
-}
-
-@font-face {
-  font-family: "Cal Sans Heading";
-  src: url("./assets/fonts/CalSans-SemiBold.woff2") format("woff2");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: "Goga";
-  src: url("/fonts/goga/Goga-Medium.woff2") format("woff2");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "Goga";
-  src: url("/fonts/goga/Goga-Bold.woff2") format("woff2");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "Goga";
-  src: url("/fonts/goga/Goga-Black.woff2") format("woff2");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 900;
-}
-
-@font-face {
-  font-family: "Paper Mono";
-  src: url("./assets/fonts/PaperMono-Regular.woff2") format("woff2");
+  font-family: "Magnetik";
+  src: url("@muse-fonts/Magnetik-Regular.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
+}
+
+@font-face {
+  font-family: "Magnetik";
+  src: url("@muse-fonts/Magnetik-Medium.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500 600;
+}
+
+@font-face {
+  font-family: "Magnetik";
+  src: url("@muse-fonts/Magnetik-Bold.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -120,20 +96,22 @@ input:-webkit-autofill:active {
 
 :root {
   --font-sans:
-    "Cal Sans UI",
+    "Magnetik",
     ui-sans-serif,
     system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
     sans-serif;
-  --font-heading: "Goga", "Cal Sans Heading", var(--font-sans);
+  --font-heading: var(--font-sans);
   --font-mono:
-    "Paper Mono",
     ui-monospace,
-    SFMono-Regular,
+    "SF Mono",
+    "JetBrains Mono",
     Menlo,
-    Monaco,
     Consolas,
-    "Liberation Mono",
-    "Courier New",
     monospace;
   --radius: 0.625rem;
   --accent: oklch(0.97 0 0);

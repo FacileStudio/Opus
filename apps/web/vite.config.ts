@@ -34,6 +34,10 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@i18n": path.resolve(__dirname, "../../i18n"),
+      "@muse-fonts": path.resolve(
+        __dirname,
+        "./node_modules/@facile/muse/src/lib/fonts",
+      ),
     },
   },
   build: {
