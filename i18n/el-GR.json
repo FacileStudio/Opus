@@ -1871,38 +1871,7 @@
 		"readOnly": "Read-only"
 	},
 	"landing": {
-		"copyright": "© {{year}} Opus by Facile.",
-		"features": {
-			"realtime": {
-				"body": "Comments, labels and task moves land in every open tab the moment somebody makes them.",
-				"title": "Realtime collaboration"
-			},
-			"rules": {
-				"body": "Status transitions, assignments and due-date reminders run on the server instead of in your head.",
-				"title": "Workflow rules"
-			},
-			"selfHosted": {
-				"body": "One container, your Postgres, your storage. Nothing you plan leaves the server it runs on.",
-				"title": "Self-hosted by default"
-			},
-			"time": {
-				"body": "Log time against tasks and read it back per project when the review starts.",
-				"title": "Time tracking"
-			},
-			"views": {
-				"body": "Board, list, gantt and backlog over the same tasks. Switch per project without moving a thing.",
-				"title": "Four views, one backlog"
-			},
-			"workspaces": {
-				"body": "Invite a team, keep projects private or shared, and let owner, admin and member decide who edits what.",
-				"title": "Workspaces and roles"
-			}
-		},
-		"footerTagline": "Self-hosted project management.",
-		"heroBody": "Opus keeps tasks, boards and timelines on your own server. Your team plans where your data already lives.",
-		"heroTitle": "Project management you host yourself",
-		"pageTitle": "Opus · Διαχείριση έργων που παραμένει γρήγορη",
-		"sectionTitle": "Everything a project needs, nothing it does not"
+		"copyright": "© {{year}} Opus by Facile."
 	},
 	"ideas": {
 		"approval": {

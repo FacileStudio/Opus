@@ -24,7 +24,8 @@
 			"!**/coverage",
 			"!**/.claude",
 			"!**/openapi.json",
-			"!**/testdata"
+			"!**/testdata",
+			"!apps/site"
 		]
 	},
 	"formatter": {

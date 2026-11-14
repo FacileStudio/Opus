@@ -78,6 +78,12 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: site check
+        run: pnpm --filter @opus/site check
+
+      - name: site build
+        run: pnpm --filter @opus/site build
+
   filet:
     runs-on: ubuntu-latest
     steps:

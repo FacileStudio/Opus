@@ -1871,38 +1871,7 @@
 		}
 	},
 	"landing": {
-		"pageTitle": "Opus · Project management that stays fast",
-		"heroTitle": "Project management you host yourself",
-		"heroBody": "Opus keeps tasks, boards and timelines on your own server. Your team plans where your data already lives.",
-		"sectionTitle": "Everything a project needs, nothing it does not",
-		"features": {
-			"views": {
-				"title": "Four views, one backlog",
-				"body": "Board, list, gantt and backlog over the same tasks. Switch per project without moving a thing."
-			},
-			"realtime": {
-				"title": "Realtime collaboration",
-				"body": "Comments, labels and task moves land in every open tab the moment somebody makes them."
-			},
-			"rules": {
-				"title": "Workflow rules",
-				"body": "Status transitions, assignments and due-date reminders run on the server instead of in your head."
-			},
-			"time": {
-				"title": "Time tracking",
-				"body": "Log time against tasks and read it back per project when the review starts."
-			},
-			"workspaces": {
-				"title": "Workspaces and roles",
-				"body": "Invite a team, keep projects private or shared, and let owner, admin and member decide who edits what."
-			},
-			"selfHosted": {
-				"title": "Self-hosted by default",
-				"body": "One container, your Postgres, your storage. Nothing you plan leaves the server it runs on."
-			}
-		},
-		"copyright": "© {{year}} Opus by Facile.",
-		"footerTagline": "Self-hosted project management."
+		"copyright": "© {{year}} Opus by Facile."
 	},
 	"ideas": {
 		"newCount_one": "{{count}} new idea",

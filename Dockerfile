@@ -1,4 +1,4 @@
-# Stage 1: Build the React SPA
+# Stage 1: Build the React SPA and the public site
 FROM oven/bun:1 AS web-builder
 WORKDIR /app
 
@@ -8,6 +8,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/libs/package.json ./packages/libs/
 COPY apps/web/package.json ./apps/web/
+COPY apps/site/package.json ./apps/site/
 
 RUN pnpm install --frozen-lockfile
 
@@ -15,8 +16,10 @@ COPY packages/typescript-config ./packages/typescript-config
 COPY packages/libs ./packages/libs
 COPY i18n ./i18n
 COPY apps/web ./apps/web
+COPY apps/site ./apps/site
 
 RUN cd apps/web && NODE_ENV=production pnpm run build
+RUN cd apps/site && NODE_ENV=production pnpm run build
 
 # Stage 2: Build the Go backend on the tronc chassis
 FROM golang:1.26.11-alpine AS go-builder
@@ -50,6 +53,8 @@ RUN apk add --no-cache ca-certificates tzdata wget && \
 WORKDIR /app
 
 COPY --from=web-builder --chown=appuser:appuser /app/apps/web/dist /client
+RUN mv /client/index.html /client/app.html
+COPY --from=web-builder --chown=appuser:appuser /app/apps/site/build /client
 COPY --from=go-builder --chown=appuser:appuser /repo/apps/api/bin/api /usr/local/bin/opus-api
 COPY --chown=appuser:appuser deploy/opus-entrypoint.sh /usr/local/bin/opus-entrypoint.sh
 COPY --chown=appuser:appuser apps/web/env.sh /usr/local/bin/web-env.sh

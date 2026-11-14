@@ -224,7 +224,7 @@ func buildRouter(deps routerDeps) chi.Router {
 	})
 
 	if spa.Available(clientDir) {
-		router.Handle("/*", spa.Handler(spa.Config{Dir: clientDir}))
+		mountClient(router, clientDir)
 		deps.appLogger.Info("serving client", slog.String("dir", clientDir))
 	}
 

@@ -7,3 +7,5 @@
 *.log
 .DS_Store
 .docker
+**/build
+**/.svelte-kit

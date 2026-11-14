@@ -1871,38 +1871,7 @@
 		"readOnly": "Read-only"
 	},
 	"landing": {
-		"pageTitle": "Opus · Projektmanagement, das schnell bleibt",
-		"heroTitle": "Projektmanagement, das Sie selbst hosten",
-		"heroBody": "Opus hält Aufgaben, Boards und Zeitpläne auf Ihrem eigenen Server. Ihr Team plant dort, wo Ihre Daten bereits liegen.",
-		"sectionTitle": "Alles, was ein Projekt braucht, und nichts darüber hinaus",
-		"features": {
-			"views": {
-				"title": "Vier Ansichten, ein Backlog",
-				"body": "Board, Liste, Gantt und Backlog über dieselben Aufgaben. Pro Projekt wechseln, ohne etwas zu verschieben."
-			},
-			"realtime": {
-				"title": "Zusammenarbeit in Echtzeit",
-				"body": "Kommentare, Labels und verschobene Aufgaben erscheinen in jedem offenen Tab, sobald jemand sie macht."
-			},
-			"rules": {
-				"title": "Workflow-Regeln",
-				"body": "Statuswechsel, Zuweisungen und Fristerinnerungen laufen auf dem Server statt in Ihrem Kopf."
-			},
-			"time": {
-				"title": "Zeiterfassung",
-				"body": "Erfassen Sie Zeit pro Aufgabe und lesen Sie sie pro Projekt aus, wenn die Auswertung beginnt."
-			},
-			"workspaces": {
-				"title": "Arbeitsbereiche und Rollen",
-				"body": "Laden Sie ein Team ein, halten Sie Projekte privat oder geteilt und lassen Sie Eigentümer, Admin und Mitglied entscheiden, wer was bearbeitet."
-			},
-			"selfHosted": {
-				"title": "Standardmäßig selbst gehostet",
-				"body": "Ein Container, Ihr Postgres, Ihr Speicher. Nichts, was Sie planen, verlässt den Server, auf dem es läuft."
-			}
-		},
-		"copyright": "© {{year}} Opus von Facile.",
-		"footerTagline": "Selbst gehostetes Projektmanagement."
+		"copyright": "© {{year}} Opus von Facile."
 	},
 	"ideas": {
 		"newCount_one": "{{count}} neue Idee",

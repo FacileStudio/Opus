@@ -29,6 +29,7 @@ export function Logo({
         setProject(undefined);
       }}
       to={to}
+      reloadDocument={to === "/"}
       className={`w-auto ${className}`}
     >
       <span className="flex items-center gap-3">

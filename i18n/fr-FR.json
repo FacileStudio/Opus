@@ -1872,38 +1872,7 @@
 		"readOnly": "Read-only"
 	},
 	"landing": {
-		"pageTitle": "Opus · La gestion de projet qui reste rapide",
-		"heroTitle": "La gestion de projet que vous hébergez vous-même",
-		"heroBody": "Opus garde tâches, tableaux et calendriers sur votre propre serveur. Votre équipe planifie là où vivent déjà vos données.",
-		"sectionTitle": "Tout ce qu’il faut à un projet, rien de plus",
-		"features": {
-			"views": {
-				"title": "Quatre vues, un seul backlog",
-				"body": "Tableau, liste, gantt et backlog sur les mêmes tâches. Changez de vue par projet sans rien déplacer."
-			},
-			"realtime": {
-				"title": "Collaboration en temps réel",
-				"body": "Commentaires, étiquettes et déplacements de tâches arrivent dans chaque onglet ouvert à l’instant où quelqu’un les fait."
-			},
-			"rules": {
-				"title": "Règles de workflow",
-				"body": "Changements de statut, assignations et rappels d’échéance tournent sur le serveur plutôt que dans votre tête."
-			},
-			"time": {
-				"title": "Suivi du temps",
-				"body": "Enregistrez le temps passé sur les tâches et relisez-le par projet au moment du bilan."
-			},
-			"workspaces": {
-				"title": "Espaces et rôles",
-				"body": "Invitez une équipe, gardez les projets privés ou partagés, et laissez propriétaire, admin et membre décider qui modifie quoi."
-			},
-			"selfHosted": {
-				"title": "Auto-hébergé par défaut",
-				"body": "Un conteneur, votre Postgres, votre stockage. Rien de ce que vous planifiez ne quitte le serveur qui l’héberge."
-			}
-		},
-		"copyright": "© {{year}} Opus par Facile.",
-		"footerTagline": "Gestion de projet auto-hébergée."
+		"copyright": "© {{year}} Opus par Facile."
 	},
 	"ideas": {
 		"newCount_one": "{{count}} nouvelle idée",

@@ -1872,38 +1872,7 @@
 		"readOnly": "Read-only"
 	},
 	"landing": {
-		"pageTitle": "Opus · Gestión de proyectos que sigue siendo rápida",
-		"heroTitle": "La gestión de proyectos que alojas tú mismo",
-		"heroBody": "Opus guarda tareas, tableros y cronogramas en tu propio servidor. Tu equipo planifica donde ya viven tus datos.",
-		"sectionTitle": "Todo lo que un proyecto necesita, nada más",
-		"features": {
-			"views": {
-				"title": "Cuatro vistas, un solo backlog",
-				"body": "Tablero, lista, gantt y backlog sobre las mismas tareas. Cambia de vista por proyecto sin mover nada."
-			},
-			"realtime": {
-				"title": "Colaboración en tiempo real",
-				"body": "Comentarios, etiquetas y movimientos de tareas llegan a cada pestaña abierta en el momento en que alguien los hace."
-			},
-			"rules": {
-				"title": "Reglas de flujo de trabajo",
-				"body": "Las transiciones de estado, las asignaciones y los recordatorios de vencimiento corren en el servidor y no en tu cabeza."
-			},
-			"time": {
-				"title": "Control del tiempo",
-				"body": "Registra el tiempo en las tareas y consúltalo por proyecto cuando empiece la revisión."
-			},
-			"workspaces": {
-				"title": "Espacios y roles",
-				"body": "Invita a un equipo, mantén los proyectos privados o compartidos y deja que propietario, administrador y miembro decidan quién edita qué."
-			},
-			"selfHosted": {
-				"title": "Autoalojado por defecto",
-				"body": "Un contenedor, tu Postgres, tu almacenamiento. Nada de lo que planificas sale del servidor donde se ejecuta."
-			}
-		},
-		"copyright": "© {{year}} Opus de Facile.",
-		"footerTagline": "Gestión de proyectos autoalojada."
+		"copyright": "© {{year}} Opus de Facile."
 	},
 	"ideas": {
 		"newCount_one": "{{count}} idea nueva",
