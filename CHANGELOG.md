@@ -4,6 +4,17 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.42.1] - 2026-11-14
+
+### Fixed
+
+- The Toile line in "Works with the rest of the suite" no longer says a Toile sticky becomes a task, which no Toile screen does; it says an Opus task pasted into Toile becomes a card on the board.
+- The "Self-host" button opens the Suite self-hosting page in the visitor's language instead of the repository's docs/deployment.md.
+
+### Changed
+
+- The landing takes muse v0.25.1. New og-image.png and site.webmanifest description from the muse brand catalog.
+
 ## [2.42.0] - 2026-11-14
 
 ### Added
