@@ -1,4 +1,5 @@
 import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
+import { apiErrorMessage } from "@/lib/auth-client";
 
 async function uploadWorkspaceLogo(workspaceId: string, file: File) {
   const formData = new FormData();
@@ -14,10 +15,8 @@ async function uploadWorkspaceLogo(workspaceId: string, file: File) {
   });
 
   if (!response.ok) {
-    const error = await response
-      .json()
-      .catch(() => ({ message: "Upload failed" }));
-    throw new Error((error as { message?: string }).message || "Upload failed");
+    const body = await response.json().catch(() => null);
+    throw new Error(apiErrorMessage(body, "Upload failed"));
   }
 
   return response.json() as Promise<{ url: string; message: string }>;

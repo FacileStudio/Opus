@@ -81,6 +81,31 @@ export type ApiError = {
   status?: number;
 };
 
+/**
+ * Reads the message out of an API error body. The API answers
+ * {"error":{"code","message"}}; an older flat {"message"} is still accepted.
+ * Anything else, including an object where a string was expected, gives the
+ * fallback, so a caller never renders an object.
+ */
+export function apiErrorMessage(body: unknown, fallback: string): string {
+  const value = body as { error?: { message?: unknown }; message?: unknown };
+  const nested = value?.error?.message;
+  if (typeof nested === "string" && nested) return nested;
+  if (typeof value?.message === "string" && value.message) return value.message;
+  return fallback;
+}
+
+/** An API error thrown from a query, keeping the HTTP status for the UI. */
+export class ApiRequestError extends Error {
+  status: number | undefined;
+
+  constructor(error: ApiError) {
+    super(error.message);
+    this.name = "ApiRequestError";
+    this.status = error.status;
+  }
+}
+
 type ApiResult<T> = Promise<{ data: T | null; error: ApiError | null }>;
 
 function apiUrl(path: string): string {
@@ -119,7 +144,6 @@ const sessionLostListeners = new Set<() => void>();
  */
 function endSession() {
   const hadUser = sessionState.user !== null;
-  localStorage.removeItem("opus.access_token");
   setSessionState({ user: null, isPending: false });
   if (!hadUser) return;
   for (const listener of sessionLostListeners) {
@@ -127,8 +151,22 @@ function endSession() {
   }
 }
 
+/**
+ * Drops the bearer token sign-in kept in localStorage before v2.27.0. Nothing
+ * writes it any more, and a request carrying it is not the browser's own
+ * session, so the confirm page would refuse it.
+ */
+function clearLegacyToken() {
+  try {
+    localStorage.removeItem("opus.access_token");
+  } catch {
+    return;
+  }
+}
+
 if (typeof window !== "undefined") {
   window.addEventListener(UNAUTHORIZED_EVENT, endSession);
+  clearLegacyToken();
 }
 
 async function request<T>(
@@ -142,11 +180,6 @@ async function request<T>(
   }
   if (options.mutation) {
     headers.set(CSRF_HEADER, "1");
-  }
-  // Bearer token kept for the fetch wrapper.
-  const token = localStorage.getItem("opus.access_token");
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
   }
   const response = await fetch(apiUrl(path), {
     ...init,
@@ -168,7 +201,7 @@ async function request<T>(
     let message = response.statusText || "Request failed";
     try {
       const body = await response.json();
-      message = body?.message || body?.error || message;
+      message = apiErrorMessage(body, message);
     } catch {
       // non-JSON error body
     }
@@ -350,7 +383,6 @@ export const authClient = {
       },
       { mutation: true },
     );
-    localStorage.removeItem("opus.access_token");
     setSessionState({ user: null, isPending: false });
     return { data: null, error: result.error };
   },

@@ -1982,6 +1982,10 @@
 		"error": {
 			"title": "Die Anfragen konnten nicht geladen werden",
 			"retry": "Erneut versuchen"
+		},
+		"reauth": {
+			"title": "Melden Sie sich erneut an, um zu bestätigen",
+			"description": "Nur eine in diesem Browser geöffnete Sitzung kann diese Anfragen bestätigen oder verwerfen. Melden Sie sich hier im Browser erneut an. Die Mobil- und Desktop-Apps können sie nicht bestätigen."
 		}
 	}
 }

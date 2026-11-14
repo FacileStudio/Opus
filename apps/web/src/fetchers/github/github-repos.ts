@@ -1,4 +1,5 @@
 import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiErrorMessage } from "@/lib/auth-client";
 import type {
   GitHubIssueState,
   GitHubIssues,
@@ -18,7 +19,7 @@ async function githubRequest<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!response.ok) {
     const body = await response.json().catch(() => null);
-    throw new Error(body?.error?.message ?? response.statusText);
+    throw new Error(apiErrorMessage(body, response.statusText));
   }
   if (response.status === 204) {
     return undefined as T;

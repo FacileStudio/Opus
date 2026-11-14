@@ -1982,6 +1982,10 @@
 		"error": {
 			"title": "The requests did not load",
 			"retry": "Try again"
+		},
+		"reauth": {
+			"title": "Meld je opnieuw aan om te bevestigen",
+			"description": "Alleen een sessie die je in deze browser hebt geopend, kan deze verzoeken bevestigen of negeren. Meld je hier in je browser opnieuw aan. De mobiele en desktop-apps kunnen ze niet bevestigen."
 		}
 	}
 }

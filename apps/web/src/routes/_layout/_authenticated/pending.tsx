@@ -8,6 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
+import { SignInWithFacile } from "@/components/auth/sign-in-with-facile";
 import Layout from "@/components/common/layout";
 import PageTitle from "@/components/page-title";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
-import { apiRequest } from "@/lib/auth-client";
+import { ApiRequestError, apiRequest } from "@/lib/auth-client";
 import { relativeTime } from "@/lib/ideas";
 import { clientName, type PendingAction } from "@/lib/pending";
 
@@ -31,6 +32,8 @@ export const Route = createFileRoute("/_layout/_authenticated/pending")({
 
 const QUERY_KEY = ["mcp", "pending"] as const;
 
+const NOT_OWN_SESSION = 403;
+
 function usePending() {
   return useQuery({
     queryKey: QUERY_KEY,
@@ -38,7 +41,7 @@ function usePending() {
       const result = await apiRequest<{ actions: PendingAction[] }>(
         "/mcp/pending",
       );
-      if (result.error) throw new Error(result.error.message);
+      if (result.error) throw new ApiRequestError(result.error);
       return result.data.actions ?? [];
     },
   });
@@ -53,7 +56,10 @@ function PendingPage() {
   const [notice, setNotice] = useState<{
     tone: "ok" | "error";
     text: string;
+    reauth?: boolean;
   } | null>(null);
+  const reauth =
+    error instanceof ApiRequestError && error.status === NOT_OWN_SESSION;
 
   const answer = async (item: PendingAction, verb: "confirm" | "dismiss") => {
     setBusy(item.id);
@@ -64,7 +70,9 @@ function PendingPage() {
       { mutation: true },
     );
     setBusy(null);
-    if (result.error) {
+    if (result.error?.status === NOT_OWN_SESSION) {
+      setNotice({ tone: "error", text: t("reauth.description"), reauth: true });
+    } else if (result.error) {
       setNotice({ tone: "error", text: result.error.message });
     } else {
       setNotice({
@@ -107,22 +115,30 @@ function PendingPage() {
             </div>
 
             {notice && (
-              <p
+              <div
                 role={notice.tone === "error" ? "alert" : "status"}
                 className={
                   notice.tone === "error"
-                    ? "rounded-xl bg-destructive/8 p-3 text-sm text-destructive-foreground"
+                    ? "flex flex-col items-start gap-3 rounded-xl bg-destructive/8 p-3 text-sm text-destructive-foreground"
                     : "rounded-xl bg-muted p-3 text-sm"
                 }
               >
-                {notice.text}
-              </p>
+                <p className="m-0">{notice.text}</p>
+                {notice.reauth && <SignInWithFacile />}
+              </div>
             )}
 
             {isLoading ? (
               <div className="flex min-h-[30vh] items-center justify-center">
                 <Spinner />
               </div>
+            ) : reauth ? (
+              <Empty
+                title={t("reauth.title")}
+                description={t("reauth.description")}
+              >
+                <SignInWithFacile size="lg" />
+              </Empty>
             ) : error ? (
               <Empty title={t("error.title")} description={error.message}>
                 <Button

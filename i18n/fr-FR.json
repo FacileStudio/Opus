@@ -1983,6 +1983,10 @@
 		"error": {
 			"title": "Les demandes n'ont pas pu être chargées",
 			"retry": "Réessayer"
+		},
+		"reauth": {
+			"title": "Reconnectez-vous pour confirmer",
+			"description": "Seule une session ouverte dans ce navigateur peut confirmer ou ignorer ces demandes. Reconnectez-vous ici, dans votre navigateur. Les applications mobile et de bureau ne peuvent pas les confirmer."
 		}
 	}
 }

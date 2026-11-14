@@ -1983,6 +1983,10 @@
 		"error": {
 			"title": "No se pudieron cargar las solicitudes",
 			"retry": "Reintentar"
+		},
+		"reauth": {
+			"title": "Vuelve a iniciar sesión para confirmar",
+			"description": "Solo una sesión abierta en este navegador puede confirmar o descartar estas solicitudes. Vuelve a iniciar sesión aquí, en tu navegador. Las aplicaciones móvil y de escritorio no pueden confirmarlas."
 		}
 	}
 }
