@@ -4,6 +4,21 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.42.0] - 2026-11-14
+
+### Added
+
+- The landing leads with "Create a free account" beside "Sign in with Facile", in the hero and the closing call to action.
+- The hero board shows two people: Léa moves a task to In progress and its due date appears in Agenda, while you move another task to Done.
+- A demo tile shows a task with a due date appearing in Agenda, in place of the pull request tile.
+- New sections: the suite apps Opus works with (Sablier, Agenda, Toile, Bulle), the plans with what Opus gives on each, and a developer block with the CLI, API, MCP server, source code and GitHub link.
+
+### Changed
+
+- New slogan, subtitle, title, meta description and footer line in English, French, Spanish and German.
+- The CLI install section and the hero CLI button are gone; the CLI lives in the developer block and on /downloads.
+- The landing takes muse v0.24.0. The CSP allows the plan catalog origin in connect-src.
+
 ## [2.41.1] - 2026-11-14
 
 ### Changed
