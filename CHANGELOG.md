@@ -4,6 +4,8 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.40.0] - 2026-11-14
+
 ### Security
 
 - The MCP confirm page (`/api/mcp/pending`) accepts only the person's own browser session, through porte `mcpauth.RequireOwnSession`. A bearer token, a CLI session or an API key could confirm a pending delete before; only delegated tokens were refused. A browser session from before this release is refused there until the person signs in again.
