@@ -4,6 +4,20 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+### Security
+
+- The MCP confirm page (`/api/mcp/pending`) accepts only the person's own browser session, through porte `mcpauth.RequireOwnSession`. A bearer token, a CLI session or an API key could confirm a pending delete before; only delegated tokens were refused. A browser session from before this release is refused there until the person signs in again.
+- The web client no longer sends the bearer token kept in localStorage (`opus.access_token`) before v2.27.0, and clears it on load. A browser that still held it was refused on every confirm.
+
+### Changed
+
+- `opus_update_task` and `opus_update_project` are marked destructive: they overwrite fields.
+- The confirm page answers a refused session with a translated "sign in again in your browser" message and the sign-in button, and API error messages show as text on every page instead of `[object Object]`. A Confirm or Dismiss error no longer crashes the page.
+- Ideas no longer fall back to personal ideas for an unusable `workspaceId`: a workspace the person is not a member of answers 404, a shared workspace not linked to Registre 412, a malformed id 400 and a database error 500.
+- Resolved and expired pending MCP actions older than 30 days are pruned hourly.
+- The MCP state key, the confirm page mount, the waiting and declined texts and the list cursors come from tronc/mcp. Cursors handed out before this release are refused once; the client asks again from the first page.
+- build(deps): tronc v0.23.0, tronc/testdb v0.1.2, porte v0.20.0, porte/mcpauth v0.3.0, porte/forfait v0.1.3. `mise.toml` pins Go 1.26.11, as `go.mod`, the Dockerfile and CI do.
+
 ## [2.39.0] - 2026-11-14
 
 ### Added

@@ -2,7 +2,6 @@ package mcp
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/FacileStudio/Opus/apps/api/modules/task"
@@ -10,13 +9,6 @@ import (
 	mcpkit "github.com/FacileStudio/tronc/mcp"
 	sdk "github.com/modelcontextprotocol/go-sdk/mcp"
 )
-
-// waiting tells the model that nothing happened yet, and what to do.
-const waiting = "Nothing was deleted: your client cannot ask the user to confirm. Give the user confirm_url " +
-	"and ask them to confirm there. Do not call this tool again for the same %s; the request stays open for 7 days."
-
-// declined tells the model the person said no.
-const declined = "The user declined. Nothing happened, and the %s is kept."
 
 // deleteTask is opus_delete_task.
 func (t *toolset) deleteTask(ctx context.Context, req *sdk.CallToolRequest, in taskRef) (*sdk.CallToolResult, actionOutput, error) {
@@ -39,7 +31,7 @@ func (t *toolset) deleteTask(ctx context.Context, req *sdk.CallToolRequest, in t
 	if result != nil {
 		return result, actionOutput{}, nil
 	}
-	return nil, actionOutput{Status: outcome.Status, TaskID: in.TaskID, ConfirmURL: outcome.ConfirmURL, Message: fmt.Sprintf(waiting, "task")}, nil
+	return nil, actionOutput{Status: outcome.Status, TaskID: in.TaskID, ConfirmURL: outcome.ConfirmURL, Message: outcome.Message}, nil
 }
 
 // deleteProject is opus_delete_project.
@@ -62,7 +54,7 @@ func (t *toolset) deleteProject(ctx context.Context, req *sdk.CallToolRequest, i
 	if result != nil {
 		return result, actionOutput{}, nil
 	}
-	return nil, actionOutput{Status: outcome.Status, ProjectID: in.ProjectID, ConfirmURL: outcome.ConfirmURL, Message: fmt.Sprintf(waiting, "project")}, nil
+	return nil, actionOutput{Status: outcome.Status, ProjectID: in.ProjectID, ConfirmURL: outcome.ConfirmURL, Message: outcome.Message}, nil
 }
 
 // resume handles the retry that carries the person's answer.
@@ -72,7 +64,7 @@ func (t *toolset) resume(ctx context.Context, req *sdk.CallToolRequest, kind, no
 		return nil, actionOutput{}, mcpkit.Failure(err, "Call the tool again to ask the user afresh.")
 	}
 	if outcome.Status == mcpkit.StatusDeclined {
-		return nil, actionOutput{Status: mcpkit.StatusDeclined, Message: fmt.Sprintf(declined, noun)}, nil
+		return nil, actionOutput{Status: mcpkit.StatusDeclined, Message: outcome.Message}, nil
 	}
 	id, _ := strconv.ParseInt(outcome.Action.Target, 10, 64)
 	out := actionOutput{Status: "deleted", Message: "The user confirmed and the " + noun + " was deleted."}

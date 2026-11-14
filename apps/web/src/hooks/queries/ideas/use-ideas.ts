@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/auth-client";
+import { ApiRequestError, apiRequest } from "@/lib/auth-client";
 import type { IdeaRun, IdeasPageData } from "@/lib/ideas";
 import { isRunSettled } from "@/lib/ideas";
 
@@ -24,7 +24,7 @@ export function useIdeas(workspaceId: string | undefined, enabled = true) {
       const result = await apiRequest<IdeasPageData>(
         ideasPath("", workspaceId),
       );
-      if (result.error) throw new Error(result.error.message);
+      if (result.error) throw new ApiRequestError(result.error);
       return { ...result.data, ideas: result.data.ideas ?? [] };
     },
     refetchInterval: (query) =>
@@ -38,7 +38,7 @@ export function useIdeaRun(runId: string | undefined) {
     enabled: !!runId,
     queryFn: async () => {
       const result = await apiRequest<IdeaRun>(`/ideas/runs/${runId}`);
-      if (result.error) throw new Error(result.error.message);
+      if (result.error) throw new ApiRequestError(result.error);
       return result.data;
     },
     refetchInterval: (query) =>

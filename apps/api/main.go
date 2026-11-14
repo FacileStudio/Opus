@@ -172,8 +172,10 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		deletions:  kits.deletions,
 	})
 	shared := newDomain(db, hub, publisher)
-	mcpService, err := newMCP(context.Background(), kits, appEnv, mcpDomain(db, workspaces, shared), appLogger)
+	mcpCtx, stopMCP := context.WithCancel(context.Background())
+	mcpService, err := newMCP(mcpCtx, kits, appEnv, mcpDomain(db, workspaces, shared), appLogger)
 	if err != nil {
+		stopMCP()
 		stopSpaces()
 		cleanup()
 		return nil, err
@@ -202,7 +204,7 @@ func createApiServer(db *gorm.DB, sqlDB sqlPinger, appEnv *env.Config, appLogger
 		WriteTimeout:      15 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
-	return &serverBundle{server: srv, cleanup: func() { stopSpaces(); cleanup() }}, nil
+	return &serverBundle{server: srv, cleanup: func() { stopMCP(); stopSpaces(); cleanup() }}, nil
 }
 
 func main() {

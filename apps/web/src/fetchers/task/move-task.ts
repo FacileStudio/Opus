@@ -1,4 +1,5 @@
 import { client } from "@opus/libs";
+import { apiErrorMessage } from "@/lib/auth-client";
 
 async function moveTask({
   taskId,
@@ -21,10 +22,7 @@ async function moveTask({
     let message: string;
     try {
       const json = await response.json();
-      message =
-        (json as { message?: string; error?: string }).message ||
-        (json as { error?: string }).error ||
-        JSON.stringify(json);
+      message = apiErrorMessage(json, `API error ${response.status}`);
     } catch {
       message =
         (await response.text().catch(() => "")) ||

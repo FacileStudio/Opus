@@ -16,6 +16,7 @@ import (
 // nothing otherwise. The verifier runs Registre discovery here, so a wrong
 // issuer fails at boot like the OIDC kit does. A person's first MCP call
 // creates their account through the OIDC kit, as a first web login would.
+// Resolved and expired pending actions are pruned until ctx ends.
 func newMCP(ctx context.Context, kits *authKits, appEnv *env.Config, tools mcp.Domain, appLogger *slog.Logger) (*mcp.Service, error) {
 	if appEnv.OIDC == nil || appEnv.MCP.Resource == "" {
 		return nil, nil
@@ -36,17 +37,23 @@ func newMCP(ctx context.Context, kits *authKits, appEnv *env.Config, tools mcp.D
 	if err != nil {
 		return nil, err
 	}
-	appLogger.Info("mcp server on", slog.String("resource", appEnv.MCP.Resource))
-	return mcp.NewService(tools, mcp.Config{
+	pending := mcpkit.PostgresPending{DB: sqlDB}
+	service, err := mcp.NewService(tools, mcp.Config{
 		Resource: appEnv.MCP.Resource,
 		Issuer:   appEnv.OIDC.Issuer,
 		Version:  version,
 		Origins:  appEnv.CORSAllowedOrigins,
 		StateKey: appEnv.MCP.StateKey,
 		Verifier: verifier,
-		Pending:  mcpkit.PostgresPending{DB: sqlDB},
+		Pending:  pending,
 		Logger:   appLogger,
 	})
+	if err != nil {
+		return nil, err
+	}
+	go mcpkit.KeepPruned(ctx, pending, 0, 0, appLogger)
+	appLogger.Info("mcp server on", slog.String("resource", appEnv.MCP.Resource))
+	return service, nil
 }
 
 // mcpDomain is the shared services the MCP tools call.

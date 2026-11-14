@@ -36,20 +36,20 @@ func (t *toolset) searchTasks(ctx context.Context, req *sdk.CallToolRequest, in 
 	if err != nil {
 		return nil, searchOutput{}, err
 	}
-	var at position
-	if err := mcpkit.DecodeCursor(in.Cursor, &at); err != nil || at.Offset < 0 {
-		return nil, searchOutput{}, mcpkit.ErrCursor
+	offset, err := mcpkit.Offset(in.Cursor)
+	if err != nil {
+		return nil, searchOutput{}, err
 	}
 	q, err := searchQuery(in, userID)
 	if err != nil {
 		return nil, searchOutput{}, err
 	}
-	q.Offset, q.Limit = at.Offset, clamp(in.Limit, defaultTaskLimit, maxTaskLimit)
+	q.Offset, q.Limit = offset, clamp(in.Limit, defaultTaskLimit, maxTaskLimit)
 	records, total, err := t.domain.Tasks.Search(ctx, userID, q)
 	if err != nil {
 		return nil, searchOutput{}, mcpkit.Failure(err, hintProject)
 	}
-	return nil, t.taskPage(ctx, records, total, at.Offset, full), nil
+	return nil, t.taskPage(ctx, records, total, offset, full), nil
 }
 
 // searchQuery turns the tool input into a task search.
@@ -128,10 +128,7 @@ func (t *toolset) taskPage(ctx context.Context, records []task.TaskRecord, total
 	keep := mcpkit.FitCount(len(summaries), func(n int) int {
 		return mcpkit.EncodedSize(searchOutput{Tasks: summaries[:n], Total: total, NextCursor: "next-cursor-placeholder"})
 	})
-	out := searchOutput{Tasks: summaries[:keep], Total: total}
-	if int64(offset+keep) < total {
-		out.NextCursor = mcpkit.EncodeCursor(position{Offset: offset + keep})
-	}
+	out := searchOutput{Tasks: summaries[:keep], Total: total, NextCursor: mcpkit.Cursor(offset+keep, int(total))}
 	if full {
 		out.Note = searchTruncated
 	}
@@ -144,9 +141,9 @@ func (t *toolset) readTask(ctx context.Context, req *sdk.CallToolRequest, in rea
 	if err != nil {
 		return nil, taskOutput{}, err
 	}
-	var at position
-	if err := mcpkit.DecodeCursor(in.CommentsCursor, &at); err != nil || at.Offset < 0 {
-		return nil, taskOutput{}, mcpkit.ErrCursor
+	offset, err := mcpkit.Offset(in.CommentsCursor)
+	if err != nil {
+		return nil, taskOutput{}, err
 	}
 	taskID := in.TaskID
 	if taskID == 0 {
@@ -159,7 +156,7 @@ func (t *toolset) readTask(ctx context.Context, req *sdk.CallToolRequest, in rea
 		return nil, taskOutput{}, mcpkit.Failure(err, hintTask)
 	}
 	out := t.fullOf(ctx, *tk)
-	if err := t.attachComments(ctx, userID, &out, at.Offset); err != nil {
+	if err := t.attachComments(ctx, userID, &out, offset); err != nil {
 		return nil, taskOutput{}, err
 	}
 	return nil, out, nil

@@ -16,12 +16,6 @@ const (
 	maxProjectLimit     = 100
 )
 
-// position is the cursor of a paged list: how many items earlier pages
-// returned.
-type position struct {
-	Offset int `json:"o"`
-}
-
 // listProjects is opus_list_projects.
 func (t *toolset) listProjects(ctx context.Context, req *sdk.CallToolRequest, in projectsInput) (*sdk.CallToolResult, projectsOutput, error) {
 	ctx, userID, err := t.caller(ctx, req)
@@ -32,19 +26,19 @@ func (t *toolset) listProjects(ctx context.Context, req *sdk.CallToolRequest, in
 	if err != nil {
 		return nil, projectsOutput{}, err
 	}
-	var at position
-	if err := mcpkit.DecodeCursor(in.Cursor, &at); err != nil || at.Offset < 0 {
-		return nil, projectsOutput{}, mcpkit.ErrCursor
+	offset, err := mcpkit.Offset(in.Cursor)
+	if err != nil {
+		return nil, projectsOutput{}, err
 	}
 	found, err := t.projectsIn(ctx, userID, in.WorkspaceID, in.IncludeArchived)
 	if err != nil {
 		return nil, projectsOutput{}, err
 	}
 	found = matchingProjects(found, in.Query)
-	if at.Offset > len(found) {
+	if offset > len(found) {
 		return nil, projectsOutput{}, mcpkit.ErrCursor
 	}
-	rest := found[at.Offset:min(at.Offset+clamp(in.Limit, defaultProjectLimit, maxProjectLimit), len(found))]
+	rest := found[offset:min(offset+clamp(in.Limit, defaultProjectLimit, maxProjectLimit), len(found))]
 	summaries := make([]projectSummary, 0, len(rest))
 	for _, p := range rest {
 		s, err := t.projectSummary(ctx, userID, p, full)
@@ -56,11 +50,7 @@ func (t *toolset) listProjects(ctx context.Context, req *sdk.CallToolRequest, in
 	keep := mcpkit.FitCount(len(summaries), func(n int) int {
 		return mcpkit.EncodedSize(projectsOutput{Projects: summaries[:n], Total: len(found), NextCursor: "next-cursor-placeholder"})
 	})
-	out := projectsOutput{Projects: summaries[:keep], Total: len(found)}
-	if at.Offset+keep < len(found) {
-		out.NextCursor = mcpkit.EncodeCursor(position{Offset: at.Offset + keep})
-	}
-	return nil, out, nil
+	return nil, projectsOutput{Projects: summaries[:keep], Total: len(found), NextCursor: mcpkit.Cursor(offset+keep, len(found))}, nil
 }
 
 // projectsIn lists the projects of one workspace, or of every workspace of

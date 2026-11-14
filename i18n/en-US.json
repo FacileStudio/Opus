@@ -1982,6 +1982,10 @@
 		"error": {
 			"title": "The requests did not load",
 			"retry": "Try again"
+		},
+		"reauth": {
+			"title": "Sign in again to confirm",
+			"description": "Only a session you opened in this browser can confirm or dismiss these requests. Sign in again here in your browser. The mobile and desktop apps cannot confirm them."
 		}
 	}
 }

@@ -7825,6 +7825,19 @@
 						}
 					},
 					"required": ["title", "retry"]
+				},
+				"reauth": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"title": {
+							"type": "string"
+						},
+						"description": {
+							"type": "string"
+						}
+					},
+					"required": ["title", "description"]
 				}
 			},
 			"required": [
@@ -7840,7 +7853,8 @@
 				"stateHelp",
 				"done",
 				"empty",
-				"error"
+				"error",
+				"reauth"
 			]
 		}
 	},

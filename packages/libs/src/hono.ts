@@ -19,14 +19,9 @@ export const client = hc<AppType>(apiUrl, {
     const headers = new Headers(init?.headers);
     headers.set("Content-Type", "application/json");
     headers.set("X-Opus-Window-Id", windowId);
-    // porte reads the session cookie before the Authorization header and
-    // refuses a cookie-authenticated mutating request without X-Facile-CSRF.
+    // porte refuses a cookie-authenticated mutating request without X-Facile-CSRF.
     if (method !== "GET" && method !== "HEAD") {
       headers.set("X-Facile-CSRF", "1");
-    }
-    const bearer = localStorage.getItem("opus.access_token");
-    if (bearer) {
-      headers.set("Authorization", `Bearer ${bearer}`);
     }
     return fetch(input, {
       ...init,

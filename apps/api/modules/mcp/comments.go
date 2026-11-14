@@ -44,9 +44,7 @@ func (t *toolset) attachComments(ctx context.Context, userID int64, out *taskOut
 		return mcpkit.EncodedSize(probe)
 	})
 	out.Comments, out.CommentsTotal = rendered[:keep], len(comments)
-	if offset+keep < len(comments) {
-		out.CommentsNextCursor = mcpkit.EncodeCursor(position{Offset: offset + keep})
-	}
+	out.CommentsNextCursor = mcpkit.Cursor(offset+keep, len(comments))
 	return nil
 }
 
