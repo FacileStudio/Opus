@@ -64,21 +64,27 @@
 			</div>
 		</section>
 
-		<section id="features" class="mx-auto max-w-5xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20">
-			<h2 class="text-center font-fc-title text-fc-2xl font-bold tracking-tight sm:text-fc-3xl">
-				{t('features.title')}
-			</h2>
-			<div class="mt-10 grid gap-4 sm:grid-cols-2">
+		<section
+			id="features"
+			class="mx-auto grid max-w-5xl scroll-mt-20 gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-[2fr_3fr] md:gap-16"
+		>
+			<div>
+				<h2 class="font-fc-title text-fc-2xl font-bold tracking-tight sm:text-fc-3xl">{t('features.title')}</h2>
+				<p class="mt-3 text-fc-fg-muted">{t('features.text')}</p>
+			</div>
+			<ul class="flex flex-col gap-7">
 				{#each features as feature (feature.icon)}
-					<div class="rounded-fc-lg bg-fc-component p-6">
-						<span class="flex size-10 items-center justify-center rounded-fc-md bg-fc-surface">
+					<li class="flex gap-4">
+						<span class="flex size-10 shrink-0 items-center justify-center rounded-fc-md bg-fc-surface">
 							<Icon icon={feature.icon} size={20} />
 						</span>
-						<h3 class="mt-4 text-fc-md font-bold">{feature.title}</h3>
-						<p class="mt-1.5 text-fc-sm text-fc-fg-muted">{feature.text}</p>
-					</div>
+						<div>
+							<h3 class="text-fc-md font-bold">{feature.title}</h3>
+							<p class="mt-1 text-fc-sm text-fc-fg-muted">{feature.text}</p>
+						</div>
+					</li>
 				{/each}
-			</div>
+			</ul>
 		</section>
 
 		<section id="download" class="mx-auto max-w-4xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20">
