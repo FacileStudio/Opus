@@ -73,7 +73,7 @@
 			<ForDevelopers
 				rows={developers()}
 				description={t('dev.text')}
-				selfHostHref="https://github.com/FacileStudio/Opus/blob/main/docs/deployment.md"
+				selfHostHref={t('dev.selfHost')}
 			/>
 		</div>
 

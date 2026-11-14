@@ -52,7 +52,7 @@ export const de: Messages = {
 	'with.text': 'Opus gibt Ihre Aufgaben an die anderen Facile-Apps weiter.',
 	'with.sablier': 'Projekte, Aufgaben und Zeiten synchron.',
 	'with.agenda': 'Eine Aufgabe mit Datum erscheint im Kalender.',
-	'with.toile': 'Eine Haftnotiz vom Board wird zur Aufgabe.',
+	'with.toile': 'Fügen Sie eine Opus-Aufgabe in Toile ein: Sie wird zur Karte auf dem Board.',
 	'with.bulle': 'Schlägt Ideen vor und legt Aufgaben an.',
 	'plan.title': 'Was Opus Ihnen bietet',
 	'plan.included': 'Ganz Opus',
@@ -63,6 +63,7 @@ export const de: Messages = {
 	'dev.cli': 'Aufgaben im Terminal anlegen, auflisten und schließen.',
 	'dev.api': 'Eine REST-API für Ihre Projekte, Aufgaben und Kommentare.',
 	'dev.mcp': 'Verbinden Sie einen KI-Assistenten mit Ihren Aufgaben unter opus.facile.studio/mcp.',
+	'dev.selfHost': 'https://suite.facile.studio/de/auto-hebergement',
 	'dev.source':
 		'Der Code ist offen. Verknüpfen Sie ein GitHub-Repository, und ein gemergter Pull Request setzt seine Aufgabe auf Erledigt.',
 	'downloads.title': 'Opus herunterladen',

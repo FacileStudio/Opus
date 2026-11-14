@@ -58,8 +58,8 @@ importers:
         specifier: github:FacileStudio/mise-en-scene#v0.2.2
         version: https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e(svelte@5.57.3)
       '@facile/muse':
-        specifier: github:FacileStudio/muse#v0.24.0
-        version: https://codeload.github.com/FacileStudio/muse/tar.gz/6f97318a6eb950f3bb000dc3549a1ddb648d59be(svelte@5.57.3)(tailwindcss@4.3.5)
+        specifier: github:FacileStudio/muse#v0.25.1
+        version: https://codeload.github.com/FacileStudio/muse/tar.gz/47a79f53b90be235ff25e2ff67116907ff2fb306(svelte@5.57.3)(tailwindcss@4.3.5)
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: ^3.0.10
@@ -1035,9 +1035,9 @@ packages:
     peerDependencies:
       svelte: ^5.29.0
 
-  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/6f97318a6eb950f3bb000dc3549a1ddb648d59be':
-    resolution: {tarball: https://codeload.github.com/FacileStudio/muse/tar.gz/6f97318a6eb950f3bb000dc3549a1ddb648d59be}
-    version: 0.24.0
+  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/47a79f53b90be235ff25e2ff67116907ff2fb306':
+    resolution: {tarball: https://codeload.github.com/FacileStudio/muse/tar.gz/47a79f53b90be235ff25e2ff67116907ff2fb306}
+    version: 0.25.1
     peerDependencies:
       svelte: ^5.0.0
       tailwindcss: ^4.0.0
@@ -5995,7 +5995,7 @@ snapshots:
     dependencies:
       svelte: 5.57.3
 
-  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/6f97318a6eb950f3bb000dc3549a1ddb648d59be(svelte@5.57.3)(tailwindcss@4.3.5)':
+  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/47a79f53b90be235ff25e2ff67116907ff2fb306(svelte@5.57.3)(tailwindcss@4.3.5)':
     dependencies:
       gsap: 3.15.1
       svelte: 5.57.3

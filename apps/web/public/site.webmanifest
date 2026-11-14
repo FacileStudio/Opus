@@ -1,7 +1,7 @@
 {
 	"name": "Opus",
 	"short_name": "Opus",
-	"description": "Kanban boards, linked tasks and instant search. Nothing you do not need, nothing that slows you down.",
+	"description": "Tasks, boards and timelines shared live. Time spent comes in from Sablier and your deadlines show up in Agenda. Free to start.",
 	"icons": [
 		{
 			"src": "/icon-192.png",
