@@ -4,6 +4,22 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.39.0] - 2026-11-14
+
+### Added
+
+- A public landing page at `/`, built as a SvelteKit site in `apps/site` with muse v0.23.0: a hero with an animated board demo (mise-en-scene v0.2.1) where a task moves to Done, four feature cards, and the CLI install commands in muse's `DownloadSection`. Copy in English, French, Spanish and German.
+- A `/downloads` page with every install command for the Opus CLI: `install.sh`, Homebrew and `facile install opus`.
+
+### Changed
+
+- The image ships the site next to the React app. The React shell is renamed `app.html`; the Go binary serves the site for `/` and `/downloads` and the React app for every other path. A signed-in visitor of `/` goes straight to `/dashboard`.
+- The web client uses muse's Magnetik for body and headings and the system monospace stack. Goga, Cal Sans and Paper Mono are removed.
+
+### Removed
+
+- The React landing page and its translations, except the footer copyright.
+
 ## [2.38.1] - 2026-11-13
 
 ### Security
