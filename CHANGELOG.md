@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.41.0] - 2026-11-14
+
+### Added
+
+- The landing shows three demo tiles under the board: stretching a Gantt bar, searching tasks and comments, and a merged pull request closing its task.
+
+### Changed
+
+- The landing site takes mise-en-scene v0.2.2 and drops it from Vite's optimizeDeps exclude list.
+
 ## [2.40.2] - 2026-11-14
 
 ### Fixed
