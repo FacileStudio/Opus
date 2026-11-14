@@ -9,6 +9,7 @@ import (
 
 	"github.com/FacileStudio/porte"
 	troncenv "github.com/FacileStudio/tronc/env"
+	mcpkit "github.com/FacileStudio/tronc/mcp"
 	"github.com/joho/godotenv"
 )
 
@@ -116,8 +117,7 @@ func mcpConfig(oidc *OIDCConfig) MCPConfig {
 	if oidc == nil || resource == "" {
 		return MCPConfig{}
 	}
-	key := sha256.Sum256([]byte("opus-mcp-state:" + oidc.ClientSecret))
-	return MCPConfig{Resource: resource, StateKey: key[:]}
+	return MCPConfig{Resource: resource, StateKey: mcpkit.StateKey("opus", oidc.ClientSecret)}
 }
 
 func parseOIDCConfig(corsOrigins []string) (*OIDCConfig, error) {

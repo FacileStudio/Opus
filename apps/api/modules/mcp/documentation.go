@@ -23,7 +23,7 @@ func Documentation() documentation.Module {
 // pendingRoutes documents the three confirm page routes.
 func pendingRoutes() []documentation.Route {
 	return mcpkit.PendingRoutes[PendingItem](mcpkit.PendingDoc{
-		Auth: "session cookie or bearer token",
+		Auth: "the person's own browser session cookie; bearer tokens, CLI sessions and API keys get 403",
 		List: "Open actions, newest first, with their task or project as it is now. state is ready, " +
 			"changed (edited after the request, so it cannot be confirmed) or missing.",
 		Confirm: "Deletes the task or the project, once. A target edited since the request is refused with " +

@@ -45,7 +45,8 @@ func (t *toolset) reads() []mcpkit.Tool {
 	}
 }
 
-// writes are the five write tools that change nothing irreversibly.
+// writes are the five write tools that need no confirmation. The two
+// updates overwrite fields, so they are marked destructive.
 func (t *toolset) writes() []mcpkit.Tool {
 	return []mcpkit.Tool{
 		mcpkit.NewTool(mcpkit.ToolSpec{
@@ -59,7 +60,7 @@ func (t *toolset) writes() []mcpkit.Tool {
 			Description: "Change a task: only the fields you set change. Set status to move it on the board (done " +
 				"to close it), assignee to me, a user_id or none, due or start to a date or empty to clear, labels " +
 				"to the full new set, project_id to move it to another project of the workspace.",
-			Annotations: &mcpkit.Annotations{Idempotent: true},
+			Annotations: &mcpkit.Annotations{Destructive: true, Idempotent: true},
 		}, t.updateTask),
 		mcpkit.NewTool(mcpkit.ToolSpec{
 			Name: toolCommentTask, Title: "Comment on a task",
@@ -77,7 +78,7 @@ func (t *toolset) writes() []mcpkit.Tool {
 			Name: toolUpdateProject, Title: "Update a project",
 			Description: "Rename a project, change its description, or archive it (archived true) and restore it " +
 				"(archived false). Archiving hides it and its tasks from lists and keeps everything.",
-			Annotations: &mcpkit.Annotations{Idempotent: true},
+			Annotations: &mcpkit.Annotations{Destructive: true, Idempotent: true},
 		}, t.updateProject),
 	}
 }
