@@ -11,13 +11,13 @@ Simplicity first. Do not add features, refactors or improvements beyond what was
 
 - **API** (`apps/api`): Go 1.26.11, chi v5.5.0, GORM over PostgreSQL 16, ordered goose SQL
   migrations embedded in the binary
-- **Auth**: [`porte`](https://github.com/FacileStudio/porte) v0.19.0. `porte/kit` owns the user
+- **Auth**: [`porte`](https://github.com/FacileStudio/porte) v0.20.0. `porte/kit` owns the user
   store and erasure, `porte/oidc` signs people in through Registre, `porte/directory` v0.5.0
-  syncs Registre spaces and deletion notices, `porte/mcpauth` v0.2.0 guards `/mcp`,
-  `porte/forfait` v0.1.1 holds plan entitlements
-- **Chassis**: [`tronc`](https://github.com/FacileStudio/tronc) v0.22.0 supplies `env`, `httpx`,
+  syncs Registre spaces and deletion notices, `porte/mcpauth` v0.3.0 guards `/mcp`,
+  `porte/forfait` v0.1.3 holds plan entitlements
+- **Chassis**: [`tronc`](https://github.com/FacileStudio/tronc) v0.23.0 supplies `env`, `httpx`,
   `middleware`, `logger`, `health`, `healthcheck`, `spa`, `apiref` and `mcp`;
-  `tronc/testdb` v0.1.1 gives tests a real Postgres
+  `tronc/testdb` v0.1.2 gives tests a real Postgres
 - **Events**: [`antenne-client/go`](https://github.com/FacileStudio/antenne-client) v1.1.0, with
   its durable outbox (`outbox`), envelope types (`envelope`) and channel catalog (`catalog`)
 - **Client** (`apps/web`): React 19, Vite 7, TanStack Router (file-based) and Query, Tailwind
