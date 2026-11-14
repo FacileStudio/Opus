@@ -193,6 +193,11 @@ installed on the repository (POST).
 | GET | `/ideas/runs/{run}` | A run's status |
 | POST | `/ideas/runs/{run}/approvals/{call}` | Approve or refuse a step |
 
+The Ideas routes take the active workspace as `?workspaceId=`. None, or the person's personal
+workspace, means their own scope. A workspace they are not a member of answers 404, a shared one not
+linked to Registre yet 412, a malformed id 400 and a database failure 500; none of them falls back to
+personal ideas.
+
 ## MCP
 
 The MCP server lives at the root. It is on only when `OIDC_ISSUER` and `MCP_RESOURCE` are set.
@@ -201,14 +206,16 @@ The MCP server lives at the root. It is on only when `OIDC_ISSUER` and `MCP_RESO
 |---|---|---|---|
 | POST | `/mcp` | Registre access token bound to `MCP_RESOURCE` | Model Context Protocol, Streamable HTTP, stateless |
 | GET | `/.well-known/oauth-protected-resource/mcp` | none | RFC 9728 metadata: the resource, Registre as the authorization server, `opus.read` and `opus.write` |
-| GET | `/api/mcp/pending` | session | Deletes an MCP client asked for and could not confirm with you |
-| POST | `/api/mcp/pending/{id}/confirm` | session | Run one, once. 412 when the target changed since the request |
-| POST | `/api/mcp/pending/{id}/dismiss` | session | Close one without running it |
+| GET | `/api/mcp/pending` | own browser session | Deletes an MCP client asked for and could not confirm with you |
+| POST | `/api/mcp/pending/{id}/confirm` | own browser session | Run one, once. 412 when the target changed since the request |
+| POST | `/api/mcp/pending/{id}/dismiss` | own browser session | Close one without running it |
 
 `GET /mcp` answers 405. A request without a valid token gets 401 with a `WWW-Authenticate`
 header naming the metadata; a write tool called with only `opus.read` gets 403
-`insufficient_scope`. A foreign browser `Origin` gets 403. Delegated tokens cannot confirm pending
-actions. The tools are listed in the [README](../README.md#mcp).
+`insufficient_scope`. A foreign browser `Origin` gets 403. Only the person's own browser session
+cookie reaches the confirm page routes (porte `mcpauth.RequireOwnSession`): a bearer token, a CLI
+session, an API key or a delegated token gets 403. A cookie issued before porte v0.20.0 is refused
+there until the person signs in again. The tools are listed in the [README](../README.md#mcp).
 
 ## WebSocket
 

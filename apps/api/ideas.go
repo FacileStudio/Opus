@@ -16,6 +16,8 @@ import (
 	"github.com/FacileStudio/porte/exchange"
 	"github.com/FacileStudio/porte/forfait"
 	"github.com/FacileStudio/tronc/bulle"
+	"github.com/FacileStudio/tronc/errors"
+	"github.com/FacileStudio/tronc/httpjson"
 	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
 )
@@ -78,13 +80,13 @@ func (i *ideas) mount(api chi.Router, authService middleware.Authenticator) {
 		Scopes:   []string{"bulle.read", "bulle.write"},
 	})
 	api.Group(func(r chi.Router) {
-		r.Use(middleware.RequireAuth(authService))
+		r.Use(middleware.RequireAuth(authService), i.resolve)
 		err := bulle.MountIdeas(r, bulle.Options{
 			App:         ideasApp,
 			URL:         i.env.BulleURL,
 			TokenSource: source.Token,
 			Forget:      source.Forget,
-			Space:       i.space,
+			Space:       activeSpace,
 			AIAccess:    i.aiAccess,
 			UpgradeURL:  strings.TrimSuffix(i.env.OIDC.Issuer, "/") + "/spaces",
 		})
@@ -94,27 +96,87 @@ func (i *ideas) mount(api chi.Router, authService middleware.Authenticator) {
 	})
 }
 
-func (i *ideas) space(r *http.Request) string {
+// spaceKey holds, in a request's context, the Registre space resolved from
+// its workspaceId: empty for the person's own scope.
+type spaceKey struct{}
+
+// resolve answers the error of an unusable workspaceId, and otherwise passes
+// the request on with its Registre space resolved once.
+func (i *ideas) resolve(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		scoped, err := i.scoped(r)
+		if err != nil {
+			httpjson.WriteError(w, err)
+			return
+		}
+		next.ServeHTTP(w, scoped)
+	})
+}
+
+// scoped is r carrying the Registre space of its workspaceId.
+func (i *ideas) scoped(r *http.Request) (*http.Request, error) {
+	spaceID, err := i.space(r)
+	if err != nil {
+		return nil, err
+	}
+	return r.WithContext(context.WithValue(r.Context(), spaceKey{}, spaceID)), nil
+}
+
+// activeSpace is the Registre space resolve put on r, empty for personal.
+func activeSpace(r *http.Request) string {
+	spaceID, _ := r.Context().Value(spaceKey{}).(string)
+	return spaceID
+}
+
+// space maps the workspaceId query to the Registre space it mirrors. No
+// workspaceId, or the caller's personal workspace, is the personal scope.
+// A workspace the caller is not a member of is not found, and a shared one
+// not linked to Registre yet is refused: neither falls back to personal.
+func (i *ideas) space(r *http.Request) (string, error) {
 	identity, ok := porte.From(r.Context())
 	if !ok {
-		return ""
+		return "", errors.Unauthorized("missing auth token")
 	}
-	workspaceID, err := strconv.ParseInt(r.URL.Query().Get(workspaceIDParam), 10, 64)
+	raw := r.URL.Query().Get(workspaceIDParam)
+	if raw == "" {
+		return "", nil
+	}
+	workspaceID, err := strconv.ParseInt(raw, 10, 64)
 	if err != nil || workspaceID <= 0 {
-		return ""
+		return "", errors.Invalid("invalid workspaceId")
 	}
-	var spaceID *string
-	err = i.db.WithContext(r.Context()).
+	var row workspaceLink
+	found := i.db.WithContext(r.Context()).
 		Model(&schemas.Workspace{}).
-		Select("workspaces.registre_space_id").
+		Select("workspaces.registre_space_id, workspaces.personal_owner_id").
 		Joins("JOIN workspace_members ON workspace_members.workspace_id = workspaces.id").
 		Where("workspaces.id = ? AND workspace_members.user_id = ?", workspaceID, identity.UserID).
 		Limit(1).
-		Scan(&spaceID).Error
-	if err != nil || spaceID == nil {
-		return ""
+		Scan(&row)
+	if found.Error != nil {
+		return "", errors.Internal("failed to load the workspace", found.Error)
 	}
-	return *spaceID
+	return row.space(found.RowsAffected > 0)
+}
+
+// workspaceLink is what space reads of a workspace.
+type workspaceLink struct {
+	RegistreSpaceID *string
+	PersonalOwnerID *int64
+}
+
+// space is the Registre space of a workspace the caller is a member of
+// (found), or why it has none.
+func (w workspaceLink) space(found bool) (string, error) {
+	switch {
+	case !found:
+		return "", errors.NotFound("workspace not found")
+	case w.PersonalOwnerID != nil:
+		return "", nil
+	case w.RegistreSpaceID == nil || *w.RegistreSpaceID == "":
+		return "", errors.Failed("this workspace is not linked to Registre yet, so Bulle cannot suggest ideas for it")
+	}
+	return *w.RegistreSpaceID, nil
 }
 
 // aiAccess reports whether the active space's plan, or the person's own,
@@ -124,7 +186,7 @@ func (i *ideas) aiAccess(r *http.Request) bool {
 	if !i.synced.Load() {
 		return false
 	}
-	if spaceID := i.space(r); spaceID != "" {
+	if spaceID := activeSpace(r); spaceID != "" {
 		return i.plans.Enabled(forfait.Scope{SpaceID: spaceID}, aiAccessKey)
 	}
 	identity, ok := porte.From(r.Context())
