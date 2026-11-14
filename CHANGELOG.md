@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.42.2] - 2026-11-14
+
+### Fixed
+
+- Landing pricing: "Start for free" and every "Choose" button open the Facile sign-up page in the visitor's language (`https://sso.facile.studio/signup?lang=…`) instead of the Spaces page, which asked a signed-out visitor to sign in. The landing takes muse v0.26.0.
+
 ## [2.42.1] - 2026-11-14
 
 ### Fixed
