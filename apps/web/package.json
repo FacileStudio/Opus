@@ -105,6 +105,7 @@
 		"zustand": "^5.0.12"
 	},
 	"devDependencies": {
+		"@facile/muse": "github:FacileStudio/muse#v0.23.0",
 		"@opus/libs": "workspace:*",
 		"@tailwindcss/postcss": "^4.2.1",
 		"@testing-library/jest-dom": "^6.9.1",
