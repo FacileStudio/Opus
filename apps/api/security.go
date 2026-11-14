@@ -15,15 +15,18 @@ var embedFrames = []string{"https://www.youtube.com", "https://www.youtube-nocoo
 // visionOrigin serves the Vision tracker that index.html loads on the production host.
 const visionOrigin = "https://vision.facile.studio"
 
+// catalogOrigin serves the public plan catalog the landing's pricing block fetches.
+const catalogOrigin = "https://api-ardoise.facile.studio"
+
 // securityConfig extends tronc's default security headers with what the built
 // client needs: the inline scripts of its pages, which script-src 'self' would
-// otherwise block, the Vision tracker's origin, the editor's embed frames, and
-// the S3 origin presigned uploads go to. A client directory that cannot be hashed is logged and leaves
+// otherwise block, the Vision tracker's origin, the plan catalog's origin, the
+// editor's embed frames, and the S3 origin presigned uploads go to. A client directory that cannot be hashed is logged and leaves
 // the default script policy, which only reports.
 func securityConfig(clientDir string, s3 *storage.S3Config, appLogger *slog.Logger) troncmiddleware.SecurityConfig {
-	sources := map[string][]string{"frame-src": embedFrames, "script-src": {visionOrigin}}
+	sources := map[string][]string{"frame-src": embedFrames, "script-src": {visionOrigin}, "connect-src": {catalogOrigin}}
 	if origin := s3Origin(s3); origin != "" {
-		sources["connect-src"] = []string{origin}
+		sources["connect-src"] = append(sources["connect-src"], origin)
 		sources["img-src"] = []string{origin}
 	}
 	if spa.Available(clientDir) {
