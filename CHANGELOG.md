@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.41.1] - 2026-11-14
+
+### Changed
+
+- The landing lists the four features beside their heading instead of a second card grid, so the demo tiles and the features no longer stack two grids.
+
+### Fixed
+
+- The pull request tile crossfades its status, badge and linked row at a fixed size, so nothing jumps when the pull request merges.
+
 ## [2.41.0] - 2026-11-14
 
 ### Added
