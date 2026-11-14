@@ -19,7 +19,11 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { ApiRequestError, apiRequest } from "@/lib/auth-client";
 import { relativeTime } from "@/lib/ideas";
-import { clientName, type PendingAction } from "@/lib/pending";
+import {
+  clientName,
+  isOwnSessionRefusal,
+  type PendingAction,
+} from "@/lib/pending";
 
 const pendingSearchSchema = z.object({
   action: z.string().optional(),
@@ -31,8 +35,6 @@ export const Route = createFileRoute("/_layout/_authenticated/pending")({
 });
 
 const QUERY_KEY = ["mcp", "pending"] as const;
-
-const NOT_OWN_SESSION = 403;
 
 function usePending() {
   return useQuery({
@@ -58,8 +60,7 @@ function PendingPage() {
     text: string;
     reauth?: boolean;
   } | null>(null);
-  const reauth =
-    error instanceof ApiRequestError && error.status === NOT_OWN_SESSION;
+  const reauth = error instanceof ApiRequestError && isOwnSessionRefusal(error);
 
   const answer = async (item: PendingAction, verb: "confirm" | "dismiss") => {
     setBusy(item.id);
@@ -70,7 +71,7 @@ function PendingPage() {
       { mutation: true },
     );
     setBusy(null);
-    if (result.error?.status === NOT_OWN_SESSION) {
+    if (isOwnSessionRefusal(result.error)) {
       setNotice({ tone: "error", text: t("reauth.description"), reauth: true });
     } else if (result.error) {
       setNotice({ tone: "error", text: result.error.message });

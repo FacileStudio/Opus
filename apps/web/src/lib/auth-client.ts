@@ -12,8 +12,8 @@ import { roleHas } from "./permissions";
  *
  * Transport follows porte: the session cookie is HttpOnly (sent automatically
  * with credentials: include), and every cookie-authenticated mutation carries
- * the X-Facile-CSRF header (any value). The bearer token from {token, user} is
- * kept and sent when present; bearer requests are exempt from the CSRF rule.
+ * the X-Facile-CSRF header (any value). The client never sends a bearer
+ * token: the cookie is its only credential.
  * Ids are normalised to strings in both directions: the API answers int64 and
  * accepts a decimal string wherever a request body carries an id (Go side:
  * internal/wireid).
@@ -79,6 +79,7 @@ export type ApiToken = {
 export type ApiError = {
   message: string;
   status?: number;
+  code?: string;
 };
 
 /**
@@ -95,14 +96,22 @@ export function apiErrorMessage(body: unknown, fallback: string): string {
   return fallback;
 }
 
+/** Reads the machine code out of an API error body, if it carries one. */
+export function apiErrorCode(body: unknown): string | undefined {
+  const code = (body as { error?: { code?: unknown } })?.error?.code;
+  return typeof code === "string" && code ? code : undefined;
+}
+
 /** An API error thrown from a query, keeping the HTTP status for the UI. */
 export class ApiRequestError extends Error {
   status: number | undefined;
+  code: string | undefined;
 
   constructor(error: ApiError) {
     super(error.message);
     this.name = "ApiRequestError";
     this.status = error.status;
+    this.code = error.code;
   }
 }
 
@@ -199,13 +208,15 @@ async function request<T>(
   }
   if (!response.ok) {
     let message = response.statusText || "Request failed";
+    let code: string | undefined;
     try {
       const body = await response.json();
       message = apiErrorMessage(body, message);
+      code = apiErrorCode(body);
     } catch {
       // non-JSON error body
     }
-    return { data: null, error: { message, status: response.status } };
+    return { data: null, error: { message, status: response.status, code } };
   }
   if (response.status === 204) {
     return { data: undefined as T, error: null };
