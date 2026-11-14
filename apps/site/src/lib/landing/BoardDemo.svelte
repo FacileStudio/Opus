@@ -1,88 +1,86 @@
 <script lang="ts">
-	import { type Act, Bar, Cursor, cursorAt, grow, Roll, Stage, Window } from '@facile/mise-en-scene';
-	import { Icon, icons } from '@facile/muse';
+	import { type Act, Bar, Cursor, cursorAt, type Point, Roll, Stage, Window } from '@facile/mise-en-scene';
 	import { tick } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import { t } from '$lib/i18n';
+	import AgendaPeek from './AgendaPeek.svelte';
+	import BoardCard from './BoardCard.svelte';
+	import BoardSide from './BoardSide.svelte';
+	import { drag, idleMove, LEA_COLOR, leave, reach } from './board';
+	import LiveCursor from './LiveCursor.svelte';
 
-	type Phase = 'idle' | 'lifted' | 'dragging' | 'done';
+	const ME = 'var(--color-fc-accent)';
 
-	const KEY = 'WEB-14';
+	let mine = $state(idleMove(98));
+	let lea = $state(idleMove(110));
+	let me = $state(cursorAt());
+	let her = $state(cursorAt());
+	let peek = $state(false);
+	let myCard = $state<HTMLElement>();
+	let mySlot = $state<HTMLElement>();
+	let herCard = $state<HTMLElement>();
+	let herSlot = $state<HTMLElement>();
+	let herLanded = $state<HTMLElement>();
 
-	let phase = $state<Phase>('idle');
-	let offset = $state({ x: 0, y: 0 });
-	let cursor = $state(cursorAt());
-	let card = $state<HTMLElement>();
-	let slot = $state<HTMLElement>();
-	let slotHeight = $state(98);
-
-	const moved = $derived(phase === 'done');
-	const lifted = $derived(phase === 'lifted' || phase === 'dragging');
+	const busy = (phase: string) => phase === 'lifted' || phase === 'dragging';
+	const todo = $derived(lea.phase === 'done' ? 2 : 3);
+	const doing = $derived(1 + (mine.phase === 'done' ? 0 : 1) + (lea.phase === 'done' ? 1 : 0));
+	const done = $derived(mine.phase === 'done' ? 3 : 2);
 
 	function reset() {
-		phase = 'idle';
-		offset = { x: 0, y: 0 };
-		cursor.visible = false;
-		cursor.down = false;
+		mine = idleMove(mine.height);
+		lea = idleMove(lea.height);
+		peek = false;
+		for (const who of [me, her]) {
+			who.visible = false;
+			who.down = false;
+		}
 	}
 
 	function poster() {
-		phase = 'done';
+		mine.phase = 'done';
+		lea.phase = 'done';
+		peek = true;
+	}
+
+	async function arrive(act: Act) {
+		lea.phase = 'done';
+		await tick();
+		const grip = act.point(herLanded, 0.35, 0.45);
+		her.visible = true;
+		her.down = true;
+		await act.move(her, grip);
+		her.down = false;
 	}
 
 	async function script(act: Act) {
-		await act.wait(900);
-		const grip = act.point(card, 0.35, 0.45);
-		await act.move(cursor, { x: grip.x + 70, y: grip.y + 90 }, 400);
-		cursor.visible = true;
-		await act.move(cursor, grip);
-		cursor.down = true;
-		slotHeight = card?.offsetHeight ?? slotHeight;
-		phase = 'lifted';
-		await tick();
-		await act.wait(250);
-		const from = act.point(card, 0, 0);
-		const to = act.point(slot, 0, 0);
-		offset = { x: to.x - from.x, y: to.y - from.y };
-		phase = 'dragging';
-		await act.move(cursor, { x: grip.x + offset.x, y: grip.y + offset.y });
-		cursor.down = false;
-		phase = 'done';
+		await act.wait(800);
+		const wide = Boolean(herCard);
+		const myDrop = reach(act, me, myCard).then((grip) =>
+			drag(act, me, mine, grip, () => myCard, () => mySlot)
+		);
+		const herGrip = act.wait(700).then(async (): Promise<Point | null> => {
+			if (wide) return reach(act, her, herCard);
+			await act.move(her, { ...act.point(myCard, 0, 0.45), x: 8 }, 0);
+			return null;
+		});
+		const [, grip] = await Promise.all([myDrop, herGrip]);
+		await act.wait(200);
+		await Promise.all([
+			leave(act, me),
+			grip ? drag(act, her, lea, grip, () => herCard, () => herSlot) : arrive(act)
+		]);
+		peek = true;
 		await act.wait(300);
-		await act.move(cursor, { x: grip.x + offset.x + 60, y: grip.y + offset.y + 110 }, 600);
-		cursor.visible = false;
-		await act.wait(2000);
-		reset();
-		await act.wait(700);
+		await leave(act, her);
+		await act.wait(2400);
+		peek = false;
+		lea = idleMove(lea.height);
+		await act.wait(350);
+		mine = idleMove(mine.height);
+		await act.wait(900);
 	}
 </script>
-
-{#snippet focal(done: boolean)}
-	<div class="bd-key">{KEY}</div>
-	<p class="bd-title">{t('demo.task')}</p>
-	<div class="bd-meta">
-		{#if done}
-			<span class="bd-check" in:fade={{ duration: 250 }}><Icon icon={icons.check} size={14} /></span>
-		{:else}
-			<Bar w={46} h={14} r={4} />
-		{/if}
-		<span class="bd-avatar bd-avatar-me"></span>
-	</div>
-{/snippet}
-
-{#snippet filler(widths: [number, number])}
-	<div class="bd-card">
-		<Bar w={38} h={6} />
-		<div class="bd-lines">
-			<Bar w="{widths[0]}%" />
-			<Bar w="{widths[1]}%" />
-		</div>
-		<div class="bd-meta">
-			<Bar w={40} h={14} r={4} />
-			<span class="bd-avatar"></span>
-		</div>
-	</div>
-{/snippet}
 
 {#snippet column(name: string, count: number, tone: string)}
 	<div class="bd-head">
@@ -92,26 +90,18 @@
 	</div>
 {/snippet}
 
-{#snippet side()}
-	<div class="bd-side">
-		<div class="bd-space"><span class="bd-logo"></span><Bar w="55%" /></div>
-		<div class="bd-nav">
-			<Bar w="62%" />
-			<Bar w="48%" />
-		</div>
-		<div class="bd-nav">
-			<Bar w={56} h={6} />
-			<span class="bd-project"><span class="bd-dot bd-blue"></span>{t('demo.project')}</span>
-			<span class="bd-row"><span class="bd-dot"></span><Bar w="58%" /></span>
-			<span class="bd-row"><span class="bd-dot"></span><Bar w="44%" /></span>
-		</div>
-	</div>
+{#snippet filler(widths: [number, number], who?: string)}
+	<div class="bd-card"><BoardCard {widths} {who} /></div>
+{/snippet}
+
+{#snippet slot(height: number)}
+	<div class="bd-slot" style="height:{height}px" in:fade={{ duration: 200 }}></div>
 {/snippet}
 
 <Stage
 	width={960}
 	height={580}
-	compact={{ below: 640, width: 358, height: 520 }}
+	compact={{ below: 640, width: 358, height: 560 }}
 	label={t('demo.label')}
 	{script}
 	{reset}
@@ -120,7 +110,7 @@
 	{#snippet children({ compact })}
 		<Window
 			sidebar={compact ? undefined : side}
-			style={compact ? 'top:16px;left:16px;width:326px;height:488px' : 'top:24px;left:40px;width:880px;height:532px'}
+			style={compact ? 'top:16px;left:16px;width:326px;height:528px' : 'top:24px;left:40px;width:880px;height:532px'}
 		>
 			<div class="bd-top">
 				<span class="bd-heading">{t('demo.project')}</span>
@@ -133,89 +123,85 @@
 			<div class="bd-board" class:bd-two={compact}>
 				{#if !compact}
 					<div class="bd-col">
-						{@render column(t('demo.todo'), 3, '')}
+						{@render column(t('demo.todo'), todo, '')}
 						<div class="bd-list">
 							{@render filler([82, 54])}
-							{@render filler([70, 40])}
-							{@render filler([64, 48])}
+							{@render filler([64, 48], LEA_COLOR)}
+							{#if lea.phase !== 'done'}
+								<div
+									bind:this={herCard}
+									class="bd-card bd-focal"
+									class:bd-lifted={busy(lea.phase)}
+									style="translate:{lea.offset.x}px {lea.offset.y}px"
+									in:fade={{ duration: 250 }}
+									out:fade={{ duration: 120 }}
+								>
+									<BoardCard key="WEB-17" title={t('demo.leaTask')} due={t('demo.due')} who={LEA_COLOR} />
+								</div>
+							{/if}
 						</div>
 					</div>
 				{/if}
 				<div class="bd-col">
-					{@render column(t('demo.doing'), moved ? 1 : 2, 'bd-blue')}
+					{@render column(t('demo.doing'), doing, 'bd-blue')}
 					<div class="bd-list">
-						{#if !moved}
+						{@render filler([76, 50], LEA_COLOR)}
+						{#if mine.phase !== 'done'}
 							<div
-								bind:this={card}
+								bind:this={myCard}
 								class="bd-card bd-focal"
-								class:bd-lifted={lifted}
-								style="translate:{offset.x}px {offset.y}px"
-								in:grow
+								class:bd-lifted={busy(mine.phase)}
+								style="translate:{mine.offset.x}px {mine.offset.y}px"
+								in:fade={{ duration: 250 }}
 								out:fade={{ duration: 120 }}
 							>
-								{@render focal(false)}
+								<BoardCard key="WEB-14" title={t('demo.task')} who={ME} />
 							</div>
 						{/if}
-						{@render filler([76, 50])}
+						{#if busy(lea.phase)}
+							<div bind:this={herSlot}>{@render slot(lea.height)}</div>
+						{/if}
+						{#if lea.phase === 'done'}
+							<div
+								bind:this={herLanded}
+								class="bd-card bd-focal"
+								in:fly={{ x: compact ? -120 : 0, duration: compact ? 900 : 0, opacity: compact ? 0 : 1 }}
+								out:fade={{ duration: 250 }}
+							>
+								<BoardCard key="WEB-17" title={t('demo.leaTask')} due={t('demo.due')} who={LEA_COLOR} />
+							</div>
+						{/if}
 					</div>
 				</div>
 				<div class="bd-col">
-					{@render column(t('demo.done'), moved ? 3 : 2, 'bd-green')}
+					{@render column(t('demo.done'), done, 'bd-green')}
 					<div class="bd-list">
-						{#if phase === 'lifted' || phase === 'dragging'}
-							<div bind:this={slot} class="bd-slot" style="height:{slotHeight}px" in:grow={{ duration: 400 }}></div>
+						{@render filler([60, 44])}
+						{@render filler([72, 38], LEA_COLOR)}
+						{#if busy(mine.phase)}
+							<div bind:this={mySlot}>{@render slot(mine.height)}</div>
 						{/if}
-						{#if moved}
+						{#if mine.phase === 'done'}
 							<div class="bd-card bd-focal" out:fade={{ duration: 250 }}>
-								{@render focal(true)}
+								<BoardCard key="WEB-14" title={t('demo.task')} who={ME} done />
 							</div>
 						{/if}
-						{@render filler([60, 44])}
-						{@render filler([72, 38])}
 					</div>
 				</div>
 			</div>
 		</Window>
-		<Cursor {cursor} />
+		<AgendaPeek
+			shown={peek}
+			style={compact ? 'left:28px;right:28px;bottom:10px' : 'right:58px;bottom:40px;width:230px'}
+		/>
+		<LiveCursor cursor={her} color={LEA_COLOR} name="Léa" />
+		<Cursor cursor={me} />
 	{/snippet}
 </Stage>
 
+{#snippet side()}<BoardSide />{/snippet}
+
 <style>
-	.bd-side {
-		display: flex;
-		flex-direction: column;
-		gap: 22px;
-		padding: 10px 16px;
-	}
-	.bd-space {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
-	.bd-logo {
-		width: 22px;
-		height: 22px;
-		border-radius: 6px;
-		background: var(--color-fc-field);
-	}
-	.bd-nav {
-		display: grid;
-		gap: 14px;
-	}
-	.bd-row,
-	.bd-project {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-	.bd-project {
-		margin: -6px -8px;
-		padding: 6px 8px;
-		border-radius: 8px;
-		background: var(--color-fc-field);
-		font-size: 13px;
-		font-weight: 700;
-	}
 	.bd-top {
 		display: flex;
 		align-items: center;
@@ -312,10 +298,6 @@
 		background: var(--mes-w-body);
 		box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
 	}
-	.bd-lines {
-		display: grid;
-		gap: 7px;
-	}
 	.bd-focal {
 		position: relative;
 		z-index: 2;
@@ -334,38 +316,6 @@
 	.bd-slot {
 		border-radius: 8px;
 		background: var(--color-fc-field);
-	}
-	.bd-key {
-		font-family: var(--font-fc-mono);
-		font-size: 10px;
-		color: var(--color-fc-fg-muted);
-	}
-	.bd-title {
-		margin: 0;
-		font-size: 13px;
-		font-weight: 700;
-		line-height: 1.35;
-	}
-	.bd-meta {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-	.bd-check {
-		display: inline-flex;
-		color: var(--color-fc-success);
-	}
-	.bd-avatar {
-		flex: none;
-		width: 20px;
-		height: 20px;
-		border-radius: 999px;
-		background: var(--color-fc-field);
-	}
-	.bd-avatar-me {
-		background: var(--color-fc-accent);
-		opacity: 0.85;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.bd-focal {

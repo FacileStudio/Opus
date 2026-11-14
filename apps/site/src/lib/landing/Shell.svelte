@@ -12,10 +12,11 @@
 
 	const links = $derived([
 		{ href: '/#features', label: t('nav.features') },
-		{ href: '/downloads', label: t('nav.download') }
+		{ href: '/#pricing', label: t('nav.pricing') },
+		{ href: '/#developers', label: t('nav.developers') }
 	]);
 	const columns = $derived([
-		{ title: 'Opus', links: links.map(({ href, label }) => ({ href, label })) },
+		{ title: 'Opus', links: [...links, { href: '/downloads', label: t('nav.download') }] },
 		{
 			title: 'Facile',
 			links: [{ href: 'https://facile.studio', label: 'facile.studio', external: true }]

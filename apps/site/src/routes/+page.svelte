@@ -1,38 +1,28 @@
 <script lang="ts">
-	import { DownloadSection, Icon, icons, SignInWithFacile } from '@facile/muse';
-	import { CHECKSUMS_URL, CLI_COMMANDS, RELEASES_URL } from '$lib/downloads';
+	import {
+		FeatureSplit,
+		ForDevelopers,
+		LANDING_HEADING,
+		LandingCta,
+		PricingPlans,
+		WorksWith,
+		icons
+	} from '@facile/muse';
 	import { t } from '$lib/i18n';
+	import AgendaTile from '$lib/landing/AgendaTile.svelte';
 	import BoardDemo from '$lib/landing/BoardDemo.svelte';
-	import GithubTile from '$lib/landing/GithubTile.svelte';
+	import { connections, developers, features } from '$lib/landing/sections';
 	import SearchTile from '$lib/landing/SearchTile.svelte';
 	import Shell from '$lib/landing/Shell.svelte';
 	import TimelineTile from '$lib/landing/TimelineTile.svelte';
 
-	const features = $derived([
-		{
-			icon: icons.layers,
-			title: t('features.views.title'),
-			text: t('features.views.text')
-		},
-		{
-			icon: icons.bolt,
-			title: t('features.live.title'),
-			text: t('features.live.text')
-		},
-		{
-			icon: icons.settings,
-			title: t('features.rules.title'),
-			text: t('features.rules.text')
-		},
-		{
-			icon: icons.code,
-			title: t('features.github.title'),
-			text: t('features.github.text')
-		}
-	]);
+	const block = 'mx-auto w-full max-w-5xl px-4 sm:px-6';
 </script>
 
-<svelte:head><title>Opus · {t('hero.title')}</title></svelte:head>
+<svelte:head>
+	<title>Opus · {t('meta.title')}</title>
+	<meta name="description" content={t('meta.description')} />
+</svelte:head>
 
 <Shell>
 	{#snippet children(signInHref)}
@@ -40,74 +30,57 @@
 			<h1 class="max-w-3xl font-fc-title text-fc-3xl leading-tight font-bold tracking-tight sm:text-5xl">
 				{t('hero.title')}
 			</h1>
-			<p class="mt-5 max-w-xl text-fc-lg text-fc-fg-muted">{t('hero.text')}</p>
-			<div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-				<SignInWithFacile href={signInHref} size="lg" />
-				<a
-					href="#download"
-					class="inline-flex min-h-11 items-center gap-2 rounded-fc-pill bg-fc-surface px-5 text-fc-sm font-bold transition-colors hover:bg-fc-field focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
-				>
-					<Icon icon={icons.code} size={16} />{t('hero.cli')}
-				</a>
-			</div>
+			<p class="mt-5 max-w-2xl text-fc-lg text-fc-fg-muted">{t('hero.text')}</p>
+			<LandingCta {signInHref} align="center" class="mt-8 w-full" />
 			<div class="mt-12 w-full sm:mt-16"><BoardDemo /></div>
 		</section>
 
-		<section class="relative mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
-			<h2 class="mb-10 text-center font-fc-title text-fc-2xl font-bold tracking-tight text-fc-fg sm:text-fc-3xl">
-				{t('tiles.title')}
-			</h2>
+		<section class="{block} py-16 sm:py-20">
+			<h2 class="mb-10 text-center {LANDING_HEADING}">{t('tiles.title')}</h2>
 			<div class="grid gap-6 md:grid-cols-3">
 				<TimelineTile />
 				<SearchTile />
-				<GithubTile />
+				<AgendaTile />
 			</div>
 		</section>
 
-		<section
+		<div class="{block} py-16 sm:py-20">
+			<WorksWith class="max-w-3xl" apps={connections()} description={t('with.text')} />
+		</div>
+
+		<FeatureSplit
 			id="features"
-			class="mx-auto grid max-w-5xl scroll-mt-20 gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-[2fr_3fr] md:gap-16"
-		>
-			<div>
-				<h2 class="font-fc-title text-fc-2xl font-bold tracking-tight sm:text-fc-3xl">{t('features.title')}</h2>
-				<p class="mt-3 text-fc-fg-muted">{t('features.text')}</p>
-			</div>
-			<ul class="flex flex-col gap-7">
-				{#each features as feature (feature.icon)}
-					<li class="flex gap-4">
-						<span class="flex size-10 shrink-0 items-center justify-center rounded-fc-md bg-fc-surface">
-							<Icon icon={feature.icon} size={20} />
-						</span>
-						<div>
-							<h3 class="text-fc-md font-bold">{feature.title}</h3>
-							<p class="mt-1 text-fc-sm text-fc-fg-muted">{feature.text}</p>
-						</div>
-					</li>
-				{/each}
-			</ul>
-		</section>
+			class="{block} scroll-mt-20 py-16 sm:py-20"
+			title={t('features.title')}
+			description={t('features.text')}
+			features={features()}
+		/>
 
-		<section id="download" class="mx-auto max-w-4xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20">
-			<div class="mb-8 text-center">
-				<h2 class="font-fc-title text-fc-2xl font-bold tracking-tight sm:text-fc-3xl">{t('download.title')}</h2>
-				<p class="mt-3 text-fc-fg-muted">{t('download.text')}</p>
-			</div>
-			<DownloadSection
-				mode="device"
-				allHref="/downloads"
-				commands={CLI_COMMANDS}
-				releasesHref={RELEASES_URL}
-				checksumsHref={CHECKSUMS_URL}
-				headingLevel={3}
+		<PricingPlans
+			id="pricing"
+			class="{block} scroll-mt-20 py-16 sm:py-20"
+			title={t('plan.title')}
+			headingClass={LANDING_HEADING}
+			highlight={['ai.access']}
+			highlightOnly
+			notes={{ '*': t('plan.included') }}
+			recommended="pro"
+			suiteHref="https://suite.facile.studio/#tarifs"
+			suiteNote={t('plan.note')}
+		/>
+
+		<div id="developers" class="{block} scroll-mt-20 py-16 sm:py-20">
+			<ForDevelopers
+				rows={developers()}
+				description={t('dev.text')}
+				selfHostHref="https://github.com/FacileStudio/Opus/blob/main/docs/deployment.md"
 			/>
-		</section>
+		</div>
 
-		<section class="mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 sm:py-24">
-			<h2 class="font-fc-title text-fc-2xl font-bold tracking-tight sm:text-fc-3xl">{t('cta.title')}</h2>
+		<section class="{block} flex flex-col items-center py-16 text-center sm:py-24">
+			<h2 class={LANDING_HEADING}>{t('cta.title')}</h2>
 			<p class="mt-3 text-fc-fg-muted">{t('cta.text')}</p>
-			<div class="mt-8 flex justify-center">
-				<SignInWithFacile href={signInHref} size="lg" />
-			</div>
+			<LandingCta {signInHref} align="center" class="mt-8 w-full" />
 		</section>
 	{/snippet}
 </Shell>
