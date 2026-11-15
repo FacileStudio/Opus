@@ -4,6 +4,16 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.43.0] - 2026-11-15
+
+### Added
+
+- Task events (`task.created`, `task.updated`, `task.deleted`, `task.status_changed`, `task.actor_changed`, and the reconcile re-sends) carry `registre_space_id` for a task in a linked workspace, `personal: true` for one in a personal workspace, and `url`, the task's page under `OPUS_CLIENT_URL`. Agenda uses them to file a due task in its space's calendar.
+
+### Changed
+
+- A task event from a personal workspace without a signed-in actor, such as a reconcile re-send, now carries the owner's email in `owner_email`.
+
 ## [2.42.2] - 2026-11-14
 
 ### Fixed
