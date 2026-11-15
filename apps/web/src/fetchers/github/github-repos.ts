@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/fetchers/get-api-url";
+import { apiFetch, getApiUrl } from "@/fetchers/get-api-url";
 import { apiErrorMessage } from "@/lib/auth-client";
 import type {
   GitHubIssueState,
@@ -7,14 +7,12 @@ import type {
 } from "@/types/github";
 
 async function githubRequest<T>(path: string, init?: RequestInit): Promise<T> {
-  const method = (init?.method ?? "GET").toUpperCase();
-  const response = await fetch(getApiUrl(path), {
+  const response = await apiFetch(getApiUrl(path), {
     ...init,
     credentials: "include",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      ...(method === "GET" ? {} : { "X-Facile-CSRF": "1" }),
     },
   });
   if (!response.ok) {
