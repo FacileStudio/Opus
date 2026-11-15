@@ -22,7 +22,8 @@ func wireSamples() map[string]any {
 		ID: 42, FacileID: "01JTASK00000000000000000000", ProjectID: 3, ProjectFacileID: "01JPROJ00000000000000000000",
 		WorkspaceID: 1, Title: "Ship it", Name: "Ship it", Status: "in-progress", Description: "Before Friday",
 		Priority: "high", DueDate: &due, ActorID: &actor, ActorEmail: "camille@facile.studio",
-		ActorSubject: "sub-camille", OwnerEmail: "owner@facile.studio", UpdatedAt: "2026-11-11T09:30:00.123Z",
+		ActorSubject: "sub-camille", OwnerEmail: "owner@facile.studio", RegistreSpaceID: "space-1",
+		URL: "https://opus.example.test/dashboard/workspace/1/project/3/task/42", UpdatedAt: "2026-11-11T09:30:00.123Z",
 	}
 	project := ProjectPayload{
 		ID: 3, FacileID: "01JPROJ00000000000000000000", WorkspaceID: 1, Name: "Launch", Slug: "launch",

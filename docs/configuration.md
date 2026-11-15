@@ -43,7 +43,7 @@ them.
 | `POSTGRES_HOST` | `postgres` | Same |
 | `POSTGRES_PORT` | `5432` | Same |
 | `GO_DATABASE_URL` | empty | Replaces `DATABASE_URL` when set |
-| `OPUS_CLIENT_URL` | empty | Public URL of the instance. `apps/web/env.sh` writes it into the built JavaScript |
+| `OPUS_CLIENT_URL` | empty | Public URL of the instance. `apps/web/env.sh` writes it into the built JavaScript, and task events link to it in `url` |
 | `OPUS_API_URL` | `<OPUS_CLIENT_URL>/api` | Written into the built JavaScript in place of the `VITE_API_URL` placeholder |
 
 The entrypoint URL-encodes the user and password when the image has Node or Bun. The runtime

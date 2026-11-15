@@ -13,6 +13,8 @@ import (
 // Config carries Antenne client connection settings. SyncWorkspaceID only
 // places projects from old Sablier payloads that carry no space. Issuer is
 // the OIDC issuer whose porte identities give owner and actor subjects.
+// ClientURL is the public origin of the Opus web app, from OPUS_CLIENT_URL;
+// task payloads link to it.
 type Config struct {
 	URL        string
 	Secret     string
@@ -20,14 +22,19 @@ type Config struct {
 
 	SyncWorkspaceID int64
 	Issuer          string
+	ClientURL       string
 }
 
 // LoadConfig reads the Antenne settings through antenne.ConfigFromEnv:
 // ANTENNE_URL, or its older synonym ANTENNE_INSTANCE, ANTENNE_SECRET and
 // ANTENNE_INSTANCE_ID. No URL turns the bus off; a URL without a secret is an
 // error. Opus always registers as the Opus app, whatever ANTENNE_APP says.
+// OPUS_CLIENT_URL gives ClientURL.
 func LoadConfig() (Config, error) {
-	cfg := Config{SyncWorkspaceID: parseWorkspaceID(os.Getenv("ANTENNE_SYNC_WORKSPACE_ID"))}
+	cfg := Config{
+		SyncWorkspaceID: parseWorkspaceID(os.Getenv("ANTENNE_SYNC_WORKSPACE_ID")),
+		ClientURL:       strings.TrimRight(strings.TrimSpace(os.Getenv("OPUS_CLIENT_URL")), "/"),
+	}
 	client, err := antenne.ConfigFromEnv(string(envelope.AppOpus))
 	switch {
 	case errors.Is(err, antenne.ErrNotConfigured):

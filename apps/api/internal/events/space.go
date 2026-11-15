@@ -93,8 +93,16 @@ func (p *Publisher) prepareTask(ctx context.Context, payload *TaskPayload) bool 
 	if p.db == nil {
 		return true
 	}
-	if _, ok := p.SpaceOf(ctx, payload.WorkspaceID); !ok {
+	space, ok := p.SpaceOf(ctx, payload.WorkspaceID)
+	if !ok {
 		return false
+	}
+	payload.RegistreSpaceID, payload.Personal = space.RegistreSpaceID, space.Personal
+	if payload.OwnerEmail == "" {
+		payload.OwnerEmail = space.OwnerEmail
+	}
+	if p.config.ClientURL != "" {
+		payload.URL = TaskURL(p.config.ClientURL, payload.WorkspaceID, payload.ProjectID, payload.ID)
 	}
 	payload.FacileID = p.ensureFacileID(ctx, &schemas.Task{}, payload.ID, payload.FacileID)
 	payload.ProjectFacileID = p.ensureFacileID(ctx, &schemas.Project{}, payload.ProjectID, payload.ProjectFacileID)

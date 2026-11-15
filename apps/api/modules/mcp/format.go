@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/FacileStudio/Opus/apps/api/internal/events"
 	"github.com/FacileStudio/Opus/apps/api/modules/task"
 	"github.com/FacileStudio/Opus/apps/api/schemas"
 	mcpkit "github.com/FacileStudio/tronc/mcp"
@@ -83,7 +84,7 @@ func (t *toolset) projectsOf(ctx context.Context, tasks []task.TaskResponse) map
 
 // taskURL is the web page of a task.
 func (t *toolset) taskURL(tk task.TaskResponse) string {
-	return fmt.Sprintf("%s/dashboard/workspace/%d/project/%d/task/%d", t.appURL, tk.WorkspaceID, tk.ProjectID, tk.ID)
+	return events.TaskURL(t.appURL, tk.WorkspaceID, tk.ProjectID, tk.ID)
 }
 
 // projectURL is the board of a project.

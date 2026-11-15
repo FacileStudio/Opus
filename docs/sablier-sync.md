@@ -49,7 +49,10 @@ A project event carries `space`: `registre_space_id` for a workspace linked to R
 `personal: true` with the owner's porte subject and lowercased email for a personal workspace.
 Projects of any other workspace, and their tasks, are never published. Events carry `updated_at`
 (RFC3339Nano). Task events carry `description`, `due_date` (`YYYY-MM-DD` or `null`), `priority`
-(`no-priority` goes out as `none`) and `actor_subject`. A row without a `facile_id` gets one minted
+(`no-priority` goes out as `none`) and `actor_subject`. They also carry their workspace's place
+flat: `registre_space_id` for a linked workspace, or `personal: true` with `owner_email` (the
+acting user's email, else the owner's) for a personal one, plus `url`, the task's page under
+`OPUS_CLIENT_URL` (left out when that is unset). Agenda files due tasks by these. A row without a `facile_id` gets one minted
 before it is published.
 
 ## Reconcile

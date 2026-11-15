@@ -1,6 +1,7 @@
 package events
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -24,6 +25,9 @@ type TaskPayload struct {
 	ActorEmail      string  `json:"actor_email,omitempty"`
 	ActorSubject    string  `json:"actor_subject,omitempty"`
 	OwnerEmail      string  `json:"owner_email,omitempty"`
+	RegistreSpaceID string  `json:"registre_space_id,omitempty"`
+	Personal        bool    `json:"personal,omitempty"`
+	URL             string  `json:"url,omitempty"`
 	UpdatedAt       string  `json:"updated_at,omitempty"`
 }
 
@@ -102,6 +106,11 @@ func (w WorkspacePayload) entityID() string {
 		return w.Slug
 	}
 	return strconv.FormatInt(w.ID, 10)
+}
+
+// TaskURL is the web page of a task under the Opus client origin base.
+func TaskURL(base string, workspaceID, projectID, taskID int64) string {
+	return fmt.Sprintf("%s/dashboard/workspace/%d/project/%d/task/%d", base, workspaceID, projectID, taskID)
 }
 
 func facileIDOf(id *string) string {
