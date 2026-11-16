@@ -4,6 +4,8 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.43.1] - 2026-11-16
+
 ### Security
 
 - The app loads the Vision tracker from its own origin (`/vision-tracker.js`) instead of `https://vision.facile.studio/s.js`, and the Content Security Policy no longer allows scripts from `https://vision.facile.studio`. Vision can no longer run code inside the signed-in client.
