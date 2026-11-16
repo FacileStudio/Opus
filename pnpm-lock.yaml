@@ -58,8 +58,8 @@ importers:
         specifier: github:FacileStudio/mise-en-scene#v0.2.2
         version: https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e(svelte@5.57.3)
       '@facile/muse':
-        specifier: github:FacileStudio/muse#v0.26.0
-        version: https://codeload.github.com/FacileStudio/muse/tar.gz/84d80dcd7f04dcfffec98788248e16d6f7f57ffb(svelte@5.57.3)(tailwindcss@4.3.5)
+        specifier: github:FacileStudio/muse#v0.32.0
+        version: https://codeload.github.com/FacileStudio/muse/tar.gz/266a6f8cb14107577bbc6365969927e755be2897(svelte@5.57.3)(tailwindcss@4.3.5)
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: ^3.0.10
@@ -360,8 +360,8 @@ importers:
         version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
     devDependencies:
       '@facile/muse':
-        specifier: github:FacileStudio/muse#v0.23.0
-        version: https://codeload.github.com/FacileStudio/muse/tar.gz/eb871cd9ab6afdb86ae878c43c207fa70cdf5a00(svelte@5.57.3)(tailwindcss@4.2.1)
+        specifier: github:FacileStudio/muse#v0.32.0
+        version: https://codeload.github.com/FacileStudio/muse/tar.gz/266a6f8cb14107577bbc6365969927e755be2897(svelte@5.57.3)(tailwindcss@4.2.1)
       '@opus/libs':
         specifier: workspace:*
         version: link:../../packages/libs
@@ -1029,22 +1029,21 @@ packages:
       '@noble/hashes':
         optional: true
 
+  '@facile/blob@https://codeload.github.com/FacileStudio/blob/tar.gz/23a0db0538d8ffd97eac60c7a2795cedccc451b9':
+    resolution: {tarball: https://codeload.github.com/FacileStudio/blob/tar.gz/23a0db0538d8ffd97eac60c7a2795cedccc451b9}
+    version: 0.2.2
+    peerDependencies:
+      svelte: ^5.29.0
+
   '@facile/mise-en-scene@https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e':
     resolution: {tarball: https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e}
     version: 0.2.2
     peerDependencies:
       svelte: ^5.29.0
 
-  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/84d80dcd7f04dcfffec98788248e16d6f7f57ffb':
-    resolution: {tarball: https://codeload.github.com/FacileStudio/muse/tar.gz/84d80dcd7f04dcfffec98788248e16d6f7f57ffb}
-    version: 0.26.0
-    peerDependencies:
-      svelte: ^5.0.0
-      tailwindcss: ^4.0.0
-
-  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/eb871cd9ab6afdb86ae878c43c207fa70cdf5a00':
-    resolution: {tarball: https://codeload.github.com/FacileStudio/muse/tar.gz/eb871cd9ab6afdb86ae878c43c207fa70cdf5a00}
-    version: 0.23.0
+  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/266a6f8cb14107577bbc6365969927e755be2897':
+    resolution: {tarball: https://codeload.github.com/FacileStudio/muse/tar.gz/266a6f8cb14107577bbc6365969927e755be2897}
+    version: 0.32.0
     peerDependencies:
       svelte: ^5.0.0
       tailwindcss: ^4.0.0
@@ -5991,23 +5990,29 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 2.0.1
 
+  '@facile/blob@https://codeload.github.com/FacileStudio/blob/tar.gz/23a0db0538d8ffd97eac60c7a2795cedccc451b9(svelte@5.57.3)':
+    dependencies:
+      svelte: 5.57.3
+
   '@facile/mise-en-scene@https://codeload.github.com/FacileStudio/mise-en-scene/tar.gz/7050c6c02f5bb1d9a8a35078d79365de291cad9e(svelte@5.57.3)':
     dependencies:
       svelte: 5.57.3
 
-  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/84d80dcd7f04dcfffec98788248e16d6f7f57ffb(svelte@5.57.3)(tailwindcss@4.3.5)':
+  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/266a6f8cb14107577bbc6365969927e755be2897(svelte@5.57.3)(tailwindcss@4.2.1)':
     dependencies:
-      gsap: 3.15.1
-      svelte: 5.57.3
-      tailwind-merge: 3.5.0
-      tailwindcss: 4.3.5
-
-  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/eb871cd9ab6afdb86ae878c43c207fa70cdf5a00(svelte@5.57.3)(tailwindcss@4.2.1)':
-    dependencies:
+      '@facile/blob': https://codeload.github.com/FacileStudio/blob/tar.gz/23a0db0538d8ffd97eac60c7a2795cedccc451b9(svelte@5.57.3)
       gsap: 3.15.1
       svelte: 5.57.3
       tailwind-merge: 3.5.0
       tailwindcss: 4.2.1
+
+  '@facile/muse@https://codeload.github.com/FacileStudio/muse/tar.gz/266a6f8cb14107577bbc6365969927e755be2897(svelte@5.57.3)(tailwindcss@4.3.5)':
+    dependencies:
+      '@facile/blob': https://codeload.github.com/FacileStudio/blob/tar.gz/23a0db0538d8ffd97eac60c7a2795cedccc451b9(svelte@5.57.3)
+      gsap: 3.15.1
+      svelte: 5.57.3
+      tailwind-merge: 3.5.0
+      tailwindcss: 4.3.5
 
   '@floating-ui/core@1.7.3':
     dependencies:
