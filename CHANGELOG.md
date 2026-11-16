@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.43.2] - 2026-11-16
+
+### Changed
+
+- The site and the web fonts use muse v0.32.0. Tabs and segmented option cards are 36px tall on pointer devices and 44px on touch.
+
 ## [2.43.1] - 2026-11-16
 
 ### Security
