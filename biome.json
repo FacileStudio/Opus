@@ -25,7 +25,8 @@
 			"!**/.claude",
 			"!**/openapi.json",
 			"!**/testdata",
-			"!apps/site"
+			"!apps/site",
+			"!**/vision-tracker.js"
 		]
 	},
 	"formatter": {
