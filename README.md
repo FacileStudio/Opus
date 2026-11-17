@@ -60,12 +60,12 @@ Migrations run when the API starts. See [docs/development.md](docs/development.m
 ## Command line
 
 [`opus`](https://github.com/FacileStudio/opus-cli) drives Opus from a terminal. It
-installs through [facile](https://github.com/FacileStudio/facile), the suite installer,
+installs through [kit](https://github.com/FacileStudio/kit), the Facile package manager,
 which fetches a prebuilt binary and puts `~/.local/bin` on your PATH:
 
 ```sh
 curl -fsSL https://get.facile.studio | bash
-facile install opus
+kit add opus
 ```
 
 `opus login` prints a browser approval link and saves a session token. Personal API tokens are
