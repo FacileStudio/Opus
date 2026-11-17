@@ -4,6 +4,12 @@ All notable changes to Opus are documented here.
 
 ## [Unreleased]
 
+## [2.43.3] - 2026-11-17
+
+### Changed
+
+- Vision tracker v0.15.0: sends bot-detection flags and a first-gesture engagement beacon.
+
 ## [2.43.2] - 2026-11-16
 
 ### Changed
