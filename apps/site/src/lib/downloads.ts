@@ -9,5 +9,5 @@ export const CLI_COMMANDS: CliCommand[] = [
 		command: 'curl -fsSL https://raw.githubusercontent.com/FacileStudio/opus-cli/main/install.sh | bash'
 	},
 	{ label: 'Homebrew', command: 'brew install facilestudio/tap/opus' },
-	{ label: 'facile', command: 'facile install opus' }
+	{ label: 'kit', command: 'kit add opus' }
 ];
